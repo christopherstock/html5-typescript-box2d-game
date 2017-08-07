@@ -1,27 +1,27 @@
 {
-  "name": "html5-typescript-box2d-game",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "npm run build:live_webpack",
-    "build:live_tsc": "nodemon --exec .\\node_modules\\.bin\\tsc",
-    "build:live_webpack": "nodemon --config nodemon.config.json --exec webpack",
-    "build": "webpack"
-  },
-  "keywords": [],
-  "author": "Christopher Stock",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^8.0.19",
-    "@types/typescript": "^2.0.0",
-    "@types/webpack": "^3.0.5",
-    "nodemon": "^1.11.0",
-    "typescript": "^2.4.2",
-    "webpack": "^3.4.1"
-  },
-  "dependencies": {
-    "@types/box2d": "0.0.31",
-    "box2d": "^1.0.0"
-  }
+    "name": "html5-typescript-box2d-game",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "npm run build:live_webpack",
+        "build:live_tsc": "nodemon --exec .\\node_modules\\.bin\\tsc",
+        "build:live_webpack": "nodemon --config nodemon.config.json --exec webpack",
+        "build": "webpack"
+    },
+    "keywords": [],
+    "author": "Christopher Stock",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^8.0.19",
+        "@types/typescript": "^2.0.0",
+        "@types/webpack": "^3.0.5",
+        "nodemon": "^1.11.0",
+        "typescript": "^2.4.2",
+        "webpack": "^3.4.1"
+    },
+    "dependencies": {
+        "@types/matter-js": "^0.9.32",
+        "matter-js": "^0.13.0"
+    }
 }
