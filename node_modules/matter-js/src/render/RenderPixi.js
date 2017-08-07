@@ -3,27 +3,49 @@
 * See also `Matter.Render` for a canvas based renderer.
 *
 * @class RenderPixi
+* @deprecated the Matter.RenderPixi module will soon be removed from the Matter.js core.
+* It will likely be moved to its own repository (but maintenance will be limited).
 */
 
 var RenderPixi = {};
 
 module.exports = RenderPixi;
 
+var Bounds = require('../geometry/Bounds');
 var Composite = require('../body/Composite');
 var Common = require('../core/Common');
+var Events = require('../core/Events');
+var Vector = require('../geometry/Vector');
 
 (function() {
+
+    var _requestAnimationFrame,
+        _cancelAnimationFrame;
+
+    if (typeof window !== 'undefined') {
+        _requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame
+                                      || window.mozRequestAnimationFrame || window.msRequestAnimationFrame 
+                                      || function(callback){ window.setTimeout(function() { callback(Common.now()); }, 1000 / 60); };
+   
+        _cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame 
+                                      || window.webkitCancelAnimationFrame || window.msCancelAnimationFrame;
+    }
     
     /**
      * Creates a new Pixi.js WebGL renderer
      * @method create
      * @param {object} options
      * @return {RenderPixi} A new renderer
+     * @deprecated
      */
     RenderPixi.create = function(options) {
+        Common.warn('RenderPixi.create: Matter.RenderPixi is deprecated (see docs)');
+
         var defaults = {
             controller: RenderPixi,
+            engine: null,
             element: null,
+            frameRequestId: null,
             canvas: null,
             renderer: null,
             container: null,
@@ -62,6 +84,8 @@ var Common = require('../core/Common');
             backgroundColor: options.background
         };
 
+        render.mouse = options.mouse;
+        render.engine = options.engine;
         render.renderer = render.renderer || new PIXI.WebGLRenderer(render.options.width, render.options.height, render.pixiOptions);
         render.container = render.container || new PIXI.Container();
         render.spriteContainer = render.spriteContainer || new PIXI.Container();
@@ -77,6 +101,11 @@ var Common = require('../core/Common');
             }
         };
 
+        // event listeners
+        Events.on(render.engine, 'beforeUpdate', function() {
+            RenderPixi.clear(render);
+        });
+
         // caches
         render.textures = {};
         render.sprites = {};
@@ -89,7 +118,7 @@ var Common = require('../core/Common');
         if (Common.isElement(render.element)) {
             render.element.appendChild(render.canvas);
         } else {
-            Common.log('No "render.element" passed, "render.canvas" was not inserted into document.', 'warn');
+            Common.warn('No "render.element" passed, "render.canvas" was not inserted into document.');
         }
 
         // prevent menus on canvas
@@ -100,9 +129,33 @@ var Common = require('../core/Common');
     };
 
     /**
+     * Continuously updates the render canvas on the `requestAnimationFrame` event.
+     * @method run
+     * @param {render} render
+     * @deprecated
+     */
+    RenderPixi.run = function(render) {
+        (function loop(time){
+            render.frameRequestId = _requestAnimationFrame(loop);
+            RenderPixi.world(render);
+        })();
+    };
+
+    /**
+     * Ends execution of `Render.run` on the given `render`, by canceling the animation frame request event loop.
+     * @method stop
+     * @param {render} render
+     * @deprecated
+     */
+    RenderPixi.stop = function(render) {
+        _cancelAnimationFrame(render.frameRequestId);
+    };
+
+    /**
      * Clears the scene graph
      * @method clear
      * @param {RenderPixi} render
+     * @deprecated
      */
     RenderPixi.clear = function(render) {
         var container = render.container,
@@ -146,6 +199,7 @@ var Common = require('../core/Common');
      * @method setBackground
      * @param {RenderPixi} render
      * @param {string} background
+     * @deprecated
      */
     RenderPixi.setBackground = function(render, background) {
         if (render.currentBackground !== background) {
@@ -180,9 +234,10 @@ var Common = require('../core/Common');
      * Description
      * @method world
      * @param {engine} engine
+     * @deprecated
      */
-    RenderPixi.world = function(engine) {
-        var render = engine.render,
+    RenderPixi.world = function(render) {
+        var engine = render.engine,
             world = engine.world,
             renderer = render.renderer,
             container = render.container,
@@ -237,10 +292,10 @@ var Common = require('../core/Common');
         }
 
         for (i = 0; i < bodies.length; i++)
-            RenderPixi.body(engine, bodies[i]);
+            RenderPixi.body(render, bodies[i]);
 
         for (i = 0; i < constraints.length; i++)
-            RenderPixi.constraint(engine, constraints[i]);
+            RenderPixi.constraint(render, constraints[i]);
 
         renderer.render(container);
     };
@@ -251,9 +306,10 @@ var Common = require('../core/Common');
      * @method constraint
      * @param {engine} engine
      * @param {constraint} constraint
+     * @deprecated
      */
-    RenderPixi.constraint = function(engine, constraint) {
-        var render = engine.render,
+    RenderPixi.constraint = function(render, constraint) {
+        var engine = render.engine,
             bodyA = constraint.bodyA,
             bodyB = constraint.bodyB,
             pointA = constraint.pointA,
@@ -302,9 +358,10 @@ var Common = require('../core/Common');
      * @method body
      * @param {engine} engine
      * @param {body} body
+     * @deprecated
      */
-    RenderPixi.body = function(engine, body) {
-        var render = engine.render,
+    RenderPixi.body = function(render, body) {
+        var engine = render.engine,
             bodyRender = body.render;
 
         if (!bodyRender.visible)
@@ -358,6 +415,7 @@ var Common = require('../core/Common');
      * @param {RenderPixi} render
      * @param {body} body
      * @return {PIXI.Sprite} sprite
+     * @deprecated
      */
     var _createBodySprite = function(render, body) {
         var bodyRender = body.render,
@@ -378,6 +436,7 @@ var Common = require('../core/Common');
      * @param {RenderPixi} render
      * @param {body} body
      * @return {PIXI.Graphics} graphics
+     * @deprecated
      */
     var _createBodyPrimitive = function(render, body) {
         var bodyRender = body.render,
@@ -442,6 +501,7 @@ var Common = require('../core/Common');
      * @param {RenderPixi} render
      * @param {string} imagePath
      * @return {PIXI.Texture} texture
+     * @deprecated
      */
     var _getTexture = function(render, imagePath) {
         var texture = render.textures[imagePath];
