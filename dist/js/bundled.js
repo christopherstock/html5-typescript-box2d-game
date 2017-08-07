@@ -7706,8 +7706,11 @@ module.exports = __webpack_require__(24);
 "use strict";
 
 var Matter = __webpack_require__(25);
-window.addEventListener("load", init);
-function init() {
+/*******************************************************************************************************************
+*   Example 1 displays two falling boxes.
+*******************************************************************************************************************/
+function showFallingBoxes() {
+    console.log(">> showFallingBoxes()");
     var body = document.querySelector("body");
     // Matter.js module aliases
     var Engine = Matter.Engine, World = Matter.World, Bodies = Matter.Bodies;
@@ -7722,6 +7725,12 @@ function init() {
     // run the engine
     Engine.run(engine);
 }
+/*******************************************************************************************************************
+*   Being invoked when the page is loaded completely.
+*******************************************************************************************************************/
+window.onload = function () {
+    showFallingBoxes();
+};
 //# sourceMappingURL=index.js.map
 
 /***/ }),
