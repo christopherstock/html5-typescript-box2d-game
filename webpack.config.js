@@ -9,6 +9,6 @@ module.exports = {
     ],
     output: {
         filename: 'bundled.js',
-        path:     path.resolve(__dirname, 'dist')
+        path:     path.resolve(__dirname, 'dist/js')
     }
 };

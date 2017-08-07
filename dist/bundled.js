@@ -67,17 +67,8 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(1);
+(function webpackMissingModule() { throw new Error("Cannot find module \"./lib/src/index.js\""); }());
 
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-console.log(">> index.ts <<");
-//# sourceMappingURL=index.js.map
 
 /***/ })
 /******/ ]);
