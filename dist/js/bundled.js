@@ -11055,6 +11055,7 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Let player jump. Improve moving via friction.
 *   TODO ASAP   Create pickable items.
 *   TODO ASAP   Create abstract level system.
+*   TODO ASAP   Create abstract body generation class that uses 0, 0 as left-top corner!
 *
 *   TODO WEAK   Try multiple layers of engines for different calcs/effects.
 *   TODO WEAK   Implement nice changing gravity effects.
@@ -11150,6 +11151,7 @@ var MfgGame = (function () {
             element: document.body,
             engine: this.engine
         });
+        // this.renderer.options.showCollisions = true;
         this.renderer.canvas.width = mfg.MfgSettings.CANVAS_WIDTH;
         this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
         this.engine.world.gravity = {
@@ -11176,6 +11178,7 @@ var MfgGame = (function () {
     *   Renders all game components.
     *****************************************************************************/
     MfgGame.prototype.render = function () {
+        this.player.render();
     };
     return MfgGame;
 }());
@@ -11276,6 +11279,8 @@ var MfgPlayer = (function () {
     *****************************************************************************/
     function MfgPlayer() {
         this.boxA = null;
+        this.jumping = false;
+        this.jumpPower = 0.0;
     }
     /*****************************************************************************
     *   Inits the player instance.
@@ -11295,7 +11300,23 @@ var MfgPlayer = (function () {
             Matter.Body.translate(this.boxA, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
         }
         if (mfg.MfgInit.game.keySystem.isPressed(MfgKeySystem_1.MfgKeySystem.KEY_UP)) {
-            //Matter.Body.applyForce( this.boxA,  )
+            if (!this.jumping) {
+                this.jumping = true;
+                this.jumpPower = 30.0;
+            }
+        }
+    };
+    /*****************************************************************************
+    *   Renders the current player tick.
+    *****************************************************************************/
+    MfgPlayer.prototype.render = function () {
+        // render jumping
+        if (this.jumping) {
+            Matter.Body.translate(this.boxA, { x: 0.0, y: -this.jumpPower });
+            this.jumpPower -= 2.0;
+            if (this.jumpPower <= 0.0) {
+                this.jumping = false;
+            }
         }
     };
     return MfgPlayer;

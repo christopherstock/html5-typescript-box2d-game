@@ -66,6 +66,8 @@
                 }
             );
 
+            // this.renderer.options.showCollisions = true;
+
             this.renderer.canvas.width  = mfg.MfgSettings.CANVAS_WIDTH;
             this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
 
@@ -120,5 +122,7 @@
         *****************************************************************************/
         private render()
         {
+            this.player.render();
+
         }
     }

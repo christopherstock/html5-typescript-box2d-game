@@ -11,7 +11,10 @@
     *****************************************************************************/
     export class MfgPlayer
     {
-        public          boxA                    :Matter.Body =                 null;
+        public          boxA                    :Matter.Body                    = null;
+
+        public          jumping                 :boolean                        = false;
+        public          jumpPower               :number                         = 0.0;
 
         /*****************************************************************************
         *   Creates a new player instance.
@@ -52,11 +55,29 @@
 
             if ( mfg.MfgInit.game.keySystem.isPressed( MfgKeySystem.KEY_UP ) )
             {
-                //Matter.Body.applyForce( this.boxA,  )
+                if ( !this.jumping )
+                {
+                    this.jumping   = true;
+                    this.jumpPower = 30.0;
+                }
             }
+        }
 
+        /*****************************************************************************
+        *   Renders the current player tick.
+        *****************************************************************************/
+        public render()
+        {
+            // render jumping
+            if ( this.jumping )
+            {
+                Matter.Body.translate( this.boxA, { x: 0.0, y: -this.jumpPower });
 
+                this.jumpPower -= 2.0;
 
-
+                if ( this.jumpPower <= 0.0 ) {
+                    this.jumping = false;
+                }
+            }
         }
     }
