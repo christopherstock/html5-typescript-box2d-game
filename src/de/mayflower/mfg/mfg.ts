@@ -6,4 +6,6 @@
     export * from './game/MfgGame';
     export * from './game/MfgLevel';
     export * from './game/MfgPlayer';
+    export * from './game/MfgBox';
+    export * from './game/MfgObstacle';
     export * from './hid/MfgKeySystem';

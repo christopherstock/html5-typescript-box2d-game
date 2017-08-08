@@ -1,7 +1,6 @@
 
     import * as Matter from 'matter-js';
     import * as mfg    from '../mfg';
-    import {MfgKeySystem} from "../hid/MfgKeySystem";
 
     /*****************************************************************************
     *   Represents the player being controled by the user.
@@ -43,17 +42,17 @@
         *****************************************************************************/
         public handleKeys()
         {
-            if ( mfg.MfgInit.game.keySystem.isPressed( MfgKeySystem.KEY_LEFT ) )
+            if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_LEFT ) )
             {
                 Matter.Body.translate( this.boxA, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
             }
 
-            if ( mfg.MfgInit.game.keySystem.isPressed( MfgKeySystem.KEY_RIGHT ) )
+            if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_RIGHT ) )
             {
                 Matter.Body.translate( this.boxA, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
             }
 
-            if ( mfg.MfgInit.game.keySystem.isPressed( MfgKeySystem.KEY_UP ) )
+            if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_UP ) )
             {
                 if ( !this.jumping )
                 {

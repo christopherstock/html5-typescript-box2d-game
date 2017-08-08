@@ -10,11 +10,11 @@
     *****************************************************************************/
     export class MfgLevel
     {
-        public      ground                  :Matter.Body        = null;
+        public      ground                  :mfg.MfgObstacle    = null;
 
-        public      boxB                    :Matter.Body        = null;
-        public      boxC                    :Matter.Body        = null;
-        public      boxD                    :Matter.Body        = null;
+        public      boxB                    :mfg.MfgBox         = null;
+        public      boxC                    :mfg.MfgBox         = null;
+        public      boxD                    :mfg.MfgObstacle    = null;
 
         /*****************************************************************************
         *   Inits the game from scratch.
@@ -22,21 +22,19 @@
         public init()
         {
             // ground
-            this.ground = Matter.Bodies.rectangle( 400, 550, 750, 26, { isStatic: true } );
+            this.ground = new mfg.MfgObstacle( 400, 550, 750, 26 );
 
             // moveable boxes
-            this.boxB   = Matter.Bodies.rectangle( 400, 40, 80, 80 );
-            this.boxC   = Matter.Bodies.rectangle( 420, 100, 80, 80 );
+            this.boxB   = new mfg.MfgBox( 400, 40, 80, 80 );
+            this.boxC   = new mfg.MfgBox( 420, 100, 80, 80 );
 
-            // static box
-            this.boxD   = Matter.Bodies.rectangle( 210, 497, 80, 80 );
-            Matter.Body.setStatic( this.boxD, true );
-
+            // static obstacle
+            this.boxD   = new mfg.MfgObstacle( 210, 497, 80, 80 );
 
             // add all bodies to the world
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.ground );
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxB   );
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxC   );
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxD   );
+            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.ground.body );
+            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxB.body   );
+            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxC.body   );
+            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxD.body   );
         }
     }
