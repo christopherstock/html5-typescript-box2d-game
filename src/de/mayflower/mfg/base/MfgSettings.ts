@@ -12,7 +12,7 @@
 
 
         /** The application's internal name. */
-        public      static      TITLE                                       :string             = "Babylon.js primer, (c) 2016 Mayflower GmbH, v.0.0.1";
+        public      static      TITLE                                       :string             = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH, v.0.0.1";
 
         /** The desired canvas3D width. */
         public      static      CANVAS_WIDTH                                :number             = 800;

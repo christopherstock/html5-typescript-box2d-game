@@ -1,5 +1,7 @@
 
-    import {MfgInit} from '../mfg';
+    import {MfgInit}     from '../mfg';
+    import {MfgDebug}    from '../mfg';
+    import {MfgSettings} from '../mfg';
 
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
@@ -9,7 +11,6 @@
     *   TODO ASAP   Create simple test level.
     *   TODO ASAP   Remove all static contexts.
     *   TODO ASAP   Create abstract level system.
-    *   TODO ASAP   Split import statements into several statements.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
@@ -21,7 +22,9 @@
         *****************************************************************************/
         public static main():void
         {
-            console.log(">> main() ... :D ");
+            MfgDebug.acclaim.log( MfgSettings.TITLE );
+
+            document.title = MfgSettings.TITLE;
 
             //init game engine
             MfgInit.init();

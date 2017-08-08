@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,723 +70,20 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var MfgSettings_1 = __webpack_require__(3);
+var MfgSettings_1 = __webpack_require__(4);
 exports.MfgSettings = MfgSettings_1.MfgSettings;
-var MfgDebug_1 = __webpack_require__(4);
+var MfgDebug_1 = __webpack_require__(5);
 exports.MfgDebug = MfgDebug_1.MfgDebug;
-var MfgInit_1 = __webpack_require__(7);
+var MfgInit_1 = __webpack_require__(8);
 exports.MfgInit = MfgInit_1.MfgInit;
-var Mfg_1 = __webpack_require__(8);
+var MfgGame_1 = __webpack_require__(9);
+exports.MfgGame = MfgGame_1.MfgGame;
+var Mfg_1 = __webpack_require__(11);
 exports.Mfg = Mfg_1.Mfg;
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(2);
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg_1 = __webpack_require__(0);
-var Matter = __webpack_require__(9);
-/*******************************************************************************************************************
-*   Example 1 displays two falling boxes.
-*******************************************************************************************************************/
-function exampleBasic() {
-    console.log(">> show basic example ..");
-    var body = document.querySelector("body");
-    // Matter.js module aliases
-    var Engine = Matter.Engine, World = Matter.World, Bodies = Matter.Bodies;
-    // create a Matter.js engine
-    var engine = Engine.create(body);
-    // create two boxes and a ground
-    var boxA = Bodies.rectangle(400, 200, 80, 80);
-    var boxB = Bodies.rectangle(450, 50, 80, 80);
-    var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
-    // add all of the bodies to the world
-    World.add(engine.world, [boxA, boxB, ground]);
-    // run the engine
-    Engine.run(engine);
-}
-/*******************************************************************************************************************
-*   Example 2 displays a bridge full of boxes.
-*******************************************************************************************************************/
-function exampleBridge() {
-    console.log(">> show the bridge ..");
-    var Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner, Body = Matter.Body, Composites = Matter.Composites, Common = Matter.Common, Constraint = Matter.Constraint, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Bodies = Matter.Bodies;
-    // create engine
-    var engine = Engine.create(), world = engine.world;
-    // create renderer
-    var render = Render.create({
-        element: document.body,
-        engine: engine,
-        options: {
-            width: 800,
-            height: 600,
-            showAngleIndicator: true
-        }
-    });
-    Render.run(render);
-    // create runner
-    var runner = Runner.create();
-    Runner.run(runner, engine);
-    // add bodies
-    var group = Body.nextGroup(true);
-    var bridge = Composites.stack(160, 290, 15, 1, 0, 0, function (x, y) {
-        return Bodies.rectangle(x - 20, y, 53, 20, {
-            collisionFilter: { group: group },
-            chamfer: 5,
-            density: 0.005,
-            frictionAir: 0.05,
-            render: {
-                fillStyle: '#575375'
-            }
-        });
-    });
-    Composites.chain(bridge, 0.3, 0, -0.3, 0, {
-        stiffness: 1,
-        length: 0,
-        render: {
-            visible: false
-        }
-    });
-    var stack = Composites.stack(250, 50, 6, 3, 0, 0, function (x, y) {
-        return Bodies.rectangle(x, y, 50, 50, Common.random(20, 40));
-    });
-    World.add(world, [
-        bridge,
-        stack,
-        Bodies.rectangle(30, 490, 220, 380, {
-            isStatic: true,
-            chamfer: { radius: 20 }
-        }),
-        Bodies.rectangle(770, 490, 220, 380, {
-            isStatic: true,
-            chamfer: { radius: 20 }
-        }),
-        Constraint.create({
-            pointA: { x: 140, y: 300 },
-            bodyB: bridge.bodies[0],
-            pointB: { x: -25, y: 0 },
-            length: 2,
-            stiffness: 0.9
-        }),
-        Constraint.create({
-            pointA: { x: 660, y: 300 },
-            bodyB: bridge.bodies[bridge.bodies.length - 1],
-            pointB: { x: 25, y: 0 },
-            length: 2,
-            stiffness: 0.9
-        })
-    ]);
-    // add mouse control
-    var mouse = Mouse.create(render.canvas), mouseConstraint = MouseConstraint.create(engine, {
-        mouse: mouse,
-        constraint: {
-            stiffness: 0.1,
-            render: {
-                visible: false
-            }
-        }
-    });
-    World.add(world, mouseConstraint);
-    // keep the mouse in sync with rendering
-    render.mouse = mouse;
-    // fit the render viewport to the scene
-    Render.lookAt(render, {
-        min: { x: 0, y: 0 },
-        max: { x: 800, y: 600 }
-    });
-    // context for MatterTools.Demo
-    return {
-        engine: engine,
-        runner: runner,
-        render: render,
-        canvas: render.canvas,
-        stop: function () {
-            Matter.Render.stop(render);
-            Matter.Runner.stop(runner);
-        }
-    };
-}
-/*******************************************************************************************************************
-*   Example 3 illustrates event handling.
-*******************************************************************************************************************/
-function exampleEvents() {
-    console.log(">> show manipulation ..");
-    var Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner, Body = Matter.Body, Events = Matter.Events, Composite = Matter.Composite, Composites = Matter.Composites, Common = Matter.Common, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Bodies = Matter.Bodies;
-    // create engine
-    var engine = Engine.create(), world = engine.world;
-    // create renderer
-    var render = Render.create({
-        element: document.body,
-        engine: engine,
-        options: {
-            width: 800,
-            height: 600,
-            wireframes: false
-        }
-    });
-    Render.run(render);
-    // create runner
-    var runner = Runner.create();
-    Runner.run(runner, engine);
-    // an example of using composite events on the world
-    Events.on(world, 'afterAdd', function (event) {
-        console.log('added to world:', event.object);
-    });
-    // an example of using beforeUpdate event on an engine
-    Events.on(engine, 'beforeUpdate', function (event) {
-        var engine = event.source;
-        // apply random forces every 5 secs
-        if (event.timestamp % 5000 < 50)
-            shakeScene(engine);
-    });
-    // an example of using collisionStart event on an engine
-    Events.on(engine, 'collisionStart', function (event) {
-        var pairs = event.pairs;
-        // change object colours to show those starting a collision
-        for (var i = 0; i < pairs.length; i++) {
-            var pair = pairs[i];
-            pair.bodyA.render.fillStyle = '#333';
-            pair.bodyB.render.fillStyle = '#333';
-        }
-    });
-    // an example of using collisionActive event on an engine
-    Events.on(engine, 'collisionActive', function (event) {
-        var pairs = event.pairs;
-        // change object colours to show those in an active collision (e.g. resting contact)
-        for (var i = 0; i < pairs.length; i++) {
-            var pair = pairs[i];
-            pair.bodyA.render.fillStyle = '#333';
-            pair.bodyB.render.fillStyle = '#333';
-        }
-    });
-    // an example of using collisionEnd event on an engine
-    Events.on(engine, 'collisionEnd', function (event) {
-        var pairs = event.pairs;
-        // change object colours to show those ending a collision
-        for (var i = 0; i < pairs.length; i++) {
-            var pair = pairs[i];
-            pair.bodyA.render.fillStyle = '#222';
-            pair.bodyB.render.fillStyle = '#222';
-        }
-    });
-    var bodyStyle = { fillStyle: '#222' };
-    // scene code
-    World.add(world, [
-        Bodies.rectangle(400, 0, 800, 50, { isStatic: true, render: bodyStyle }),
-        Bodies.rectangle(400, 600, 800, 50, { isStatic: true, render: bodyStyle }),
-        Bodies.rectangle(800, 300, 50, 600, { isStatic: true, render: bodyStyle }),
-        Bodies.rectangle(0, 300, 50, 600, { isStatic: true, render: bodyStyle })
-    ]);
-    var stack = Composites.stack(70, 100, 9, 4, 50, 50, function (x, y) {
-        return Bodies.circle(x, y, 15, { restitution: 1, render: bodyStyle });
-    });
-    World.add(world, stack);
-    var shakeScene = function (engine) {
-        var bodies = Composite.allBodies(engine.world);
-        for (var i = 0; i < bodies.length; i++) {
-            var body = bodies[i];
-            if (!body.isStatic && body.position.y >= 500) {
-                var forceMagnitude = 0.02 * body.mass;
-                Body.applyForce(body, body.position, {
-                    x: (forceMagnitude + Common.random() * forceMagnitude) * Common.choose([1, -1]),
-                    y: -forceMagnitude + Common.random() * -forceMagnitude
-                });
-            }
-        }
-    };
-    // add mouse control
-    var mouse = Mouse.create(render.canvas), mouseConstraint = MouseConstraint.create(engine, {
-        mouse: mouse,
-        constraint: {
-            stiffness: 0.2,
-            render: {
-                visible: false
-            }
-        }
-    });
-    World.add(world, mouseConstraint);
-    // keep the mouse in sync with rendering
-    render.mouse = mouse;
-    // an example of using mouse events on a mouse
-    Events.on(mouseConstraint, 'mousedown', function (event) {
-        var mousePosition = event.mouse.position;
-        console.log('mousedown at ' + mousePosition.x + ' ' + mousePosition.y);
-        shakeScene(engine);
-    });
-    // an example of using mouse events on a mouse
-    Events.on(mouseConstraint, 'mouseup', function (event) {
-        var mousePosition = event.mouse.position;
-        console.log('mouseup at ' + mousePosition.x + ' ' + mousePosition.y);
-    });
-    // an example of using mouse events on a mouse
-    Events.on(mouseConstraint, 'startdrag', function (event) {
-        console.log('startdrag', event);
-    });
-    // an example of using mouse events on a mouse
-    Events.on(mouseConstraint, 'enddrag', function (event) {
-        console.log('enddrag', event);
-    });
-    // fit the render viewport to the scene
-    Render.lookAt(render, {
-        min: { x: 0, y: 0 },
-        max: { x: 800, y: 600 }
-    });
-    // context for MatterTools.Demo
-    return {
-        engine: engine,
-        runner: runner,
-        render: render,
-        canvas: render.canvas,
-        stop: function () {
-            Matter.Render.stop(render);
-            Matter.Runner.stop(runner);
-        }
-    };
-}
-/*******************************************************************************************************************
-*   Example 4 illustrated manipulation on objects.
-*******************************************************************************************************************/
-function exampleManipulation() {
-    console.log(">> show manipulation ..");
-    var Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner, Body = Matter.Body, Events = Matter.Events, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Bodies = Matter.Bodies;
-    // create engine
-    var engine = Engine.create(), world = engine.world;
-    // create renderer
-    var render = Render.create({
-        element: document.body,
-        engine: engine,
-        options: {
-            width: 800,
-            height: 600,
-            showAxes: true,
-            showCollisions: true,
-            showConvexHulls: true
-        }
-    });
-    Render.run(render);
-    // create runner
-    var runner = Runner.create();
-    Runner.run(runner, engine);
-    // add bodies
-    var bodyA = Bodies.rectangle(100, 200, 50, 50, { isStatic: true }), bodyB = Bodies.rectangle(200, 200, 50, 50), bodyC = Bodies.rectangle(300, 200, 50, 50), bodyD = Bodies.rectangle(400, 200, 50, 50), bodyE = Bodies.rectangle(550, 200, 50, 50), bodyF = Bodies.rectangle(700, 200, 50, 50), bodyG = Bodies.circle(400, 100, 25), partA = Bodies.rectangle(600, 200, 120, 50), partB = Bodies.rectangle(660, 200, 50, 190), compound = Body.create({
-        parts: [partA, partB],
-        isStatic: true
-    });
-    World.add(world, [bodyA, bodyB, bodyC, bodyD, bodyE, bodyF, bodyG, compound]);
-    World.add(world, [
-        // walls
-        Bodies.rectangle(400, 0, 800, 50, { isStatic: true }),
-        Bodies.rectangle(400, 600, 800, 50, { isStatic: true }),
-        Bodies.rectangle(800, 300, 50, 600, { isStatic: true }),
-        Bodies.rectangle(0, 300, 50, 600, { isStatic: true })
-    ]);
-    var counter = 0, scaleFactor = 1.01;
-    Events.on(engine, 'beforeUpdate', function (event) {
-        counter += 1;
-        if (counter === 40)
-            Body.setStatic(bodyG, true);
-        if (scaleFactor > 1) {
-            Body.scale(bodyF, scaleFactor, scaleFactor);
-            Body.scale(compound, 0.995, 0.995);
-            // modify bodyE vertices
-            bodyE.vertices[0].x -= 0.2;
-            bodyE.vertices[0].y -= 0.2;
-            bodyE.vertices[1].x += 0.2;
-            bodyE.vertices[1].y -= 0.2;
-            Body.setVertices(bodyE, bodyE.vertices);
-        }
-        // make bodyA move up and down
-        // body is static so must manually update velocity for friction to work
-        var py = 300 + 100 * Math.sin(engine.timing.timestamp * 0.002);
-        Body.setVelocity(bodyA, { x: 0, y: py - bodyA.position.y });
-        Body.setPosition(bodyA, { x: 100, y: py });
-        // make compound body move up and down and rotate constantly
-        Body.setVelocity(compound, { x: 0, y: py - compound.position.y });
-        Body.setAngularVelocity(compound, 0.02);
-        Body.setPosition(compound, { x: 600, y: py });
-        Body.rotate(compound, 0.02);
-        // every 1.5 sec
-        if (counter >= 60 * 1.5) {
-            Body.setVelocity(bodyB, { x: 0, y: -10 });
-            Body.setAngle(bodyC, -Math.PI * 0.26);
-            Body.setAngularVelocity(bodyD, 0.2);
-            // reset counter
-            counter = 0;
-            scaleFactor = 1;
-        }
-    });
-    // add mouse control
-    var mouse = Mouse.create(render.canvas), mouseConstraint = MouseConstraint.create(engine, {
-        mouse: mouse,
-        constraint: {
-            stiffness: 0.2,
-            render: {
-                visible: false
-            }
-        }
-    });
-    World.add(world, mouseConstraint);
-    // keep the mouse in sync with rendering
-    render.mouse = mouse;
-    // fit the render viewport to the scene
-    Render.lookAt(render, {
-        min: { x: 0, y: 0 },
-        max: { x: 800, y: 600 }
-    });
-    // context for MatterTools.Demo
-    return {
-        engine: engine,
-        runner: runner,
-        render: render,
-        canvas: render.canvas,
-        stop: function () {
-            Matter.Render.stop(render);
-            Matter.Runner.stop(runner);
-        }
-    };
-}
-/*******************************************************************************************************************
-*   Being invoked when the page is loaded completely.
-*******************************************************************************************************************/
-window.onload = function () {
-    // exampleBasic();
-    // exampleBridge();
-    // exampleEvents();
-    // exampleManipulation();
-    mfg_1.Mfg.main();
-};
-/*****************************************************************************
-*   Being invoked when the page is left.
-*****************************************************************************/
-window.onunload = function () {
-};
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/*****************************************************************************
-*   All adjustments and balancings for the application.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var MfgSettings = (function () {
-    function MfgSettings() {
-    }
-    /** The debug switch. */
-    MfgSettings.DEBUG_MODE = true;
-    /** The application's internal name. */
-    MfgSettings.TITLE = "Babylon.js primer, (c) 2016 Mayflower GmbH, v.0.0.1";
-    /** The desired canvas3D width. */
-    MfgSettings.CANVAS_WIDTH = 800;
-    /** The desired canvas3D height. */
-    MfgSettings.CANVAS_HEIGHT = 600;
-    /** The scene's gravity. */
-    MfgSettings.GRAVITY = 0.0; //-0.01;
-    /** The relative path from index.html where all images the app makes use of reside. */
-    MfgSettings.PATH_IMAGE_TEXTURE = "res/image/texture/";
-    /** The relative path from index.html where all sounds the app makes use of reside. */
-    MfgSettings.PATH_SOUND = "res/sound/";
-    /** The relative path from index.html where all 3d model files the app makes use of reside. */
-    MfgSettings.PATH_3DS = "res/3ds/";
-    /** The player's x and z dimension (radius). */
-    MfgSettings.PLAYER_SIZE_XZ = 1.0;
-    /** The player's y dimension (height). */
-    MfgSettings.PLAYER_SIZE_Y = 2.0;
-    /** The player's speed in world coordinate per tick. */
-    MfgSettings.PLAYER_SPEED_MOVE = 10;
-    /** The player's turning speed in degrees per tick. */
-    MfgSettings.PLAYER_SPEED_TURN = 5.0;
-    /** The player's looking up/down speed in degrees per tick. */
-    MfgSettings.PLAYER_SPEED_LOOK_UP_DOWN = 2.5;
-    /** The player's maximum looking up/down in degrees. */
-    MfgSettings.PLAYER_MAX_LOOK_UP_DOWN = 60.0;
-    /** The player's speed for centering the up/down view aim in degrees per tick. */
-    MfgSettings.PLAYER_SPEED_CENTER_VIEW_AIM = 5.0;
-    return MfgSettings;
-}());
-exports.MfgSettings = MfgSettings;
-//# sourceMappingURL=MfgSettings.js.map
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg_1 = __webpack_require__(0);
-var lib_1 = __webpack_require__(5);
-/*****************************************************************************
-*   Represents a debug group whose logging can be enabled or disabled.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var MfgDebug = (function () {
-    /*****************************************************************************
-    *   Constructs a new debug group.
-    *
-    *   @param  debugEnabled    Flags if this debug group should log messages.
-    *****************************************************************************/
-    function MfgDebug(debugEnabled) {
-        /** The flag that enables or disables logging for this debug group. */
-        this.debugEnabled = false;
-        this.debugEnabled = debugEnabled;
-    }
-    /*****************************************************************************
-    *   Logs a line of output to the default console. Will only generate output
-    *   if the debug for this debug group is enabled.
-    *
-    *   @param msg The message to log to the default console.
-    *****************************************************************************/
-    MfgDebug.prototype.log = function (msg) {
-        if (this.debugEnabled) {
-            console.log('[' + lib_1.LibString.getDateTimeString() + '] ' + msg);
-        }
-    };
-    MfgDebug.bugfix = new MfgDebug(mfg_1.MfgSettings.DEBUG_MODE);
-    MfgDebug.init = new MfgDebug(true && mfg_1.MfgSettings.DEBUG_MODE);
-    return MfgDebug;
-}());
-exports.MfgDebug = MfgDebug;
-//# sourceMappingURL=MfgDebug.js.map
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var LibString_1 = __webpack_require__(6);
-exports.LibString = LibString_1.LibString;
-//# sourceMappingURL=lib.js.map
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/*****************************************************************************
-*   Offers static string functionality.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var LibString = (function () {
-    function LibString() {
-    }
-    /*****************************************************************************
-    *   Returns an array of all found regular expression matches.
-    *
-    *   @param  subject The target string to apply the regular expression search on.
-    *   @param  regEx   The regular expression.
-    *                   This string MUST NOT be enclosed in string quotes!
-    *   @return         An array containing all matched results.
-    *****************************************************************************/
-    LibString.searchRegEx = function (subject, regEx) {
-        var results = subject.match(regEx);
-        var ret = [];
-        if (results != null) {
-            for (var i = 0; i < results.length; ++i) {
-                ret[i] = results[i];
-            }
-        }
-        return ret;
-    };
-    /*****************************************************************************
-    *   Returns a formatted timestamp of the current system date and time.
-    *
-    *   @return A formatted timestamp of the current system date and time.
-    *****************************************************************************/
-    LibString.getDateTimeString = function () {
-        var now = new Date();
-        var year = (now.getFullYear()).toString();
-        var month = (now.getMonth() + 1).toString();
-        var day = (now.getDate()).toString();
-        var hour = (now.getHours()).toString();
-        var minute = (now.getMinutes()).toString();
-        var second = (now.getSeconds()).toString();
-        if (month.toString().length == 1)
-            month = '0' + month;
-        if (day.toString().length == 1)
-            day = '0' + day;
-        if (hour.toString().length == 1)
-            hour = '0' + hour;
-        if (minute.toString().length == 1)
-            minute = '0' + minute;
-        if (second.toString().length == 1)
-            second = '0' + second;
-        return (day + '.' + month + '.' + year + ' ' + hour + ':' + minute + ':' + second);
-    };
-    return LibString;
-}());
-exports.LibString = LibString;
-//# sourceMappingURL=LibString.js.map
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg_1 = __webpack_require__(0);
-/*****************************************************************************
-*   Specifies the initialization part of the game logic.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var MfgInit = (function () {
-    function MfgInit() {
-    }
-    /*****************************************************************************
-    *   The WebGL canvas context.
-    *****************************************************************************/
-    //        public          static      engine          :BABYLON.Engine             = null;
-    /*****************************************************************************
-    *   Inits this app from scratch.
-    *****************************************************************************/
-    MfgInit.init = function () {
-        console.log("MfgInit.init() being invoked");
-        mfg_1.MfgDebug.init.log("Acclaiming and setting title.");
-        /*
-        
-        
-                    //acclaim debug console
-                    MfgDebug.acclaim.log( MfgSettings.TITLE );
-        
-                    //set document title
-                    document.title = MfgSettings.TITLE;
-        
-                    //reference canvas element and fps counter div
-                    MfgInit.canvas = <HTMLCanvasElement>document.getElementById( "renderCanvas" );
-                    MfgInit.divFps = <HTMLDivElement>   document.getElementById( "fps"          );
-        
-                    //setup canvas size
-                    MfgInit.canvas.width  = MfgSettings.CANVAS_WIDTH;
-                    MfgInit.canvas.height = MfgSettings.CANVAS_HEIGHT;
-        
-                    //init Babylon.js engine
-                    MfgDebug.init.log( "Initializing the BABYLON engine." );
-                    MfgInit.engine = new BABYLON.Engine( MfgInit.canvas, true );
-        
-                    //add resize event listener
-                    window.addEventListener(
-                        "resize",
-                        function () {
-                            MfgInit.engine.resize();
-                        }
-                    );
-        
-                    MfgDebug.init.log( "Displaying the loading UI" );
-                    MfgInit.engine.displayLoadingUI();
-        
-                    //create the scene
-                    MfgDebug.init.log( "Creating the Scene" );
-                    MfgScene.createScene();
-        
-                    //init materials
-                    MfgDebug.init.log( "Init all materials" );
-                    MfgMaterial.initMaterials( MfgScene.scene );
-        
-                    //init sprite manager
-                    MfgDebug.init.log( "Init the sprite manager" );
-                    MfgSprite.init();
-        
-                    //setup physics
-                    MfgDebug.init.log( "Setup all physics" );
-                    MfgScene.scene.enablePhysics( null, new BABYLON.CannonJSPlugin() );
-        
-                    //setup the level
-                    MfgDebug.init.log( "Setup the level" );
-                    MfgLevel.currentLevel = new MfgLevelBunny();
-        */
-    };
-    /*****************************************************************************
-    *   Being invoked when all items are initialized and loaded.
-    *****************************************************************************/
-    MfgInit.onInitCompleted = function () {
-        /*
-                    MfgDebug.init.log( "> onInitCompleted" );
-        
-                    MfgScene.scene.executeWhenReady
-                    (
-                        MfgScene.initSceneCompleted
-                    );
-        */
-    };
-    /*****************************************************************************
-    *   The WebGL canvas context.
-    *****************************************************************************/
-    MfgInit.canvas = null;
-    /*****************************************************************************
-    *   The DIV containing the FPS information.
-    *****************************************************************************/
-    MfgInit.divFps = null;
-    return MfgInit;
-}());
-exports.MfgInit = MfgInit;
-//# sourceMappingURL=MfgInit.js.map
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg_1 = __webpack_require__(0);
-/************************************************************************************
-*   The main class contains the application's points of entry and termination.
-*
-*   TODO ASAP   Try namespaces (without export) over split files once again?
-*   TODO ASAP   Improve namespaces (like java packages!)
-*   TODO ASAP   Create simple test level.
-*   TODO ASAP   Remove all static contexts.
-*   TODO ASAP   Create abstract level system.
-*   TODO ASAP   Split import statements into several statements.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var Mfg = (function () {
-    function Mfg() {
-    }
-    /*****************************************************************************
-    *   This method is invoked when the application starts.
-    *****************************************************************************/
-    Mfg.main = function () {
-        console.log(">> main() ... :D ");
-        //init game engine
-        mfg_1.MfgInit.init();
-    };
-    return Mfg;
-}());
-exports.Mfg = Mfg;
-//# sourceMappingURL=Mfg.js.map
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var require;var require;/**
@@ -11069,6 +10366,642 @@ var Vector = _dereq_('../geometry/Vector');
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(3);
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg_1 = __webpack_require__(0);
+var Matter = __webpack_require__(1);
+/*******************************************************************************************************************
+*   Example 1 displays two falling boxes.
+*******************************************************************************************************************/
+function exampleBasic() {
+    console.log(">> show basic example ..");
+    var body = document.querySelector("body");
+    // Matter.js module aliases
+    var Engine = Matter.Engine, World = Matter.World, Bodies = Matter.Bodies;
+    // create a Matter.js engine
+    var engine = Engine.create(body);
+    // create two boxes and a ground
+    var boxA = Bodies.rectangle(400, 200, 80, 80);
+    var boxB = Bodies.rectangle(450, 50, 80, 80);
+    var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+    // add all of the bodies to the world
+    World.add(engine.world, [boxA, boxB, ground]);
+    // run the engine
+    Engine.run(engine);
+}
+/*******************************************************************************************************************
+*   Example 2 displays a bridge full of boxes.
+*******************************************************************************************************************/
+function exampleBridge() {
+    console.log(">> show the bridge ..");
+    var Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner, Body = Matter.Body, Composites = Matter.Composites, Common = Matter.Common, Constraint = Matter.Constraint, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Bodies = Matter.Bodies;
+    // create engine
+    var engine = Engine.create(), world = engine.world;
+    // create renderer
+    var render = Render.create({
+        element: document.body,
+        engine: engine,
+        options: {
+            width: 800,
+            height: 600,
+            showAngleIndicator: true
+        }
+    });
+    Render.run(render);
+    // create runner
+    var runner = Runner.create();
+    Runner.run(runner, engine);
+    // add bodies
+    var group = Body.nextGroup(true);
+    var bridge = Composites.stack(160, 290, 15, 1, 0, 0, function (x, y) {
+        return Bodies.rectangle(x - 20, y, 53, 20, {
+            collisionFilter: { group: group },
+            chamfer: 5,
+            density: 0.005,
+            frictionAir: 0.05,
+            render: {
+                fillStyle: '#575375'
+            }
+        });
+    });
+    Composites.chain(bridge, 0.3, 0, -0.3, 0, {
+        stiffness: 1,
+        length: 0,
+        render: {
+            visible: false
+        }
+    });
+    var stack = Composites.stack(250, 50, 6, 3, 0, 0, function (x, y) {
+        return Bodies.rectangle(x, y, 50, 50, Common.random(20, 40));
+    });
+    World.add(world, [
+        bridge,
+        stack,
+        Bodies.rectangle(30, 490, 220, 380, {
+            isStatic: true,
+            chamfer: { radius: 20 }
+        }),
+        Bodies.rectangle(770, 490, 220, 380, {
+            isStatic: true,
+            chamfer: { radius: 20 }
+        }),
+        Constraint.create({
+            pointA: { x: 140, y: 300 },
+            bodyB: bridge.bodies[0],
+            pointB: { x: -25, y: 0 },
+            length: 2,
+            stiffness: 0.9
+        }),
+        Constraint.create({
+            pointA: { x: 660, y: 300 },
+            bodyB: bridge.bodies[bridge.bodies.length - 1],
+            pointB: { x: 25, y: 0 },
+            length: 2,
+            stiffness: 0.9
+        })
+    ]);
+    // add mouse control
+    var mouse = Mouse.create(render.canvas), mouseConstraint = MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: {
+            stiffness: 0.1,
+            render: {
+                visible: false
+            }
+        }
+    });
+    World.add(world, mouseConstraint);
+    // keep the mouse in sync with rendering
+    render.mouse = mouse;
+    // fit the render viewport to the scene
+    Render.lookAt(render, {
+        min: { x: 0, y: 0 },
+        max: { x: 800, y: 600 }
+    });
+    // context for MatterTools.Demo
+    return {
+        engine: engine,
+        runner: runner,
+        render: render,
+        canvas: render.canvas,
+        stop: function () {
+            Matter.Render.stop(render);
+            Matter.Runner.stop(runner);
+        }
+    };
+}
+/*******************************************************************************************************************
+*   Example 3 illustrates event handling.
+*******************************************************************************************************************/
+function exampleEvents() {
+    console.log(">> show manipulation ..");
+    var Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner, Body = Matter.Body, Events = Matter.Events, Composite = Matter.Composite, Composites = Matter.Composites, Common = Matter.Common, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Bodies = Matter.Bodies;
+    // create engine
+    var engine = Engine.create(), world = engine.world;
+    // create renderer
+    var render = Render.create({
+        element: document.body,
+        engine: engine,
+        options: {
+            width: 800,
+            height: 600,
+            wireframes: false
+        }
+    });
+    Render.run(render);
+    // create runner
+    var runner = Runner.create();
+    Runner.run(runner, engine);
+    // an example of using composite events on the world
+    Events.on(world, 'afterAdd', function (event) {
+        console.log('added to world:', event.object);
+    });
+    // an example of using beforeUpdate event on an engine
+    Events.on(engine, 'beforeUpdate', function (event) {
+        var engine = event.source;
+        // apply random forces every 5 secs
+        if (event.timestamp % 5000 < 50)
+            shakeScene(engine);
+    });
+    // an example of using collisionStart event on an engine
+    Events.on(engine, 'collisionStart', function (event) {
+        var pairs = event.pairs;
+        // change object colours to show those starting a collision
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i];
+            pair.bodyA.render.fillStyle = '#333';
+            pair.bodyB.render.fillStyle = '#333';
+        }
+    });
+    // an example of using collisionActive event on an engine
+    Events.on(engine, 'collisionActive', function (event) {
+        var pairs = event.pairs;
+        // change object colours to show those in an active collision (e.g. resting contact)
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i];
+            pair.bodyA.render.fillStyle = '#333';
+            pair.bodyB.render.fillStyle = '#333';
+        }
+    });
+    // an example of using collisionEnd event on an engine
+    Events.on(engine, 'collisionEnd', function (event) {
+        var pairs = event.pairs;
+        // change object colours to show those ending a collision
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i];
+            pair.bodyA.render.fillStyle = '#222';
+            pair.bodyB.render.fillStyle = '#222';
+        }
+    });
+    var bodyStyle = { fillStyle: '#222' };
+    // scene code
+    World.add(world, [
+        Bodies.rectangle(400, 0, 800, 50, { isStatic: true, render: bodyStyle }),
+        Bodies.rectangle(400, 600, 800, 50, { isStatic: true, render: bodyStyle }),
+        Bodies.rectangle(800, 300, 50, 600, { isStatic: true, render: bodyStyle }),
+        Bodies.rectangle(0, 300, 50, 600, { isStatic: true, render: bodyStyle })
+    ]);
+    var stack = Composites.stack(70, 100, 9, 4, 50, 50, function (x, y) {
+        return Bodies.circle(x, y, 15, { restitution: 1, render: bodyStyle });
+    });
+    World.add(world, stack);
+    var shakeScene = function (engine) {
+        var bodies = Composite.allBodies(engine.world);
+        for (var i = 0; i < bodies.length; i++) {
+            var body = bodies[i];
+            if (!body.isStatic && body.position.y >= 500) {
+                var forceMagnitude = 0.02 * body.mass;
+                Body.applyForce(body, body.position, {
+                    x: (forceMagnitude + Common.random() * forceMagnitude) * Common.choose([1, -1]),
+                    y: -forceMagnitude + Common.random() * -forceMagnitude
+                });
+            }
+        }
+    };
+    // add mouse control
+    var mouse = Mouse.create(render.canvas), mouseConstraint = MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: {
+            stiffness: 0.2,
+            render: {
+                visible: false
+            }
+        }
+    });
+    World.add(world, mouseConstraint);
+    // keep the mouse in sync with rendering
+    render.mouse = mouse;
+    // an example of using mouse events on a mouse
+    Events.on(mouseConstraint, 'mousedown', function (event) {
+        var mousePosition = event.mouse.position;
+        console.log('mousedown at ' + mousePosition.x + ' ' + mousePosition.y);
+        shakeScene(engine);
+    });
+    // an example of using mouse events on a mouse
+    Events.on(mouseConstraint, 'mouseup', function (event) {
+        var mousePosition = event.mouse.position;
+        console.log('mouseup at ' + mousePosition.x + ' ' + mousePosition.y);
+    });
+    // an example of using mouse events on a mouse
+    Events.on(mouseConstraint, 'startdrag', function (event) {
+        console.log('startdrag', event);
+    });
+    // an example of using mouse events on a mouse
+    Events.on(mouseConstraint, 'enddrag', function (event) {
+        console.log('enddrag', event);
+    });
+    // fit the render viewport to the scene
+    Render.lookAt(render, {
+        min: { x: 0, y: 0 },
+        max: { x: 800, y: 600 }
+    });
+    // context for MatterTools.Demo
+    return {
+        engine: engine,
+        runner: runner,
+        render: render,
+        canvas: render.canvas,
+        stop: function () {
+            Matter.Render.stop(render);
+            Matter.Runner.stop(runner);
+        }
+    };
+}
+/*******************************************************************************************************************
+*   Example 4 illustrated manipulation on objects.
+*******************************************************************************************************************/
+function exampleManipulation() {
+    console.log(">> show manipulation ..");
+    var Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner, Body = Matter.Body, Events = Matter.Events, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Bodies = Matter.Bodies;
+    // create engine
+    var engine = Engine.create(), world = engine.world;
+    // create renderer
+    var render = Render.create({
+        element: document.body,
+        engine: engine,
+        options: {
+            width: 800,
+            height: 600,
+            showAxes: true,
+            showCollisions: true,
+            showConvexHulls: true
+        }
+    });
+    Render.run(render);
+    // create runner
+    var runner = Runner.create();
+    Runner.run(runner, engine);
+    // add bodies
+    var bodyA = Bodies.rectangle(100, 200, 50, 50, { isStatic: true }), bodyB = Bodies.rectangle(200, 200, 50, 50), bodyC = Bodies.rectangle(300, 200, 50, 50), bodyD = Bodies.rectangle(400, 200, 50, 50), bodyE = Bodies.rectangle(550, 200, 50, 50), bodyF = Bodies.rectangle(700, 200, 50, 50), bodyG = Bodies.circle(400, 100, 25), partA = Bodies.rectangle(600, 200, 120, 50), partB = Bodies.rectangle(660, 200, 50, 190), compound = Body.create({
+        parts: [partA, partB],
+        isStatic: true
+    });
+    World.add(world, [bodyA, bodyB, bodyC, bodyD, bodyE, bodyF, bodyG, compound]);
+    World.add(world, [
+        // walls
+        Bodies.rectangle(400, 0, 800, 50, { isStatic: true }),
+        Bodies.rectangle(400, 600, 800, 50, { isStatic: true }),
+        Bodies.rectangle(800, 300, 50, 600, { isStatic: true }),
+        Bodies.rectangle(0, 300, 50, 600, { isStatic: true })
+    ]);
+    var counter = 0, scaleFactor = 1.01;
+    Events.on(engine, 'beforeUpdate', function (event) {
+        counter += 1;
+        if (counter === 40)
+            Body.setStatic(bodyG, true);
+        if (scaleFactor > 1) {
+            Body.scale(bodyF, scaleFactor, scaleFactor);
+            Body.scale(compound, 0.995, 0.995);
+            // modify bodyE vertices
+            bodyE.vertices[0].x -= 0.2;
+            bodyE.vertices[0].y -= 0.2;
+            bodyE.vertices[1].x += 0.2;
+            bodyE.vertices[1].y -= 0.2;
+            Body.setVertices(bodyE, bodyE.vertices);
+        }
+        // make bodyA move up and down
+        // body is static so must manually update velocity for friction to work
+        var py = 300 + 100 * Math.sin(engine.timing.timestamp * 0.002);
+        Body.setVelocity(bodyA, { x: 0, y: py - bodyA.position.y });
+        Body.setPosition(bodyA, { x: 100, y: py });
+        // make compound body move up and down and rotate constantly
+        Body.setVelocity(compound, { x: 0, y: py - compound.position.y });
+        Body.setAngularVelocity(compound, 0.02);
+        Body.setPosition(compound, { x: 600, y: py });
+        Body.rotate(compound, 0.02);
+        // every 1.5 sec
+        if (counter >= 60 * 1.5) {
+            Body.setVelocity(bodyB, { x: 0, y: -10 });
+            Body.setAngle(bodyC, -Math.PI * 0.26);
+            Body.setAngularVelocity(bodyD, 0.2);
+            // reset counter
+            counter = 0;
+            scaleFactor = 1;
+        }
+    });
+    // add mouse control
+    var mouse = Mouse.create(render.canvas), mouseConstraint = MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: {
+            stiffness: 0.2,
+            render: {
+                visible: false
+            }
+        }
+    });
+    World.add(world, mouseConstraint);
+    // keep the mouse in sync with rendering
+    render.mouse = mouse;
+    // fit the render viewport to the scene
+    Render.lookAt(render, {
+        min: { x: 0, y: 0 },
+        max: { x: 800, y: 600 }
+    });
+    // context for MatterTools.Demo
+    return {
+        engine: engine,
+        runner: runner,
+        render: render,
+        canvas: render.canvas,
+        stop: function () {
+            Matter.Render.stop(render);
+            Matter.Runner.stop(runner);
+        }
+    };
+}
+/*******************************************************************************************************************
+*   Being invoked when the page is loaded completely.
+*******************************************************************************************************************/
+window.onload = function () {
+    // exampleBasic();
+    // exampleBridge();
+    // exampleEvents();
+    // exampleManipulation();
+    mfg_1.Mfg.main();
+};
+/*****************************************************************************
+*   Being invoked when the page is left.
+*****************************************************************************/
+window.onunload = function () {
+};
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*****************************************************************************
+*   All adjustments and balancings for the application.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgSettings = (function () {
+    function MfgSettings() {
+    }
+    /** The debug switch. */
+    MfgSettings.DEBUG_MODE = true;
+    /** The application's internal name. */
+    MfgSettings.TITLE = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH, v.0.0.1";
+    /** The desired canvas3D width. */
+    MfgSettings.CANVAS_WIDTH = 800;
+    /** The desired canvas3D height. */
+    MfgSettings.CANVAS_HEIGHT = 600;
+    /** The scene's gravity. */
+    MfgSettings.GRAVITY = 0.0; //-0.01;
+    /** The relative path from index.html where all images the app makes use of reside. */
+    MfgSettings.PATH_IMAGE_TEXTURE = "res/image/texture/";
+    /** The relative path from index.html where all sounds the app makes use of reside. */
+    MfgSettings.PATH_SOUND = "res/sound/";
+    /** The relative path from index.html where all 3d model files the app makes use of reside. */
+    MfgSettings.PATH_3DS = "res/3ds/";
+    /** The player's x and z dimension (radius). */
+    MfgSettings.PLAYER_SIZE_XZ = 1.0;
+    /** The player's y dimension (height). */
+    MfgSettings.PLAYER_SIZE_Y = 2.0;
+    /** The player's speed in world coordinate per tick. */
+    MfgSettings.PLAYER_SPEED_MOVE = 10;
+    /** The player's turning speed in degrees per tick. */
+    MfgSettings.PLAYER_SPEED_TURN = 5.0;
+    /** The player's looking up/down speed in degrees per tick. */
+    MfgSettings.PLAYER_SPEED_LOOK_UP_DOWN = 2.5;
+    /** The player's maximum looking up/down in degrees. */
+    MfgSettings.PLAYER_MAX_LOOK_UP_DOWN = 60.0;
+    /** The player's speed for centering the up/down view aim in degrees per tick. */
+    MfgSettings.PLAYER_SPEED_CENTER_VIEW_AIM = 5.0;
+    return MfgSettings;
+}());
+exports.MfgSettings = MfgSettings;
+//# sourceMappingURL=MfgSettings.js.map
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg_1 = __webpack_require__(0);
+var lib_1 = __webpack_require__(6);
+/*****************************************************************************
+*   Represents a debug group whose logging can be enabled or disabled.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgDebug = (function () {
+    /*****************************************************************************
+    *   Constructs a new debug group.
+    *
+    *   @param  debugEnabled    Flags if this debug group should log messages.
+    *****************************************************************************/
+    function MfgDebug(debugEnabled) {
+        /** The flag that enables or disables logging for this debug group. */
+        this.debugEnabled = false;
+        this.debugEnabled = debugEnabled;
+    }
+    /*****************************************************************************
+    *   Logs a line of output to the default console. Will only generate output
+    *   if the debug for this debug group is enabled.
+    *
+    *   @param msg The message to log to the default console.
+    *****************************************************************************/
+    MfgDebug.prototype.log = function (msg) {
+        if (this.debugEnabled) {
+            console.log('[' + lib_1.LibString.getDateTimeString() + '] ' + msg);
+        }
+    };
+    MfgDebug.bugfix = new MfgDebug(mfg_1.MfgSettings.DEBUG_MODE);
+    MfgDebug.init = new MfgDebug(true && mfg_1.MfgSettings.DEBUG_MODE);
+    MfgDebug.acclaim = new MfgDebug(true && mfg_1.MfgSettings.DEBUG_MODE);
+    return MfgDebug;
+}());
+exports.MfgDebug = MfgDebug;
+//# sourceMappingURL=MfgDebug.js.map
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var LibString_1 = __webpack_require__(7);
+exports.LibString = LibString_1.LibString;
+//# sourceMappingURL=lib.js.map
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*****************************************************************************
+*   Offers static string functionality.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var LibString = (function () {
+    function LibString() {
+    }
+    /*****************************************************************************
+    *   Returns an array of all found regular expression matches.
+    *
+    *   @param  subject The target string to apply the regular expression search on.
+    *   @param  regEx   The regular expression.
+    *                   This string MUST NOT be enclosed in string quotes!
+    *   @return         An array containing all matched results.
+    *****************************************************************************/
+    LibString.searchRegEx = function (subject, regEx) {
+        var results = subject.match(regEx);
+        var ret = [];
+        if (results != null) {
+            for (var i = 0; i < results.length; ++i) {
+                ret[i] = results[i];
+            }
+        }
+        return ret;
+    };
+    /*****************************************************************************
+    *   Returns a formatted timestamp of the current system date and time.
+    *
+    *   @return A formatted timestamp of the current system date and time.
+    *****************************************************************************/
+    LibString.getDateTimeString = function () {
+        var now = new Date();
+        var year = (now.getFullYear()).toString();
+        var month = (now.getMonth() + 1).toString();
+        var day = (now.getDate()).toString();
+        var hour = (now.getHours()).toString();
+        var minute = (now.getMinutes()).toString();
+        var second = (now.getSeconds()).toString();
+        if (month.toString().length == 1)
+            month = '0' + month;
+        if (day.toString().length == 1)
+            day = '0' + day;
+        if (hour.toString().length == 1)
+            hour = '0' + hour;
+        if (minute.toString().length == 1)
+            minute = '0' + minute;
+        if (second.toString().length == 1)
+            second = '0' + second;
+        return (day + '.' + month + '.' + year + ' ' + hour + ':' + minute + ':' + second);
+    };
+    return LibString;
+}());
+exports.LibString = LibString;
+//# sourceMappingURL=LibString.js.map
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg_1 = __webpack_require__(0);
+/*****************************************************************************
+*   Specifies the initialization part of the game logic.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgInit = (function () {
+    function MfgInit() {
+    }
+    /*****************************************************************************
+    *   Inits this app from scratch.
+    *****************************************************************************/
+    MfgInit.init = function () {
+        // init the game engine
+        MfgInit.game = new mfg_1.MfgGame();
+        MfgInit.game.init();
+    };
+    MfgInit.game = null;
+    return MfgInit;
+}());
+exports.MfgInit = MfgInit;
+//# sourceMappingURL=MfgInit.js.map
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg_1 = __webpack_require__(0);
+/*****************************************************************************
+*   Specifies the initialization part of the game logic.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgGame = (function () {
+    function MfgGame() {
+    }
+    /*****************************************************************************
+    *   Inits this app from scratch.
+    *****************************************************************************/
+    MfgGame.prototype.init = function () {
+        mfg_1.MfgDebug.init.log("Initing game engine");
+        var body = document.querySelector("body");
+        // Matter.js module aliases
+        var Engine = Matter.Engine, World = Matter.World, Bodies = Matter.Bodies;
+        // create a Matter.js engine
+        var engine = Engine.create(body);
+        // create two boxes and a ground
+        var boxA = Bodies.rectangle(400, 200, 80, 80);
+        var boxB = Bodies.rectangle(450, 50, 80, 80);
+        var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+        // add all of the bodies to the world
+        World.add(engine.world, [boxA, boxB, ground]);
+        // run the engine
+        Engine.run(engine);
+    };
+    return MfgGame;
+}());
+exports.MfgGame = MfgGame;
+//# sourceMappingURL=MfgGame.js.map
+
+/***/ }),
 /* 10 */
 /***/ (function(module, exports) {
 
@@ -11094,6 +11027,45 @@ try {
 
 module.exports = g;
 
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg_1 = __webpack_require__(0);
+var mfg_2 = __webpack_require__(0);
+var mfg_3 = __webpack_require__(0);
+/************************************************************************************
+*   The main class contains the application's points of entry and termination.
+*
+*   TODO ASAP   Try namespaces (without export) over split files once again?
+*   TODO ASAP   Improve namespaces (like java packages!)
+*   TODO ASAP   Create simple test level.
+*   TODO ASAP   Remove all static contexts.
+*   TODO ASAP   Create abstract level system.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var Mfg = (function () {
+    function Mfg() {
+    }
+    /*****************************************************************************
+    *   This method is invoked when the application starts.
+    *****************************************************************************/
+    Mfg.main = function () {
+        mfg_2.MfgDebug.acclaim.log(mfg_3.MfgSettings.TITLE);
+        document.title = mfg_3.MfgSettings.TITLE;
+        //init game engine
+        mfg_1.MfgInit.init();
+    };
+    return Mfg;
+}());
+exports.Mfg = Mfg;
+//# sourceMappingURL=Mfg.js.map
 
 /***/ })
 /******/ ]);
