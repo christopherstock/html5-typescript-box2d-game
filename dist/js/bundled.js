@@ -10781,6 +10781,10 @@ var MfgSettings = (function () {
     MfgSettings.CANVAS_WIDTH = 800;
     /** The desired canvas3D height. */
     MfgSettings.CANVAS_HEIGHT = 600;
+    /** The player's width. */
+    MfgSettings.PLAYER_SIZE_X = 80.0;
+    /** The player's y dimension (height). */
+    MfgSettings.PLAYER_SIZE_Y = 120.0;
     /** The scene's gravity. */
     MfgSettings.GRAVITY = 0.0; //-0.01;
     /** The relative path from index.html where all images the app makes use of reside. */
@@ -10789,10 +10793,6 @@ var MfgSettings = (function () {
     MfgSettings.PATH_SOUND = "res/sound/";
     /** The relative path from index.html where all 3d model files the app makes use of reside. */
     MfgSettings.PATH_3DS = "res/3ds/";
-    /** The player's width. */
-    MfgSettings.PLAYER_SIZE_X = 80.0;
-    /** The player's y dimension (height). */
-    MfgSettings.PLAYER_SIZE_Y = 120.0;
     /** The player's speed in world coordinate per tick. */
     MfgSettings.PLAYER_SPEED_MOVE = 10;
     /** The player's turning speed in degrees per tick. */
@@ -11009,7 +11009,6 @@ var mfg_1 = __webpack_require__(0);
 var mfg_2 = __webpack_require__(0);
 var mfg_3 = __webpack_require__(0);
 var mfg_4 = __webpack_require__(0);
-var mfg_5 = __webpack_require__(0);
 /*****************************************************************************
 *   Specifies the initialization part of the game logic.
 *
@@ -11022,6 +11021,12 @@ var MfgGame = (function () {
         this.renderer = null;
         this.player = null;
         this.level = null;
+        /*****************************************************************************
+        *   Being invoked each tick of the game loop in order to render the game.
+        *****************************************************************************/
+        this.renderGame = function () {
+            mfg_1.MfgDebug.bugfix.log("render game ..");
+        };
     }
     /*****************************************************************************
     *   Inits the game from scratch.
@@ -11032,11 +11037,11 @@ var MfgGame = (function () {
         this.initLevel();
         this.initPlayer();
         // add all of the bodies to the world
-        Matter.World.add(mfg_5.MfgInit.game.engine.world, [
-            mfg_5.MfgInit.game.level.boxB,
-            mfg_5.MfgInit.game.level.boxC,
-            mfg_5.MfgInit.game.level.ground,
-            mfg_5.MfgInit.game.player.boxA,
+        Matter.World.add(this.engine.world, [
+            this.level.boxB,
+            this.level.boxC,
+            this.level.ground,
+            this.player.boxA,
         ]);
         // start the game loop
         this.start();
@@ -11070,8 +11075,9 @@ var MfgGame = (function () {
     *   Starts the game loop.
     *****************************************************************************/
     MfgGame.prototype.start = function () {
-        Matter.Engine.run(this.engine);
+        Matter.Events.on(this.engine, 'beforeUpdate', this.renderGame);
         Matter.Render.run(this.renderer);
+        Matter.Engine.run(this.engine);
     };
     return MfgGame;
 }());

@@ -4,7 +4,6 @@
     import {MfgSettings} from '../mfg';
     import {MfgPlayer}   from '../mfg';
     import {MfgLevel}    from '../mfg';
-    import {MfgInit}     from '../mfg';
 
     /*****************************************************************************
     *   Specifies the initialization part of the game logic.
@@ -14,10 +13,11 @@
     *****************************************************************************/
     export class MfgGame
     {
-        public      engine                  :Matter.Engine      = null;
-        public      renderer                :Matter.Render      = null;
-        public      player                  :MfgPlayer          = null;
-        public      level                   :MfgLevel           = null;
+        private     engine                  :Matter.Engine      = null;
+        private     renderer                :Matter.Render      = null;
+
+        private     player                  :MfgPlayer          = null;
+        private     level                   :MfgLevel           = null;
 
         /*****************************************************************************
         *   Inits the game from scratch.
@@ -32,12 +32,12 @@
 
             // add all of the bodies to the world
             Matter.World.add(
-                MfgInit.game.engine.world,
+                this.engine.world,
                 [
-                    MfgInit.game.level.boxB,
-                    MfgInit.game.level.boxC,
-                    MfgInit.game.level.ground,
-                    MfgInit.game.player.boxA,
+                    this.level.boxB,
+                    this.level.boxC,
+                    this.level.ground,
+                    this.player.boxA,
                 ]
             );
 
@@ -85,7 +85,25 @@
         *****************************************************************************/
         private start()
         {
-            Matter.Engine.run( this.engine );
+            Matter.Events.on(
+                this.engine,
+                'beforeUpdate',
+                this.renderGame
+            );
+
             Matter.Render.run( this.renderer );
+            Matter.Engine.run( this.engine   );
+        }
+
+        /*****************************************************************************
+        *   Being invoked each tick of the game loop in order to render the game.
+        *****************************************************************************/
+        private renderGame=()=>
+        {
+            MfgDebug.bugfix.log("render game ..");
+
+
+
+
         }
     }
