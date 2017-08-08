@@ -39,7 +39,12 @@
         public init()
         {
             // init player
-            this.player     = new mfg.MfgPlayer( 0, 0 );
+            this.player     = new mfg.MfgPlayer(
+                0,
+                0,
+                mfg.MfgSettings.PLAYER_SIZE_X,
+                mfg.MfgSettings.PLAYER_SIZE_Y
+            );
 
             // init static obstacles
             this.groundA    = new mfg.MfgObstacle( 0,   550, 600, 25 );
@@ -61,9 +66,21 @@
 
             // add bg objects behind the game objects
 
+/*
+            // join player parts and add them to the world
+            let playerBodies = Matter.Body.create(
+                {
+                    parts: [
+                        this.player.body,
+                        this.player.bottomCollisionChecker
+                    ],
+                    friction: 0
+                }
+            );
+*/
+            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body    );
 
             // add all game objects to the world
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body    );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.groundA.body   );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.groundB.body   );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.obstacleA.body );

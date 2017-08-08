@@ -23,11 +23,7 @@
             this.body.isStatic = true;
 
             // put the item into a unique collision group so its uncollidable
-            this.body.collisionFilter = {
-                category: 0x0001,
-                mask: 0x00002,
-                group: 0x0003
-            };
+            this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUPS;
         }
 
         /*****************************************************************************

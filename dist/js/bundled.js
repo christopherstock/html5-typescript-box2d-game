@@ -10812,6 +10812,12 @@ var MfgSettings = (function () {
     MfgSettings.COLOR_DEBUG_ITEM = "#ffff00";
     /** The opacity for the debug colors. */
     MfgSettings.COLOR_DEBUG_OPACITY = 1.0;
+    /** The collision group for items and player collision indicator. */
+    MfgSettings.UNIQUE_COLLISION_GROUPS = {
+        category: 0x0001,
+        mask: 0x00002,
+        group: 0x0003
+    };
     /** The relative path from index.html where all images the app makes use of reside. */
     MfgSettings.PATH_IMAGE_TEXTURE = "res/image/texture/";
     /** The relative path from index.html where all sounds the app makes use of reside. */
@@ -10915,17 +10921,17 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO INIT   Player may only jump if colliding with the floor.
+*
 *   TODO ASAP   Let player jump. Improve moving via friction and only jump if bottom collision is active!.
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Add circle objects.
 *   TODO ASAP   Different colors for different game objects.
-*   TODO ASAP   Draw before and behind the render canvas?
 *   TODO ASAP   Different shapes for all game objects.
 *   TODO ASAP   CSS: improve margin, center canvas, etc.
 *   TODO ASAP   CameraY shall only change if player collides with the floor!!
 *   TODO ASAP   Create abstract level system.
 *   TODO INIT   Buffer camera.
-*   TODO INIT   Player may only jump if colliding with the floor.
 *   TODO WEAK   Try multiple layers of engines for different calcs/effects.
 *   TODO WEAK   Implement nice changing gravity effects.
 *
@@ -11085,11 +11091,7 @@ var MfgItem = (function (_super) {
         _this.picked = null;
         _this.body.isStatic = true;
         // put the item into a unique collision group so its uncollidable
-        _this.body.collisionFilter = {
-            category: 0x0001,
-            mask: 0x00002,
-            group: 0x0003
-        };
+        _this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUPS;
         return _this;
     }
     /*****************************************************************************
@@ -11172,10 +11174,39 @@ var MfgPlayer = (function (_super) {
     /*****************************************************************************
     *   Creates a new player instance.
     *****************************************************************************/
-    function MfgPlayer(x, y) {
-        var _this = _super.call(this, x, y, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y, mfg.MfgSettings.COLOR_DEBUG_PLAYER) || this;
+    function MfgPlayer(x, y, width, height) {
+        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER) || this;
+        // public          bottomCollisionChecker  :Matter.Body                    = null;
         _this.jumping = false;
         _this.jumpPower = 0.0;
+        /*
+                    this.bottomCollisionChecker = Matter.Bodies.rectangle(
+                        x + ( width  / 2 ),
+                        y + height,
+                        width,
+                        1.0,
+                        {
+                            render:
+                            {
+                                strokeStyle: '#dedede',
+                                lineWidth: 1,
+                                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                                fillStyle: "#ffffff"
+                            }
+                        }
+                    );
+        */
+        /*
+                    this.body = Matter.Body.create(
+                        {
+                            parts: [
+                                this.body,
+                                this.bottomCollisionChecker
+                            ],
+                            friction: 0
+                        }
+                    );
+        */
         // avoid body tilting
         _this.body.inertia = Infinity;
         _this.body.inverseInertia = 1 / Infinity;
@@ -11375,7 +11406,7 @@ var MfgLevel = (function () {
     *****************************************************************************/
     MfgLevel.prototype.init = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 0);
+        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y);
         // init static obstacles
         this.groundA = new mfg.MfgObstacle(0, 550, 600, 25);
         this.groundB = new mfg.MfgObstacle(650, 550, 600, 25);
@@ -11391,8 +11422,20 @@ var MfgLevel = (function () {
         ];
         // adding bodies increases z-index!
         // add bg objects behind the game objects
-        // add all game objects to the world
+        /*
+                    // join player parts and add them to the world
+                    let playerBodies = Matter.Body.create(
+                        {
+                            parts: [
+                                this.player.body,
+                                this.player.bottomCollisionChecker
+                            ],
+                            friction: 0
+                        }
+                    );
+        */
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
+        // add all game objects to the world
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.groundA.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.groundB.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.obstacleA.body);

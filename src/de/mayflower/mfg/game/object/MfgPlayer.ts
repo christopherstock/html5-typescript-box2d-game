@@ -10,16 +10,45 @@
     *****************************************************************************/
     export class MfgPlayer extends mfg.MfgGameObject
     {
+        // public          bottomCollisionChecker  :Matter.Body                    = null;
+
         public          jumping                 :boolean                        = false;
         public          jumpPower               :number                         = 0.0;
 
         /*****************************************************************************
         *   Creates a new player instance.
         *****************************************************************************/
-        public constructor( x:number, y:number )
+        public constructor( x:number, y:number, width:number, height:number )
         {
-            super( x, y, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y, mfg.MfgSettings.COLOR_DEBUG_PLAYER );
-
+            super( x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER );
+/*
+            this.bottomCollisionChecker = Matter.Bodies.rectangle(
+                x + ( width  / 2 ),
+                y + height,
+                width,
+                1.0,
+                {
+                    render:
+                    {
+                        strokeStyle: '#dedede',
+                        lineWidth: 1,
+                        opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                        fillStyle: "#ffffff"
+                    }
+                }
+            );
+*/
+/*
+            this.body = Matter.Body.create(
+                {
+                    parts: [
+                        this.body,
+                        this.bottomCollisionChecker
+                    ],
+                    friction: 0
+                }
+            );
+*/
             // avoid body tilting
             this.body.inertia        = Infinity;
             this.body.inverseInertia = 1 / Infinity;
