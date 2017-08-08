@@ -62,16 +62,17 @@
             this.renderer = Matter.Render.create(
                 {
                     element: document.body,
-                    engine:  this.engine
+                    engine:  this.engine,
+                    options: {
+                        hasBounds: true,
+                        wireframes: false
+                        // showCollisions: true,
+                    }
                 }
             );
 
-            // this.renderer.options.showCollisions = true;
-
             this.renderer.canvas.width  = mfg.MfgSettings.CANVAS_WIDTH;
             this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
-
-            this.renderer.options.hasBounds = true;
 
             this.engine.world.gravity = {
                 x: 0.0,

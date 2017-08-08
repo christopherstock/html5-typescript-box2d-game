@@ -36,7 +36,16 @@
         /** The camera ration for the vertical axis. */
         public      static      CAMERA_RATIO_Y                              :number             = 0.25;
 
-
+        /** The debug color for the player block. */
+        public      static      COLOR_DEBUG_PLAYER                          :string             = "#43bfee";
+        /** The debug color for a box. */
+        public      static      COLOR_DEBUG_BOX                             :string             = "#ffa95e";
+        /** The debug color for an obstacle. */
+        public      static      COLOR_DEBUG_OBSTACLE                        :string             = "#808080";
+        /** The debug color for the item. */
+        public      static      COLOR_DEBUG_ITEM                            :string             = "#ffff00";
+        /** The opacity for the debug colors. */
+        public      static      COLOR_DEBUG_OPACITY                         :number             = 1.0;
 
 
         /** The relative path from index.html where all images the app makes use of reside. */

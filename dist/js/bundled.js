@@ -10802,6 +10802,16 @@ var MfgSettings = (function () {
     MfgSettings.CAMERA_RATIO_X = 0.5;
     /** The camera ration for the vertical axis. */
     MfgSettings.CAMERA_RATIO_Y = 0.25;
+    /** The debug color for the player block. */
+    MfgSettings.COLOR_DEBUG_PLAYER = "#43bfee";
+    /** The debug color for a box. */
+    MfgSettings.COLOR_DEBUG_BOX = "#ffa95e";
+    /** The debug color for an obstacle. */
+    MfgSettings.COLOR_DEBUG_OBSTACLE = "#808080";
+    /** The debug color for the item. */
+    MfgSettings.COLOR_DEBUG_ITEM = "#ffff00";
+    /** The opacity for the debug colors. */
+    MfgSettings.COLOR_DEBUG_OPACITY = 1.0;
     /** The relative path from index.html where all images the app makes use of reside. */
     MfgSettings.PATH_IMAGE_TEXTURE = "res/image/texture/";
     /** The relative path from index.html where all sounds the app makes use of reside. */
@@ -10909,6 +10919,7 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Add circle objects.
 *   TODO ASAP   Different colors for different game objects.
+*   TODO ASAP   Draw before and behind the render canvas?
 *   TODO ASAP   Different shapes for all game objects.
 *   TODO ASAP   CSS: improve margin, center canvas, etc.
 *   TODO ASAP   CameraY shall only change if player collides with the floor!!
@@ -10947,6 +10958,7 @@ exports.Mfg = Mfg;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
 /*****************************************************************************
 *   The abstract class of all game objects.
 *
@@ -10957,10 +10969,17 @@ var MfgGameObject = (function () {
     /*****************************************************************************
     *   Creates a new game object.
     *****************************************************************************/
-    function MfgGameObject(x, y, width, height) {
+    function MfgGameObject(x, y, width, height, debugColor) {
         /** The game objects' body. */
         this.body = null;
-        this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height);
+        this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, {
+            render: {
+                strokeStyle: '#dedede',
+                lineWidth: 1,
+                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                fillStyle: debugColor
+            }
+        });
     }
     return MfgGameObject;
 }());
@@ -11021,7 +11040,7 @@ var mfg = __webpack_require__(0);
 var MfgBox = (function (_super) {
     __extends(MfgBox, _super);
     function MfgBox(x, y, width, height) {
-        var _this = _super.call(this, x, y, width, height) || this;
+        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX) || this;
         _this.body.isStatic = false;
         return _this;
     }
@@ -11061,10 +11080,16 @@ var MfgItem = (function (_super) {
     *   Creates a new game item.
     *****************************************************************************/
     function MfgItem(x, y, width, height) {
-        var _this = _super.call(this, x, y, width, height) || this;
+        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
         _this.body.isStatic = true;
+        // put the item into a unique collision group so its uncollidable
+        _this.body.collisionFilter = {
+            category: 0x0001,
+            mask: 0x00002,
+            group: 0x0003
+        };
         return _this;
     }
     /*****************************************************************************
@@ -11108,7 +11133,7 @@ var mfg = __webpack_require__(0);
 var MfgObstacle = (function (_super) {
     __extends(MfgObstacle, _super);
     function MfgObstacle(x, y, width, height) {
-        var _this = _super.call(this, x, y, width, height) || this;
+        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE) || this;
         _this.body.isStatic = true;
         return _this;
     }
@@ -11148,7 +11173,7 @@ var MfgPlayer = (function (_super) {
     *   Creates a new player instance.
     *****************************************************************************/
     function MfgPlayer(x, y) {
-        var _this = _super.call(this, x, y, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y) || this;
+        var _this = _super.call(this, x, y, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y, mfg.MfgSettings.COLOR_DEBUG_PLAYER) || this;
         _this.jumping = false;
         _this.jumpPower = 0.0;
         // avoid body tilting
@@ -11257,12 +11282,15 @@ var MfgGame = (function () {
         this.engine = Matter.Engine.create();
         this.renderer = Matter.Render.create({
             element: document.body,
-            engine: this.engine
+            engine: this.engine,
+            options: {
+                hasBounds: true,
+                wireframes: false
+                // showCollisions: true,
+            }
         });
-        // this.renderer.options.showCollisions = true;
         this.renderer.canvas.width = mfg.MfgSettings.CANVAS_WIDTH;
         this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
-        this.renderer.options.hasBounds = true;
         this.engine.world.gravity = {
             x: 0.0,
             y: mfg.MfgSettings.DEFAULT_GRAVITY_Y,
@@ -11361,6 +11389,8 @@ var MfgLevel = (function () {
             new mfg.MfgItem(850, 450, 25, 25),
             new mfg.MfgItem(900, 450, 25, 25),
         ];
+        // adding bodies increases z-index!
+        // add bg objects behind the game objects
         // add all game objects to the world
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.groundA.body);
@@ -11383,6 +11413,7 @@ var MfgLevel = (function () {
             finally { if (e_1) throw e_1.error; }
         }
         var e_1, _c;
+        // add deco objects in front of the game objects
     };
     /*****************************************************************************
     *   Renders all level components.

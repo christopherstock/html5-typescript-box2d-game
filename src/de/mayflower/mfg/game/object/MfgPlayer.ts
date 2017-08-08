@@ -18,7 +18,7 @@
         *****************************************************************************/
         public constructor( x:number, y:number )
         {
-            super( x, y, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y );
+            super( x, y, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y, mfg.MfgSettings.COLOR_DEBUG_PLAYER );
 
             // avoid body tilting
             this.body.inertia        = Infinity;

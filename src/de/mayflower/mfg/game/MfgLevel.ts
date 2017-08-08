@@ -57,6 +57,11 @@
                 new mfg.MfgItem( 900, 450, 25, 25 ),
             ];
 
+            // adding bodies increases z-index!
+
+            // add bg objects behind the game objects
+
+
             // add all game objects to the world
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body    );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.groundA.body   );
@@ -70,6 +75,10 @@
             {
                 Matter.World.addBody( mfg.MfgInit.game.engine.world, item.body );
             }
+
+            // add deco objects in front of the game objects
+
+
         }
 
         /*****************************************************************************

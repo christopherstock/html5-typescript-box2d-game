@@ -8,6 +8,7 @@
     *   TODO ASAP   Checkout material parameters for different game objects!
     *   TODO ASAP   Add circle objects.
     *   TODO ASAP   Different colors for different game objects.
+    *   TODO ASAP   Draw before and behind the render canvas?
     *   TODO ASAP   Different shapes for all game objects.
     *   TODO ASAP   CSS: improve margin, center canvas, etc.
     *   TODO ASAP   CameraY shall only change if player collides with the floor!!

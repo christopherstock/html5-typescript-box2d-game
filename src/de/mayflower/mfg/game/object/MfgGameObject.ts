@@ -16,13 +16,22 @@
         /*****************************************************************************
         *   Creates a new game object.
         *****************************************************************************/
-        public constructor( x:number, y:number, width:number, height:number )
+        public constructor( x:number, y:number, width:number, height:number, debugColor:string )
         {
             this.body = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),
                 y + ( height / 2 ) ,
                 width,
-                height
+                height,
+                {
+                    render:
+                    {
+                        strokeStyle: '#dedede',
+                        lineWidth: 1,
+                        opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                        fillStyle: debugColor
+                    }
+                }
             );
         }
     }
