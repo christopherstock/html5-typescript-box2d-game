@@ -11032,10 +11032,10 @@ var MfgGame = (function () {
         this.initPlayer();
         // add all of the bodies to the world
         Matter.World.add(mfg_5.MfgInit.game.engine.world, [
-            mfg_5.MfgInit.game.player.boxA,
             mfg_5.MfgInit.game.level.boxB,
             mfg_5.MfgInit.game.level.boxC,
-            mfg_5.MfgInit.game.level.ground
+            mfg_5.MfgInit.game.level.ground,
+            mfg_5.MfgInit.game.player.boxA,
         ]);
         Matter.Engine.run(this.engine);
     };

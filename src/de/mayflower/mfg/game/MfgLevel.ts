@@ -1,9 +1,5 @@
 
-    const Matter = require('matter-js');
-    import {MfgDebug}    from '../mfg';
-    import {MfgSettings} from '../mfg';
-    import {MfgPlayer}   from '../mfg';
-    import {MfgInit}     from '../mfg';
+    import * as Matter   from 'matter-js';
 
     /*****************************************************************************
     *   Specifies the initialization part of the game logic.

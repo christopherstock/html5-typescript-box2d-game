@@ -1,5 +1,5 @@
 
-    const Matter = require('matter-js');
+    import * as Matter   from 'matter-js';
     import {MfgDebug}    from '../mfg';
     import {MfgSettings} from '../mfg';
     import {MfgPlayer}   from '../mfg';
@@ -33,10 +33,10 @@
             Matter.World.add(
                 MfgInit.game.engine.world,
                 [
-                    MfgInit.game.player.boxA,
                     MfgInit.game.level.boxB,
                     MfgInit.game.level.boxC,
-                    MfgInit.game.level.ground
+                    MfgInit.game.level.ground,
+                    MfgInit.game.player.boxA,
                 ]
             );
 

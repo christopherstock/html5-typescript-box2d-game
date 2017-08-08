@@ -1,6 +1,5 @@
 
-    const Matter = require('matter-js');
-    import {MfgDebug}    from '../mfg';
+    import * as Matter   from 'matter-js';
     import {MfgSettings} from '../mfg';
 
     /*****************************************************************************
@@ -11,7 +10,7 @@
     *****************************************************************************/
     export class MfgPlayer
     {
-        public          boxA                    :Body =                 null;
+        public          boxA                    :Matter.Body =                 null;
 
         /*****************************************************************************
         *   Creates a new player instance.
