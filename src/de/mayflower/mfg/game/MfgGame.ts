@@ -13,6 +13,7 @@
         public      engine                  :Matter.Engine      = null;
         private     renderer                :Matter.Render      = null;
 
+        public      keySystem               :mfg.MfgKeySystem   = null;
         private     player                  :mfg.MfgPlayer      = null;
         private     level                   :mfg.MfgLevel       = null;
 
@@ -27,6 +28,8 @@
             this.initLevel();
             this.initPlayer();
 
+            this.initKeySystem();
+
             // start the game loop
             this.start();
         }
@@ -38,6 +41,15 @@
         {
             this.player = new mfg.MfgPlayer();
             this.player.init();
+        }
+
+        /*****************************************************************************
+        *   Inits the key system.
+        *****************************************************************************/
+        private initKeySystem()
+        {
+            this.keySystem = new mfg.MfgKeySystem();
+            this.keySystem.init();
         }
 
         /*****************************************************************************
@@ -85,9 +97,22 @@
         *****************************************************************************/
         private tick=()=>
         {
-            mfg.MfgDebug.bugfix.log("render game ..");
+            // handle player keys
+            this.player.handleKeys();
+
+            // render the engine
+            this.render();
+
+
 
             // update MatterJS 2d engine
-            Matter.Engine.update(this.engine, mfg.MfgSettings.RENDER_DELTA);
+            Matter.Engine.update( this.engine, mfg.MfgSettings.RENDER_DELTA );
+        };
+
+        /*****************************************************************************
+        *   Renders all game components.
+        *****************************************************************************/
+        private render()
+        {
         }
     }

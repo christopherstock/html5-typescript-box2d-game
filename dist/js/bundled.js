@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,13 +73,14 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(4));
 __export(__webpack_require__(5));
-__export(__webpack_require__(8));
+__export(__webpack_require__(6));
 __export(__webpack_require__(9));
 __export(__webpack_require__(10));
-__export(__webpack_require__(12));
+__export(__webpack_require__(11));
 __export(__webpack_require__(13));
+__export(__webpack_require__(14));
+__export(__webpack_require__(2));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10363,17 +10364,100 @@ var Vector = _dereq_('../geometry/Vector');
 
 },{"../body/Composite":2,"../core/Common":14,"../core/Events":16,"../geometry/Bounds":26,"../geometry/Vector":28}]},{},[30])(30)
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(3);
+"use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   The key system that manages all pressed keys.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgKeySystem = (function () {
+    /*****************************************************************************
+    *   Creates a new key system.
+    *****************************************************************************/
+    function MfgKeySystem() {
+        var _this = this;
+        /** All current key information. */
+        this.iAllKeys = [];
+        /*****************************************************************************
+        *   This method is always invoked by the system if a key is pressed.
+        *
+        *   @param evt  The system's propagated key event.
+        *****************************************************************************/
+        this.onKeyDown = function (evt) {
+            var keyCode = evt.which;
+            _this.iAllKeys[keyCode] = true;
+            mfg.MfgDebug.key.log("key pressed [" + keyCode + "]");
+        };
+        /*****************************************************************************
+        *   This method is always invoked by the system if a key is released.
+        *
+        *   @param evt  The system's propagated key event.
+        *****************************************************************************/
+        this.onKeyUp = function (evt) {
+            var keyCode = evt.which;
+            _this.iAllKeys[keyCode] = false;
+            mfg.MfgDebug.key.log("key released [" + keyCode + "]");
+        };
+    }
+    /*****************************************************************************
+    *   Inits the key system by registering the key event listeners.
+    *****************************************************************************/
+    MfgKeySystem.prototype.init = function () {
+        //set event listener for keyboard devices - all but IE
+        window.addEventListener("keydown", this.onKeyDown, false);
+        window.addEventListener("keyup", this.onKeyUp, false);
+        //set event listener for keyboard devices - IE
+        window.addEventListener("onkeydown", this.onKeyDown, false);
+        window.addEventListener("onkeyup", this.onKeyUp, false);
+    };
+    /*****************************************************************************
+    *   Checks if the key with the given keyCode is currently pressed.
+    *
+    *   @param  keyCode The keyCode of the key to return pressed state.
+    *   @return         <code>true</code> if this key is currently pressed.
+    *                   Otherwise <code>false</code>.
+    *****************************************************************************/
+    MfgKeySystem.prototype.isPressed = function (keyCode) {
+        return this.iAllKeys[keyCode];
+    };
+    /** The keycode that represents the 'ARROW LEFT' key. */
+    MfgKeySystem.KEY_LEFT = 37;
+    /** The keycode that represents the 'ARROW UP' key. */
+    MfgKeySystem.KEY_UP = 38;
+    /** The keycode that represents the 'ARROW RIGHT' key. */
+    MfgKeySystem.KEY_RIGHT = 39;
+    /** The keycode that represents the 'ARROW DOWN' key. */
+    MfgKeySystem.KEY_DOWN = 40;
+    /** The keycode that represents the 'ENTER' key. */
+    MfgKeySystem.KEY_ENTER = 13;
+    /** The keycode that represents the 'ESCAPE' key. */
+    MfgKeySystem.KEY_ESCAPE = 27;
+    /** The keycode that represents the 'SPACE' key. */
+    MfgKeySystem.KEY_SPACE = 32;
+    return MfgKeySystem;
+}());
+exports.MfgKeySystem = MfgKeySystem;
+//# sourceMappingURL=MfgKeySystem.js.map
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(4);
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10758,7 +10842,7 @@ window.onunload = function () {
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10787,6 +10871,8 @@ var MfgSettings = (function () {
     MfgSettings.PLAYER_SIZE_X = 80.0;
     /** The player's y dimension (height). */
     MfgSettings.PLAYER_SIZE_Y = 120.0;
+    /** The player's speed in world coordinate per tick. */
+    MfgSettings.PLAYER_SPEED_MOVE = 5.0;
     /** The scene's gravity. */
     MfgSettings.GRAVITY = 0.0; //-0.01;
     /** The relative path from index.html where all images the app makes use of reside. */
@@ -10795,8 +10881,6 @@ var MfgSettings = (function () {
     MfgSettings.PATH_SOUND = "res/sound/";
     /** The relative path from index.html where all 3d model files the app makes use of reside. */
     MfgSettings.PATH_3DS = "res/3ds/";
-    /** The player's speed in world coordinate per tick. */
-    MfgSettings.PLAYER_SPEED_MOVE = 10;
     /** The player's turning speed in degrees per tick. */
     MfgSettings.PLAYER_SPEED_TURN = 5.0;
     /** The player's looking up/down speed in degrees per tick. */
@@ -10811,14 +10895,14 @@ exports.MfgSettings = MfgSettings;
 //# sourceMappingURL=MfgSettings.js.map
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
-var lib = __webpack_require__(6);
+var lib = __webpack_require__(7);
 /*****************************************************************************
 *   Represents a debug group whose logging can be enabled or disabled.
 *
@@ -10847,27 +10931,30 @@ var MfgDebug = (function () {
             console.log('[' + lib.LibString.getDateTimeString() + '] ' + msg);
         }
     };
+    /** A global debug group. */
     MfgDebug.bugfix = new MfgDebug(mfg.MfgSettings.DEBUG_MODE);
+    /** Debugs the init system. */
     MfgDebug.init = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
-    MfgDebug.acclaim = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
+    /** Debugs the key system. */
+    MfgDebug.key = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
     return MfgDebug;
 }());
 exports.MfgDebug = MfgDebug;
 //# sourceMappingURL=MfgDebug.js.map
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LibString_1 = __webpack_require__(7);
+var LibString_1 = __webpack_require__(8);
 exports.LibString = LibString_1.LibString;
 //# sourceMappingURL=lib.js.map
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10931,7 +11018,7 @@ exports.LibString = LibString;
 //# sourceMappingURL=LibString.js.map
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10963,7 +11050,7 @@ exports.MfgInit = MfgInit;
 //# sourceMappingURL=MfgInit.js.map
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10987,7 +11074,7 @@ var Mfg = (function () {
     *****************************************************************************/
     Mfg.main = function () {
         // set title and acclaim debug console
-        mfg.MfgDebug.acclaim.log(mfg.MfgSettings.TITLE);
+        mfg.MfgDebug.init.log(mfg.MfgSettings.TITLE);
         document.title = mfg.MfgSettings.TITLE;
         //init game engine
         mfg.MfgInit.init();
@@ -10998,7 +11085,7 @@ exports.Mfg = Mfg;
 //# sourceMappingURL=Mfg.js.map
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11017,13 +11104,17 @@ var MfgGame = (function () {
         var _this = this;
         this.engine = null;
         this.renderer = null;
+        this.keySystem = null;
         this.player = null;
         this.level = null;
         /*****************************************************************************
         *   Being invoked each tick of the game loop in order to render the game.
         *****************************************************************************/
         this.tick = function () {
-            mfg.MfgDebug.bugfix.log("render game ..");
+            // handle player keys
+            _this.player.handleKeys();
+            // render the engine
+            _this.render();
             // update MatterJS 2d engine
             Matter.Engine.update(_this.engine, mfg.MfgSettings.RENDER_DELTA);
         };
@@ -11036,6 +11127,7 @@ var MfgGame = (function () {
         this.initEngine2D();
         this.initLevel();
         this.initPlayer();
+        this.initKeySystem();
         // start the game loop
         this.start();
     };
@@ -11045,6 +11137,13 @@ var MfgGame = (function () {
     MfgGame.prototype.initPlayer = function () {
         this.player = new mfg.MfgPlayer();
         this.player.init();
+    };
+    /*****************************************************************************
+    *   Inits the key system.
+    *****************************************************************************/
+    MfgGame.prototype.initKeySystem = function () {
+        this.keySystem = new mfg.MfgKeySystem();
+        this.keySystem.init();
     };
     /*****************************************************************************
     *   Inits the 2D engine.
@@ -11072,13 +11171,18 @@ var MfgGame = (function () {
         Matter.Render.run(this.renderer);
         window.setInterval(this.tick, mfg.MfgSettings.RENDER_DELTA);
     };
+    /*****************************************************************************
+    *   Renders all game components.
+    *****************************************************************************/
+    MfgGame.prototype.render = function () {
+    };
     return MfgGame;
 }());
 exports.MfgGame = MfgGame;
 //# sourceMappingURL=MfgGame.js.map
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 var g;
@@ -11105,7 +11209,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11144,7 +11248,7 @@ exports.MfgLevel = MfgLevel;
 //# sourceMappingURL=MfgLevel.js.map
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11152,6 +11256,7 @@ exports.MfgLevel = MfgLevel;
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
+var MfgKeySystem_1 = __webpack_require__(2);
 /*****************************************************************************
 *   Represents the player being controled by the user.
 *
@@ -11171,6 +11276,17 @@ var MfgPlayer = (function () {
     MfgPlayer.prototype.init = function () {
         this.boxA = Matter.Bodies.rectangle(250, 40, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxA);
+    };
+    /*****************************************************************************
+    *   Checks all pressed player keys and performs according actions.
+    *****************************************************************************/
+    MfgPlayer.prototype.handleKeys = function () {
+        if (mfg.MfgInit.game.keySystem.isPressed(MfgKeySystem_1.MfgKeySystem.KEY_LEFT)) {
+            Matter.Body.translate(this.boxA, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+        }
+        if (mfg.MfgInit.game.keySystem.isPressed(MfgKeySystem_1.MfgKeySystem.KEY_RIGHT)) {
+            Matter.Body.translate(this.boxA, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+        }
     };
     return MfgPlayer;
 }());

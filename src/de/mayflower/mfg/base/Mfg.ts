@@ -18,7 +18,7 @@
         public static main():void
         {
             // set title and acclaim debug console
-            mfg.MfgDebug.acclaim.log( mfg.MfgSettings.TITLE );
+            mfg.MfgDebug.init.log( mfg.MfgSettings.TITLE );
             document.title = mfg.MfgSettings.TITLE;
 
             //init game engine
