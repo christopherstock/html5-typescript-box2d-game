@@ -4,8 +4,6 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Create multiple pickable items.
-    *
     *   TODO ASAP   Let player jump. Improve moving via friction and only jump if bottom collision is active!.
     *   TODO ASAP   Checkout material parameters for different game objects!
     *   TODO ASAP   Add circle objects.

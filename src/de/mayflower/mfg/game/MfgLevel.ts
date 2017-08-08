@@ -10,19 +10,19 @@
     *****************************************************************************/
     export class MfgLevel
     {
-        public      width                   :number             = 0.0;
-        public      height                  :number             = 0.0;
+        public      width                   :number                 = 0.0;
+        public      height                  :number                 = 0.0;
 
-        public      player                  :mfg.MfgPlayer      = null;
+        public      player                  :mfg.MfgPlayer          = null;
 
-        public      groundA                 :mfg.MfgObstacle    = null;
-        public      groundB                 :mfg.MfgObstacle    = null;
-        public      obstacleA               :mfg.MfgObstacle    = null;
+        public      groundA                 :mfg.MfgObstacle        = null;
+        public      groundB                 :mfg.MfgObstacle        = null;
+        public      obstacleA               :mfg.MfgObstacle        = null;
 
-        public      boxA                    :mfg.MfgBox         = null;
-        public      boxB                    :mfg.MfgBox         = null;
+        public      boxA                    :mfg.MfgBox             = null;
+        public      boxB                    :mfg.MfgBox             = null;
 
-        public      itemA                   :mfg.MfgItem        = null;
+        public      items                   :Array<mfg.MfgItem>     = null;
 
         /*****************************************************************************
         *   Inits the game from scratch.
@@ -51,7 +51,11 @@
             this.boxB       = new mfg.MfgBox( 380, 60, 80, 80 );
 
             // init items
-            this.itemA      = new mfg.MfgItem( 800, 450, 25, 25 );
+            this.items      = [
+                new mfg.MfgItem( 800, 450, 25, 25 ),
+                new mfg.MfgItem( 850, 450, 25, 25 ),
+                new mfg.MfgItem( 900, 450, 25, 25 ),
+            ];
 
             // add all game objects to the world
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body    );
@@ -60,7 +64,12 @@
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.obstacleA.body );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxA.body      );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxB.body      );
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.itemA.body     );
+
+            // add all items
+            for ( let i:number = 0; i < this.items.length; ++i )
+            {
+                Matter.World.addBody( mfg.MfgInit.game.engine.world, this.items[ i ].body );
+            }
         }
 
         /*****************************************************************************
@@ -72,13 +81,16 @@
             this.player.render();
 
             // check item collision
-            if ( !this.itemA.picked )
+            for ( let i:number = 0; i < this.items.length; ++i )
             {
-                if ( Matter.Bounds.overlaps( this.itemA.body.bounds, this.player.body.bounds ) )
+                if ( !this.items[ i ].picked )
                 {
-                    mfg.MfgDebug.item.log(">> Player picked item!");
+                    if ( Matter.Bounds.overlaps( this.items[ i ].body.bounds, this.player.body.bounds ) )
+                    {
+                        mfg.MfgDebug.item.log(">> Player picked item!");
 
-                    this.itemA.pick();
+                        this.items[ i ].pick();
+                    }
                 }
             }
         }

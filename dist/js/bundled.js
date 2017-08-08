@@ -10905,8 +10905,6 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Create multiple pickable items.
-*
 *   TODO ASAP   Let player jump. Improve moving via friction and only jump if bottom collision is active!.
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Add circle objects.
@@ -11330,7 +11328,7 @@ var MfgLevel = (function () {
         this.obstacleA = null;
         this.boxA = null;
         this.boxB = null;
-        this.itemA = null;
+        this.items = null;
         this.width = width;
         this.height = height;
     }
@@ -11348,7 +11346,11 @@ var MfgLevel = (function () {
         this.boxA = new mfg.MfgBox(360, 0, 80, 80);
         this.boxB = new mfg.MfgBox(380, 60, 80, 80);
         // init items
-        this.itemA = new mfg.MfgItem(800, 450, 25, 25);
+        this.items = [
+            new mfg.MfgItem(800, 450, 25, 25),
+            new mfg.MfgItem(850, 450, 25, 25),
+            new mfg.MfgItem(900, 450, 25, 25),
+        ];
         // add all game objects to the world
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.groundA.body);
@@ -11356,7 +11358,10 @@ var MfgLevel = (function () {
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.obstacleA.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxA.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxB.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.itemA.body);
+        // add all items
+        for (var i = 0; i < this.items.length; ++i) {
+            Matter.World.addBody(mfg.MfgInit.game.engine.world, this.items[i].body);
+        }
     };
     /*****************************************************************************
     *   Renders all level components.
@@ -11365,10 +11370,12 @@ var MfgLevel = (function () {
         // render player
         this.player.render();
         // check item collision
-        if (!this.itemA.picked) {
-            if (Matter.Bounds.overlaps(this.itemA.body.bounds, this.player.body.bounds)) {
-                mfg.MfgDebug.item.log(">> Player picked item!");
-                this.itemA.pick();
+        for (var i = 0; i < this.items.length; ++i) {
+            if (!this.items[i].picked) {
+                if (Matter.Bounds.overlaps(this.items[i].body.bounds, this.player.body.bounds)) {
+                    mfg.MfgDebug.item.log(">> Player picked item!");
+                    this.items[i].pick();
+                }
             }
         }
     };
