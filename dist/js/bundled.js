@@ -77,12 +77,11 @@ module.exports = __webpack_require__(1);
 "use strict";
 
 var Matter = __webpack_require__(2);
-var Example = {};
 /*******************************************************************************************************************
 *   Example 1 displays two falling boxes.
 *******************************************************************************************************************/
-Example.basic = function () {
-    console.log(">> showFallingBoxes()");
+function exampleBasic() {
+    console.log(">> show basic example ..");
     var body = document.querySelector("body");
     // Matter.js module aliases
     var Engine = Matter.Engine, World = Matter.World, Bodies = Matter.Bodies;
@@ -96,11 +95,12 @@ Example.basic = function () {
     World.add(engine.world, [boxA, boxB, ground]);
     // run the engine
     Engine.run(engine);
-};
+}
 /*******************************************************************************************************************
 *   Example 2 displays a bridge full of boxes.
 *******************************************************************************************************************/
-Example.bridge = function () {
+function exampleBridge() {
+    console.log(">> show the bridge ..");
     var Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner, Body = Matter.Body, Composites = Matter.Composites, Common = Matter.Common, Constraint = Matter.Constraint, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Bodies = Matter.Bodies;
     // create engine
     var engine = Engine.create(), world = engine.world;
@@ -196,13 +196,13 @@ Example.bridge = function () {
             Matter.Runner.stop(runner);
         }
     };
-};
+}
 /*******************************************************************************************************************
 *   Being invoked when the page is loaded completely.
 *******************************************************************************************************************/
 window.onload = function () {
-    //Example.basic();
-    Example.bridge();
+    // exampleBasic();
+    exampleBridge();
 };
 //# sourceMappingURL=index.js.map
 
