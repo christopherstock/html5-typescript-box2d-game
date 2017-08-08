@@ -11,6 +11,8 @@
     *****************************************************************************/
     export class MfgGame
     {
+        public      engine                  :Matter.Engine      = null;
+
         /*****************************************************************************
         *   Inits this app from scratch.
         *****************************************************************************/
@@ -19,13 +21,12 @@
             MfgDebug.init.log( "Initing game engine" );
 
             let body = document.querySelector("body");
-            // Matter.js module aliases
-            let Engine = Matter.Engine,
-            World = Matter.World,
-            Bodies = Matter.Bodies;
+
+            let World = Matter.World;
+            let Bodies = Matter.Bodies;
 
             // create a Matter.js engine
-            let engine = Engine.create(body);
+            this.engine = Matter.Engine.create(body, {});
 
             // create two boxes and a ground
             let boxA:Body = Bodies.rectangle(400, 200, 80, 80);
@@ -33,9 +34,11 @@
             let ground:Body = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
 
             // add all of the bodies to the world
-            World.add( engine.world, [ boxA, boxB, ground ] );
+            World.add(
+                this.engine.world,
+                [ boxA, boxB, ground ]
+            );
 
-            // run the engine
-            Engine.run( engine );
+            Matter.Engine.run( this.engine );
         }
     }

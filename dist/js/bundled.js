@@ -69,17 +69,15 @@
 
 "use strict";
 
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-var MfgSettings_1 = __webpack_require__(4);
-exports.MfgSettings = MfgSettings_1.MfgSettings;
-var MfgDebug_1 = __webpack_require__(5);
-exports.MfgDebug = MfgDebug_1.MfgDebug;
-var MfgInit_1 = __webpack_require__(8);
-exports.MfgInit = MfgInit_1.MfgInit;
-var MfgGame_1 = __webpack_require__(9);
-exports.MfgGame = MfgGame_1.MfgGame;
-var Mfg_1 = __webpack_require__(11);
-exports.Mfg = Mfg_1.Mfg;
+__export(__webpack_require__(4));
+__export(__webpack_require__(5));
+__export(__webpack_require__(8));
+__export(__webpack_require__(9));
+__export(__webpack_require__(11));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10953,6 +10951,7 @@ var MfgInit = (function () {
         MfgInit.game = new mfg_1.MfgGame();
         MfgInit.game.init();
     };
+    /** The singleton game instance. */
     MfgInit.game = null;
     return MfgInit;
 }());
@@ -10976,6 +10975,7 @@ var mfg_1 = __webpack_require__(0);
 *****************************************************************************/
 var MfgGame = (function () {
     function MfgGame() {
+        this.engine = null;
     }
     /*****************************************************************************
     *   Inits this app from scratch.
@@ -10983,18 +10983,17 @@ var MfgGame = (function () {
     MfgGame.prototype.init = function () {
         mfg_1.MfgDebug.init.log("Initing game engine");
         var body = document.querySelector("body");
-        // Matter.js module aliases
-        var Engine = Matter.Engine, World = Matter.World, Bodies = Matter.Bodies;
+        var World = Matter.World;
+        var Bodies = Matter.Bodies;
         // create a Matter.js engine
-        var engine = Engine.create(body);
+        this.engine = Matter.Engine.create(body, {});
         // create two boxes and a ground
         var boxA = Bodies.rectangle(400, 200, 80, 80);
         var boxB = Bodies.rectangle(450, 50, 80, 80);
         var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
         // add all of the bodies to the world
-        World.add(engine.world, [boxA, boxB, ground]);
-        // run the engine
-        Engine.run(engine);
+        World.add(this.engine.world, [boxA, boxB, ground]);
+        Matter.Engine.run(this.engine);
     };
     return MfgGame;
 }());
@@ -11041,9 +11040,6 @@ var mfg_3 = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Try namespaces (without export) over split files once again?
-*   TODO ASAP   Improve namespaces (like java packages!)
-*   TODO ASAP   Create simple test level.
 *   TODO ASAP   Remove all static contexts.
 *   TODO ASAP   Create abstract level system.
 *
@@ -11057,6 +11053,7 @@ var Mfg = (function () {
     *   This method is invoked when the application starts.
     *****************************************************************************/
     Mfg.main = function () {
+        // set title and acclaim debug console
         mfg_2.MfgDebug.acclaim.log(mfg_3.MfgSettings.TITLE);
         document.title = mfg_3.MfgSettings.TITLE;
         //init game engine

@@ -1,6 +1,6 @@
 
-    export {MfgSettings}         from './base/MfgSettings';
-    export {MfgDebug}            from './base/MfgDebug';
-    export {MfgInit}             from './base/MfgInit';
-    export {MfgGame}             from './game/MfgGame';
-    export {Mfg}                 from './base/Mfg';
+    export * from './base/MfgSettings';
+    export * from './base/MfgDebug';
+    export * from './base/MfgInit';
+    export * from './game/MfgGame';
+    export * from './base/Mfg';
