@@ -8,10 +8,8 @@
     *   @author     Christopher Stock
     *   @version    0.0.1
     *****************************************************************************/
-    export class MfgPlayer
+    export class MfgPlayer extends mfg.MfgGameObject
     {
-        public          boxA                    :Matter.Body                    = null;
-
         public          jumping                 :boolean                        = false;
         public          jumpPower               :number                         = 0.0;
 
@@ -20,6 +18,7 @@
         *****************************************************************************/
         public constructor()
         {
+            super( 250, 40, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y );
         }
 
         /*****************************************************************************
@@ -27,14 +26,7 @@
         *****************************************************************************/
         public init()
         {
-            this.boxA = Matter.Bodies.rectangle(
-                250,
-                40,
-                mfg.MfgSettings.PLAYER_SIZE_X,
-                mfg.MfgSettings.PLAYER_SIZE_Y
-            );
-
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxA );
+            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.body );
         }
 
         /*****************************************************************************
@@ -44,12 +36,12 @@
         {
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_LEFT ) )
             {
-                Matter.Body.translate( this.boxA, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+                Matter.Body.translate( this.body, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
             }
 
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_RIGHT ) )
             {
-                Matter.Body.translate( this.boxA, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+                Matter.Body.translate( this.body, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
             }
 
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_UP ) )
@@ -70,7 +62,7 @@
             // render jumping
             if ( this.jumping )
             {
-                Matter.Body.translate( this.boxA, { x: 0.0, y: -this.jumpPower });
+                Matter.Body.translate( this.body, { x: 0.0, y: -this.jumpPower });
 
                 this.jumpPower -= 2.0;
 

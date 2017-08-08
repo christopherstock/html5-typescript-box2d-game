@@ -83,6 +83,7 @@ __export(__webpack_require__(13));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
 __export(__webpack_require__(16));
+__export(__webpack_require__(17));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10971,6 +10972,8 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Player should be more massive (not tilt to one side!) (static?).
+*   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Let player jump. Improve moving via friction.
 *   TODO ASAP   Create pickable items.
 *   TODO ASAP   Create abstract level system.
@@ -11140,6 +11143,34 @@ module.exports = g;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
+/*****************************************************************************
+*   The abstract class of all game objects.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgGameObject = (function () {
+    /*****************************************************************************
+    *   Creates a new player instance.
+    *****************************************************************************/
+    function MfgGameObject(x, y, width, height) {
+        /** The game objects' body. */
+        this.body = null;
+        this.body = Matter.Bodies.rectangle(x, y, width, height);
+    }
+    return MfgGameObject;
+}());
+exports.MfgGameObject = MfgGameObject;
+//# sourceMappingURL=MfgGameObject.js.map
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*****************************************************************************
 *   Specifies the initialization part of the game logic.
@@ -11177,11 +11208,21 @@ exports.MfgLevel = MfgLevel;
 //# sourceMappingURL=MfgLevel.js.map
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
@@ -11191,31 +11232,32 @@ var mfg = __webpack_require__(0);
 *   @author     Christopher Stock
 *   @version    0.0.1
 *****************************************************************************/
-var MfgPlayer = (function () {
+var MfgPlayer = (function (_super) {
+    __extends(MfgPlayer, _super);
     /*****************************************************************************
     *   Creates a new player instance.
     *****************************************************************************/
     function MfgPlayer() {
-        this.boxA = null;
-        this.jumping = false;
-        this.jumpPower = 0.0;
+        var _this = _super.call(this, 250, 40, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y) || this;
+        _this.jumping = false;
+        _this.jumpPower = 0.0;
+        return _this;
     }
     /*****************************************************************************
     *   Inits the player instance.
     *****************************************************************************/
     MfgPlayer.prototype.init = function () {
-        this.boxA = Matter.Bodies.rectangle(250, 40, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxA);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.body);
     };
     /*****************************************************************************
     *   Checks all pressed player keys and performs according actions.
     *****************************************************************************/
     MfgPlayer.prototype.handleKeys = function () {
         if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_LEFT)) {
-            Matter.Body.translate(this.boxA, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+            Matter.Body.translate(this.body, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
         }
         if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_RIGHT)) {
-            Matter.Body.translate(this.boxA, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+            Matter.Body.translate(this.body, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
         }
         if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
             if (!this.jumping) {
@@ -11230,7 +11272,7 @@ var MfgPlayer = (function () {
     MfgPlayer.prototype.render = function () {
         // render jumping
         if (this.jumping) {
-            Matter.Body.translate(this.boxA, { x: 0.0, y: -this.jumpPower });
+            Matter.Body.translate(this.body, { x: 0.0, y: -this.jumpPower });
             this.jumpPower -= 2.0;
             if (this.jumpPower <= 0.0) {
                 this.jumping = false;
@@ -11238,34 +11280,9 @@ var MfgPlayer = (function () {
         }
     };
     return MfgPlayer;
-}());
+}(mfg.MfgGameObject));
 exports.MfgPlayer = MfgPlayer;
 //# sourceMappingURL=MfgPlayer.js.map
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-/*****************************************************************************
-*   Represents the player being controled by the user.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var MfgBox = (function () {
-    function MfgBox(x, y, width, height) {
-        this.body = null;
-        this.body = Matter.Bodies.rectangle(x, y, width, height);
-        this.body.isStatic = false;
-    }
-    return MfgBox;
-}());
-exports.MfgBox = MfgBox;
-//# sourceMappingURL=MfgBox.js.map
 
 /***/ }),
 /* 15 */
@@ -11273,27 +11290,74 @@ exports.MfgBox = MfgBox;
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
 /*****************************************************************************
 *   Represents the player being controled by the user.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
 *****************************************************************************/
-var MfgObstacle = (function () {
+var MfgBox = (function (_super) {
+    __extends(MfgBox, _super);
+    function MfgBox(x, y, width, height) {
+        var _this = _super.call(this, x, y, width, height) || this;
+        _this.body.isStatic = false;
+        return _this;
+    }
+    return MfgBox;
+}(mfg.MfgGameObject));
+exports.MfgBox = MfgBox;
+//# sourceMappingURL=MfgBox.js.map
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   Represents the player being controled by the user.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgObstacle = (function (_super) {
+    __extends(MfgObstacle, _super);
     function MfgObstacle(x, y, width, height) {
-        this.body = null;
-        this.body = Matter.Bodies.rectangle(x, y, width, height);
-        this.body.isStatic = true;
+        var _this = _super.call(this, x, y, width, height) || this;
+        _this.body.isStatic = true;
+        return _this;
     }
     return MfgObstacle;
-}());
+}(mfg.MfgGameObject));
 exports.MfgObstacle = MfgObstacle;
 //# sourceMappingURL=MfgObstacle.js.map
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

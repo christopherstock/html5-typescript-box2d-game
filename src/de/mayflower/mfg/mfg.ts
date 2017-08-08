@@ -4,6 +4,7 @@
     export * from './base/MfgInit';
     export * from './base/Mfg';
     export * from './game/MfgGame';
+    export * from './game/MfgGameObject';
     export * from './game/MfgLevel';
     export * from './game/MfgPlayer';
     export * from './game/MfgBox';
