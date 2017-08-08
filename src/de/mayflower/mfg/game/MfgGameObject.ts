@@ -18,6 +18,11 @@
         *****************************************************************************/
         public constructor( x:number, y:number, width:number, height:number )
         {
-            this.body = Matter.Bodies.rectangle( x, y, width, height );
+            this.body = Matter.Bodies.rectangle(
+                x + ( width  / 2 ),
+                y + ( height / 2 ) ,
+                width,
+                height
+            );
         }
     }

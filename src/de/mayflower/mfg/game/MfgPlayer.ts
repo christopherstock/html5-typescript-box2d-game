@@ -16,9 +16,13 @@
         /*****************************************************************************
         *   Creates a new player instance.
         *****************************************************************************/
-        public constructor()
+        public constructor( x:number, y:number )
         {
-            super( 250, 40, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y );
+            super( x, y, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y );
+
+            // avoid body tilting
+            this.body.inertia        = Infinity;
+            this.body.inverseInertia = 1 / Infinity;
         }
 
         /*****************************************************************************

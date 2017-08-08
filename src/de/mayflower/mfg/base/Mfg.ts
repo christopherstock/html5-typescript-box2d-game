@@ -4,8 +4,8 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Player should be more massive (not tilt to one side!) (static?).
     *   TODO ASAP   Checkout material parameters for different game objects!
+    *   TODO ASAP   Implement camera.
     *   TODO ASAP   Let player jump. Improve moving via friction.
     *   TODO ASAP   Create pickable items.
     *   TODO ASAP   Create abstract level system.

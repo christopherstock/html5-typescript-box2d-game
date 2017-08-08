@@ -10972,8 +10972,8 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Player should be more massive (not tilt to one side!) (static?).
 *   TODO ASAP   Checkout material parameters for different game objects!
+*   TODO ASAP   Implement camera.
 *   TODO ASAP   Let player jump. Improve moving via friction.
 *   TODO ASAP   Create pickable items.
 *   TODO ASAP   Create abstract level system.
@@ -11148,7 +11148,7 @@ var MfgGameObject = (function () {
     function MfgGameObject(x, y, width, height) {
         /** The game objects' body. */
         this.body = null;
-        this.body = Matter.Bodies.rectangle(x, y, width, height);
+        this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height);
     }
     return MfgGameObject;
 }());
@@ -11172,31 +11172,30 @@ var mfg = __webpack_require__(0);
 *****************************************************************************/
 var MfgLevel = (function () {
     function MfgLevel() {
-        this.ground = null;
         this.player = null;
+        this.ground = null;
+        this.obstacleA = null;
+        this.boxA = null;
         this.boxB = null;
-        this.boxC = null;
-        this.boxD = null;
     }
     /*****************************************************************************
     *   Inits the game from scratch.
     *****************************************************************************/
     MfgLevel.prototype.init = function () {
-        // init ground
-        this.ground = new mfg.MfgObstacle(400, 550, 750, 26);
         // init player
-        this.player = new mfg.MfgPlayer();
-        // init moveable boxes
-        this.boxB = new mfg.MfgBox(400, 40, 80, 80);
-        this.boxC = new mfg.MfgBox(420, 100, 80, 80);
+        this.player = new mfg.MfgPlayer(0, 0);
         // init static obstacles
-        this.boxD = new mfg.MfgObstacle(210, 497, 80, 80);
+        this.ground = new mfg.MfgObstacle(0, 550, 600, 25);
+        this.obstacleA = new mfg.MfgObstacle(250, 470, 80, 80);
+        // init moveable boxes
+        this.boxA = new mfg.MfgBox(360, 0, 80, 80);
+        this.boxB = new mfg.MfgBox(380, 60, 80, 80);
         // add all game objects to the world
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.ground.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.ground.body);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.obstacleA.body);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxA.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxB.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxC.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxD.body);
     };
     /*****************************************************************************
     *   Renders all level components.
@@ -11240,10 +11239,13 @@ var MfgPlayer = (function (_super) {
     /*****************************************************************************
     *   Creates a new player instance.
     *****************************************************************************/
-    function MfgPlayer() {
-        var _this = _super.call(this, 250, 40, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y) || this;
+    function MfgPlayer(x, y) {
+        var _this = _super.call(this, x, y, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y) || this;
         _this.jumping = false;
         _this.jumpPower = 0.0;
+        // avoid body tilting
+        _this.body.inertia = Infinity;
+        _this.body.inverseInertia = 1 / Infinity;
         return _this;
     }
     /*****************************************************************************
