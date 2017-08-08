@@ -11025,14 +11025,13 @@ var MfgGame = (function () {
         this.engine = null;
         this.renderer = null;
         this.keySystem = null;
-        this.player = null;
         this.level = null;
         /*****************************************************************************
         *   Being invoked each tick of the game loop in order to render the game.
         *****************************************************************************/
         this.tick = function () {
             // handle player keys
-            _this.player.handleKeys();
+            _this.level.player.handleKeys();
             // render the engine
             _this.render();
             // update MatterJS 2d engine
@@ -11046,17 +11045,9 @@ var MfgGame = (function () {
         mfg.MfgDebug.init.log("Initing game engine");
         this.initEngine2D();
         this.initLevel();
-        this.initPlayer();
         this.initKeySystem();
         // start the game loop
         this.start();
-    };
-    /*****************************************************************************
-    *   Inits the player instance.
-    *****************************************************************************/
-    MfgGame.prototype.initPlayer = function () {
-        this.player = new mfg.MfgPlayer();
-        this.player.init();
     };
     /*****************************************************************************
     *   Inits the key system.
@@ -11101,7 +11092,8 @@ var MfgGame = (function () {
     *   Renders all game components.
     *****************************************************************************/
     MfgGame.prototype.render = function () {
-        this.player.render();
+        // render level
+        this.level.render();
     };
     return MfgGame;
 }());
@@ -11181,6 +11173,7 @@ var mfg = __webpack_require__(0);
 var MfgLevel = (function () {
     function MfgLevel() {
         this.ground = null;
+        this.player = null;
         this.boxB = null;
         this.boxC = null;
         this.boxD = null;
@@ -11189,18 +11182,28 @@ var MfgLevel = (function () {
     *   Inits the game from scratch.
     *****************************************************************************/
     MfgLevel.prototype.init = function () {
-        // ground
+        // init ground
         this.ground = new mfg.MfgObstacle(400, 550, 750, 26);
-        // moveable boxes
+        // init player
+        this.player = new mfg.MfgPlayer();
+        // init moveable boxes
         this.boxB = new mfg.MfgBox(400, 40, 80, 80);
         this.boxC = new mfg.MfgBox(420, 100, 80, 80);
-        // static obstacle
+        // init static obstacles
         this.boxD = new mfg.MfgObstacle(210, 497, 80, 80);
-        // add all bodies to the world
+        // add all game objects to the world
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.ground.body);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxB.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxC.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxD.body);
+    };
+    /*****************************************************************************
+    *   Renders all level components.
+    *****************************************************************************/
+    MfgLevel.prototype.render = function () {
+        // render player
+        this.player.render();
     };
     return MfgLevel;
 }());
@@ -11243,12 +11246,6 @@ var MfgPlayer = (function (_super) {
         _this.jumpPower = 0.0;
         return _this;
     }
-    /*****************************************************************************
-    *   Inits the player instance.
-    *****************************************************************************/
-    MfgPlayer.prototype.init = function () {
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.body);
-    };
     /*****************************************************************************
     *   Checks all pressed player keys and performs according actions.
     *****************************************************************************/

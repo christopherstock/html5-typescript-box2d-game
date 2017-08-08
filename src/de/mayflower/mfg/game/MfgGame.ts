@@ -14,7 +14,6 @@
         private     renderer                :Matter.Render      = null;
 
         public      keySystem               :mfg.MfgKeySystem   = null;
-        private     player                  :mfg.MfgPlayer      = null;
         private     level                   :mfg.MfgLevel       = null;
 
         /*****************************************************************************
@@ -26,21 +25,11 @@
 
             this.initEngine2D();
             this.initLevel();
-            this.initPlayer();
 
             this.initKeySystem();
 
             // start the game loop
             this.start();
-        }
-
-        /*****************************************************************************
-        *   Inits the player instance.
-        *****************************************************************************/
-        private initPlayer()
-        {
-            this.player = new mfg.MfgPlayer();
-            this.player.init();
         }
 
         /*****************************************************************************
@@ -106,7 +95,7 @@
         private tick=()=>
         {
             // handle player keys
-            this.player.handleKeys();
+            this.level.player.handleKeys();
 
             // render the engine
             this.render();
@@ -122,7 +111,8 @@
         *****************************************************************************/
         private render()
         {
-            this.player.render();
+            // render level
+            this.level.render();
 
         }
     }

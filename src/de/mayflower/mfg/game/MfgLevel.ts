@@ -11,6 +11,7 @@
     export class MfgLevel
     {
         public      ground                  :mfg.MfgObstacle    = null;
+        public      player                  :mfg.MfgPlayer      = null;
 
         public      boxB                    :mfg.MfgBox         = null;
         public      boxC                    :mfg.MfgBox         = null;
@@ -21,20 +22,34 @@
         *****************************************************************************/
         public init()
         {
-            // ground
+            // init ground
             this.ground = new mfg.MfgObstacle( 400, 550, 750, 26 );
 
-            // moveable boxes
+            // init player
+            this.player = new mfg.MfgPlayer();
+
+            // init moveable boxes
             this.boxB   = new mfg.MfgBox( 400, 40, 80, 80 );
             this.boxC   = new mfg.MfgBox( 420, 100, 80, 80 );
 
-            // static obstacle
+            // init static obstacles
             this.boxD   = new mfg.MfgObstacle( 210, 497, 80, 80 );
 
-            // add all bodies to the world
+
+            // add all game objects to the world
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.ground.body );
+            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxB.body   );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxC.body   );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxD.body   );
+        }
+
+        /*****************************************************************************
+        *   Renders all level components.
+        *****************************************************************************/
+        public render()
+        {
+            // render player
+            this.player.render();
         }
     }
