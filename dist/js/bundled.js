@@ -10777,6 +10777,8 @@ var MfgSettings = (function () {
     MfgSettings.DEBUG_MODE = true;
     /** The application's internal name. */
     MfgSettings.TITLE = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH, v.0.0.1";
+    /** The delta between render ticks in ms. */
+    MfgSettings.RENDER_DELTA = 16.66;
     /** The desired canvas3D width. */
     MfgSettings.CANVAS_WIDTH = 800;
     /** The desired canvas3D height. */
@@ -11017,6 +11019,7 @@ var mfg_4 = __webpack_require__(0);
 *****************************************************************************/
 var MfgGame = (function () {
     function MfgGame() {
+        var _this = this;
         this.engine = null;
         this.renderer = null;
         this.player = null;
@@ -11024,8 +11027,10 @@ var MfgGame = (function () {
         /*****************************************************************************
         *   Being invoked each tick of the game loop in order to render the game.
         *****************************************************************************/
-        this.renderGame = function () {
+        this.tick = function () {
             mfg_1.MfgDebug.bugfix.log("render game ..");
+            // update MatterJS 2d engine
+            Matter.Engine.update(_this.engine, mfg_2.MfgSettings.RENDER_DELTA);
         };
     }
     /*****************************************************************************
@@ -11075,9 +11080,8 @@ var MfgGame = (function () {
     *   Starts the game loop.
     *****************************************************************************/
     MfgGame.prototype.start = function () {
-        Matter.Events.on(this.engine, 'beforeUpdate', this.renderGame);
         Matter.Render.run(this.renderer);
-        Matter.Engine.run(this.engine);
+        window.setInterval(this.tick, mfg_2.MfgSettings.RENDER_DELTA);
     };
     return MfgGame;
 }());

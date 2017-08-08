@@ -85,25 +85,22 @@
         *****************************************************************************/
         private start()
         {
-            Matter.Events.on(
-                this.engine,
-                'beforeUpdate',
-                this.renderGame
-            );
-
             Matter.Render.run( this.renderer );
-            Matter.Engine.run( this.engine   );
+
+            window.setInterval(
+                this.tick,
+                MfgSettings.RENDER_DELTA
+            );
         }
 
         /*****************************************************************************
         *   Being invoked each tick of the game loop in order to render the game.
         *****************************************************************************/
-        private renderGame=()=>
+        private tick=()=>
         {
             MfgDebug.bugfix.log("render game ..");
 
-
-
-
+            // update MatterJS 2d engine
+            Matter.Engine.update(this.engine, MfgSettings.RENDER_DELTA);
         }
     }

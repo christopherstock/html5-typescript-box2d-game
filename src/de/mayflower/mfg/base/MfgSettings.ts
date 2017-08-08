@@ -13,6 +13,9 @@
         /** The application's internal name. */
         public      static      TITLE                                       :string             = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH, v.0.0.1";
 
+        /** The delta between render ticks in ms. */
+        public      static      RENDER_DELTA                                :number             = 16.66;
+
         /** The desired canvas3D width. */
         public      static      CANVAS_WIDTH                                :number             = 800;
         /** The desired canvas3D height. */
