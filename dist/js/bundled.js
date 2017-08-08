@@ -10872,23 +10872,15 @@ var MfgSettings = (function () {
     /** The player's y dimension (height). */
     MfgSettings.PLAYER_SIZE_Y = 120.0;
     /** The player's speed in world coordinate per tick. */
-    MfgSettings.PLAYER_SPEED_MOVE = 5.0;
-    /** The scene's gravity. */
-    MfgSettings.GRAVITY = 0.0; //-0.01;
+    MfgSettings.PLAYER_SPEED_MOVE = 7.5;
+    /** The default vertical gravity for all levels. */
+    MfgSettings.DEFAULT_GRAVITY_Y = 1.0;
     /** The relative path from index.html where all images the app makes use of reside. */
     MfgSettings.PATH_IMAGE_TEXTURE = "res/image/texture/";
     /** The relative path from index.html where all sounds the app makes use of reside. */
     MfgSettings.PATH_SOUND = "res/sound/";
     /** The relative path from index.html where all 3d model files the app makes use of reside. */
     MfgSettings.PATH_3DS = "res/3ds/";
-    /** The player's turning speed in degrees per tick. */
-    MfgSettings.PLAYER_SPEED_TURN = 5.0;
-    /** The player's looking up/down speed in degrees per tick. */
-    MfgSettings.PLAYER_SPEED_LOOK_UP_DOWN = 2.5;
-    /** The player's maximum looking up/down in degrees. */
-    MfgSettings.PLAYER_MAX_LOOK_UP_DOWN = 60.0;
-    /** The player's speed for centering the up/down view aim in degrees per tick. */
-    MfgSettings.PLAYER_SPEED_CENTER_VIEW_AIM = 5.0;
     return MfgSettings;
 }());
 exports.MfgSettings = MfgSettings;
@@ -10936,7 +10928,7 @@ var MfgDebug = (function () {
     /** Debugs the init system. */
     MfgDebug.init = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
     /** Debugs the key system. */
-    MfgDebug.key = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
+    MfgDebug.key = new MfgDebug(false && mfg.MfgSettings.DEBUG_MODE);
     return MfgDebug;
 }());
 exports.MfgDebug = MfgDebug;
@@ -11062,6 +11054,8 @@ var mfg = __webpack_require__(0);
 *
 *   TODO ASAP   Remove all static contexts.
 *   TODO ASAP   Create abstract level system.
+*   TODO ASAP   Nice gravity effects?
+*   TODO ASAP   Multiple layers of engines for different calcs/effects?
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -11156,6 +11150,11 @@ var MfgGame = (function () {
         });
         this.renderer.canvas.width = mfg.MfgSettings.CANVAS_WIDTH;
         this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
+        this.engine.world.gravity = {
+            x: 0.0,
+            y: mfg.MfgSettings.DEFAULT_GRAVITY_Y,
+            scale: 0.001
+        };
     };
     /*****************************************************************************
     *   Inits the level.

@@ -6,6 +6,8 @@
     *
     *   TODO ASAP   Remove all static contexts.
     *   TODO ASAP   Create abstract level system.
+    *   TODO ASAP   Nice gravity effects?
+    *   TODO ASAP   Multiple layers of engines for different calcs/effects?
     *
     *   @author     Christopher Stock
     *   @version    0.0.1

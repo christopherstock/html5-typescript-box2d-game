@@ -68,6 +68,12 @@
 
             this.renderer.canvas.width  = mfg.MfgSettings.CANVAS_WIDTH;
             this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
+
+            this.engine.world.gravity = {
+                x: 0.0,
+                y: mfg.MfgSettings.DEFAULT_GRAVITY_Y,
+                scale: 0.001
+            };
         }
 
         /*****************************************************************************
