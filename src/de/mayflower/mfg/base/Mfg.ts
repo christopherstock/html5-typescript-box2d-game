@@ -4,10 +4,12 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Remove all static contexts.
+    *   TODO ASAP   Let player jump. Improve moving via friction.
+    *   TODO ASAP   Create pickable items.
     *   TODO ASAP   Create abstract level system.
-    *   TODO ASAP   Nice gravity effects?
-    *   TODO ASAP   Multiple layers of engines for different calcs/effects?
+    *
+    *   TODO WEAK   Try multiple layers of engines for different calcs/effects.
+    *   TODO WEAK   Implement nice changing gravity effects.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1

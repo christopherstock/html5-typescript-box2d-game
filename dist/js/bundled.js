@@ -11052,10 +11052,12 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Remove all static contexts.
+*   TODO ASAP   Let player jump. Improve moving via friction.
+*   TODO ASAP   Create pickable items.
 *   TODO ASAP   Create abstract level system.
-*   TODO ASAP   Nice gravity effects?
-*   TODO ASAP   Multiple layers of engines for different calcs/effects?
+*
+*   TODO WEAK   Try multiple layers of engines for different calcs/effects.
+*   TODO WEAK   Implement nice changing gravity effects.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -11227,19 +11229,25 @@ var MfgLevel = (function () {
         this.ground = null;
         this.boxB = null;
         this.boxC = null;
+        this.boxD = null;
     }
     /*****************************************************************************
     *   Inits the game from scratch.
     *****************************************************************************/
     MfgLevel.prototype.init = function () {
-        // add some example objects
+        // ground
+        this.ground = Matter.Bodies.rectangle(400, 550, 750, 26, { isStatic: true });
+        // moveable boxes
         this.boxB = Matter.Bodies.rectangle(400, 40, 80, 80);
         this.boxC = Matter.Bodies.rectangle(420, 100, 80, 80);
-        this.ground = Matter.Bodies.rectangle(400, 550, 750, 25, { isStatic: true });
-        // add all of the bodies to the world
+        // static box
+        this.boxD = Matter.Bodies.rectangle(210, 497, 80, 80);
+        Matter.Body.setStatic(this.boxD, true);
+        // add all bodies to the world
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.ground);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxB);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxC);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.ground);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxD);
     };
     return MfgLevel;
 }());
@@ -11285,6 +11293,9 @@ var MfgPlayer = (function () {
         }
         if (mfg.MfgInit.game.keySystem.isPressed(MfgKeySystem_1.MfgKeySystem.KEY_RIGHT)) {
             Matter.Body.translate(this.boxA, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+        }
+        if (mfg.MfgInit.game.keySystem.isPressed(MfgKeySystem_1.MfgKeySystem.KEY_UP)) {
+            //Matter.Body.applyForce( this.boxA,  )
         }
     };
     return MfgPlayer;

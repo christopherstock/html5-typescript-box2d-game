@@ -50,6 +50,10 @@
                 Matter.Body.translate( this.boxA, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
             }
 
+            if ( mfg.MfgInit.game.keySystem.isPressed( MfgKeySystem.KEY_UP ) )
+            {
+                //Matter.Body.applyForce( this.boxA,  )
+            }
 
 
 
