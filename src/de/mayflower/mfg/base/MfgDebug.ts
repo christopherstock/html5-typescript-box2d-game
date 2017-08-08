@@ -1,6 +1,5 @@
 
     import * as mfg from '../mfg';
-    import * as lib from '../../lib/lib';
 
     /*****************************************************************************
     *   Represents a debug group whose logging can be enabled or disabled.
@@ -40,7 +39,7 @@
         {
             if ( this.debugEnabled )
             {
-                console.log( '[' + lib.LibString.getDateTimeString() + '] ' + msg );
+                console.log( '[' + mfg.MfgString.getDateTimeString() + '] ' + msg );
             }
         }
     }

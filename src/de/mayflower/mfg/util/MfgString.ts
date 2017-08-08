@@ -5,7 +5,7 @@
     *   @author     Christopher Stock
     *   @version    0.0.1
     *****************************************************************************/
-    export class LibString
+    export class MfgString
     {
         /*****************************************************************************
         *   Returns an array of all found regular expression matches.

@@ -75,16 +75,17 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(4));
 __export(__webpack_require__(5));
+__export(__webpack_require__(6));
+__export(__webpack_require__(7));
 __export(__webpack_require__(8));
-__export(__webpack_require__(9));
 __export(__webpack_require__(10));
+__export(__webpack_require__(11));
 __export(__webpack_require__(12));
 __export(__webpack_require__(13));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
 __export(__webpack_require__(16));
 __export(__webpack_require__(17));
-__export(__webpack_require__(18));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10368,7 +10369,7 @@ var Vector = _dereq_('../geometry/Vector');
 
 },{"../body/Composite":2,"../core/Common":14,"../core/Events":16,"../geometry/Bounds":26,"../geometry/Vector":28}]},{},[30])(30)
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
 /* 2 */
@@ -10819,7 +10820,6 @@ exports.MfgSettings = MfgSettings;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
-var lib = __webpack_require__(6);
 /*****************************************************************************
 *   Represents a debug group whose logging can be enabled or disabled.
 *
@@ -10845,7 +10845,7 @@ var MfgDebug = (function () {
     *****************************************************************************/
     MfgDebug.prototype.log = function (msg) {
         if (this.debugEnabled) {
-            console.log('[' + lib.LibString.getDateTimeString() + '] ' + msg);
+            console.log('[' + mfg.MfgString.getDateTimeString() + '] ' + msg);
         }
     };
     /** A global debug group. */
@@ -10861,81 +10861,6 @@ exports.MfgDebug = MfgDebug;
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var LibString_1 = __webpack_require__(7);
-exports.LibString = LibString_1.LibString;
-//# sourceMappingURL=lib.js.map
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/*****************************************************************************
-*   Offers static string functionality.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var LibString = (function () {
-    function LibString() {
-    }
-    /*****************************************************************************
-    *   Returns an array of all found regular expression matches.
-    *
-    *   @param  subject The target string to apply the regular expression search on.
-    *   @param  regEx   The regular expression.
-    *                   This string MUST NOT be enclosed in string quotes!
-    *   @return         An array containing all matched results.
-    *****************************************************************************/
-    LibString.searchRegEx = function (subject, regEx) {
-        var results = subject.match(regEx);
-        var ret = [];
-        if (results != null) {
-            for (var i = 0; i < results.length; ++i) {
-                ret[i] = results[i];
-            }
-        }
-        return ret;
-    };
-    /*****************************************************************************
-    *   Returns a formatted timestamp of the current system date and time.
-    *
-    *   @return A formatted timestamp of the current system date and time.
-    *****************************************************************************/
-    LibString.getDateTimeString = function () {
-        var now = new Date();
-        var year = (now.getFullYear()).toString();
-        var month = (now.getMonth() + 1).toString();
-        var day = (now.getDate()).toString();
-        var hour = (now.getHours()).toString();
-        var minute = (now.getMinutes()).toString();
-        var second = (now.getSeconds()).toString();
-        if (month.toString().length == 1)
-            month = '0' + month;
-        if (day.toString().length == 1)
-            day = '0' + day;
-        if (hour.toString().length == 1)
-            hour = '0' + hour;
-        if (minute.toString().length == 1)
-            minute = '0' + minute;
-        if (second.toString().length == 1)
-            second = '0' + second;
-        return (day + '.' + month + '.' + year + ' ' + hour + ':' + minute + ':' + second);
-    };
-    return LibString;
-}());
-exports.LibString = LibString;
-//# sourceMappingURL=LibString.js.map
-
-/***/ }),
-/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10967,7 +10892,7 @@ exports.MfgInit = MfgInit;
 //# sourceMappingURL=MfgInit.js.map
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10977,10 +10902,11 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Checkout material parameters for different game objects!
-*   TODO ASAP   Let player jump. Improve moving via friction.
-*   TODO ASAP   Prune lib!
 *   TODO ASAP   Create pickable items.
+*
+*   TODO ASAP   Let player jump. Improve moving via friction and only jump if bottom collision is active!.
+*   TODO ASAP   Checkout material parameters for different game objects!
+*   TODO ASAP   Add circle objects.
 *   TODO ASAP   CSS: improve margin, center canvas, etc.
 *   TODO ASAP   CameraY shall only change if player collides with the floor!!
 *   TODO ASAP   Create abstract level system.
@@ -11011,7 +10937,7 @@ exports.Mfg = Mfg;
 //# sourceMappingURL=Mfg.js.map
 
 /***/ }),
-/* 10 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11039,7 +10965,7 @@ exports.MfgGameObject = MfgGameObject;
 //# sourceMappingURL=MfgGameObject.js.map
 
 /***/ }),
-/* 11 */
+/* 9 */
 /***/ (function(module, exports) {
 
 var g;
@@ -11066,7 +10992,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11140,7 +11066,7 @@ exports.MfgPlayer = MfgPlayer;
 //# sourceMappingURL=MfgPlayer.js.map
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11176,7 +11102,7 @@ exports.MfgBox = MfgBox;
 //# sourceMappingURL=MfgBox.js.map
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11212,7 +11138,7 @@ exports.MfgObstacle = MfgObstacle;
 //# sourceMappingURL=MfgObstacle.js.map
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11321,7 +11247,7 @@ exports.MfgGame = MfgGame;
 //# sourceMappingURL=MfgGame.js.map
 
 /***/ }),
-/* 16 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11385,7 +11311,7 @@ exports.MfgLevel = MfgLevel;
 //# sourceMappingURL=MfgLevel.js.map
 
 /***/ }),
-/* 17 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11463,7 +11389,7 @@ exports.MfgKeySystem = MfgKeySystem;
 //# sourceMappingURL=MfgKeySystem.js.map
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11526,6 +11452,70 @@ var MfgCamera = (function () {
 }());
 exports.MfgCamera = MfgCamera;
 //# sourceMappingURL=MfgCamera.js.map
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*****************************************************************************
+*   Offers static string functionality.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgString = (function () {
+    function MfgString() {
+    }
+    /*****************************************************************************
+    *   Returns an array of all found regular expression matches.
+    *
+    *   @param  subject The target string to apply the regular expression search on.
+    *   @param  regEx   The regular expression.
+    *                   This string MUST NOT be enclosed in string quotes!
+    *   @return         An array containing all matched results.
+    *****************************************************************************/
+    MfgString.searchRegEx = function (subject, regEx) {
+        var results = subject.match(regEx);
+        var ret = [];
+        if (results != null) {
+            for (var i = 0; i < results.length; ++i) {
+                ret[i] = results[i];
+            }
+        }
+        return ret;
+    };
+    /*****************************************************************************
+    *   Returns a formatted timestamp of the current system date and time.
+    *
+    *   @return A formatted timestamp of the current system date and time.
+    *****************************************************************************/
+    MfgString.getDateTimeString = function () {
+        var now = new Date();
+        var year = (now.getFullYear()).toString();
+        var month = (now.getMonth() + 1).toString();
+        var day = (now.getDate()).toString();
+        var hour = (now.getHours()).toString();
+        var minute = (now.getMinutes()).toString();
+        var second = (now.getSeconds()).toString();
+        if (month.toString().length == 1)
+            month = '0' + month;
+        if (day.toString().length == 1)
+            day = '0' + day;
+        if (hour.toString().length == 1)
+            hour = '0' + hour;
+        if (minute.toString().length == 1)
+            minute = '0' + minute;
+        if (second.toString().length == 1)
+            second = '0' + second;
+        return (day + '.' + month + '.' + year + ' ' + hour + ':' + minute + ':' + second);
+    };
+    return MfgString;
+}());
+exports.MfgString = MfgString;
+//# sourceMappingURL=MfgString.js.map
 
 /***/ })
 /******/ ]);
