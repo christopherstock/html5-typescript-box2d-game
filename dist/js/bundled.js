@@ -11306,6 +11306,16 @@ exports.MfgGame = MfgGame;
 
 "use strict";
 
+var __values = (this && this.__values) || function (o) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    if (m) return m.call(o);
+    return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
@@ -11358,10 +11368,21 @@ var MfgLevel = (function () {
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.obstacleA.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxA.body);
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxB.body);
-        // add all items
-        for (var i = 0; i < this.items.length; ++i) {
-            Matter.World.addBody(mfg.MfgInit.game.engine.world, this.items[i].body);
+        try {
+            // add all items
+            for (var _a = __values(this.items), _b = _a.next(); !_b.done; _b = _a.next()) {
+                var item = _b.value;
+                Matter.World.addBody(mfg.MfgInit.game.engine.world, item.body);
+            }
         }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        var e_1, _c;
     };
     /*****************************************************************************
     *   Renders all level components.
@@ -11369,15 +11390,26 @@ var MfgLevel = (function () {
     MfgLevel.prototype.render = function () {
         // render player
         this.player.render();
-        // check item collision
-        for (var i = 0; i < this.items.length; ++i) {
-            if (!this.items[i].picked) {
-                if (Matter.Bounds.overlaps(this.items[i].body.bounds, this.player.body.bounds)) {
-                    mfg.MfgDebug.item.log(">> Player picked item!");
-                    this.items[i].pick();
+        try {
+            // check item collision
+            for (var _a = __values(this.items), _b = _a.next(); !_b.done; _b = _a.next()) {
+                var item = _b.value;
+                if (!item.picked) {
+                    if (Matter.Bounds.overlaps(item.body.bounds, this.player.body.bounds)) {
+                        mfg.MfgDebug.item.log(">> Player picked item!");
+                        item.pick();
+                    }
                 }
             }
         }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        var e_2, _c;
     };
     return MfgLevel;
 }());

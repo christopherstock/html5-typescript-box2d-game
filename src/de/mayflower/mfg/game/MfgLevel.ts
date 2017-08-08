@@ -66,9 +66,9 @@
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxB.body      );
 
             // add all items
-            for ( let i:number = 0; i < this.items.length; ++i )
+            for ( let item of this.items )
             {
-                Matter.World.addBody( mfg.MfgInit.game.engine.world, this.items[ i ].body );
+                Matter.World.addBody( mfg.MfgInit.game.engine.world, item.body );
             }
         }
 
@@ -81,15 +81,15 @@
             this.player.render();
 
             // check item collision
-            for ( let i:number = 0; i < this.items.length; ++i )
+            for ( let item of this.items )
             {
-                if ( !this.items[ i ].picked )
+                if ( !item.picked )
                 {
-                    if ( Matter.Bounds.overlaps( this.items[ i ].body.bounds, this.player.body.bounds ) )
+                    if ( Matter.Bounds.overlaps( item.body.bounds, this.player.body.bounds ) )
                     {
                         mfg.MfgDebug.item.log(">> Player picked item!");
 
-                        this.items[ i ].pick();
+                        item.pick();
                     }
                 }
             }
