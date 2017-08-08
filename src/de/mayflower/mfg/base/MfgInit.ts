@@ -1,5 +1,5 @@
 
-    import {MfgGame}     from '../mfg';
+    import * as mfg from '../mfg';
 
     /*****************************************************************************
     *   Specifies the initialization part of the game logic.
@@ -10,7 +10,7 @@
     export class MfgInit
     {
         /** The singleton game instance. */
-        public  static      game    :MfgGame        = null;
+        public  static      game    :mfg.MfgGame        = null;
 
         /*****************************************************************************
         *   Inits this app from scratch.
@@ -18,7 +18,7 @@
         public static init()
         {
             // init the game engine
-            MfgInit.game = new MfgGame();
+            MfgInit.game = new mfg.MfgGame();
             MfgInit.game.init();
         }
     }

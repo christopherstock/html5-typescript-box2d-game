@@ -10379,7 +10379,7 @@ module.exports = __webpack_require__(3);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg_1 = __webpack_require__(0);
+var mfg = __webpack_require__(0);
 var Matter = __webpack_require__(1);
 /*******************************************************************************************************************
 *   Example 1 displays two falling boxes.
@@ -10747,8 +10747,8 @@ window.onload = function () {
     // exampleBasic();
     // exampleBridge();
     // exampleEvents();
-    // exampleManipulation();
-    mfg_1.Mfg.main();
+    //           exampleManipulation();
+    mfg.Mfg.main();
 };
 /*****************************************************************************
 *   Being invoked when the page is left.
@@ -10817,8 +10817,8 @@ exports.MfgSettings = MfgSettings;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg_1 = __webpack_require__(0);
-var lib_1 = __webpack_require__(6);
+var mfg = __webpack_require__(0);
+var lib = __webpack_require__(6);
 /*****************************************************************************
 *   Represents a debug group whose logging can be enabled or disabled.
 *
@@ -10844,12 +10844,12 @@ var MfgDebug = (function () {
     *****************************************************************************/
     MfgDebug.prototype.log = function (msg) {
         if (this.debugEnabled) {
-            console.log('[' + lib_1.LibString.getDateTimeString() + '] ' + msg);
+            console.log('[' + lib.LibString.getDateTimeString() + '] ' + msg);
         }
     };
-    MfgDebug.bugfix = new MfgDebug(mfg_1.MfgSettings.DEBUG_MODE);
-    MfgDebug.init = new MfgDebug(true && mfg_1.MfgSettings.DEBUG_MODE);
-    MfgDebug.acclaim = new MfgDebug(true && mfg_1.MfgSettings.DEBUG_MODE);
+    MfgDebug.bugfix = new MfgDebug(mfg.MfgSettings.DEBUG_MODE);
+    MfgDebug.init = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
+    MfgDebug.acclaim = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
     return MfgDebug;
 }());
 exports.MfgDebug = MfgDebug;
@@ -10937,7 +10937,7 @@ exports.LibString = LibString;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg_1 = __webpack_require__(0);
+var mfg = __webpack_require__(0);
 /*****************************************************************************
 *   Specifies the initialization part of the game logic.
 *
@@ -10952,7 +10952,7 @@ var MfgInit = (function () {
     *****************************************************************************/
     MfgInit.init = function () {
         // init the game engine
-        MfgInit.game = new mfg_1.MfgGame();
+        MfgInit.game = new mfg.MfgGame();
         MfgInit.game.init();
     };
     /** The singleton game instance. */
@@ -10969,9 +10969,7 @@ exports.MfgInit = MfgInit;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg_1 = __webpack_require__(0);
-var mfg_2 = __webpack_require__(0);
-var mfg_3 = __webpack_require__(0);
+var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
@@ -10989,10 +10987,10 @@ var Mfg = (function () {
     *****************************************************************************/
     Mfg.main = function () {
         // set title and acclaim debug console
-        mfg_2.MfgDebug.acclaim.log(mfg_3.MfgSettings.TITLE);
-        document.title = mfg_3.MfgSettings.TITLE;
+        mfg.MfgDebug.acclaim.log(mfg.MfgSettings.TITLE);
+        document.title = mfg.MfgSettings.TITLE;
         //init game engine
-        mfg_1.MfgInit.init();
+        mfg.MfgInit.init();
     };
     return Mfg;
 }());
@@ -11007,10 +11005,7 @@ exports.Mfg = Mfg;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
-var mfg_1 = __webpack_require__(0);
-var mfg_2 = __webpack_require__(0);
-var mfg_3 = __webpack_require__(0);
-var mfg_4 = __webpack_require__(0);
+var mfg = __webpack_require__(0);
 /*****************************************************************************
 *   Specifies the initialization part of the game logic.
 *
@@ -11028,26 +11023,19 @@ var MfgGame = (function () {
         *   Being invoked each tick of the game loop in order to render the game.
         *****************************************************************************/
         this.tick = function () {
-            mfg_1.MfgDebug.bugfix.log("render game ..");
+            mfg.MfgDebug.bugfix.log("render game ..");
             // update MatterJS 2d engine
-            Matter.Engine.update(_this.engine, mfg_2.MfgSettings.RENDER_DELTA);
+            Matter.Engine.update(_this.engine, mfg.MfgSettings.RENDER_DELTA);
         };
     }
     /*****************************************************************************
     *   Inits the game from scratch.
     *****************************************************************************/
     MfgGame.prototype.init = function () {
-        mfg_1.MfgDebug.init.log("Initing game engine");
+        mfg.MfgDebug.init.log("Initing game engine");
         this.initEngine2D();
         this.initLevel();
         this.initPlayer();
-        // add all of the bodies to the world
-        Matter.World.add(this.engine.world, [
-            this.level.boxB,
-            this.level.boxC,
-            this.level.ground,
-            this.player.boxA,
-        ]);
         // start the game loop
         this.start();
     };
@@ -11055,7 +11043,8 @@ var MfgGame = (function () {
     *   Inits the player instance.
     *****************************************************************************/
     MfgGame.prototype.initPlayer = function () {
-        this.player = new mfg_3.MfgPlayer();
+        this.player = new mfg.MfgPlayer();
+        this.player.init();
     };
     /*****************************************************************************
     *   Inits the 2D engine.
@@ -11066,14 +11055,14 @@ var MfgGame = (function () {
             element: document.body,
             engine: this.engine
         });
-        this.renderer.canvas.width = mfg_2.MfgSettings.CANVAS_WIDTH;
-        this.renderer.canvas.height = mfg_2.MfgSettings.CANVAS_HEIGHT;
+        this.renderer.canvas.width = mfg.MfgSettings.CANVAS_WIDTH;
+        this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
     };
     /*****************************************************************************
     *   Inits the level.
     *****************************************************************************/
     MfgGame.prototype.initLevel = function () {
-        this.level = new mfg_4.MfgLevel();
+        this.level = new mfg.MfgLevel();
         this.level.init();
     };
     /*****************************************************************************
@@ -11081,7 +11070,7 @@ var MfgGame = (function () {
     *****************************************************************************/
     MfgGame.prototype.start = function () {
         Matter.Render.run(this.renderer);
-        window.setInterval(this.tick, mfg_2.MfgSettings.RENDER_DELTA);
+        window.setInterval(this.tick, mfg.MfgSettings.RENDER_DELTA);
     };
     return MfgGame;
 }());
@@ -11123,6 +11112,7 @@ module.exports = g;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
 /*****************************************************************************
 *   Specifies the initialization part of the game logic.
 *
@@ -11143,6 +11133,10 @@ var MfgLevel = (function () {
         this.boxB = Matter.Bodies.rectangle(400, 40, 80, 80);
         this.boxC = Matter.Bodies.rectangle(420, 100, 80, 80);
         this.ground = Matter.Bodies.rectangle(400, 550, 750, 25, { isStatic: true });
+        // add all of the bodies to the world
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxB);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxC);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.ground);
     };
     return MfgLevel;
 }());
@@ -11157,7 +11151,7 @@ exports.MfgLevel = MfgLevel;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
-var mfg_1 = __webpack_require__(0);
+var mfg = __webpack_require__(0);
 /*****************************************************************************
 *   Represents the player being controled by the user.
 *
@@ -11170,8 +11164,14 @@ var MfgPlayer = (function () {
     *****************************************************************************/
     function MfgPlayer() {
         this.boxA = null;
-        this.boxA = Matter.Bodies.rectangle(250, 40, mfg_1.MfgSettings.PLAYER_SIZE_X, mfg_1.MfgSettings.PLAYER_SIZE_Y);
     }
+    /*****************************************************************************
+    *   Inits the player instance.
+    *****************************************************************************/
+    MfgPlayer.prototype.init = function () {
+        this.boxA = Matter.Bodies.rectangle(250, 40, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxA);
+    };
     return MfgPlayer;
 }());
 exports.MfgPlayer = MfgPlayer;

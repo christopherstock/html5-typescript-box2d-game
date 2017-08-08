@@ -1,6 +1,6 @@
 
-    import {MfgSettings} from '../mfg';
-    import {LibString}   from '../../lib/lib';
+    import * as mfg from '../mfg';
+    import * as lib from '../../lib/lib';
 
     /*****************************************************************************
     *   Represents a debug group whose logging can be enabled or disabled.
@@ -10,9 +10,9 @@
     *****************************************************************************/
     export class MfgDebug
     {
-        public      static  bugfix          :MfgDebug           = new MfgDebug(          MfgSettings.DEBUG_MODE );
-        public      static  init            :MfgDebug           = new MfgDebug( true  && MfgSettings.DEBUG_MODE );
-        public      static  acclaim         :MfgDebug           = new MfgDebug( true  && MfgSettings.DEBUG_MODE );
+        public      static  bugfix          :MfgDebug           = new MfgDebug(          mfg.MfgSettings.DEBUG_MODE );
+        public      static  init            :MfgDebug           = new MfgDebug( true  && mfg.MfgSettings.DEBUG_MODE );
+        public      static  acclaim         :MfgDebug           = new MfgDebug( true  && mfg.MfgSettings.DEBUG_MODE );
 
         /** The flag that enables or disables logging for this debug group. */
         private             debugEnabled    :boolean            = false;
@@ -37,7 +37,7 @@
         {
             if ( this.debugEnabled )
             {
-                console.log( '[' + LibString.getDateTimeString() + '] ' + msg );
+                console.log( '[' + lib.LibString.getDateTimeString() + '] ' + msg );
             }
         }
     }

@@ -1,5 +1,5 @@
 
-    import {Mfg} from './de/mayflower/mfg/mfg';
+    import * as mfg from './de/mayflower/mfg/mfg';
     const Matter = require('matter-js');
 
     /*******************************************************************************************************************
@@ -500,9 +500,10 @@
         // exampleBasic();
         // exampleBridge();
         // exampleEvents();
-        // exampleManipulation();
 
-        Mfg.main();
+        //           exampleManipulation();
+
+         mfg.Mfg.main();
     };
 
     /*****************************************************************************

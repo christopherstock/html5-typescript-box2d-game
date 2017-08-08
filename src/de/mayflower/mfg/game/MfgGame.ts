@@ -1,9 +1,6 @@
 
-    import * as Matter   from 'matter-js';
-    import {MfgDebug}    from '../mfg';
-    import {MfgSettings} from '../mfg';
-    import {MfgPlayer}   from '../mfg';
-    import {MfgLevel}    from '../mfg';
+    import * as Matter from 'matter-js';
+    import * as mfg    from '../mfg';
 
     /*****************************************************************************
     *   Specifies the initialization part of the game logic.
@@ -13,33 +10,22 @@
     *****************************************************************************/
     export class MfgGame
     {
-        private     engine                  :Matter.Engine      = null;
+        public      engine                  :Matter.Engine      = null;
         private     renderer                :Matter.Render      = null;
 
-        private     player                  :MfgPlayer          = null;
-        private     level                   :MfgLevel           = null;
+        private     player                  :mfg.MfgPlayer      = null;
+        private     level                   :mfg.MfgLevel       = null;
 
         /*****************************************************************************
         *   Inits the game from scratch.
         *****************************************************************************/
         public init()
         {
-            MfgDebug.init.log( "Initing game engine" );
+            mfg.MfgDebug.init.log( "Initing game engine" );
 
             this.initEngine2D();
             this.initLevel();
             this.initPlayer();
-
-            // add all of the bodies to the world
-            Matter.World.add(
-                this.engine.world,
-                [
-                    this.level.boxB,
-                    this.level.boxC,
-                    this.level.ground,
-                    this.player.boxA,
-                ]
-            );
 
             // start the game loop
             this.start();
@@ -50,7 +36,8 @@
         *****************************************************************************/
         private initPlayer()
         {
-            this.player = new MfgPlayer();
+            this.player = new mfg.MfgPlayer();
+            this.player.init();
         }
 
         /*****************************************************************************
@@ -67,8 +54,8 @@
                 }
             );
 
-            this.renderer.canvas.width  = MfgSettings.CANVAS_WIDTH;
-            this.renderer.canvas.height = MfgSettings.CANVAS_HEIGHT;
+            this.renderer.canvas.width  = mfg.MfgSettings.CANVAS_WIDTH;
+            this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
         }
 
         /*****************************************************************************
@@ -76,7 +63,7 @@
         *****************************************************************************/
         private initLevel()
         {
-            this.level = new MfgLevel();
+            this.level = new mfg.MfgLevel();
             this.level.init();
         }
 
@@ -89,7 +76,7 @@
 
             window.setInterval(
                 this.tick,
-                MfgSettings.RENDER_DELTA
+                mfg.MfgSettings.RENDER_DELTA
             );
         }
 
@@ -98,9 +85,9 @@
         *****************************************************************************/
         private tick=()=>
         {
-            MfgDebug.bugfix.log("render game ..");
+            mfg.MfgDebug.bugfix.log("render game ..");
 
             // update MatterJS 2d engine
-            Matter.Engine.update(this.engine, MfgSettings.RENDER_DELTA);
+            Matter.Engine.update(this.engine, mfg.MfgSettings.RENDER_DELTA);
         }
     }

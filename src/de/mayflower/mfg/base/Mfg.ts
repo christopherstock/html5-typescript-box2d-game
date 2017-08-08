@@ -1,7 +1,5 @@
 
-    import {MfgInit}     from '../mfg';
-    import {MfgDebug}    from '../mfg';
-    import {MfgSettings} from '../mfg';
+    import * as mfg from '../mfg';
 
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
@@ -20,10 +18,10 @@
         public static main():void
         {
             // set title and acclaim debug console
-            MfgDebug.acclaim.log( MfgSettings.TITLE );
-            document.title = MfgSettings.TITLE;
+            mfg.MfgDebug.acclaim.log( mfg.MfgSettings.TITLE );
+            document.title = mfg.MfgSettings.TITLE;
 
             //init game engine
-            MfgInit.init();
+            mfg.MfgInit.init();
         }
     }

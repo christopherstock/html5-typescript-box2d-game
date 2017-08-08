@@ -1,6 +1,6 @@
 
-    import * as Matter   from 'matter-js';
-    import {MfgSettings} from '../mfg';
+    import * as Matter from 'matter-js';
+    import * as mfg    from '../mfg';
 
     /*****************************************************************************
     *   Represents the player being controled by the user.
@@ -17,11 +17,20 @@
         *****************************************************************************/
         public constructor()
         {
+        }
+
+        /*****************************************************************************
+        *   Inits the player instance.
+        *****************************************************************************/
+        public init()
+        {
             this.boxA = Matter.Bodies.rectangle(
                 250,
                 40,
-                MfgSettings.PLAYER_SIZE_X,
-                MfgSettings.PLAYER_SIZE_Y
+                mfg.MfgSettings.PLAYER_SIZE_X,
+                mfg.MfgSettings.PLAYER_SIZE_Y
             );
+
+            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxA );
         }
     }
