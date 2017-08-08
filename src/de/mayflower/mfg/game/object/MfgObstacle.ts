@@ -12,8 +12,6 @@
     {
         public constructor( x:number, y:number, width:number, height:number )
         {
-            super( x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE );
-
-            this.body.isStatic = true;
+            super( x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true );
         }
     }

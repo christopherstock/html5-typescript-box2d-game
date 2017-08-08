@@ -10802,6 +10802,10 @@ var MfgSettings = (function () {
     MfgSettings.CAMERA_RATIO_X = 0.5;
     /** The camera ration for the vertical axis. */
     MfgSettings.CAMERA_RATIO_Y = 0.25;
+    /** The opacity for the debug colors. */
+    MfgSettings.COLOR_DEBUG_OPACITY = 1.0;
+    /** The debug color for the player block. */
+    MfgSettings.COLOR_DEBUG_BORDER = "#dedede";
     /** The debug color for the player block. */
     MfgSettings.COLOR_DEBUG_PLAYER = "#43bfee";
     /** The debug color for a box. */
@@ -10810,8 +10814,6 @@ var MfgSettings = (function () {
     MfgSettings.COLOR_DEBUG_OBSTACLE = "#808080";
     /** The debug color for the item. */
     MfgSettings.COLOR_DEBUG_ITEM = "#ffff00";
-    /** The opacity for the debug colors. */
-    MfgSettings.COLOR_DEBUG_OPACITY = 1.0;
     /** The collision group for items and player collision indicator. */
     MfgSettings.UNIQUE_COLLISION_GROUPS = {
         category: 0x0001,
@@ -10975,16 +10977,18 @@ var MfgGameObject = (function () {
     /*****************************************************************************
     *   Creates a new game object.
     *****************************************************************************/
-    function MfgGameObject(x, y, width, height, debugColor) {
+    function MfgGameObject(x, y, width, height, debugColor, isSensor, isStatic) {
         /** The game objects' body. */
         this.body = null;
         this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, {
             render: {
-                strokeStyle: '#dedede',
-                lineWidth: 1,
+                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                lineWidth: 1.0,
                 opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                 fillStyle: debugColor
-            }
+            },
+            isSensor: isSensor,
+            isStatic: isStatic
         });
     }
     return MfgGameObject;
@@ -11046,9 +11050,7 @@ var mfg = __webpack_require__(0);
 var MfgBox = (function (_super) {
     __extends(MfgBox, _super);
     function MfgBox(x, y, width, height) {
-        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX) || this;
-        _this.body.isStatic = false;
-        return _this;
+        return _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false) || this;
     }
     return MfgBox;
 }(mfg.MfgGameObject));
@@ -11086,12 +11088,9 @@ var MfgItem = (function (_super) {
     *   Creates a new game item.
     *****************************************************************************/
     function MfgItem(x, y, width, height) {
-        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM) || this;
+        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
-        _this.body.isStatic = true;
-        // put the item into a unique collision group so its uncollidable
-        _this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUPS;
         return _this;
     }
     /*****************************************************************************
@@ -11135,9 +11134,7 @@ var mfg = __webpack_require__(0);
 var MfgObstacle = (function (_super) {
     __extends(MfgObstacle, _super);
     function MfgObstacle(x, y, width, height) {
-        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE) || this;
-        _this.body.isStatic = true;
-        return _this;
+        return _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true) || this;
     }
     return MfgObstacle;
 }(mfg.MfgGameObject));
@@ -11175,38 +11172,25 @@ var MfgPlayer = (function (_super) {
     *   Creates a new player instance.
     *****************************************************************************/
     function MfgPlayer(x, y, width, height) {
-        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER) || this;
-        // public          bottomCollisionChecker  :Matter.Body                    = null;
+        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, false) || this;
+        _this.bottomCollisionChecker = null;
         _this.jumping = false;
         _this.jumpPower = 0.0;
-        /*
-                    this.bottomCollisionChecker = Matter.Bodies.rectangle(
-                        x + ( width  / 2 ),
-                        y + height,
-                        width,
-                        1.0,
-                        {
-                            render:
-                            {
-                                strokeStyle: '#dedede',
-                                lineWidth: 1,
-                                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                                fillStyle: "#ffffff"
-                            }
-                        }
-                    );
-        */
-        /*
-                    this.body = Matter.Body.create(
-                        {
-                            parts: [
-                                this.body,
-                                this.bottomCollisionChecker
-                            ],
-                            friction: 0
-                        }
-                    );
-        */
+        _this.bottomCollisionChecker = Matter.Bodies.rectangle(x + (width / 2), y + height, width, 1.0, {
+            render: {
+                strokeStyle: '#dedede',
+                lineWidth: 1,
+                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                fillStyle: "#ffffff"
+            },
+            isSensor: true
+        });
+        _this.body = Matter.Body.create({
+            parts: [
+                _this.body,
+                _this.bottomCollisionChecker
+            ]
+        });
         // avoid body tilting
         _this.body.inertia = Infinity;
         _this.body.inverseInertia = 1 / Infinity;

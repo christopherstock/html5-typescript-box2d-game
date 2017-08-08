@@ -18,12 +18,7 @@
         *****************************************************************************/
         public constructor( x:number, y:number, width:number, height:number )
         {
-            super( x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM );
-
-            this.body.isStatic = true;
-
-            // put the item into a unique collision group so its uncollidable
-            this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUPS;
+            super( x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true );
         }
 
         /*****************************************************************************

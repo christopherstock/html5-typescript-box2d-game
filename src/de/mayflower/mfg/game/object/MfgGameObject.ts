@@ -16,7 +16,16 @@
         /*****************************************************************************
         *   Creates a new game object.
         *****************************************************************************/
-        public constructor( x:number, y:number, width:number, height:number, debugColor:string )
+        public constructor
+        (
+            x:number,
+            y:number,
+            width:number,
+            height:number,
+            debugColor:string,
+            isSensor:boolean,
+            isStatic:boolean
+        )
         {
             this.body = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),
@@ -26,11 +35,13 @@
                 {
                     render:
                     {
-                        strokeStyle: '#dedede',
-                        lineWidth: 1,
-                        opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                        fillStyle: debugColor
-                    }
+                        strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                        lineWidth:   1.0,
+                        opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                        fillStyle:   debugColor
+                    },
+                    isSensor: isSensor,
+                    isStatic: isStatic
                 }
             );
         }
