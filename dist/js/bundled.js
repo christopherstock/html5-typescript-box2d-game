@@ -77,7 +77,9 @@ __export(__webpack_require__(4));
 __export(__webpack_require__(5));
 __export(__webpack_require__(8));
 __export(__webpack_require__(9));
-__export(__webpack_require__(11));
+__export(__webpack_require__(10));
+__export(__webpack_require__(12));
+__export(__webpack_require__(13));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10361,7 +10363,7 @@ var Vector = _dereq_('../geometry/Vector');
 
 },{"../body/Composite":2,"../core/Common":14,"../core/Events":16,"../geometry/Bounds":26,"../geometry/Vector":28}]},{},[30])(30)
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ }),
 /* 2 */
@@ -10787,10 +10789,10 @@ var MfgSettings = (function () {
     MfgSettings.PATH_SOUND = "res/sound/";
     /** The relative path from index.html where all 3d model files the app makes use of reside. */
     MfgSettings.PATH_3DS = "res/3ds/";
-    /** The player's x and z dimension (radius). */
-    MfgSettings.PLAYER_SIZE_XZ = 1.0;
+    /** The player's width. */
+    MfgSettings.PLAYER_SIZE_X = 80.0;
     /** The player's y dimension (height). */
-    MfgSettings.PLAYER_SIZE_Y = 2.0;
+    MfgSettings.PLAYER_SIZE_Y = 120.0;
     /** The player's speed in world coordinate per tick. */
     MfgSettings.PLAYER_SPEED_MOVE = 10;
     /** The player's turning speed in degrees per tick. */
@@ -10965,75 +10967,6 @@ exports.MfgInit = MfgInit;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg_1 = __webpack_require__(0);
-/*****************************************************************************
-*   Specifies the initialization part of the game logic.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var MfgGame = (function () {
-    function MfgGame() {
-        this.engine = null;
-    }
-    /*****************************************************************************
-    *   Inits this app from scratch.
-    *****************************************************************************/
-    MfgGame.prototype.init = function () {
-        mfg_1.MfgDebug.init.log("Initing game engine");
-        var body = document.querySelector("body");
-        var World = Matter.World;
-        var Bodies = Matter.Bodies;
-        // create a Matter.js engine
-        this.engine = Matter.Engine.create(body, {});
-        // create two boxes and a ground
-        var boxA = Bodies.rectangle(400, 200, 80, 80);
-        var boxB = Bodies.rectangle(450, 50, 80, 80);
-        var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
-        // add all of the bodies to the world
-        World.add(this.engine.world, [boxA, boxB, ground]);
-        Matter.Engine.run(this.engine);
-    };
-    return MfgGame;
-}());
-exports.MfgGame = MfgGame;
-//# sourceMappingURL=MfgGame.js.map
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 var mfg_1 = __webpack_require__(0);
 var mfg_2 = __webpack_require__(0);
 var mfg_3 = __webpack_require__(0);
@@ -11063,6 +10996,161 @@ var Mfg = (function () {
 }());
 exports.Mfg = Mfg;
 //# sourceMappingURL=Mfg.js.map
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg_1 = __webpack_require__(0);
+var mfg_2 = __webpack_require__(0);
+var mfg_3 = __webpack_require__(0);
+var mfg_4 = __webpack_require__(0);
+var mfg_5 = __webpack_require__(0);
+/*****************************************************************************
+*   Specifies the initialization part of the game logic.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgGame = (function () {
+    function MfgGame() {
+        this.engine = null;
+        this.player = null;
+        this.level = null;
+    }
+    /*****************************************************************************
+    *   Inits the game from scratch.
+    *****************************************************************************/
+    MfgGame.prototype.init = function () {
+        mfg_1.MfgDebug.init.log("Initing game engine");
+        this.initEngine2D();
+        this.initLevel();
+        this.initPlayer();
+        // add all of the bodies to the world
+        Matter.World.add(mfg_5.MfgInit.game.engine.world, [
+            mfg_5.MfgInit.game.player.boxA,
+            mfg_5.MfgInit.game.level.boxB,
+            mfg_5.MfgInit.game.level.ground
+        ]);
+        Matter.Engine.run(this.engine);
+    };
+    /*****************************************************************************
+    *   Inits the player instance.
+    *****************************************************************************/
+    MfgGame.prototype.initPlayer = function () {
+        this.player = new mfg_3.MfgPlayer();
+    };
+    /*****************************************************************************
+    *   Inits the 2D engine.
+    *****************************************************************************/
+    MfgGame.prototype.initEngine2D = function () {
+        var htmlBody = document.querySelector("body");
+        this.engine = Matter.Engine.create(htmlBody, {});
+        this.engine.render.canvas.width = mfg_2.MfgSettings.CANVAS_WIDTH;
+        this.engine.render.canvas.height = mfg_2.MfgSettings.CANVAS_HEIGHT;
+    };
+    /*****************************************************************************
+    *   Inits the level.
+    *****************************************************************************/
+    MfgGame.prototype.initLevel = function () {
+        this.level = new mfg_4.MfgLevel();
+        this.level.init();
+    };
+    return MfgGame;
+}());
+exports.MfgGame = MfgGame;
+//# sourceMappingURL=MfgGame.js.map
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+/*****************************************************************************
+*   Specifies the initialization part of the game logic.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgLevel = (function () {
+    function MfgLevel() {
+        this.ground = null;
+        this.boxB = null;
+    }
+    /*****************************************************************************
+    *   Inits the game from scratch.
+    *****************************************************************************/
+    MfgLevel.prototype.init = function () {
+        // add some example objects
+        this.boxB = Matter.Bodies.rectangle(450, 50, 80, 80);
+        this.ground = Matter.Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+    };
+    return MfgLevel;
+}());
+exports.MfgLevel = MfgLevel;
+//# sourceMappingURL=MfgLevel.js.map
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg_1 = __webpack_require__(0);
+/*****************************************************************************
+*   Represents the player being controled by the user.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgPlayer = (function () {
+    /*****************************************************************************
+    *   Creates a new player instance.
+    *****************************************************************************/
+    function MfgPlayer() {
+        this.boxA = null;
+        this.boxA = Matter.Bodies.rectangle(100, 40, mfg_1.MfgSettings.PLAYER_SIZE_X, mfg_1.MfgSettings.PLAYER_SIZE_Y);
+    }
+    return MfgPlayer;
+}());
+exports.MfgPlayer = MfgPlayer;
+//# sourceMappingURL=MfgPlayer.js.map
 
 /***/ })
 /******/ ]);

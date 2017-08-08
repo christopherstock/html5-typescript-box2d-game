@@ -29,10 +29,10 @@
         /** The relative path from index.html where all 3d model files the app makes use of reside. */
         public      static      PATH_3DS                                    :string             = "res/3ds/";
 
-        /** The player's x and z dimension (radius). */
-        public      static      PLAYER_SIZE_XZ                              :number             = 1.0;
+        /** The player's width. */
+        public      static      PLAYER_SIZE_X                               :number             = 80.0;
         /** The player's y dimension (height). */
-        public      static      PLAYER_SIZE_Y                               :number             = 2.0;
+        public      static      PLAYER_SIZE_Y                               :number             = 120.0;
 
         /** The player's speed in world coordinate per tick. */
         public      static      PLAYER_SPEED_MOVE                           :number             = 10;
