@@ -10,10 +10,9 @@
     *****************************************************************************/
     export class MfgPlayer extends mfg.MfgGameObject
     {
-        public          bottomCollisionChecker  :Matter.Body                    = null;
-
-        public          jumping                 :boolean                        = false;
+        public          bottomSensor            :Matter.Body                    = null;
         public          jumpPower               :number                         = 0.0;
+        private         jumpKeyNeedsRelease     :boolean                        = false;
 
         /*****************************************************************************
         *   Creates a new player instance.
@@ -22,18 +21,18 @@
         {
             super( x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, false );
 
-            this.bottomCollisionChecker = Matter.Bodies.rectangle(
+            this.bottomSensor = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),
-                y + height,
+                y + height + 1,
                 width,
                 1.0,
                 {
                     render:
                     {
-                        strokeStyle: '#dedede',
-                        lineWidth: 1,
+                        lineWidth: 1.0,
+                        strokeStyle: '#ffffff',
+                        fillStyle: "#ffffff",
                         opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                        fillStyle: "#ffffff"
                     },
                     isSensor: true
                 }
@@ -43,7 +42,7 @@
                 {
                     parts: [
                         this.body,
-                        this.bottomCollisionChecker
+                        this.bottomSensor
                     ]
                 }
             );
@@ -70,11 +69,22 @@
 
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_UP ) )
             {
-                if ( !this.jumping )
+                if ( !this.jumpKeyNeedsRelease )
                 {
-                    this.jumping   = true;
-                    this.jumpPower = 30.0;
+                    this.jumpKeyNeedsRelease = true;
+
+                    let bottomCollides = this.checkBottomCollision();
+
+                    // jump if colliding with bottom and not currently jumping
+                    if ( bottomCollides )
+                    {
+                        this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
+                    }
                 }
+            }
+            else
+            {
+                this.jumpKeyNeedsRelease = false;
             }
         }
 
@@ -84,15 +94,39 @@
         public render()
         {
             // render jumping
-            if ( this.jumping )
+            if ( this.jumpPower > 0.0 )
             {
+                // move body
                 Matter.Body.translate( this.body, { x: 0.0, y: -this.jumpPower });
 
                 this.jumpPower -= 2.0;
 
-                if ( this.jumpPower <= 0.0 ) {
-                    this.jumping = false;
+                if ( this.jumpPower < 0.0 ) {
+                    this.jumpPower = 0.0;
                 }
             }
+        }
+
+        /*****************************************************************************
+        *   Check if the player's bottom sensor currently collides with any other body.
+        *****************************************************************************/
+        public checkBottomCollision()
+        {
+            let bodies:Array<Matter.Body> = mfg.MfgInit.game.engine.world.bodies;
+
+            for ( let body of bodies )
+            {
+                if ( body == this.body )
+                {
+                    continue;
+                }
+
+                if ( Matter.Bounds.overlaps( body.bounds, this.bottomSensor.bounds ) )
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }

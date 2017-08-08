@@ -10796,6 +10796,8 @@ var MfgSettings = (function () {
     MfgSettings.PLAYER_SIZE_Y = 120.0;
     /** The player's speed in world coordinate per tick. */
     MfgSettings.PLAYER_SPEED_MOVE = 7.5;
+    /** The player's jump power in px per tick. */
+    MfgSettings.PLAYER_JUMP_POWER = 30.0;
     /** The default vertical gravity for all levels. */
     MfgSettings.DEFAULT_GRAVITY_Y = 1.0;
     /** The camera ration for the horizontal axis. */
@@ -10923,9 +10925,6 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO INIT   Player may only jump if colliding with the floor.
-*
-*   TODO ASAP   Let player jump. Improve moving via friction and only jump if bottom collision is active!.
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Add circle objects.
 *   TODO ASAP   Different colors for different game objects.
@@ -10934,6 +10933,7 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   CameraY shall only change if player collides with the floor!!
 *   TODO ASAP   Create abstract level system.
 *   TODO INIT   Buffer camera.
+*   TODO INIT   Enrich all JavaDoc items.
 *   TODO WEAK   Try multiple layers of engines for different calcs/effects.
 *   TODO WEAK   Implement nice changing gravity effects.
 *
@@ -10982,10 +10982,10 @@ var MfgGameObject = (function () {
         this.body = null;
         this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, {
             render: {
+                fillStyle: debugColor,
                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                lineWidth: 1.0,
                 opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                fillStyle: debugColor
+                lineWidth: 1.0,
             },
             isSensor: isSensor,
             isStatic: isStatic
@@ -11157,6 +11157,16 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __values = (this && this.__values) || function (o) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    if (m) return m.call(o);
+    return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
@@ -11173,22 +11183,22 @@ var MfgPlayer = (function (_super) {
     *****************************************************************************/
     function MfgPlayer(x, y, width, height) {
         var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, false) || this;
-        _this.bottomCollisionChecker = null;
-        _this.jumping = false;
+        _this.bottomSensor = null;
         _this.jumpPower = 0.0;
-        _this.bottomCollisionChecker = Matter.Bodies.rectangle(x + (width / 2), y + height, width, 1.0, {
+        _this.jumpKeyNeedsRelease = false;
+        _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
             render: {
-                strokeStyle: '#dedede',
-                lineWidth: 1,
+                lineWidth: 1.0,
+                strokeStyle: '#ffffff',
+                fillStyle: "#ffffff",
                 opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                fillStyle: "#ffffff"
             },
             isSensor: true
         });
         _this.body = Matter.Body.create({
             parts: [
                 _this.body,
-                _this.bottomCollisionChecker
+                _this.bottomSensor
             ]
         });
         // avoid body tilting
@@ -11207,10 +11217,17 @@ var MfgPlayer = (function (_super) {
             Matter.Body.translate(this.body, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
         }
         if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
-            if (!this.jumping) {
-                this.jumping = true;
-                this.jumpPower = 30.0;
+            if (!this.jumpKeyNeedsRelease) {
+                this.jumpKeyNeedsRelease = true;
+                var bottomCollides = this.checkBottomCollision();
+                // jump if colliding with bottom and not currently jumping
+                if (bottomCollides) {
+                    this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
+                }
             }
+        }
+        else {
+            this.jumpKeyNeedsRelease = false;
         }
     };
     /*****************************************************************************
@@ -11218,13 +11235,40 @@ var MfgPlayer = (function (_super) {
     *****************************************************************************/
     MfgPlayer.prototype.render = function () {
         // render jumping
-        if (this.jumping) {
+        if (this.jumpPower > 0.0) {
+            // move body
             Matter.Body.translate(this.body, { x: 0.0, y: -this.jumpPower });
             this.jumpPower -= 2.0;
-            if (this.jumpPower <= 0.0) {
-                this.jumping = false;
+            if (this.jumpPower < 0.0) {
+                this.jumpPower = 0.0;
             }
         }
+    };
+    /*****************************************************************************
+    *   Check if the player's bottom sensor currently collides with any other body.
+    *****************************************************************************/
+    MfgPlayer.prototype.checkBottomCollision = function () {
+        var bodies = mfg.MfgInit.game.engine.world.bodies;
+        try {
+            for (var bodies_1 = __values(bodies), bodies_1_1 = bodies_1.next(); !bodies_1_1.done; bodies_1_1 = bodies_1.next()) {
+                var body = bodies_1_1.value;
+                if (body == this.body) {
+                    continue;
+                }
+                if (Matter.Bounds.overlaps(body.bounds, this.bottomSensor.bounds)) {
+                    return true;
+                }
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (bodies_1_1 && !bodies_1_1.done && (_a = bodies_1.return)) _a.call(bodies_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        return false;
+        var e_1, _a;
     };
     return MfgPlayer;
 }(mfg.MfgGameObject));

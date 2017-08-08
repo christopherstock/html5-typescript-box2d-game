@@ -49,7 +49,7 @@
         *****************************************************************************/
         public onKeyDown=( evt:KeyboardEvent )=>
         {
-            var keyCode = evt.which;
+            let keyCode = evt.which;
             this.iAllKeys[ keyCode ] = true;
 
             mfg.MfgDebug.key.log( "key pressed ["  + keyCode + "]" );
@@ -62,7 +62,7 @@
         *****************************************************************************/
         public onKeyUp=( evt:KeyboardEvent )=>
         {
-            var keyCode = evt.which;
+            let keyCode = evt.which;
             this.iAllKeys[ keyCode ] = false;
 
             mfg.MfgDebug.key.log( "key released ["  + keyCode + "]" );

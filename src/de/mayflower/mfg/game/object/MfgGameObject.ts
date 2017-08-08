@@ -35,10 +35,10 @@
                 {
                     render:
                     {
+                        fillStyle:   debugColor,
                         strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                        lineWidth:   1.0,
                         opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                        fillStyle:   debugColor
+                        lineWidth:   1.0,
                     },
                     isSensor: isSensor,
                     isStatic: isStatic

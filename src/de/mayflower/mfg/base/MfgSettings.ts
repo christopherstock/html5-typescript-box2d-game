@@ -29,6 +29,8 @@
         public      static      PLAYER_SIZE_Y                               :number                     = 120.0;
         /** The player's speed in world coordinate per tick. */
         public      static      PLAYER_SPEED_MOVE                           :number                     = 7.5;
+        /** The player's jump power in px per tick. */
+        public      static      PLAYER_JUMP_POWER                           :number                     = 30.0;
 
         /** The default vertical gravity for all levels. */
         public      static      DEFAULT_GRAVITY_Y                           :number                     = 1.0;
