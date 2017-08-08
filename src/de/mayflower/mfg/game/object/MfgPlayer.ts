@@ -1,6 +1,6 @@
 
     import * as Matter from 'matter-js';
-    import * as mfg    from '../mfg';
+    import * as mfg    from '../../mfg';
 
     /*****************************************************************************
     *   Represents the player being controled by the user.

@@ -84,6 +84,7 @@ __export(__webpack_require__(14));
 __export(__webpack_require__(15));
 __export(__webpack_require__(16));
 __export(__webpack_require__(17));
+__export(__webpack_require__(18));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10795,6 +10796,10 @@ var MfgSettings = (function () {
     MfgSettings.PLAYER_SPEED_MOVE = 7.5;
     /** The default vertical gravity for all levels. */
     MfgSettings.DEFAULT_GRAVITY_Y = 1.0;
+    /** The camera ration for the horizontal axis. */
+    MfgSettings.CAMERA_RATIO_X = 0.5;
+    /** The camera ration for the vertical axis. */
+    MfgSettings.CAMERA_RATIO_Y = 0.25;
     /** The relative path from index.html where all images the app makes use of reside. */
     MfgSettings.PATH_IMAGE_TEXTURE = "res/image/texture/";
     /** The relative path from index.html where all sounds the app makes use of reside. */
@@ -10973,13 +10978,14 @@ var mfg = __webpack_require__(0);
 *   The main class contains the application's points of entry and termination.
 *
 *   TODO ASAP   Checkout material parameters for different game objects!
-*   TODO ASAP   Implement camera.
 *   TODO ASAP   Let player jump. Improve moving via friction.
+*   TODO ASAP   Prune lib!
 *   TODO ASAP   Create pickable items.
+*   TODO ASAP   CSS: improve margin, center canvas, etc.
+*   TODO ASAP   CameraY shall only change if player collides with the floor!!
 *   TODO ASAP   Create abstract level system.
+*   TODO INIT   Buffer camera.
 *   TODO INIT   Player may only jump if colliding with the floor.
-*   TODO ASAP   Create abstract body generation class that uses 0, 0 as left-top corner!
-*
 *   TODO WEAK   Try multiple layers of engines for different calcs/effects.
 *   TODO WEAK   Implement nice changing gravity effects.
 *
@@ -11012,93 +11018,25 @@ exports.Mfg = Mfg;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
 /*****************************************************************************
-*   Specifies the initialization part of the game logic.
+*   The abstract class of all game objects.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
 *****************************************************************************/
-var MfgGame = (function () {
-    function MfgGame() {
-        var _this = this;
-        this.engine = null;
-        this.renderer = null;
-        this.keySystem = null;
-        this.level = null;
-        /*****************************************************************************
-        *   Being invoked each tick of the game loop in order to render the game.
-        *****************************************************************************/
-        this.tick = function () {
-            // handle player keys
-            _this.level.player.handleKeys();
-            // render the engine
-            _this.render();
-            // update MatterJS 2d engine
-            Matter.Engine.update(_this.engine, mfg.MfgSettings.RENDER_DELTA);
-        };
+var MfgGameObject = (function () {
+    /*****************************************************************************
+    *   Creates a new player instance.
+    *****************************************************************************/
+    function MfgGameObject(x, y, width, height) {
+        /** The game objects' body. */
+        this.body = null;
+        this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height);
     }
-    /*****************************************************************************
-    *   Inits the game from scratch.
-    *****************************************************************************/
-    MfgGame.prototype.init = function () {
-        mfg.MfgDebug.init.log("Initing game engine");
-        this.initEngine2D();
-        this.initLevel();
-        this.initKeySystem();
-        // start the game loop
-        this.start();
-    };
-    /*****************************************************************************
-    *   Inits the key system.
-    *****************************************************************************/
-    MfgGame.prototype.initKeySystem = function () {
-        this.keySystem = new mfg.MfgKeySystem();
-        this.keySystem.init();
-    };
-    /*****************************************************************************
-    *   Inits the 2D engine.
-    *****************************************************************************/
-    MfgGame.prototype.initEngine2D = function () {
-        this.engine = Matter.Engine.create();
-        this.renderer = Matter.Render.create({
-            element: document.body,
-            engine: this.engine
-        });
-        // this.renderer.options.showCollisions = true;
-        this.renderer.canvas.width = mfg.MfgSettings.CANVAS_WIDTH;
-        this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
-        this.engine.world.gravity = {
-            x: 0.0,
-            y: mfg.MfgSettings.DEFAULT_GRAVITY_Y,
-            scale: 0.001
-        };
-    };
-    /*****************************************************************************
-    *   Inits the level.
-    *****************************************************************************/
-    MfgGame.prototype.initLevel = function () {
-        this.level = new mfg.MfgLevel();
-        this.level.init();
-    };
-    /*****************************************************************************
-    *   Starts the game loop.
-    *****************************************************************************/
-    MfgGame.prototype.start = function () {
-        Matter.Render.run(this.renderer);
-        window.setInterval(this.tick, mfg.MfgSettings.RENDER_DELTA);
-    };
-    /*****************************************************************************
-    *   Renders all game components.
-    *****************************************************************************/
-    MfgGame.prototype.render = function () {
-        // render level
-        this.level.render();
-    };
-    return MfgGame;
+    return MfgGameObject;
 }());
-exports.MfgGame = MfgGame;
-//# sourceMappingURL=MfgGame.js.map
+exports.MfgGameObject = MfgGameObject;
+//# sourceMappingURL=MfgGameObject.js.map
 
 /***/ }),
 /* 11 */
@@ -11129,88 +11067,6 @@ module.exports = g;
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-/*****************************************************************************
-*   The abstract class of all game objects.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var MfgGameObject = (function () {
-    /*****************************************************************************
-    *   Creates a new player instance.
-    *****************************************************************************/
-    function MfgGameObject(x, y, width, height) {
-        /** The game objects' body. */
-        this.body = null;
-        this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height);
-    }
-    return MfgGameObject;
-}());
-exports.MfgGameObject = MfgGameObject;
-//# sourceMappingURL=MfgGameObject.js.map
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
-/*****************************************************************************
-*   Specifies the initialization part of the game logic.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var MfgLevel = (function () {
-    function MfgLevel() {
-        this.player = null;
-        this.ground = null;
-        this.obstacleA = null;
-        this.boxA = null;
-        this.boxB = null;
-    }
-    /*****************************************************************************
-    *   Inits the game from scratch.
-    *****************************************************************************/
-    MfgLevel.prototype.init = function () {
-        // init player
-        this.player = new mfg.MfgPlayer(0, 0);
-        // init static obstacles
-        this.ground = new mfg.MfgObstacle(0, 550, 600, 25);
-        this.obstacleA = new mfg.MfgObstacle(250, 470, 80, 80);
-        // init moveable boxes
-        this.boxA = new mfg.MfgBox(360, 0, 80, 80);
-        this.boxB = new mfg.MfgBox(380, 60, 80, 80);
-        // add all game objects to the world
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.ground.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.obstacleA.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxA.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxB.body);
-    };
-    /*****************************************************************************
-    *   Renders all level components.
-    *****************************************************************************/
-    MfgLevel.prototype.render = function () {
-        // render player
-        this.player.render();
-    };
-    return MfgLevel;
-}());
-exports.MfgLevel = MfgLevel;
-//# sourceMappingURL=MfgLevel.js.map
-
-/***/ }),
-/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11284,7 +11140,7 @@ exports.MfgPlayer = MfgPlayer;
 //# sourceMappingURL=MfgPlayer.js.map
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11320,7 +11176,7 @@ exports.MfgBox = MfgBox;
 //# sourceMappingURL=MfgBox.js.map
 
 /***/ }),
-/* 16 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11354,6 +11210,179 @@ var MfgObstacle = (function (_super) {
 }(mfg.MfgGameObject));
 exports.MfgObstacle = MfgObstacle;
 //# sourceMappingURL=MfgObstacle.js.map
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   Specifies the initialization part of the game logic.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgGame = (function () {
+    function MfgGame() {
+        var _this = this;
+        this.engine = null;
+        this.renderer = null;
+        this.keySystem = null;
+        this.camera = null;
+        this.level = null;
+        /*****************************************************************************
+        *   Being invoked each tick of the game loop in order to render the game.
+        *****************************************************************************/
+        this.tick = function () {
+            // handle player keys
+            _this.level.player.handleKeys();
+            // render the engine
+            _this.render();
+            // update MatterJS 2d engine
+            Matter.Engine.update(_this.engine, mfg.MfgSettings.RENDER_DELTA);
+        };
+    }
+    /*****************************************************************************
+    *   Inits the game from scratch.
+    *****************************************************************************/
+    MfgGame.prototype.init = function () {
+        mfg.MfgDebug.init.log("Initing game engine");
+        this.initEngine2D();
+        this.initLevel();
+        this.initKeySystem();
+        this.initCamera();
+        // start the game loop
+        this.start();
+    };
+    /*****************************************************************************
+    *   Inits the key system.
+    *****************************************************************************/
+    MfgGame.prototype.initKeySystem = function () {
+        this.keySystem = new mfg.MfgKeySystem();
+    };
+    /*****************************************************************************
+    *   Inits the camera.
+    *****************************************************************************/
+    MfgGame.prototype.initCamera = function () {
+        this.camera = new mfg.MfgCamera(mfg.MfgSettings.CAMERA_RATIO_X, mfg.MfgSettings.CAMERA_RATIO_Y);
+    };
+    /*****************************************************************************
+    *   Inits the 2D engine.
+    *****************************************************************************/
+    MfgGame.prototype.initEngine2D = function () {
+        this.engine = Matter.Engine.create();
+        this.renderer = Matter.Render.create({
+            element: document.body,
+            engine: this.engine
+        });
+        // this.renderer.options.showCollisions = true;
+        this.renderer.canvas.width = mfg.MfgSettings.CANVAS_WIDTH;
+        this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
+        this.renderer.options.hasBounds = true;
+        this.engine.world.gravity = {
+            x: 0.0,
+            y: mfg.MfgSettings.DEFAULT_GRAVITY_Y,
+            scale: 0.001
+        };
+    };
+    /*****************************************************************************
+    *   Inits the level.
+    *****************************************************************************/
+    MfgGame.prototype.initLevel = function () {
+        this.level = new mfg.MfgLevel(5000, 600);
+        this.level.init();
+    };
+    /*****************************************************************************
+    *   Starts the game loop.
+    *****************************************************************************/
+    MfgGame.prototype.start = function () {
+        // render 1st engine tick
+        this.tick();
+        // start the renderer
+        Matter.Render.run(this.renderer);
+        window.setInterval(this.tick, mfg.MfgSettings.RENDER_DELTA);
+    };
+    /*****************************************************************************
+    *   Renders all game components.
+    *****************************************************************************/
+    MfgGame.prototype.render = function () {
+        // render level
+        this.level.render();
+        // render camera
+        this.camera.update(this.level.width, this.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT, this.level.player.body.position.x, this.level.player.body.position.y, this.renderer);
+    };
+    return MfgGame;
+}());
+exports.MfgGame = MfgGame;
+//# sourceMappingURL=MfgGame.js.map
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   Specifies the initialization part of the game logic.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgLevel = (function () {
+    /*****************************************************************************
+    *   Inits the game from scratch.
+    *****************************************************************************/
+    function MfgLevel(width, height) {
+        this.width = 0.0;
+        this.height = 0.0;
+        this.player = null;
+        this.groundA = null;
+        this.groundB = null;
+        this.obstacleA = null;
+        this.boxA = null;
+        this.boxB = null;
+        this.width = width;
+        this.height = height;
+    }
+    /*****************************************************************************
+    *   Inits the game from scratch.
+    *****************************************************************************/
+    MfgLevel.prototype.init = function () {
+        // init player
+        this.player = new mfg.MfgPlayer(0, 0);
+        // init static obstacles
+        this.groundA = new mfg.MfgObstacle(0, 550, 600, 25);
+        this.groundB = new mfg.MfgObstacle(650, 550, 600, 25);
+        this.obstacleA = new mfg.MfgObstacle(250, 470, 80, 80);
+        // init moveable boxes
+        this.boxA = new mfg.MfgBox(360, 0, 80, 80);
+        this.boxB = new mfg.MfgBox(380, 60, 80, 80);
+        // add all game objects to the world
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.groundA.body);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.groundB.body);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.obstacleA.body);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxA.body);
+        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxB.body);
+    };
+    /*****************************************************************************
+    *   Renders all level components.
+    *****************************************************************************/
+    MfgLevel.prototype.render = function () {
+        // render player
+        this.player.render();
+    };
+    return MfgLevel;
+}());
+exports.MfgLevel = MfgLevel;
+//# sourceMappingURL=MfgLevel.js.map
 
 /***/ }),
 /* 17 */
@@ -11397,18 +11426,13 @@ var MfgKeySystem = (function () {
             _this.iAllKeys[keyCode] = false;
             mfg.MfgDebug.key.log("key released [" + keyCode + "]");
         };
-    }
-    /*****************************************************************************
-    *   Inits the key system by registering the key event listeners.
-    *****************************************************************************/
-    MfgKeySystem.prototype.init = function () {
         //set event listener for keyboard devices - all but IE
         window.addEventListener("keydown", this.onKeyDown, false);
         window.addEventListener("keyup", this.onKeyUp, false);
         //set event listener for keyboard devices - IE
         window.addEventListener("onkeydown", this.onKeyDown, false);
         window.addEventListener("onkeyup", this.onKeyUp, false);
-    };
+    }
     /*****************************************************************************
     *   Checks if the key with the given keyCode is currently pressed.
     *
@@ -11437,6 +11461,71 @@ var MfgKeySystem = (function () {
 }());
 exports.MfgKeySystem = MfgKeySystem;
 //# sourceMappingURL=MfgKeySystem.js.map
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+/*****************************************************************************
+*   Manages the camera that handles the scrolling part.
+*
+*   @author     Christopher Stock
+*   @version    0.0.8
+*****************************************************************************/
+var MfgCamera = (function () {
+    /*****************************************************************************
+    *   Constructs a new camera.
+    *****************************************************************************/
+    function MfgCamera(ratioX, ratioY) {
+        /** Current camera offset X. */
+        this.offsetX = 0.0;
+        /** Current camera offset Y. */
+        this.offsetY = 0.0;
+        /** Camera centering ration X. */
+        this.ratioX = 0.0;
+        /** Camera centering ration X. */
+        this.ratioY = 0.0;
+        this.ratioX = ratioX;
+        this.ratioY = ratioY;
+    }
+    /*****************************************************************************
+    *   Updates the singleton instance of the camera by reassigning
+    *   it's horizontal and vertical offset.
+    *****************************************************************************/
+    MfgCamera.prototype.update = function (levelWidth, levelHeight, canvasWidth, canvasHeight, subjectX, subjectY, renderer) {
+        //calculate scroll-offsets so camera is centered to subject
+        this.offsetX = subjectX - (canvasWidth * this.ratioX);
+        this.offsetY = subjectY - (canvasHeight * this.ratioY);
+        //clip camera-x to level bounds
+        if (this.offsetX < 0)
+            this.offsetX = 0;
+        if (this.offsetY > levelWidth - canvasWidth)
+            this.offsetX = levelWidth - canvasWidth;
+        //clip camera-y to level bounds
+        if (this.offsetX < 0)
+            this.offsetY = 0;
+        if (this.offsetY > levelHeight - canvasHeight)
+            this.offsetY = levelHeight - canvasHeight;
+        // assign current camera offset to renderer
+        renderer.bounds = Matter.Bounds.create([
+            {
+                x: this.offsetX,
+                y: this.offsetY
+            },
+            {
+                x: this.offsetX + canvasWidth,
+                y: this.offsetY + canvasHeight
+            }
+        ]);
+    };
+    return MfgCamera;
+}());
+exports.MfgCamera = MfgCamera;
+//# sourceMappingURL=MfgCamera.js.map
 
 /***/ })
 /******/ ]);

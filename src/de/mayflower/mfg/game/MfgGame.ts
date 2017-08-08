@@ -14,6 +14,7 @@
         private     renderer                :Matter.Render      = null;
 
         public      keySystem               :mfg.MfgKeySystem   = null;
+        public      camera                  :mfg.MfgCamera      = null;
         private     level                   :mfg.MfgLevel       = null;
 
         /*****************************************************************************
@@ -25,8 +26,8 @@
 
             this.initEngine2D();
             this.initLevel();
-
             this.initKeySystem();
+            this.initCamera();
 
             // start the game loop
             this.start();
@@ -38,7 +39,17 @@
         private initKeySystem()
         {
             this.keySystem = new mfg.MfgKeySystem();
-            this.keySystem.init();
+        }
+
+        /*****************************************************************************
+        *   Inits the camera.
+        *****************************************************************************/
+        private initCamera()
+        {
+            this.camera = new mfg.MfgCamera(
+                mfg.MfgSettings.CAMERA_RATIO_X,
+                mfg.MfgSettings.CAMERA_RATIO_Y
+            );
         }
 
         /*****************************************************************************
@@ -60,6 +71,8 @@
             this.renderer.canvas.width  = mfg.MfgSettings.CANVAS_WIDTH;
             this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
 
+            this.renderer.options.hasBounds = true;
+
             this.engine.world.gravity = {
                 x: 0.0,
                 y: mfg.MfgSettings.DEFAULT_GRAVITY_Y,
@@ -72,7 +85,7 @@
         *****************************************************************************/
         private initLevel()
         {
-            this.level = new mfg.MfgLevel();
+            this.level = new mfg.MfgLevel( 5000, 600 );
             this.level.init();
         }
 
@@ -81,6 +94,10 @@
         *****************************************************************************/
         private start()
         {
+            // render 1st engine tick
+            this.tick();
+
+            // start the renderer
             Matter.Render.run( this.renderer );
 
             window.setInterval(
@@ -100,8 +117,6 @@
             // render the engine
             this.render();
 
-
-
             // update MatterJS 2d engine
             Matter.Engine.update( this.engine, mfg.MfgSettings.RENDER_DELTA );
         };
@@ -114,5 +129,15 @@
             // render level
             this.level.render();
 
+            // render camera
+            this.camera.update(
+                this.level.width,
+                this.level.height,
+                mfg.MfgSettings.CANVAS_WIDTH,
+                mfg.MfgSettings.CANVAS_HEIGHT,
+                this.level.player.body.position.x,
+                this.level.player.body.position.y,
+                this.renderer
+            );
         }
     }

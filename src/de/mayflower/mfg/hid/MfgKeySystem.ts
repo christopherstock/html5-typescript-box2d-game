@@ -33,13 +33,6 @@
         *****************************************************************************/
         public constructor()
         {
-        }
-
-        /*****************************************************************************
-        *   Inits the key system by registering the key event listeners.
-        *****************************************************************************/
-        public init()
-        {
             //set event listener for keyboard devices - all but IE
             window.addEventListener( "keydown",     this.onKeyDown, false );
             window.addEventListener( "keyup",       this.onKeyUp,   false );

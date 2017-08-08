@@ -3,10 +3,11 @@
     export * from './base/MfgDebug';
     export * from './base/MfgInit';
     export * from './base/Mfg';
+    export * from './game/object/MfgGameObject';
+    export * from './game/object/MfgPlayer';
+    export * from './game/object/MfgBox';
+    export * from './game/object/MfgObstacle';
     export * from './game/MfgGame';
-    export * from './game/MfgGameObject';
     export * from './game/MfgLevel';
-    export * from './game/MfgPlayer';
-    export * from './game/MfgBox';
-    export * from './game/MfgObstacle';
     export * from './hid/MfgKeySystem';
+    export * from './ui/MfgCamera';

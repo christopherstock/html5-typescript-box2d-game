@@ -31,6 +31,12 @@
         /** The default vertical gravity for all levels. */
         public      static      DEFAULT_GRAVITY_Y                           :number             = 1.0;
 
+        /** The camera ration for the horizontal axis. */
+        public      static      CAMERA_RATIO_X                              :number             = 0.5;
+        /** The camera ration for the vertical axis. */
+        public      static      CAMERA_RATIO_Y                              :number             = 0.25;
+
+
 
 
         /** The relative path from index.html where all images the app makes use of reside. */
@@ -39,6 +45,4 @@
         public      static      PATH_SOUND                                  :string             = "res/sound/";
         /** The relative path from index.html where all 3d model files the app makes use of reside. */
         public      static      PATH_3DS                                    :string             = "res/3ds/";
-
-
     }
