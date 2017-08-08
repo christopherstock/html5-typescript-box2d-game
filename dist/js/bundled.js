@@ -11034,6 +11034,7 @@ var MfgGame = (function () {
         Matter.World.add(mfg_5.MfgInit.game.engine.world, [
             mfg_5.MfgInit.game.player.boxA,
             mfg_5.MfgInit.game.level.boxB,
+            mfg_5.MfgInit.game.level.boxC,
             mfg_5.MfgInit.game.level.ground
         ]);
         Matter.Engine.run(this.engine);
@@ -11110,14 +11111,16 @@ var MfgLevel = (function () {
     function MfgLevel() {
         this.ground = null;
         this.boxB = null;
+        this.boxC = null;
     }
     /*****************************************************************************
     *   Inits the game from scratch.
     *****************************************************************************/
     MfgLevel.prototype.init = function () {
         // add some example objects
-        this.boxB = Matter.Bodies.rectangle(450, 50, 80, 80);
-        this.ground = Matter.Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+        this.boxB = Matter.Bodies.rectangle(400, 40, 80, 80);
+        this.boxC = Matter.Bodies.rectangle(420, 100, 80, 80);
+        this.ground = Matter.Bodies.rectangle(400, 550, 750, 25, { isStatic: true });
     };
     return MfgLevel;
 }());
@@ -11145,7 +11148,7 @@ var MfgPlayer = (function () {
     *****************************************************************************/
     function MfgPlayer() {
         this.boxA = null;
-        this.boxA = Matter.Bodies.rectangle(100, 40, mfg_1.MfgSettings.PLAYER_SIZE_X, mfg_1.MfgSettings.PLAYER_SIZE_Y);
+        this.boxA = Matter.Bodies.rectangle(250, 40, mfg_1.MfgSettings.PLAYER_SIZE_X, mfg_1.MfgSettings.PLAYER_SIZE_Y);
     }
     return MfgPlayer;
 }());

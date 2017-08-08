@@ -35,10 +35,10 @@
                 [
                     MfgInit.game.player.boxA,
                     MfgInit.game.level.boxB,
+                    MfgInit.game.level.boxC,
                     MfgInit.game.level.ground
                 ]
             );
-
 
             Matter.Engine.run( this.engine );
         }

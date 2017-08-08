@@ -19,7 +19,7 @@
         public constructor()
         {
             this.boxA = Matter.Bodies.rectangle(
-                100,
+                250,
                 40,
                 MfgSettings.PLAYER_SIZE_X,
                 MfgSettings.PLAYER_SIZE_Y
