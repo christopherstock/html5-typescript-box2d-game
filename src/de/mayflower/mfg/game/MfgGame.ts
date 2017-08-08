@@ -15,6 +15,7 @@
     export class MfgGame
     {
         public      engine                  :Matter.Engine      = null;
+        public      renderer                :Matter.Render      = null;
         public      player                  :MfgPlayer          = null;
         public      level                   :MfgLevel           = null;
 
@@ -40,7 +41,8 @@
                 ]
             );
 
-            Matter.Engine.run( this.engine );
+            // start the game loop
+            this.start();
         }
 
         /*****************************************************************************
@@ -56,12 +58,17 @@
         *****************************************************************************/
         private initEngine2D()
         {
-            let htmlBody:HTMLBodyElement = document.querySelector("body");
+            this.engine = Matter.Engine.create();
 
-            this.engine = Matter.Engine.create( htmlBody, {} );
+            this.renderer = Matter.Render.create(
+                {
+                    element: document.body,
+                    engine:  this.engine
+                }
+            );
 
-            this.engine.render.canvas.width  = MfgSettings.CANVAS_WIDTH;
-            this.engine.render.canvas.height = MfgSettings.CANVAS_HEIGHT;
+            this.renderer.canvas.width  = MfgSettings.CANVAS_WIDTH;
+            this.renderer.canvas.height = MfgSettings.CANVAS_HEIGHT;
         }
 
         /*****************************************************************************
@@ -71,5 +78,14 @@
         {
             this.level = new MfgLevel();
             this.level.init();
+        }
+
+        /*****************************************************************************
+        *   Starts the game loop.
+        *****************************************************************************/
+        private start()
+        {
+            Matter.Engine.run( this.engine );
+            Matter.Render.run( this.renderer );
         }
     }

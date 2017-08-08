@@ -11019,6 +11019,7 @@ var mfg_5 = __webpack_require__(0);
 var MfgGame = (function () {
     function MfgGame() {
         this.engine = null;
+        this.renderer = null;
         this.player = null;
         this.level = null;
     }
@@ -11037,7 +11038,8 @@ var MfgGame = (function () {
             mfg_5.MfgInit.game.level.ground,
             mfg_5.MfgInit.game.player.boxA,
         ]);
-        Matter.Engine.run(this.engine);
+        // start the game loop
+        this.start();
     };
     /*****************************************************************************
     *   Inits the player instance.
@@ -11049,10 +11051,13 @@ var MfgGame = (function () {
     *   Inits the 2D engine.
     *****************************************************************************/
     MfgGame.prototype.initEngine2D = function () {
-        var htmlBody = document.querySelector("body");
-        this.engine = Matter.Engine.create(htmlBody, {});
-        this.engine.render.canvas.width = mfg_2.MfgSettings.CANVAS_WIDTH;
-        this.engine.render.canvas.height = mfg_2.MfgSettings.CANVAS_HEIGHT;
+        this.engine = Matter.Engine.create();
+        this.renderer = Matter.Render.create({
+            element: document.body,
+            engine: this.engine
+        });
+        this.renderer.canvas.width = mfg_2.MfgSettings.CANVAS_WIDTH;
+        this.renderer.canvas.height = mfg_2.MfgSettings.CANVAS_HEIGHT;
     };
     /*****************************************************************************
     *   Inits the level.
@@ -11060,6 +11065,13 @@ var MfgGame = (function () {
     MfgGame.prototype.initLevel = function () {
         this.level = new mfg_4.MfgLevel();
         this.level.init();
+    };
+    /*****************************************************************************
+    *   Starts the game loop.
+    *****************************************************************************/
+    MfgGame.prototype.start = function () {
+        Matter.Engine.run(this.engine);
+        Matter.Render.run(this.renderer);
     };
     return MfgGame;
 }());
