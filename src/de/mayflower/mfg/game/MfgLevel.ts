@@ -22,6 +22,8 @@
         public      boxA                    :mfg.MfgBox         = null;
         public      boxB                    :mfg.MfgBox         = null;
 
+        public      itemA                   :mfg.MfgItem        = null;
+
         /*****************************************************************************
         *   Inits the game from scratch.
         *****************************************************************************/
@@ -37,16 +39,19 @@
         public init()
         {
             // init player
-            this.player    = new mfg.MfgPlayer( 0, 0 );
+            this.player     = new mfg.MfgPlayer( 0, 0 );
 
             // init static obstacles
-            this.groundA   = new mfg.MfgObstacle( 0,   550, 600, 25 );
-            this.groundB   = new mfg.MfgObstacle( 650, 550, 600, 25 );
-            this.obstacleA = new mfg.MfgObstacle( 250, 470, 80,  80 );
+            this.groundA    = new mfg.MfgObstacle( 0,   550, 600, 25 );
+            this.groundB    = new mfg.MfgObstacle( 650, 550, 600, 25 );
+            this.obstacleA  = new mfg.MfgObstacle( 250, 470, 80,  80 );
 
             // init moveable boxes
-            this.boxA      = new mfg.MfgBox( 360, 0,  80, 80 );
-            this.boxB      = new mfg.MfgBox( 380, 60, 80, 80 );
+            this.boxA       = new mfg.MfgBox( 360, 0,  80, 80 );
+            this.boxB       = new mfg.MfgBox( 380, 60, 80, 80 );
+
+            // init items
+            this.itemA      = new mfg.MfgItem( 800, 450, 25, 25 );
 
             // add all game objects to the world
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body    );
@@ -55,6 +60,7 @@
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.obstacleA.body );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxA.body      );
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxB.body      );
+            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.itemA.body     );
         }
 
         /*****************************************************************************
@@ -64,5 +70,16 @@
         {
             // render player
             this.player.render();
+
+            // check item collision
+            if ( !this.itemA.picked )
+            {
+                if ( Matter.Bounds.overlaps( this.itemA.body.bounds, this.player.body.bounds ) )
+                {
+                    mfg.MfgDebug.item.log(">> Player picked item!");
+
+                    this.itemA.pick();
+                }
+            }
         }
     }

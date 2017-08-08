@@ -15,7 +15,7 @@
 
         public      keySystem               :mfg.MfgKeySystem   = null;
         public      camera                  :mfg.MfgCamera      = null;
-        private     level                   :mfg.MfgLevel       = null;
+        public      level                   :mfg.MfgLevel       = null;
 
         /*****************************************************************************
         *   Inits the game from scratch.

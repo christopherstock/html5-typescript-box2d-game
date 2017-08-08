@@ -14,7 +14,7 @@
         public          body                    :Matter.Body                    = null;
 
         /*****************************************************************************
-        *   Creates a new player instance.
+        *   Creates a new game object.
         *****************************************************************************/
         public constructor( x:number, y:number, width:number, height:number )
         {

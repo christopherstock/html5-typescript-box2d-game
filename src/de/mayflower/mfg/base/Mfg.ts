@@ -4,11 +4,13 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Create pickable items.
+    *   TODO ASAP   Create multiple pickable items.
     *
     *   TODO ASAP   Let player jump. Improve moving via friction and only jump if bottom collision is active!.
     *   TODO ASAP   Checkout material parameters for different game objects!
     *   TODO ASAP   Add circle objects.
+    *   TODO ASAP   Different colors for different game objects.
+    *   TODO ASAP   Different shapes for all game objects.
     *   TODO ASAP   CSS: improve margin, center canvas, etc.
     *   TODO ASAP   CameraY shall only change if player collides with the floor!!
     *   TODO ASAP   Create abstract level system.

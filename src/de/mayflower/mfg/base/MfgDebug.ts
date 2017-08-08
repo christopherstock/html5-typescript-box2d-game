@@ -15,6 +15,8 @@
         public      static  init            :MfgDebug           = new MfgDebug( true  && mfg.MfgSettings.DEBUG_MODE );
         /** Debugs the key system. */
         public      static  key             :MfgDebug           = new MfgDebug( false && mfg.MfgSettings.DEBUG_MODE );
+        /** Debugs the pickable game items. */
+        public      static  item            :MfgDebug           = new MfgDebug( true  && mfg.MfgSettings.DEBUG_MODE );
 
         /** The flag that enables or disables logging for this debug group. */
         private             debugEnabled    :boolean            = false;
