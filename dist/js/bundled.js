@@ -10988,8 +10988,6 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Extend key system with 'keyNeedsRelease'.
-*
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Add doors / level portals.
 *   TODO ASAP   Add sprites.
@@ -11483,10 +11481,7 @@ var MfgPlayer = (function (_super) {
     *   @param height The new height.
     *****************************************************************************/
     function MfgPlayer(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER) || this;
-        /** Flags if the jump key needs a release. */
-        _this.jumpKeyNeedsRelease = false;
-        return _this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER) || this;
     }
     /*****************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -11499,17 +11494,10 @@ var MfgPlayer = (function (_super) {
             Matter.Body.translate(this.body, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
         }
         if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
-            if (!this.jumpKeyNeedsRelease) {
-                this.jumpKeyNeedsRelease = true;
-                var bottomCollides = this.checkBottomCollision();
-                // jump if colliding with bottom and not currently jumping
-                if (bottomCollides) {
-                    this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
-                }
+            mfg.MfgInit.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_UP);
+            if (this.checkBottomCollision()) {
+                this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
             }
-        }
-        else {
-            this.jumpKeyNeedsRelease = false;
         }
     };
     /*****************************************************************************
@@ -11992,8 +11980,10 @@ var MfgKeySystem = (function () {
     *****************************************************************************/
     function MfgKeySystem() {
         var _this = this;
-        /** All current key information. */
-        this.iAllKeys = [];
+        /** All 'pressed' information for all keys. */
+        this.keysPressed = [];
+        /** All 'needs release' information for all keys. */
+        this.keysNeedRelease = [];
         /*****************************************************************************
         *   This method is always invoked by the system if a key is pressed.
         *
@@ -12001,8 +11991,10 @@ var MfgKeySystem = (function () {
         *****************************************************************************/
         this.onKeyDown = function (evt) {
             var keyCode = evt.which;
-            _this.iAllKeys[keyCode] = true;
-            mfg.MfgDebug.key.log("key pressed [" + keyCode + "]");
+            if (!_this.keysNeedRelease[keyCode]) {
+                _this.keysPressed[keyCode] = true;
+                mfg.MfgDebug.key.log("key pressed [" + keyCode + "]");
+            }
         };
         /*****************************************************************************
         *   This method is always invoked by the system if a key is released.
@@ -12011,7 +12003,8 @@ var MfgKeySystem = (function () {
         *****************************************************************************/
         this.onKeyUp = function (evt) {
             var keyCode = evt.which;
-            _this.iAllKeys[keyCode] = false;
+            _this.keysPressed[keyCode] = false;
+            _this.keysNeedRelease[keyCode] = false;
             mfg.MfgDebug.key.log("key released [" + keyCode + "]");
         };
         //set event listener for keyboard devices - all but IE
@@ -12029,7 +12022,16 @@ var MfgKeySystem = (function () {
     *                   Otherwise <code>false</code>.
     *****************************************************************************/
     MfgKeySystem.prototype.isPressed = function (keyCode) {
-        return this.iAllKeys[keyCode];
+        return this.keysPressed[keyCode];
+    };
+    /*****************************************************************************
+    *   Flags that a key needs release before being able to be pressed again.
+    *
+    *   @param  keyCode The keyCode of the key to mark as 'needs key release'.
+    *****************************************************************************/
+    MfgKeySystem.prototype.setNeedsRelease = function (keyCode) {
+        this.keysNeedRelease[keyCode] = true;
+        this.keysPressed[keyCode] = false;
     };
     /** The keycode that represents the 'ARROW LEFT' key. */
     MfgKeySystem.KEY_LEFT = 37;

@@ -10,23 +10,25 @@
     export class MfgKeySystem
     {
         /** The keycode that represents the 'ARROW LEFT' key. */
-        public      static  KEY_LEFT        :number                             = 37;
+        public      static  KEY_LEFT            :number                         = 37;
         /** The keycode that represents the 'ARROW UP' key. */
-        public      static  KEY_UP          :number                             = 38;
+        public      static  KEY_UP              :number                         = 38;
         /** The keycode that represents the 'ARROW RIGHT' key. */
-        public      static  KEY_RIGHT       :number                             = 39;
+        public      static  KEY_RIGHT           :number                         = 39;
         /** The keycode that represents the 'ARROW DOWN' key. */
-        public      static  KEY_DOWN        :number                             = 40;
+        public      static  KEY_DOWN            :number                         = 40;
 
         /** The keycode that represents the 'ENTER' key. */
-        public      static  KEY_ENTER       :number                             = 13;
+        public      static  KEY_ENTER           :number                         = 13;
         /** The keycode that represents the 'ESCAPE' key. */
-        public      static  KEY_ESCAPE      :number                             = 27;
+        public      static  KEY_ESCAPE          :number                         = 27;
         /** The keycode that represents the 'SPACE' key. */
-        public      static  KEY_SPACE       :number                             = 32;
+        public      static  KEY_SPACE           :number                         = 32;
 
-        /** All current key information. */
-        private             iAllKeys        :Array<boolean>                     = [];
+        /** All 'pressed' information for all keys. */
+        private             keysPressed         :Array<boolean>                 = [];
+        /** All 'needs release' information for all keys. */
+        private             keysNeedRelease     :Array<boolean>                 = [];
 
         /*****************************************************************************
         *   Creates a new key system.
@@ -50,9 +52,12 @@
         public onKeyDown=( evt:KeyboardEvent )=>
         {
             let keyCode = evt.which;
-            this.iAllKeys[ keyCode ] = true;
 
-            mfg.MfgDebug.key.log( "key pressed ["  + keyCode + "]" );
+            if (!this.keysNeedRelease[ keyCode ]) {
+                this.keysPressed[ keyCode ] = true;
+
+                mfg.MfgDebug.key.log( "key pressed ["  + keyCode + "]" );
+            }
         };
 
         /*****************************************************************************
@@ -63,7 +68,8 @@
         public onKeyUp=( evt:KeyboardEvent )=>
         {
             let keyCode = evt.which;
-            this.iAllKeys[ keyCode ] = false;
+            this.keysPressed[ keyCode ] = false;
+            this.keysNeedRelease[ keyCode ] = false;
 
             mfg.MfgDebug.key.log( "key released ["  + keyCode + "]" );
         };
@@ -77,6 +83,17 @@
         *****************************************************************************/
         public isPressed( keyCode:number ):boolean
         {
-            return this.iAllKeys[ keyCode ];
+            return this.keysPressed[ keyCode ];
+        }
+
+        /*****************************************************************************
+        *   Flags that a key needs release before being able to be pressed again.
+        *
+        *   @param  keyCode The keyCode of the key to mark as 'needs key release'.
+        *****************************************************************************/
+        public setNeedsRelease( keyCode:number )
+        {
+            this.keysNeedRelease[ keyCode ] = true;
+            this.keysPressed[     keyCode ] = false;
         }
     }

@@ -10,9 +10,6 @@
     *****************************************************************************/
     export class MfgPlayer extends mfg.MfgCharacter
     {
-        /** Flags if the jump key needs a release. */
-        private         jumpKeyNeedsRelease     :boolean                        = false;
-
         /*****************************************************************************
         *   Creates a new player instance.
         *
@@ -44,22 +41,12 @@
 
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_UP ) )
             {
-                if ( !this.jumpKeyNeedsRelease )
+                mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_UP )
+
+                if ( this.checkBottomCollision() )
                 {
-                    this.jumpKeyNeedsRelease = true;
-
-                    let bottomCollides = this.checkBottomCollision();
-
-                    // jump if colliding with bottom and not currently jumping
-                    if ( bottomCollides )
-                    {
-                        this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
-                    }
+                    this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
                 }
-            }
-            else
-            {
-                this.jumpKeyNeedsRelease = false;
             }
         }
 
