@@ -1,9 +1,8 @@
 
     import * as Matter from 'matter-js';
-    import * as mfg    from '../mfg';
 
     /*****************************************************************************
-    *   Manages the camera that handles the scrolling part.
+    *   Manages the camera that calculates the scrolling amounts.
     *
     *   @author     Christopher Stock
     *   @version    0.0.8
@@ -15,13 +14,16 @@
         /** Current camera offset Y. */
         private     offsetY                     :number                 = 0.0;
 
-        /** Camera centering ration X. */
+        /** Camera centering ratio X. */
         private     ratioX                      :number                 = 0.0;
-        /** Camera centering ration X. */
+        /** Camera centering ratio X. */
         private     ratioY                      :number                 = 0.0;
 
         /*****************************************************************************
         *   Constructs a new camera.
+        *
+        *   @param ratioX Camera ratio X for horizontal centering of the player.
+        *   @param ratioY Camera ratio Y for vertical centering   of the player.
         *****************************************************************************/
         public constructor( ratioX:number, ratioY:number )
         {
@@ -32,6 +34,14 @@
         /*****************************************************************************
         *   Updates the singleton instance of the camera by reassigning
         *   it's horizontal and vertical offset.
+        *
+        *   @param levelWidth   The width of the level.
+        *   @param levelHeight  The height of the level.
+        *   @param canvasWidth  The width of the canvas.
+        *   @param canvasHeight The height of the canvas.
+        *   @param subjectX     The subject coordinate X to center the camera.
+        *   @param subjectY     The subject coordinate Y to center the camera.
+        *   @param renderer     The MatterJS renderer.
         *****************************************************************************/
         public update
         (

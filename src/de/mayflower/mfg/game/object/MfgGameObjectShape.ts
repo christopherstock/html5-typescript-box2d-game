@@ -10,6 +10,9 @@
     *****************************************************************************/
     export enum MfgGameObjectShape
     {
+        /** The shape of a rectangle. */
         ERectangle,
+
+        /** The shape of a circle. */
         ECircle,
     }

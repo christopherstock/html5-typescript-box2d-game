@@ -10910,7 +10910,7 @@ var MfgInit = (function () {
     function MfgInit() {
     }
     /*****************************************************************************
-    *   Inits this app from scratch.
+    *   Inits the game from scratch.
     *****************************************************************************/
     MfgInit.init = function () {
         // init the game engine
@@ -10988,7 +10988,7 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Enrich all JavaDoc items.
+*   TODO ASAP   Extend key system with 'keyNeedsRelease'.
 *
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Add doors / level portals.
@@ -11044,7 +11044,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 *****************************************************************************/
 var MfgGameObjectShape;
 (function (MfgGameObjectShape) {
+    /** The shape of a rectangle. */
     MfgGameObjectShape[MfgGameObjectShape["ERectangle"] = 0] = "ERectangle";
+    /** The shape of a circle. */
     MfgGameObjectShape[MfgGameObjectShape["ECircle"] = 1] = "ECircle";
 })(MfgGameObjectShape = exports.MfgGameObjectShape || (exports.MfgGameObjectShape = {}));
 //# sourceMappingURL=MfgGameObjectShape.js.map
@@ -11071,7 +11073,9 @@ var MfgGameObject = (function () {
     function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic) {
         /** The game objects' body. */
         this.body = null;
+        /** The width of this object. */
         this.width = 0;
+        /** The height of this object. */
         this.height = 0;
         this.width = width;
         this.height = height;
@@ -11164,7 +11168,7 @@ module.exports = g;
 Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
 /*****************************************************************************
-*   The abstract class of all game objects.
+*   Creates customized instances of game objects.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -11172,21 +11176,70 @@ var mfg = __webpack_require__(0);
 var MfgGameObjectFactory = (function () {
     function MfgGameObjectFactory() {
     }
+    /*****************************************************************************
+    *   Creates a box.
+    *
+    *   @param x      Anchor X.
+    *   @param y      Anchor Y.
+    *   @param width  Object width.
+    *   @param height Object height.
+    *   @return       The created box.
+    *****************************************************************************/
     MfgGameObjectFactory.createBox = function (x, y, width, height) {
         return new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, x, y, width, height);
     };
-    MfgGameObjectFactory.createSphere = function (x, y, width, height) {
-        return new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, x, y, width, height);
+    /*****************************************************************************
+    *   Creates a sphere.
+    *
+    *   @param x      Anchor X.
+    *   @param y      Anchor Y.
+    *   @param radius Sphere radius.
+    *   @return       The created sphere.
+    *****************************************************************************/
+    MfgGameObjectFactory.createSphere = function (x, y, radius) {
+        return new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, x, y, radius, radius);
     };
+    /*****************************************************************************
+    *   Creates an item.
+    *
+    *   @param x Anchor X.
+    *   @param y Anchor Y.
+    *   @return  The created item.
+    *****************************************************************************/
     MfgGameObjectFactory.createItem = function (x, y) {
         return new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, x, y, 25.0, 25.0);
     };
+    /*****************************************************************************
+    *   Creates an obstacle.
+    *
+    *   @param x      Anchor X.
+    *   @param y      Anchor Y.
+    *   @param width  Object width.
+    *   @param height Object height.
+    *   @return       The created obstacle.
+    *****************************************************************************/
     MfgGameObjectFactory.createObstacle = function (x, y, width, height) {
         return new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, x, y, width, height);
     };
+    /*****************************************************************************
+    *   Creates an enemy.
+    *
+    *   @param x Anchor X.
+    *   @param y Anchor Y.
+    *   @return  The created enemy.
+    *****************************************************************************/
     MfgGameObjectFactory.createEnemy = function (x, y) {
         return new mfg.MfgEnemy(mfg.MfgGameObjectShape.ERectangle, 800, 0, 50, 50);
     };
+    /*****************************************************************************
+    *   Creates a decoration.
+    *
+    *   @param x      Anchor X.
+    *   @param y      Anchor Y.
+    *   @param width  Object width.
+    *   @param height Object height.
+    *   @return       The created decoration.
+    *****************************************************************************/
     MfgGameObjectFactory.createDecoration = function (x, y, width, height) {
         return new mfg.MfgDecoration(mfg.MfgGameObjectShape.ERectangle, x, y, width, height);
     };
@@ -11233,12 +11286,21 @@ var mfg = __webpack_require__(0);
 var MfgCharacter = (function (_super) {
     __extends(MfgCharacter, _super);
     /*****************************************************************************
-    *   Creates a new character instance.
+    *   Creates a new character.
+    *
+    *   @param shape  The shape for this object.
+    *   @param x      Startup position X.
+    *   @param y      Startup position Y.
+    *   @param width  The new width.
+    *   @param height The new height.
     *****************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor) {
         var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false) || this;
+        /** The bottom line that checks collisions with the body. */
         _this.bottomSensor = null;
+        /** The current jump force. */
         _this.jumpPower = 0.0;
+        /** Flags if this character is dead. */
         _this.dead = false;
         _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
             render: {
@@ -11301,7 +11363,7 @@ var MfgCharacter = (function (_super) {
         var e_1, _a;
     };
     /*****************************************************************************
-    *   Kills the player.
+    *   Kills this character.
     *****************************************************************************/
     MfgCharacter.prototype.kill = function () {
         // remove character body
@@ -11356,7 +11418,13 @@ var mfg = __webpack_require__(0);
 var MfgEnemy = (function (_super) {
     __extends(MfgEnemy, _super);
     /*****************************************************************************
-    *   Creates a new enemy instance.
+    *   Creates a new enemy.
+    *
+    *   @param shape  The shape for this object.
+    *   @param x      Startup position X.
+    *   @param y      Startup position Y.
+    *   @param width  The new width.
+    *   @param height The new height.
     *****************************************************************************/
     function MfgEnemy(shape, x, y, width, height) {
         return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY) || this;
@@ -11407,9 +11475,16 @@ var MfgPlayer = (function (_super) {
     __extends(MfgPlayer, _super);
     /*****************************************************************************
     *   Creates a new player instance.
+    *
+    *   @param shape  The shape for this object.
+    *   @param x      Startup position X.
+    *   @param y      Startup position Y.
+    *   @param width  The new width.
+    *   @param height The new height.
     *****************************************************************************/
     function MfgPlayer(shape, x, y, width, height) {
         var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER) || this;
+        /** Flags if the jump key needs a release. */
         _this.jumpKeyNeedsRelease = false;
         return _this;
     }
@@ -11472,13 +11547,22 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
 /*****************************************************************************
-*   Represents the player being controled by the user.
+*   Represents a movable box.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
 *****************************************************************************/
 var MfgBox = (function (_super) {
     __extends(MfgBox, _super);
+    /*****************************************************************************
+    *   Creates a new box.
+    *
+    *   @param shape  The shape for this object.
+    *   @param x      Startup position X.
+    *   @param y      Startup position Y.
+    *   @param width  The new width.
+    *   @param height The new height.
+    *****************************************************************************/
     function MfgBox(shape, x, y, width, height) {
         return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false) || this;
     }
@@ -11513,7 +11597,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*****************************************************************************
-*   Represents the player being controled by the user.
+*   Represents a pickable item.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -11521,22 +11605,24 @@ var mfg = __webpack_require__(0);
 var MfgItem = (function (_super) {
     __extends(MfgItem, _super);
     /*****************************************************************************
-    *   Creates a new game item.
+    *   Creates a new item.
+    *
+    *   @param shape  The shape for this object.
+    *   @param x      Startup position X.
+    *   @param y      Startup position Y.
+    *   @param width  The new width.
+    *   @param height The new height.
     *****************************************************************************/
     function MfgItem(shape, x, y, width, height) {
         var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
         // put the item into a unique collision group so its uncollidable
-        _this.body.collisionFilter = {
-            category: 0x0001,
-            mask: 0x00002,
-            group: 0x0003
-        };
+        _this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUPS;
         return _this;
     }
     /*****************************************************************************
-    *   Render this item.
+    *   Renders this item.
     *****************************************************************************/
     MfgItem.prototype.render = function () {
         if (!this.picked) {
@@ -11579,13 +11665,22 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
 /*****************************************************************************
-*   Represents the player being controled by the user.
+*   Represents a non-colliding decoration.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
 *****************************************************************************/
 var MfgDecoration = (function (_super) {
     __extends(MfgDecoration, _super);
+    /*****************************************************************************
+    *   Creates a new decoration.
+    *
+    *   @param shape  The shape for this object.
+    *   @param x      Startup position X.
+    *   @param y      Startup position Y.
+    *   @param width  The new width.
+    *   @param height The new height.
+    *****************************************************************************/
     function MfgDecoration(shape, x, y, width, height) {
         return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true) || this;
     }
@@ -11618,13 +11713,22 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
 /*****************************************************************************
-*   Represents the player being controled by the user.
+*   Represents a collidable and solid obstacle.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
 *****************************************************************************/
 var MfgObstacle = (function (_super) {
     __extends(MfgObstacle, _super);
+    /*****************************************************************************
+    *   Creates a new obstacle.
+    *
+    *   @param shape  The shape for this object.
+    *   @param x      Startup position X.
+    *   @param y      Startup position Y.
+    *   @param width  The new width.
+    *   @param height The new height.
+    *****************************************************************************/
     function MfgObstacle(shape, x, y, width, height) {
         return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true) || this;
     }
@@ -11648,7 +11752,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*****************************************************************************
-*   Specifies the initialization part of the game logic.
+*   Specifies the game logic and specifies all primal parts of the game.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -11656,10 +11760,15 @@ var mfg = __webpack_require__(0);
 var MfgGame = (function () {
     function MfgGame() {
         var _this = this;
+        /** The MatterJS engine. */
         this.engine = null;
+        /** The MatterJS renderer. */
         this.renderer = null;
+        /** The custom key system. */
         this.keySystem = null;
+        /** The custom camera. */
         this.camera = null;
+        /** The custom level. */
         this.level = null;
         /*****************************************************************************
         *   Being invoked each tick of the game loop in order to render the game.
@@ -11768,30 +11877,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*****************************************************************************
-*   Specifies the initialization part of the game logic.
+*   Represents the current level.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
 *****************************************************************************/
 var MfgLevel = (function () {
     /*****************************************************************************
-    *   Inits the game from scratch.
+    *   Creates a new level.
+    *
+    *   @param width  The width for the new level.
+    *   @param height The height for the new level.
     *****************************************************************************/
     function MfgLevel(width, height) {
+        /** The width of this level. */
         this.width = 0.0;
+        /** The height of this level. */
         this.height = 0.0;
+        /** The player instance. */
         this.player = null;
+        /** ALL game objects for this level, including the player. */
         this.gameObjects = null;
         this.width = width;
         this.height = height;
     }
     /*****************************************************************************
-    *   Inits the game from scratch.
+    *   Inits a new level.
     *****************************************************************************/
     MfgLevel.prototype.init = function () {
         // init player
         this.player = new mfg.MfgPlayer(null, 0, 0, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT);
-        // adding bodies increases z-index!
+        // setup all game objects
         this.gameObjects =
             [
                 // bg decoration
@@ -11943,7 +12059,7 @@ exports.MfgKeySystem = MfgKeySystem;
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 /*****************************************************************************
-*   Manages the camera that handles the scrolling part.
+*   Manages the camera that calculates the scrolling amounts.
 *
 *   @author     Christopher Stock
 *   @version    0.0.8
@@ -11951,15 +12067,18 @@ var Matter = __webpack_require__(1);
 var MfgCamera = (function () {
     /*****************************************************************************
     *   Constructs a new camera.
+    *
+    *   @param ratioX Camera ratio X for horizontal centering of the player.
+    *   @param ratioY Camera ratio Y for vertical centering   of the player.
     *****************************************************************************/
     function MfgCamera(ratioX, ratioY) {
         /** Current camera offset X. */
         this.offsetX = 0.0;
         /** Current camera offset Y. */
         this.offsetY = 0.0;
-        /** Camera centering ration X. */
+        /** Camera centering ratio X. */
         this.ratioX = 0.0;
-        /** Camera centering ration X. */
+        /** Camera centering ratio X. */
         this.ratioY = 0.0;
         this.ratioX = ratioX;
         this.ratioY = ratioY;
@@ -11967,6 +12086,14 @@ var MfgCamera = (function () {
     /*****************************************************************************
     *   Updates the singleton instance of the camera by reassigning
     *   it's horizontal and vertical offset.
+    *
+    *   @param levelWidth   The width of the level.
+    *   @param levelHeight  The height of the level.
+    *   @param canvasWidth  The width of the canvas.
+    *   @param canvasHeight The height of the canvas.
+    *   @param subjectX     The subject coordinate X to center the camera.
+    *   @param subjectY     The subject coordinate Y to center the camera.
+    *   @param renderer     The MatterJS renderer.
     *****************************************************************************/
     MfgCamera.prototype.update = function (levelWidth, levelHeight, canvasWidth, canvasHeight, subjectX, subjectY, renderer) {
         //calculate scroll-offsets so camera is centered to subject
@@ -12018,10 +12145,10 @@ var MfgString = (function () {
     /*****************************************************************************
     *   Returns an array of all found regular expression matches.
     *
-    *   @param  subject The target string to apply the regular expression search on.
-    *   @param  regEx   The regular expression.
-    *                   This string MUST NOT be enclosed in string quotes!
-    *   @return         An array containing all matched results.
+    *   @param  subject  The target string to apply the regular expression search on.
+    *   @param  regEx    The regular expression.
+    *                    This string MUST NOT be enclosed in string quotes!
+    *   @return          An array containing all matched results.
     *****************************************************************************/
     MfgString.searchRegEx = function (subject, regEx) {
         var results = subject.match(regEx);
@@ -12036,7 +12163,7 @@ var MfgString = (function () {
     /*****************************************************************************
     *   Returns a formatted timestamp of the current system date and time.
     *
-    *   @return A formatted timestamp of the current system date and time.
+    *   @return string A formatted timestamp of the current system date and time.
     *****************************************************************************/
     MfgString.getDateTimeString = function () {
         var now = new Date();

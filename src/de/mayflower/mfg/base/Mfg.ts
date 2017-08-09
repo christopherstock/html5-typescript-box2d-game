@@ -4,7 +4,7 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Enrich all JavaDoc items.
+    *   TODO ASAP   Extend key system with 'keyNeedsRelease'.
     *
     *   TODO ASAP   Checkout material parameters for different game objects!
     *   TODO ASAP   Add doors / level portals.

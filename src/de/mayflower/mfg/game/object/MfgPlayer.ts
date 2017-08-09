@@ -10,10 +10,17 @@
     *****************************************************************************/
     export class MfgPlayer extends mfg.MfgCharacter
     {
+        /** Flags if the jump key needs a release. */
         private         jumpKeyNeedsRelease     :boolean                        = false;
 
         /*****************************************************************************
         *   Creates a new player instance.
+        *
+        *   @param shape  The shape for this object.
+        *   @param x      Startup position X.
+        *   @param y      Startup position Y.
+        *   @param width  The new width.
+        *   @param height The new height.
         *****************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
         {

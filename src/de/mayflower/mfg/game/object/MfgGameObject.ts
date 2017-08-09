@@ -13,8 +13,9 @@
         /** The game objects' body. */
         public          body                    :Matter.Body                    = null;
 
+        /** The width of this object. */
         public          width                   :number                         = 0;
-
+        /** The height of this object. */
         public          height                  :number                         = 0;
 
         /*****************************************************************************

@@ -13,7 +13,7 @@
         public  static      game    :mfg.MfgGame        = null;
 
         /*****************************************************************************
-        *   Inits this app from scratch.
+        *   Inits the game from scratch.
         *****************************************************************************/
         public static init()
         {

@@ -10,10 +10,10 @@
         /*****************************************************************************
         *   Returns an array of all found regular expression matches.
         *
-        *   @param  subject The target string to apply the regular expression search on.
-        *   @param  regEx   The regular expression.
-        *                   This string MUST NOT be enclosed in string quotes!
-        *   @return         An array containing all matched results.
+        *   @param  subject  The target string to apply the regular expression search on.
+        *   @param  regEx    The regular expression.
+        *                    This string MUST NOT be enclosed in string quotes!
+        *   @return          An array containing all matched results.
         *****************************************************************************/
         public static searchRegEx( subject:string, regEx:RegExp ):Array<string>
         {
@@ -34,7 +34,7 @@
         /*****************************************************************************
         *   Returns a formatted timestamp of the current system date and time.
         *
-        *   @return A formatted timestamp of the current system date and time.
+        *   @return string A formatted timestamp of the current system date and time.
         *****************************************************************************/
         public static getDateTimeString():string
         {

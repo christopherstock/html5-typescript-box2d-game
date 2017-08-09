@@ -3,7 +3,7 @@
     import * as mfg    from '../../mfg';
 
     /*****************************************************************************
-    *   Represents the player being controled by the user.
+    *   Represents a pickable item.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
@@ -14,22 +14,24 @@
         public          picked                      :boolean                        = null;
 
         /*****************************************************************************
-        *   Creates a new game item.
+        *   Creates a new item.
+        *
+        *   @param shape  The shape for this object.
+        *   @param x      Startup position X.
+        *   @param y      Startup position Y.
+        *   @param width  The new width.
+        *   @param height The new height.
         *****************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
         {
             super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true );
 
             // put the item into a unique collision group so its uncollidable
-            this.body.collisionFilter = {
-                category: 0x0001,
-                mask:     0x00002,
-                group:    0x0003
-            };
+            this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUPS;
         }
 
         /*****************************************************************************
-        *   Render this item.
+        *   Renders this item.
         *****************************************************************************/
         public render()
         {

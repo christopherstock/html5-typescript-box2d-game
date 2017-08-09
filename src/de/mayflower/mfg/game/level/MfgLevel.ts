@@ -3,21 +3,28 @@
     import * as mfg    from '../../mfg';
 
     /*****************************************************************************
-    *   Specifies the initialization part of the game logic.
+    *   Represents the current level.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
     *****************************************************************************/
     export class MfgLevel
     {
+        /** The width of this level. */
         public      width                   :number                     = 0.0;
+        /** The height of this level. */
         public      height                  :number                     = 0.0;
 
+        /** The player instance. */
         public      player                  :mfg.MfgPlayer              = null;
+        /** ALL game objects for this level, including the player. */
         private     gameObjects             :Array<mfg.MfgGameObject>   = null;
 
         /*****************************************************************************
-        *   Inits the game from scratch.
+        *   Creates a new level.
+        *
+        *   @param width  The width for the new level.
+        *   @param height The height for the new level.
         *****************************************************************************/
         public constructor( width:number, height:number )
         {
@@ -26,7 +33,7 @@
         }
 
         /*****************************************************************************
-        *   Inits the game from scratch.
+        *   Inits a new level.
         *****************************************************************************/
         public init()
         {
@@ -39,7 +46,7 @@
                 mfg.MfgSettings.PLAYER_HEIGHT
             );
 
-            // adding bodies increases z-index!
+            // setup all game objects
             this.gameObjects =
             [
                 // bg decoration

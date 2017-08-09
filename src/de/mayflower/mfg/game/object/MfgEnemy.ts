@@ -11,7 +11,13 @@
     export class MfgEnemy extends mfg.MfgCharacter
     {
         /*****************************************************************************
-        *   Creates a new enemy instance.
+        *   Creates a new enemy.
+        *
+        *   @param shape  The shape for this object.
+        *   @param x      Startup position X.
+        *   @param y      Startup position Y.
+        *   @param width  The new width.
+        *   @param height The new height.
         *****************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
         {

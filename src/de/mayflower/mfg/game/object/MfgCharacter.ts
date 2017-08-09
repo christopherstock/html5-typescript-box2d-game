@@ -10,12 +10,21 @@
     *****************************************************************************/
     export abstract class MfgCharacter extends mfg.MfgGameObject
     {
+        /** The bottom line that checks collisions with the body. */
         protected       bottomSensor            :Matter.Body                    = null;
+        /** The current jump force. */
         protected       jumpPower               :number                         = 0.0;
+        /** Flags if this character is dead. */
         protected       dead                    :boolean                        = false;
 
         /*****************************************************************************
-        *   Creates a new character instance.
+        *   Creates a new character.
+        *
+        *   @param shape  The shape for this object.
+        *   @param x      Startup position X.
+        *   @param y      Startup position Y.
+        *   @param width  The new width.
+        *   @param height The new height.
         *****************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, debugColor:string )
         {
@@ -96,9 +105,9 @@
         }
 
         /*****************************************************************************
-        *   Kills the player.
+        *   Kills this character.
         *****************************************************************************/
-        private kill()
+        public kill()
         {
             // remove character body
             Matter.World.remove( mfg.MfgInit.game.engine.world, this.body );

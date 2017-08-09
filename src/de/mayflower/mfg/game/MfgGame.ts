@@ -3,18 +3,23 @@
     import * as mfg    from '../mfg';
 
     /*****************************************************************************
-    *   Specifies the initialization part of the game logic.
+    *   Specifies the game logic and specifies all primal parts of the game.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
     *****************************************************************************/
     export class MfgGame
     {
+        /** The MatterJS engine. */
         public      engine                  :Matter.Engine      = null;
+        /** The MatterJS renderer. */
         private     renderer                :Matter.Render      = null;
 
+        /** The custom key system. */
         public      keySystem               :mfg.MfgKeySystem   = null;
+        /** The custom camera. */
         public      camera                  :mfg.MfgCamera      = null;
+        /** The custom level. */
         public      level                   :mfg.MfgLevel       = null;
 
         /*****************************************************************************
