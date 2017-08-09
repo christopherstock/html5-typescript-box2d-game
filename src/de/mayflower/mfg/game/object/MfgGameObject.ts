@@ -18,6 +18,9 @@
         /** The height of this object. */
         public          height                  :number                         = 0;
 
+        /** Specifies if this object is non-colliding. */
+        public          isSensor                :boolean                        = false;
+
         /*****************************************************************************
         *   Creates a new game object.
         *****************************************************************************/
@@ -35,6 +38,8 @@
         {
             this.width  = width;
             this.height = height;
+
+            this.isSensor = isSensor;
 
             switch ( +shape )
             {

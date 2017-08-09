@@ -10988,12 +10988,13 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Try a graphic style..?
+*   TODO ASAP   Parallax bg.
+*   TODO ASAP   Buffer camera according to looking direction.
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Add doors / level portals.
 *   TODO ASAP   Add sprites.
 *   TODO ASAP   Add images.
-*   TODO ASAP   Parallax bg.
-*   TODO ASAP   Buffer camera according to looking direction.
 *   TODO ASAP   Add TypeDoc via npm.
 *   TODO ASAP   Create levels and sublevels.
 *   TODO HIGH   Created animated platforms.
@@ -11075,8 +11076,11 @@ var MfgGameObject = (function () {
         this.width = 0;
         /** The height of this object. */
         this.height = 0;
+        /** Specifies if this object is non-colliding. */
+        this.isSensor = false;
         this.width = width;
         this.height = height;
+        this.isSensor = isSensor;
         switch (+shape) {
             case mfg.MfgGameObjectShape.ERectangle:
                 {
@@ -11335,17 +11339,19 @@ var MfgCharacter = (function (_super) {
         }
     };
     /*****************************************************************************
-    *   Check if the player's bottom sensor currently collides with any other body.
+    *   Check if the character's bottom sensor currently
+    *   collides with any other colliding body.
+    *
+    *   @return <code>true</code> if a bottom collision is currently active.
     *****************************************************************************/
     MfgCharacter.prototype.checkBottomCollision = function () {
-        var bodies = mfg.MfgInit.game.engine.world.bodies;
         try {
-            for (var bodies_1 = __values(bodies), bodies_1_1 = bodies_1.next(); !bodies_1_1.done; bodies_1_1 = bodies_1.next()) {
-                var body = bodies_1_1.value;
-                if (body == this.body) {
+            for (var _a = __values(mfg.MfgInit.game.level.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
+                var object = _b.value;
+                if (object.body == this.body || object.isSensor) {
                     continue;
                 }
-                if (Matter.Bounds.overlaps(body.bounds, this.bottomSensor.bounds)) {
+                if (Matter.Bounds.overlaps(object.body.bounds, this.bottomSensor.bounds)) {
                     return true;
                 }
             }
@@ -11353,12 +11359,12 @@ var MfgCharacter = (function (_super) {
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (bodies_1_1 && !bodies_1_1.done && (_a = bodies_1.return)) _a.call(bodies_1);
+                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
             }
             finally { if (e_1) throw e_1.error; }
         }
         return false;
-        var e_1, _a;
+        var e_1, _c;
     };
     /*****************************************************************************
     *   Kills this character.
@@ -11899,6 +11905,8 @@ var MfgLevel = (function () {
         this.gameObjects =
             [
                 // bg decoration
+                //                mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height ),
+                // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration(30, 860, 120, 120),
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle(0, 950, 680, 25),
@@ -11907,7 +11915,7 @@ var MfgLevel = (function () {
                 mfg.MfgGameObjectFactory.createObstacle(1000, 870, 80, 80),
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(380, 60, 80, 80),
-                mfg.MfgGameObjectFactory.createSphere(360, 0, 40, 40),
+                mfg.MfgGameObjectFactory.createSphere(360, 0, 40),
                 // items
                 mfg.MfgGameObjectFactory.createItem(800, 850),
                 mfg.MfgGameObjectFactory.createItem(850, 850),

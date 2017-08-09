@@ -82,20 +82,21 @@
         }
 
         /*****************************************************************************
-        *   Check if the player's bottom sensor currently collides with any other body.
+        *   Check if the character's bottom sensor currently
+        *   collides with any other colliding body.
+        *
+        *   @return <code>true</code> if a bottom collision is currently active.
         *****************************************************************************/
         public checkBottomCollision()
         {
-            let bodies:Array<Matter.Body> = mfg.MfgInit.game.engine.world.bodies;
-
-            for ( let body of bodies )
+            for ( let object of mfg.MfgInit.game.level.gameObjects )
             {
-                if ( body == this.body )
+                if ( object.body == this.body || object.isSensor )
                 {
                     continue;
                 }
 
-                if ( Matter.Bounds.overlaps( body.bounds, this.bottomSensor.bounds ) )
+                if ( Matter.Bounds.overlaps( object.body.bounds, this.bottomSensor.bounds ) )
                 {
                     return true;
                 }

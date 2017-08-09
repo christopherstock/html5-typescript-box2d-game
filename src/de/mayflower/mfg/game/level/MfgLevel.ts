@@ -18,7 +18,7 @@
         /** The player instance. */
         public      player                  :mfg.MfgPlayer              = null;
         /** ALL game objects for this level, including the player. */
-        private     gameObjects             :Array<mfg.MfgGameObject>   = null;
+        public      gameObjects             :Array<mfg.MfgGameObject>   = null;
 
         /*****************************************************************************
         *   Creates a new level.
@@ -50,6 +50,9 @@
             this.gameObjects =
             [
                 // bg decoration
+//                mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height ),
+
+                // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration( 30, 860, 120, 120 ),
 
                 // static obstacles
@@ -60,7 +63,7 @@
 
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(    380, 60, 80, 80 ),
-                mfg.MfgGameObjectFactory.createSphere( 360, 0, 40, 40 ),
+                mfg.MfgGameObjectFactory.createSphere( 360, 0, 40 ),
 
                 // items
                 mfg.MfgGameObjectFactory.createItem( 800, 850 ),

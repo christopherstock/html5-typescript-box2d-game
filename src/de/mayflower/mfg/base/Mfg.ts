@@ -4,12 +4,13 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Try a graphic style..?
+    *   TODO ASAP   Parallax bg.
+    *   TODO ASAP   Buffer camera according to looking direction.
     *   TODO ASAP   Checkout material parameters for different game objects!
     *   TODO ASAP   Add doors / level portals.
     *   TODO ASAP   Add sprites.
     *   TODO ASAP   Add images.
-    *   TODO ASAP   Parallax bg.
-    *   TODO ASAP   Buffer camera according to looking direction.
     *   TODO ASAP   Add TypeDoc via npm.
     *   TODO ASAP   Create levels and sublevels.
     *   TODO HIGH   Created animated platforms.
