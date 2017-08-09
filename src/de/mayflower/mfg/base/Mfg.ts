@@ -4,9 +4,10 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Different shapes for all game objects.
+    *
     *   TODO ASAP   Checkout material parameters for different game objects!
     *   TODO ASAP   Add circle objects.
-    *   TODO ASAP   Different shapes for all game objects.
     *   TODO ASAP   CSS: improve margin, center canvas, etc.
     *   TODO ASAP   CameraY shall only change if player collides with the floor!!
     *   TODO ASAP   Create abstract level system.
@@ -24,9 +25,11 @@
         *****************************************************************************/
         public static main():void
         {
-            // set title and acclaim debug console
-            mfg.MfgDebug.init.log( mfg.MfgSettings.TITLE );
-            document.title = mfg.MfgSettings.TITLE;
+            let title:string = mfg.MfgSettings.TITLE + ", " + mfg.MfgVersion.CURRENT_VERSION.getVersionDescriptor();
+
+            // acclaim debug console and set title
+            mfg.MfgDebug.init.log( title );
+            document.title = title;
 
             //init game engine
             mfg.MfgInit.init();

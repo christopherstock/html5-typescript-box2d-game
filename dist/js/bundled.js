@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,13 +73,13 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(4));
 __export(__webpack_require__(5));
 __export(__webpack_require__(6));
 __export(__webpack_require__(7));
 __export(__webpack_require__(8));
+__export(__webpack_require__(9));
+__export(__webpack_require__(2));
 __export(__webpack_require__(10));
-__export(__webpack_require__(11));
 __export(__webpack_require__(12));
 __export(__webpack_require__(13));
 __export(__webpack_require__(14));
@@ -87,6 +87,8 @@ __export(__webpack_require__(15));
 __export(__webpack_require__(16));
 __export(__webpack_require__(17));
 __export(__webpack_require__(18));
+__export(__webpack_require__(19));
+__export(__webpack_require__(20));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10370,17 +10372,37 @@ var Vector = _dereq_('../geometry/Vector');
 
 },{"../body/Composite":2,"../core/Common":14,"../core/Events":16,"../geometry/Bounds":26,"../geometry/Vector":28}]},{},[30])(30)
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(3);
+"use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+/*****************************************************************************
+*   The abstract class of all game objects.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgGameObjectShape;
+(function (MfgGameObjectShape) {
+    MfgGameObjectShape[MfgGameObjectShape["ERectangle"] = 0] = "ERectangle";
+    MfgGameObjectShape[MfgGameObjectShape["ECircle"] = 1] = "ECircle";
+})(MfgGameObjectShape = exports.MfgGameObjectShape || (exports.MfgGameObjectShape = {}));
+//# sourceMappingURL=MfgGameObjectShape.js.map
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(4);
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10765,7 +10787,7 @@ window.onunload = function () {
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10783,7 +10805,7 @@ var MfgSettings = (function () {
     /** The debug switch. */
     MfgSettings.DEBUG_MODE = true;
     /** The application's internal name. */
-    MfgSettings.TITLE = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH, v.0.0.1";
+    MfgSettings.TITLE = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH";
     /** The delta between render ticks in ms. */
     MfgSettings.RENDER_DELTA = 16.66;
     /** The desired canvas3D width. */
@@ -10834,7 +10856,7 @@ exports.MfgSettings = MfgSettings;
 //# sourceMappingURL=MfgSettings.js.map
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10883,7 +10905,7 @@ exports.MfgDebug = MfgDebug;
 //# sourceMappingURL=MfgDebug.js.map
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10915,7 +10937,60 @@ exports.MfgInit = MfgInit;
 //# sourceMappingURL=MfgInit.js.map
 
 /***/ }),
-/* 7 */
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**************************************************************************************
+*   Contains the project history with all current and completed version information.
+*
+*   @author     Christopher Stock
+*   @version    0.0.8
+**************************************************************************************/
+var MfgVersion = (function () {
+    /*****************************************************************************
+    *   Creates a project version.
+    *
+    *   @param aVersion     The version specifier.
+    *   @param aCodename    The internal codename.
+    *   @param aDate        The completion date.
+    *   @param aLog         The changelog.
+    *****************************************************************************/
+    function MfgVersion(aVersion, aCodename, aDate, aLog) {
+        /** This version's specifier. */
+        this.iVersion = null;
+        /** This version's internal codename. */
+        this.iCodename = null;
+        /** This version's completion date. */
+        this.iDate = null;
+        /** This version's changelog. */
+        this.iLog = null;
+        this.iVersion = aVersion;
+        this.iCodename = aCodename;
+        this.iDate = aDate;
+        this.iLog = aLog;
+    }
+    /**************************************************************************************
+    *   Returns a representation of the current project version and it's date.
+    *
+    *   @return A representation of the current project's version with it's timestamp.
+    **************************************************************************************/
+    MfgVersion.prototype.getVersionDescriptor = function () {
+        return ("v. " + this.iVersion + ", " + this.iDate + ", [" + this.iCodename + "]");
+    };
+    /** The project's version v.0.0.1. */
+    MfgVersion.V_0_0_1 = new MfgVersion("0.0.1", "GAMBAZ", "30.04.2015, 17:18:34 GMT+1", "Solved module usage. Simplified file-references/import-system via _references.ts. Refactor MfgPlayer. Implemented suitable images. Player now manages a sprite instead of an image. Reimplemented the Sprite system. Pruned block class. Implement horizontal and vertical scrolling. Improve parallax scrolling for 2nd background. Extract parallax scrolling to function in order to support various bg layers. Converted all classes to TypeScript.");
+    /** The project's current version. */
+    MfgVersion.CURRENT_VERSION = MfgVersion.V_0_0_1;
+    return MfgVersion;
+}());
+exports.MfgVersion = MfgVersion;
+//# sourceMappingURL=MfgVersion.js.map
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10925,9 +11000,10 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Different shapes for all game objects.
+*
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Add circle objects.
-*   TODO ASAP   Different shapes for all game objects.
 *   TODO ASAP   CSS: improve margin, center canvas, etc.
 *   TODO ASAP   CameraY shall only change if player collides with the floor!!
 *   TODO ASAP   Create abstract level system.
@@ -10945,9 +11021,10 @@ var Mfg = (function () {
     *   This method is invoked when the application starts.
     *****************************************************************************/
     Mfg.main = function () {
-        // set title and acclaim debug console
-        mfg.MfgDebug.init.log(mfg.MfgSettings.TITLE);
-        document.title = mfg.MfgSettings.TITLE;
+        var title = mfg.MfgSettings.TITLE + ", " + mfg.MfgVersion.CURRENT_VERSION.getVersionDescriptor();
+        // acclaim debug console and set title
+        mfg.MfgDebug.init.log(title);
+        document.title = title;
         //init game engine
         mfg.MfgInit.init();
     };
@@ -10957,7 +11034,7 @@ exports.Mfg = Mfg;
 //# sourceMappingURL=Mfg.js.map
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10975,7 +11052,7 @@ var MfgGameObject = (function () {
     /*****************************************************************************
     *   Creates a new game object.
     *****************************************************************************/
-    function MfgGameObject(x, y, width, height, debugColor, isSensor, isStatic) {
+    function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic) {
         /** The game objects' body. */
         this.body = null;
         this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, {
@@ -10988,6 +11065,58 @@ var MfgGameObject = (function () {
             isSensor: isSensor,
             isStatic: isStatic
         });
+        return;
+        /*
+                    switch ( shape )
+                    {
+                        case MfgGameObjectShape.ERectangle:
+                        {
+                            this.body = Matter.Bodies.rectangle(
+                                x + ( width  / 2 ),
+                                y + ( height / 2 ),
+                                width,
+                                height,
+                                {
+                                    render:
+                                    {
+                                        fillStyle:   debugColor,
+                                        strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                                        opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                                        lineWidth:   1.0,
+                                    },
+                                    isSensor: isSensor,
+                                    isStatic: isStatic
+                                }
+                            );
+        
+                            break;
+                        }
+        
+                        case MfgGameObjectShape.ECircle:
+                        default:
+                        {
+                            this.body = Matter.Bodies.rectangle(
+                                x + ( width  / 2 ),
+                                y + ( height / 2 ),
+                                width,
+                                height,
+                                {
+                                    render:
+                                    {
+                                        fillStyle:   debugColor,
+                                        strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                                        opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                                        lineWidth:   1.0,
+                                    },
+                                    isSensor: isSensor,
+                                    isStatic: isStatic
+                                }
+                            );
+        
+                            break;
+                        }
+                    }
+          */
     }
     return MfgGameObject;
 }());
@@ -10995,7 +11124,7 @@ exports.MfgGameObject = MfgGameObject;
 //# sourceMappingURL=MfgGameObject.js.map
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports) {
 
 var g;
@@ -11022,7 +11151,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11047,8 +11176,11 @@ var mfg = __webpack_require__(0);
 *****************************************************************************/
 var MfgBox = (function (_super) {
     __extends(MfgBox, _super);
-    function MfgBox(x, y, width, height) {
-        return _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false) || this;
+    /*****************************************************************************
+    *   Creates a new game item.
+    *****************************************************************************/
+    function MfgBox(shape, x, y, width, height) {
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true) || this;
     }
     return MfgBox;
 }(mfg.MfgGameObject));
@@ -11056,7 +11188,7 @@ exports.MfgBox = MfgBox;
 //# sourceMappingURL=MfgBox.js.map
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11085,8 +11217,8 @@ var MfgItem = (function (_super) {
     /*****************************************************************************
     *   Creates a new game item.
     *****************************************************************************/
-    function MfgItem(x, y, width, height) {
-        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true) || this;
+    function MfgItem(shape, x, y, width, height) {
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
         return _this;
@@ -11106,7 +11238,7 @@ exports.MfgItem = MfgItem;
 //# sourceMappingURL=MfgItem.js.map
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11131,8 +11263,11 @@ var mfg = __webpack_require__(0);
 *****************************************************************************/
 var MfgObstacle = (function (_super) {
     __extends(MfgObstacle, _super);
-    function MfgObstacle(x, y, width, height) {
-        return _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true) || this;
+    /*****************************************************************************
+    *   Creates a new game item.
+    *****************************************************************************/
+    function MfgObstacle(shape, x, y, width, height) {
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true) || this;
     }
     return MfgObstacle;
 }(mfg.MfgGameObject));
@@ -11140,7 +11275,7 @@ exports.MfgObstacle = MfgObstacle;
 //# sourceMappingURL=MfgObstacle.js.map
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11168,6 +11303,7 @@ var __values = (this && this.__values) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
+var MfgGameObjectShape_1 = __webpack_require__(2);
 /*****************************************************************************
 *   Represents the player being controled by the user.
 *
@@ -11180,7 +11316,7 @@ var MfgPlayer = (function (_super) {
     *   Creates a new player instance.
     *****************************************************************************/
     function MfgPlayer(x, y, width, height) {
-        var _this = _super.call(this, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, false) || this;
+        var _this = _super.call(this, MfgGameObjectShape_1.MfgGameObjectShape.ERectangle, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, false) || this;
         _this.bottomSensor = null;
         _this.jumpPower = 0.0;
         _this.jumpKeyNeedsRelease = false;
@@ -11279,7 +11415,7 @@ exports.MfgPlayer = MfgPlayer;
 //# sourceMappingURL=MfgPlayer.js.map
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11391,7 +11527,7 @@ exports.MfgGame = MfgGame;
 //# sourceMappingURL=MfgGame.js.map
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11439,17 +11575,17 @@ var MfgLevel = (function () {
         // init player
         this.player = new mfg.MfgPlayer(0, 0, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y);
         // init static obstacles
-        this.groundA = new mfg.MfgObstacle(0, 550, 600, 25);
-        this.groundB = new mfg.MfgObstacle(650, 550, 600, 25);
-        this.obstacleA = new mfg.MfgObstacle(250, 470, 80, 80);
+        this.groundA = new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 550, 600, 25);
+        this.groundB = new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 550, 600, 25);
+        this.obstacleA = new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 470, 80, 80);
         // init moveable boxes
-        this.boxA = new mfg.MfgBox(360, 0, 80, 80);
-        this.boxB = new mfg.MfgBox(380, 60, 80, 80);
+        this.boxA = new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 360, 0, 80, 80);
+        this.boxB = new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80);
         // init items
         this.items = [
-            new mfg.MfgItem(800, 450, 25, 25),
-            new mfg.MfgItem(850, 450, 25, 25),
-            new mfg.MfgItem(900, 450, 25, 25),
+            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 800, 450, 25, 25),
+            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 850, 450, 25, 25),
+            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 900, 450, 25, 25),
         ];
         // adding bodies increases z-index!
         // add bg objects behind the game objects
@@ -11522,7 +11658,7 @@ exports.MfgLevel = MfgLevel;
 //# sourceMappingURL=MfgLevel.js.map
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11600,7 +11736,7 @@ exports.MfgKeySystem = MfgKeySystem;
 //# sourceMappingURL=MfgKeySystem.js.map
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11665,7 +11801,7 @@ exports.MfgCamera = MfgCamera;
 //# sourceMappingURL=MfgCamera.js.map
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
