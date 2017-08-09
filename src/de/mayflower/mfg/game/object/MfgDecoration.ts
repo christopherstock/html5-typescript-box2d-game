@@ -17,10 +17,11 @@
         *   @param y      Startup position Y.
         *   @param width  The new width.
         *   @param height The new height.
+        *   @param image  The image source to use.
         *****************************************************************************/
-        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
+        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, image:string )
         {
-            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true );
+            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true, image );
         }
 
         /*****************************************************************************

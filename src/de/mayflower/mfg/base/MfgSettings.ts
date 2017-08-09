@@ -64,10 +64,6 @@
                 group: 0x0003
         };
 
-        /** The relative path from index.html where all images the app makes use of reside. */
-        public      static      PATH_IMAGE_TEXTURE                          :string                     = "res/image/texture/";
-        /** The relative path from index.html where all sounds the app makes use of reside. */
-        public      static      PATH_SOUND                                  :string                     = "res/sound/";
-        /** The relative path from index.html where all 3d model files the app makes use of reside. */
-        public      static      PATH_3DS                                    :string                     = "res/3ds/";
+        /** The relative path from index.html where all background images reside. */
+        public      static      PATH_IMAGE_BG                               :string                     = "res/image/bg/";
     }

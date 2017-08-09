@@ -33,13 +33,24 @@
             height:number,
             debugColor:string,
             isSensor:boolean,
-            isStatic:boolean
+            isStatic:boolean,
+            image:string
         )
         {
             this.width  = width;
             this.height = height;
 
             this.isSensor = isSensor;
+
+            let sprite:any = {};
+            if ( image != null )
+            {
+                sprite = {
+                    texture: image,
+                    xScale:  1.0,
+                    yScale:  1.0,
+                };
+            }
 
             switch ( +shape )
             {
@@ -57,16 +68,7 @@
                                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                                 opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                                 lineWidth:   1.0,
-/*
-                                sprite:
-                                {
-                                    texture: './res/texture/stand.png',
-
-                                    xScale: 1.0,
-                                    yScale: 1.0,
-
-                                },
-*/
+                                sprite:      sprite,
                             },
                             isSensor: isSensor,
                             isStatic: isStatic
@@ -89,14 +91,7 @@
                                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                                 opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                                 lineWidth:   1.0,
-/*
-                                sprite:
-                                {
-                                    texture: './res/texture/stand.png',
-                                    xScale: 1.0,
-                                    yScale: 1.0,
-                                },
-*/
+                                sprite:      sprite,
                             },
                             isSensor: isSensor,
                             isStatic: isStatic
@@ -105,10 +100,6 @@
 
                     break;
                 }
-
-
-
-
             }
         }
 

@@ -50,10 +50,10 @@
             this.gameObjects =
             [
                 // bg decoration
-//                mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height ),
+                mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
 
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 30, 860, 120, 120 ),
+                mfg.MfgGameObjectFactory.createDecoration( 30, 860, 120, 120, null ),
 
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle( 0,    950, 680,  25 ),
@@ -77,7 +77,7 @@
                 this.player,
 
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 860, 860, 60, 120 ),
+                mfg.MfgGameObjectFactory.createDecoration( 860, 860, 60, 120, null ),
             ];
 
             // add all bodies of all game objects to the world

@@ -20,15 +20,17 @@
         /*****************************************************************************
         *   Creates a new character.
         *
-        *   @param shape  The shape for this object.
-        *   @param x      Startup position X.
-        *   @param y      Startup position Y.
-        *   @param width  The new width.
-        *   @param height The new height.
+        *   @param shape      The shape for this object.
+        *   @param x          Startup position X.
+        *   @param y          Startup position Y.
+        *   @param width      The new width.
+        *   @param height     The new height.
+        *   @param debugColor The color for the debug object.
+        *   @param image      The image for this game object.
         *****************************************************************************/
-        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, debugColor:string )
+        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, debugColor:string, image:string )
         {
-            super( shape, x, y, width, height, debugColor, false, false );
+            super( shape, x, y, width, height, debugColor, false, false, image );
 
             this.bottomSensor = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),

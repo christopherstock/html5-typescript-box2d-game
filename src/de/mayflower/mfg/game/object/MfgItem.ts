@@ -24,7 +24,7 @@
         *****************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
         {
-            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true );
+            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true, null );
 
             // put the item into a unique collision group so its uncollidable
             this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUPS;

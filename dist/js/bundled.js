@@ -93,6 +93,7 @@ __export(__webpack_require__(21));
 __export(__webpack_require__(22));
 __export(__webpack_require__(23));
 __export(__webpack_require__(24));
+__export(__webpack_require__(25));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10832,12 +10833,8 @@ var MfgSettings = (function () {
         mask: 0x00002,
         group: 0x0003
     };
-    /** The relative path from index.html where all images the app makes use of reside. */
-    MfgSettings.PATH_IMAGE_TEXTURE = "res/image/texture/";
-    /** The relative path from index.html where all sounds the app makes use of reside. */
-    MfgSettings.PATH_SOUND = "res/sound/";
-    /** The relative path from index.html where all 3d model files the app makes use of reside. */
-    MfgSettings.PATH_3DS = "res/3ds/";
+    /** The relative path from index.html where all background images reside. */
+    MfgSettings.PATH_IMAGE_BG = "res/image/bg/";
     return MfgSettings;
 }());
 exports.MfgSettings = MfgSettings;
@@ -11069,7 +11066,7 @@ var MfgGameObject = (function () {
     /*****************************************************************************
     *   Creates a new game object.
     *****************************************************************************/
-    function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic) {
+    function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic, image) {
         /** The game objects' body. */
         this.body = null;
         /** The width of this object. */
@@ -11081,6 +11078,14 @@ var MfgGameObject = (function () {
         this.width = width;
         this.height = height;
         this.isSensor = isSensor;
+        var sprite = {};
+        if (image != null) {
+            sprite = {
+                texture: image,
+                xScale: 1.0,
+                yScale: 1.0,
+            };
+        }
         switch (+shape) {
             case mfg.MfgGameObjectShape.ERectangle:
                 {
@@ -11090,6 +11095,7 @@ var MfgGameObject = (function () {
                             strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                             opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                             lineWidth: 1.0,
+                            sprite: sprite,
                         },
                         isSensor: isSensor,
                         isStatic: isStatic
@@ -11104,6 +11110,7 @@ var MfgGameObject = (function () {
                             strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                             opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                             lineWidth: 1.0,
+                            sprite: sprite,
                         },
                         isSensor: isSensor,
                         isStatic: isStatic
@@ -11240,10 +11247,11 @@ var MfgGameObjectFactory = (function () {
     *   @param y      Anchor Y.
     *   @param width  Object width.
     *   @param height Object height.
+    *   @param image  The decoration image.
     *   @return       The created decoration.
     *****************************************************************************/
-    MfgGameObjectFactory.createDecoration = function (x, y, width, height) {
-        return new mfg.MfgDecoration(mfg.MfgGameObjectShape.ERectangle, x, y, width, height);
+    MfgGameObjectFactory.createDecoration = function (x, y, width, height, image) {
+        return new mfg.MfgDecoration(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image);
     };
     return MfgGameObjectFactory;
 }());
@@ -11290,14 +11298,16 @@ var MfgCharacter = (function (_super) {
     /*****************************************************************************
     *   Creates a new character.
     *
-    *   @param shape  The shape for this object.
-    *   @param x      Startup position X.
-    *   @param y      Startup position Y.
-    *   @param width  The new width.
-    *   @param height The new height.
+    *   @param shape      The shape for this object.
+    *   @param x          Startup position X.
+    *   @param y          Startup position Y.
+    *   @param width      The new width.
+    *   @param height     The new height.
+    *   @param debugColor The color for the debug object.
+    *   @param image      The image for this game object.
     *****************************************************************************/
-    function MfgCharacter(shape, x, y, width, height, debugColor) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false) || this;
+    function MfgCharacter(shape, x, y, width, height, debugColor, image) {
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image) || this;
         /** The bottom line that checks collisions with the body. */
         _this.bottomSensor = null;
         /** The current jump force. */
@@ -11431,7 +11441,7 @@ var MfgEnemy = (function (_super) {
     *   @param height The new height.
     *****************************************************************************/
     function MfgEnemy(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null) || this;
     }
     /*****************************************************************************
     *   Renders the current player tick.
@@ -11487,7 +11497,7 @@ var MfgPlayer = (function (_super) {
     *   @param height The new height.
     *****************************************************************************/
     function MfgPlayer(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null) || this;
     }
     /*****************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -11558,7 +11568,7 @@ var MfgBox = (function (_super) {
     *   @param height The new height.
     *****************************************************************************/
     function MfgBox(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null) || this;
     }
     /*****************************************************************************
     *   Renders this box.
@@ -11608,7 +11618,7 @@ var MfgItem = (function (_super) {
     *   @param height The new height.
     *****************************************************************************/
     function MfgItem(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true, null) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
         // put the item into a unique collision group so its uncollidable
@@ -11674,9 +11684,10 @@ var MfgDecoration = (function (_super) {
     *   @param y      Startup position Y.
     *   @param width  The new width.
     *   @param height The new height.
+    *   @param image  The image source to use.
     *****************************************************************************/
-    function MfgDecoration(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true) || this;
+    function MfgDecoration(shape, x, y, width, height, image) {
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true, image) || this;
     }
     /*****************************************************************************
     *   Renders this obstacle.
@@ -11724,7 +11735,7 @@ var MfgObstacle = (function (_super) {
     *   @param height The new height.
     *****************************************************************************/
     function MfgObstacle(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null) || this;
     }
     /*****************************************************************************
     *   Renders this obstacle.
@@ -11905,9 +11916,9 @@ var MfgLevel = (function () {
         this.gameObjects =
             [
                 // bg decoration
-                //                mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height ),
+                mfg.MfgGameObjectFactory.createDecoration(0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN),
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(30, 860, 120, 120),
+                mfg.MfgGameObjectFactory.createDecoration(30, 860, 120, 120, null),
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle(0, 950, 680, 25),
                 mfg.MfgGameObjectFactory.createObstacle(700, 950, 600, 25),
@@ -11925,7 +11936,7 @@ var MfgLevel = (function () {
                 // player
                 this.player,
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration(860, 860, 60, 120),
+                mfg.MfgGameObjectFactory.createDecoration(860, 860, 60, 120, null),
             ];
         try {
             // add all bodies of all game objects to the world
@@ -12138,6 +12149,29 @@ exports.MfgCamera = MfgCamera;
 
 /***/ }),
 /* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   All images the game makes use of.
+*
+*   @author     Christopher Stock
+*   @version    0.0.8
+*****************************************************************************/
+var MfgImages = (function () {
+    function MfgImages() {
+    }
+    MfgImages.IMAGE_BG_FOREST_GREEN = mfg.MfgSettings.PATH_IMAGE_BG + "woodsGreen_big.jpg";
+    return MfgImages;
+}());
+exports.MfgImages = MfgImages;
+//# sourceMappingURL=MfgImages.js.map
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
