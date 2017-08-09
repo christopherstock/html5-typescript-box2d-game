@@ -10927,14 +10927,12 @@ var mfg = __webpack_require__(0);
 *
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Add circle objects.
-*   TODO ASAP   Different colors for different game objects.
 *   TODO ASAP   Different shapes for all game objects.
 *   TODO ASAP   CSS: improve margin, center canvas, etc.
 *   TODO ASAP   CameraY shall only change if player collides with the floor!!
 *   TODO ASAP   Create abstract level system.
 *   TODO INIT   Buffer camera.
-*   TODO INIT   Enrich all JavaDoc items.
-*   TODO WEAK   Try multiple layers of engines for different calcs/effects.
+*   TODO LOW    Enrich all JavaDoc items.
 *   TODO WEAK   Implement nice changing gravity effects.
 *
 *   @author     Christopher Stock
@@ -11204,7 +11202,12 @@ var MfgPlayer = (function (_super) {
         // avoid body tilting
         _this.body.inertia = Infinity;
         _this.body.inverseInertia = 1 / Infinity;
+        // though tilting is off, increase the mass
+        _this.body.mass = 70.0;
+        _this.body.inverseMass = 1 / 70.0;
         return _this;
+        // density ?
+        // this.body.density = 100.0;
     }
     /*****************************************************************************
     *   Checks all pressed player keys and performs according actions.

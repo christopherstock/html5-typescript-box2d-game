@@ -6,14 +6,12 @@
     *
     *   TODO ASAP   Checkout material parameters for different game objects!
     *   TODO ASAP   Add circle objects.
-    *   TODO ASAP   Different colors for different game objects.
     *   TODO ASAP   Different shapes for all game objects.
     *   TODO ASAP   CSS: improve margin, center canvas, etc.
     *   TODO ASAP   CameraY shall only change if player collides with the floor!!
     *   TODO ASAP   Create abstract level system.
     *   TODO INIT   Buffer camera.
-    *   TODO INIT   Enrich all JavaDoc items.
-    *   TODO WEAK   Try multiple layers of engines for different calcs/effects.
+    *   TODO LOW    Enrich all JavaDoc items.
     *   TODO WEAK   Implement nice changing gravity effects.
     *
     *   @author     Christopher Stock

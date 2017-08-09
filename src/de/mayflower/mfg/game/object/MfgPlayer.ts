@@ -11,6 +11,7 @@
     export class MfgPlayer extends mfg.MfgGameObject
     {
         public          bottomSensor            :Matter.Body                    = null;
+
         public          jumpPower               :number                         = 0.0;
         private         jumpKeyNeedsRelease     :boolean                        = false;
 
@@ -50,6 +51,13 @@
             // avoid body tilting
             this.body.inertia        = Infinity;
             this.body.inverseInertia = 1 / Infinity;
+
+            // though tilting is off, increase the mass
+            this.body.mass = 70.0;
+            this.body.inverseMass = 1 / 70.0;
+
+            // density ?
+            // this.body.density = 100.0;
         }
 
         /*****************************************************************************
