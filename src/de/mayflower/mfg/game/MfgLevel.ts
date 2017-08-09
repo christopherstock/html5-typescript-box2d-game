@@ -40,6 +40,7 @@
         {
             // init player
             this.player     = new mfg.MfgPlayer(
+                null,
                 0,
                 0,
                 mfg.MfgSettings.PLAYER_SIZE_X,
@@ -47,37 +48,30 @@
             );
 
             // init static obstacles
-            this.groundA    = new mfg.MfgObstacle( 0,   550, 600, 25 );
-            this.groundB    = new mfg.MfgObstacle( 650, 550, 600, 25 );
-            this.obstacleA  = new mfg.MfgObstacle( 250, 470, 80,  80 );
+            this.groundA    = new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0,   550, 600, 25 );
+            this.groundB    = new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 650, 550, 600, 25 );
+            this.obstacleA  = new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 470, 80,  80 );
 
             // init moveable boxes
-            this.boxA       = new mfg.MfgBox( 360, 0,  80, 80 );
-            this.boxB       = new mfg.MfgBox( 380, 60, 80, 80 );
+            this.boxA       = new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle, 360, 0,  40, 40 );
+            this.boxB       = new mfg.MfgBox( mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80 );
 
             // init items
             this.items      = [
-                new mfg.MfgItem( 800, 450, 25, 25 ),
-                new mfg.MfgItem( 850, 450, 25, 25 ),
-                new mfg.MfgItem( 900, 450, 25, 25 ),
+                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 800, 450, 25, 25 ),
+                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 850, 450, 25, 25 ),
+                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 900, 450, 25, 25 ),
             ];
 
             // adding bodies increases z-index!
 
+
+
+
             // add bg objects behind the game objects
 
-/*
-            // join player parts and add them to the world
-            let playerBodies = Matter.Body.create(
-                {
-                    parts: [
-                        this.player.body,
-                        this.player.bottomCollisionChecker
-                    ],
-                    friction: 0
-                }
-            );
-*/
+
+            // add player body
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body    );
 
             // add all game objects to the world

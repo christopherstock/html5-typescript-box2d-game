@@ -10,6 +10,6 @@
     *****************************************************************************/
     export enum MfgGameObjectShape
     {
-        ERectangle = 0,
-        ECircle = 1,
+        ERectangle,
+        ECircle,
     }

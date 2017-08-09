@@ -10,8 +10,8 @@
     *****************************************************************************/
     export class MfgBox extends mfg.MfgGameObject
     {
-        public constructor( x:number, y:number, width:number, height:number )
+        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
         {
-            super( x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false );
+            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false );
         }
     }

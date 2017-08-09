@@ -18,6 +18,7 @@
         *****************************************************************************/
         public constructor
         (
+            shape:mfg.MfgGameObjectShape,
             x:number,
             y:number,
             width:number,
@@ -27,22 +28,56 @@
             isStatic:boolean
         )
         {
-            this.body = Matter.Bodies.rectangle(
-                x + ( width  / 2 ),
-                y + ( height / 2 ),
-                width,
-                height,
+            switch ( +shape )
+            {
+                case mfg.MfgGameObjectShape.ERectangle:
                 {
-                    render:
-                    {
-                        fillStyle:   debugColor,
-                        strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                        opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                        lineWidth:   1.0,
-                    },
-                    isSensor: isSensor,
-                    isStatic: isStatic
+                    this.body = Matter.Bodies.rectangle(
+                        x + ( width  / 2 ),
+                        y + ( height / 2 ),
+                        width,
+                        height,
+                        {
+                            render:
+                            {
+                                fillStyle:   debugColor,
+                                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                                opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                                lineWidth:   1.0,
+                            },
+                            isSensor: isSensor,
+                            isStatic: isStatic
+                        }
+                    );
+
+                    break;
                 }
-            );
+
+                case mfg.MfgGameObjectShape.ECircle:
+                {
+                    this.body = Matter.Bodies.circle(
+                        x + ( width  / 2 ),
+                        y + ( width / 2 ),
+                        width,
+                        {
+                            render:
+                            {
+                                fillStyle:   debugColor,
+                                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                                opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                                lineWidth:   1.0,
+                            },
+                            isSensor: isSensor,
+                            isStatic: isStatic
+                        }
+                    );
+
+                    break;
+                }
+
+
+
+
+            }
         }
     }

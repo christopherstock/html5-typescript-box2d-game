@@ -10,8 +10,8 @@
     *****************************************************************************/
     export class MfgObstacle extends mfg.MfgGameObject
     {
-        public constructor( x:number, y:number, width:number, height:number )
+        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
         {
-            super( x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true );
+            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true );
         }
     }

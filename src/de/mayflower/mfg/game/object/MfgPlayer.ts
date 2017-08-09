@@ -18,9 +18,9 @@
         /*****************************************************************************
         *   Creates a new player instance.
         *****************************************************************************/
-        public constructor( x:number, y:number, width:number, height:number )
+        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
         {
-            super( x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, false );
+            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, false );
 
             this.bottomSensor = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),

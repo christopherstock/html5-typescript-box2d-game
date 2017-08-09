@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,12 +73,12 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(4));
 __export(__webpack_require__(5));
 __export(__webpack_require__(6));
 __export(__webpack_require__(7));
 __export(__webpack_require__(8));
 __export(__webpack_require__(9));
-__export(__webpack_require__(2));
 __export(__webpack_require__(10));
 __export(__webpack_require__(12));
 __export(__webpack_require__(13));
@@ -10378,31 +10378,11 @@ var Vector = _dereq_('../geometry/Vector');
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+module.exports = __webpack_require__(3);
 
-Object.defineProperty(exports, "__esModule", { value: true });
-/*****************************************************************************
-*   The abstract class of all game objects.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var MfgGameObjectShape;
-(function (MfgGameObjectShape) {
-    MfgGameObjectShape[MfgGameObjectShape["ERectangle"] = 0] = "ERectangle";
-    MfgGameObjectShape[MfgGameObjectShape["ECircle"] = 1] = "ECircle";
-})(MfgGameObjectShape = exports.MfgGameObjectShape || (exports.MfgGameObjectShape = {}));
-//# sourceMappingURL=MfgGameObjectShape.js.map
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(4);
-
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10787,7 +10767,7 @@ window.onunload = function () {
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10856,7 +10836,7 @@ exports.MfgSettings = MfgSettings;
 //# sourceMappingURL=MfgSettings.js.map
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10905,7 +10885,7 @@ exports.MfgDebug = MfgDebug;
 //# sourceMappingURL=MfgDebug.js.map
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10937,7 +10917,7 @@ exports.MfgInit = MfgInit;
 //# sourceMappingURL=MfgInit.js.map
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10990,7 +10970,7 @@ exports.MfgVersion = MfgVersion;
 //# sourceMappingURL=MfgVersion.js.map
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11000,10 +10980,10 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Different shapes for all game objects.
-*
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Add circle objects.
+*   TODO ASAP   Create enemies.
+*   TODO ASAP   Created animated platforms.
 *   TODO ASAP   CSS: improve margin, center canvas, etc.
 *   TODO ASAP   CameraY shall only change if player collides with the floor!!
 *   TODO ASAP   Create abstract level system.
@@ -11034,6 +11014,26 @@ exports.Mfg = Mfg;
 //# sourceMappingURL=Mfg.js.map
 
 /***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*****************************************************************************
+*   The abstract class of all game objects.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgGameObjectShape;
+(function (MfgGameObjectShape) {
+    MfgGameObjectShape[MfgGameObjectShape["ERectangle"] = 0] = "ERectangle";
+    MfgGameObjectShape[MfgGameObjectShape["ECircle"] = 1] = "ECircle";
+})(MfgGameObjectShape = exports.MfgGameObjectShape || (exports.MfgGameObjectShape = {}));
+//# sourceMappingURL=MfgGameObjectShape.js.map
+
+/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11055,68 +11055,36 @@ var MfgGameObject = (function () {
     function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic) {
         /** The game objects' body. */
         this.body = null;
-        this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, {
-            render: {
-                fillStyle: debugColor,
-                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                lineWidth: 1.0,
-            },
-            isSensor: isSensor,
-            isStatic: isStatic
-        });
-        return;
-        /*
-                    switch ( shape )
-                    {
-                        case MfgGameObjectShape.ERectangle:
-                        {
-                            this.body = Matter.Bodies.rectangle(
-                                x + ( width  / 2 ),
-                                y + ( height / 2 ),
-                                width,
-                                height,
-                                {
-                                    render:
-                                    {
-                                        fillStyle:   debugColor,
-                                        strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                                        opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                                        lineWidth:   1.0,
-                                    },
-                                    isSensor: isSensor,
-                                    isStatic: isStatic
-                                }
-                            );
-        
-                            break;
-                        }
-        
-                        case MfgGameObjectShape.ECircle:
-                        default:
-                        {
-                            this.body = Matter.Bodies.rectangle(
-                                x + ( width  / 2 ),
-                                y + ( height / 2 ),
-                                width,
-                                height,
-                                {
-                                    render:
-                                    {
-                                        fillStyle:   debugColor,
-                                        strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                                        opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                                        lineWidth:   1.0,
-                                    },
-                                    isSensor: isSensor,
-                                    isStatic: isStatic
-                                }
-                            );
-        
-                            break;
-                        }
-                    }
-          */
+        switch (+shape) {
+            case mfg.MfgGameObjectShape.ERectangle:
+                {
+                    this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, {
+                        render: {
+                            fillStyle: debugColor,
+                            strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                            opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                            lineWidth: 1.0,
+                        },
+                        isSensor: isSensor,
+                        isStatic: isStatic
+                    });
+                    break;
+                }
+            case mfg.MfgGameObjectShape.ECircle:
+                {
+                    this.body = Matter.Bodies.circle(x + (width / 2), y + (width / 2), width, {
+                        render: {
+                            fillStyle: debugColor,
+                            strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                            opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                            lineWidth: 1.0,
+                        },
+                        isSensor: isSensor,
+                        isStatic: isStatic
+                    });
+                    break;
+                }
+        }
     }
     return MfgGameObject;
 }());
@@ -11176,11 +11144,8 @@ var mfg = __webpack_require__(0);
 *****************************************************************************/
 var MfgBox = (function (_super) {
     __extends(MfgBox, _super);
-    /*****************************************************************************
-    *   Creates a new game item.
-    *****************************************************************************/
     function MfgBox(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false) || this;
     }
     return MfgBox;
 }(mfg.MfgGameObject));
@@ -11221,6 +11186,12 @@ var MfgItem = (function (_super) {
         var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
+        // put the item into a unique collision group so its uncollidable
+        _this.body.collisionFilter = {
+            category: 0x0001,
+            mask: 0x00002,
+            group: 0x0003
+        };
         return _this;
     }
     /*****************************************************************************
@@ -11263,11 +11234,8 @@ var mfg = __webpack_require__(0);
 *****************************************************************************/
 var MfgObstacle = (function (_super) {
     __extends(MfgObstacle, _super);
-    /*****************************************************************************
-    *   Creates a new game item.
-    *****************************************************************************/
     function MfgObstacle(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true) || this;
     }
     return MfgObstacle;
 }(mfg.MfgGameObject));
@@ -11303,7 +11271,6 @@ var __values = (this && this.__values) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
-var MfgGameObjectShape_1 = __webpack_require__(2);
 /*****************************************************************************
 *   Represents the player being controled by the user.
 *
@@ -11315,8 +11282,8 @@ var MfgPlayer = (function (_super) {
     /*****************************************************************************
     *   Creates a new player instance.
     *****************************************************************************/
-    function MfgPlayer(x, y, width, height) {
-        var _this = _super.call(this, MfgGameObjectShape_1.MfgGameObjectShape.ERectangle, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, false) || this;
+    function MfgPlayer(shape, x, y, width, height) {
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, false) || this;
         _this.bottomSensor = null;
         _this.jumpPower = 0.0;
         _this.jumpKeyNeedsRelease = false;
@@ -11573,13 +11540,13 @@ var MfgLevel = (function () {
     *****************************************************************************/
     MfgLevel.prototype.init = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y);
+        this.player = new mfg.MfgPlayer(null, 0, 0, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y);
         // init static obstacles
         this.groundA = new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 550, 600, 25);
         this.groundB = new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 550, 600, 25);
         this.obstacleA = new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 470, 80, 80);
         // init moveable boxes
-        this.boxA = new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 360, 0, 80, 80);
+        this.boxA = new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, 360, 0, 40, 40);
         this.boxB = new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80);
         // init items
         this.items = [
@@ -11589,18 +11556,7 @@ var MfgLevel = (function () {
         ];
         // adding bodies increases z-index!
         // add bg objects behind the game objects
-        /*
-                    // join player parts and add them to the world
-                    let playerBodies = Matter.Body.create(
-                        {
-                            parts: [
-                                this.player.body,
-                                this.player.bottomCollisionChecker
-                            ],
-                            friction: 0
-                        }
-                    );
-        */
+        // add player body
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
         // add all game objects to the world
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.groundA.body);
