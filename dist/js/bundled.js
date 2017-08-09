@@ -11078,14 +11078,6 @@ var MfgGameObject = (function () {
         this.width = width;
         this.height = height;
         this.isSensor = isSensor;
-        var sprite = {};
-        if (image != null) {
-            sprite = {
-                texture: image,
-                xScale: 1.0,
-                yScale: 1.0,
-            };
-        }
         switch (+shape) {
             case mfg.MfgGameObjectShape.ERectangle:
                 {
@@ -11095,7 +11087,6 @@ var MfgGameObject = (function () {
                             strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                             opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                             lineWidth: 1.0,
-                            sprite: sprite,
                         },
                         isSensor: isSensor,
                         isStatic: isStatic
@@ -11110,13 +11101,15 @@ var MfgGameObject = (function () {
                             strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                             opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                             lineWidth: 1.0,
-                            sprite: sprite,
                         },
                         isSensor: isSensor,
                         isStatic: isStatic
                     });
                     break;
                 }
+        }
+        if (image != null) {
+            this.body.render.sprite.texture = image;
         }
     }
     /*****************************************************************************
@@ -11635,6 +11628,14 @@ var MfgItem = (function (_super) {
                 this.pick();
             }
         }
+        /*
+                    if ( Math.random() * 2 > 1 )
+                    {
+                        this.body.render.sprite.texture = "res/image/texture/EStand.png";
+                    } else {
+                        this.body.render.sprite.texture = "res/image/texture/ETree1.png";
+                    }
+        */
     };
     /*****************************************************************************
     *   Picks up this item.

@@ -44,6 +44,14 @@
                     this.pick();
                 }
             }
+/*
+            if ( Math.random() * 2 > 1 )
+            {
+                this.body.render.sprite.texture = "res/image/texture/EStand.png";
+            } else {
+                this.body.render.sprite.texture = "res/image/texture/ETree1.png";
+            }
+*/
         }
 
         /*****************************************************************************

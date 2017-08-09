@@ -42,16 +42,6 @@
 
             this.isSensor = isSensor;
 
-            let sprite:any = {};
-            if ( image != null )
-            {
-                sprite = {
-                    texture: image,
-                    xScale:  1.0,
-                    yScale:  1.0,
-                };
-            }
-
             switch ( +shape )
             {
                 case mfg.MfgGameObjectShape.ERectangle:
@@ -68,7 +58,6 @@
                                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                                 opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                                 lineWidth:   1.0,
-                                sprite:      sprite,
                             },
                             isSensor: isSensor,
                             isStatic: isStatic
@@ -91,7 +80,6 @@
                                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                                 opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                                 lineWidth:   1.0,
-                                sprite:      sprite,
                             },
                             isSensor: isSensor,
                             isStatic: isStatic
@@ -100,6 +88,11 @@
 
                     break;
                 }
+            }
+
+            if ( image != null )
+            {
+                this.body.render.sprite.texture = image;
             }
         }
 
