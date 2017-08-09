@@ -10988,21 +10988,21 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Enrich all JavaDoc items.
+*
 *   TODO ASAP   Checkout material parameters for different game objects!
-*   TODO ASAP   Create object creation factory.
 *   TODO ASAP   Add doors / level portals.
 *   TODO ASAP   Add sprites.
 *   TODO ASAP   Add images.
+*   TODO ASAP   Parallax bg.
+*   TODO ASAP   Buffer camera according to looking direction.
 *   TODO ASAP   Add TypeDoc via npm.
-*   TODO HIGH   Create different enemy move patterns.
-*   TODO INIT   Add main menu and menu keys ..
 *   TODO ASAP   Create levels and sublevels.
-*   TODO ASAP   Created animated platforms.
-*   TODO ASAP   CSS: improve margin, center canvas, etc.
+*   TODO HIGH   Created animated platforms.
+*   TODO INIT   Create different enemy move patterns.
+*   TODO INIT   Add main menu and menu keys ..
 *   TODO ASAP   CameraY shall only change if player collides with the floor!!
 *   TODO ASAP   Create abstract level system.
-*   TODO HIGH   Buffer camera according to looking direction.
-*   TODO LOW    Enrich all JavaDoc items.
 *   TODO WEAK   Implement nice changing gravity effects.
 *
 *   @author     Christopher Stock
@@ -11015,7 +11015,9 @@ var Mfg = (function () {
     *   This method is invoked when the application starts.
     *****************************************************************************/
     Mfg.main = function () {
-        var title = mfg.MfgSettings.TITLE + ", " + mfg.MfgVersion.CURRENT_VERSION.getVersionDescriptor();
+        var title = (mfg.MfgSettings.TITLE
+            + ", "
+            + mfg.MfgVersion.CURRENT_VERSION.getVersionDescriptor());
         // acclaim debug console and set title
         mfg.MfgDebug.init.log(title);
         document.title = title;
@@ -11795,10 +11797,10 @@ var MfgLevel = (function () {
                 // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration(30, 860, 120, 120),
                 // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle(0, 950, 600, 25),
+                mfg.MfgGameObjectFactory.createObstacle(0, 950, 680, 25),
                 mfg.MfgGameObjectFactory.createObstacle(700, 950, 600, 25),
-                mfg.MfgGameObjectFactory.createObstacle(1350, 950, 1650, 25),
-                mfg.MfgGameObjectFactory.createObstacle(250, 870, 80, 80),
+                mfg.MfgGameObjectFactory.createObstacle(1320, 950, 1650, 25),
+                mfg.MfgGameObjectFactory.createObstacle(1000, 870, 80, 80),
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(380, 60, 80, 80),
                 mfg.MfgGameObjectFactory.createSphere(360, 0, 40, 40),

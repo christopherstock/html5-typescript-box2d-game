@@ -46,13 +46,13 @@
                 mfg.MfgGameObjectFactory.createDecoration( 30, 860, 120, 120 ),
 
                 // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle( 0,    950, 600,  25 ),
+                mfg.MfgGameObjectFactory.createObstacle( 0,    950, 680,  25 ),
                 mfg.MfgGameObjectFactory.createObstacle( 700,  950, 600,  25 ),
-                mfg.MfgGameObjectFactory.createObstacle( 1350, 950, 1650, 25 ),
-                mfg.MfgGameObjectFactory.createObstacle( 250, 870, 80,  80 ),
+                mfg.MfgGameObjectFactory.createObstacle( 1320, 950, 1650, 25 ),
+                mfg.MfgGameObjectFactory.createObstacle( 1000, 870, 80,   80 ),
 
                 // moveable boxes
-                mfg.MfgGameObjectFactory.createBox( 380, 60, 80, 80 ),
+                mfg.MfgGameObjectFactory.createBox(    380, 60, 80, 80 ),
                 mfg.MfgGameObjectFactory.createSphere( 360, 0, 40, 40 ),
 
                 // items
