@@ -10980,8 +10980,11 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Make render() abstract for game objects class.
 *   TODO ASAP   Checkout material parameters for different game objects!
-*   TODO ASAP   Add circle objects.
+*   TODO ASAP   Create object creation factory.
+*   TODO ASAP   Add images.
+*   TODO ASAP   Add TypeDoc via npm.
 *   TODO ASAP   Create enemies.
 *   TODO ASAP   Created animated platforms.
 *   TODO ASAP   CSS: improve margin, center canvas, etc.
@@ -11147,6 +11150,11 @@ var MfgBox = (function (_super) {
     function MfgBox(shape, x, y, width, height) {
         return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false) || this;
     }
+    /*****************************************************************************
+    *   Renders this box.
+    *****************************************************************************/
+    MfgBox.prototype.render = function () {
+    };
     return MfgBox;
 }(mfg.MfgGameObject));
 exports.MfgBox = MfgBox;
@@ -11195,6 +11203,17 @@ var MfgItem = (function (_super) {
         return _this;
     }
     /*****************************************************************************
+    *   Render this item.
+    *****************************************************************************/
+    MfgItem.prototype.render = function () {
+        if (!this.picked) {
+            if (Matter.Bounds.overlaps(this.body.bounds, mfg.MfgInit.game.level.player.body.bounds)) {
+                mfg.MfgDebug.item.log(">> Player picked item!");
+                this.pick();
+            }
+        }
+    };
+    /*****************************************************************************
     *   Picks up this item.
     *****************************************************************************/
     MfgItem.prototype.pick = function () {
@@ -11237,6 +11256,11 @@ var MfgObstacle = (function (_super) {
     function MfgObstacle(shape, x, y, width, height) {
         return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true) || this;
     }
+    /*****************************************************************************
+    *   Renders this obstacle.
+    *****************************************************************************/
+    MfgObstacle.prototype.render = function () {
+    };
     return MfgObstacle;
 }(mfg.MfgGameObject));
 exports.MfgObstacle = MfgObstacle;
@@ -11340,6 +11364,12 @@ var MfgPlayer = (function (_super) {
     *   Renders the current player tick.
     *****************************************************************************/
     MfgPlayer.prototype.render = function () {
+        this.renderJumping();
+    };
+    /*****************************************************************************
+    *   Handles jumping.
+    *****************************************************************************/
+    MfgPlayer.prototype.renderJumping = function () {
         // render jumping
         if (this.jumpPower > 0.0) {
             // move body
@@ -11526,11 +11556,8 @@ var MfgLevel = (function () {
         this.width = 0.0;
         this.height = 0.0;
         this.player = null;
-        this.groundA = null;
-        this.groundB = null;
-        this.obstacleA = null;
-        this.boxA = null;
-        this.boxB = null;
+        this.obstacles = null;
+        this.boxes = null;
         this.items = null;
         this.width = width;
         this.height = height;
@@ -11542,12 +11569,16 @@ var MfgLevel = (function () {
         // init player
         this.player = new mfg.MfgPlayer(null, 0, 0, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y);
         // init static obstacles
-        this.groundA = new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 550, 600, 25);
-        this.groundB = new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 550, 600, 25);
-        this.obstacleA = new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 470, 80, 80);
+        this.obstacles = [
+            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 550, 600, 25),
+            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 550, 600, 25),
+            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 470, 80, 80),
+        ];
         // init moveable boxes
-        this.boxA = new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, 360, 0, 40, 40);
-        this.boxB = new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80);
+        this.boxes = [
+            new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, 360, 0, 40, 40),
+            new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80),
+        ];
         // init items
         this.items = [
             new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 800, 450, 25, 25),
@@ -11558,17 +11589,11 @@ var MfgLevel = (function () {
         // add bg objects behind the game objects
         // add player body
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
-        // add all game objects to the world
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.groundA.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.groundB.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.obstacleA.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxA.body);
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.boxB.body);
         try {
-            // add all items
-            for (var _a = __values(this.items), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var item = _b.value;
-                Matter.World.addBody(mfg.MfgInit.game.engine.world, item.body);
+            // add all obstacles
+            for (var _a = __values(this.obstacles), _b = _a.next(); !_b.done; _b = _a.next()) {
+                var obstacle = _b.value;
+                Matter.World.addBody(mfg.MfgInit.game.engine.world, obstacle.body);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -11578,7 +11603,35 @@ var MfgLevel = (function () {
             }
             finally { if (e_1) throw e_1.error; }
         }
-        var e_1, _c;
+        try {
+            // add all boxes
+            for (var _d = __values(this.boxes), _e = _d.next(); !_e.done; _e = _d.next()) {
+                var box = _e.value;
+                Matter.World.addBody(mfg.MfgInit.game.engine.world, box.body);
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_e && !_e.done && (_f = _d.return)) _f.call(_d);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        try {
+            // add all items
+            for (var _g = __values(this.items), _h = _g.next(); !_h.done; _h = _g.next()) {
+                var item = _h.value;
+                Matter.World.addBody(mfg.MfgInit.game.engine.world, item.body);
+            }
+        }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (_h && !_h.done && (_j = _g.return)) _j.call(_g);
+            }
+            finally { if (e_3) throw e_3.error; }
+        }
+        var e_1, _c, e_2, _f, e_3, _j;
         // add deco objects in front of the game objects
     };
     /*****************************************************************************
@@ -11588,25 +11641,20 @@ var MfgLevel = (function () {
         // render player
         this.player.render();
         try {
-            // check item collision
+            // render item
             for (var _a = __values(this.items), _b = _a.next(); !_b.done; _b = _a.next()) {
                 var item = _b.value;
-                if (!item.picked) {
-                    if (Matter.Bounds.overlaps(item.body.bounds, this.player.body.bounds)) {
-                        mfg.MfgDebug.item.log(">> Player picked item!");
-                        item.pick();
-                    }
-                }
+                item.render();
             }
         }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        catch (e_4_1) { e_4 = { error: e_4_1 }; }
         finally {
             try {
                 if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
             }
-            finally { if (e_2) throw e_2.error; }
+            finally { if (e_4) throw e_4.error; }
         }
-        var e_2, _c;
+        var e_4, _c;
     };
     return MfgLevel;
 }());

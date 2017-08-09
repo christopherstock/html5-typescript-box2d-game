@@ -14,14 +14,8 @@
         public      height                  :number                 = 0.0;
 
         public      player                  :mfg.MfgPlayer          = null;
-
-        public      groundA                 :mfg.MfgObstacle        = null;
-        public      groundB                 :mfg.MfgObstacle        = null;
-        public      obstacleA               :mfg.MfgObstacle        = null;
-
-        public      boxA                    :mfg.MfgBox             = null;
-        public      boxB                    :mfg.MfgBox             = null;
-
+        public      obstacles               :Array<mfg.MfgObstacle> = null;
+        public      boxes                   :Array<mfg.MfgBox>      = null;
         public      items                   :Array<mfg.MfgItem>     = null;
 
         /*****************************************************************************
@@ -39,7 +33,7 @@
         public init()
         {
             // init player
-            this.player     = new mfg.MfgPlayer(
+            this.player = new mfg.MfgPlayer(
                 null,
                 0,
                 0,
@@ -48,16 +42,20 @@
             );
 
             // init static obstacles
-            this.groundA    = new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0,   550, 600, 25 );
-            this.groundB    = new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 650, 550, 600, 25 );
-            this.obstacleA  = new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 470, 80,  80 );
+            this.obstacles = [
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0,   550, 600, 25 ),
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 650, 550, 600, 25 ),
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 470, 80,  80 ),
+            ];
 
             // init moveable boxes
-            this.boxA       = new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle, 360, 0,  40, 40 );
-            this.boxB       = new mfg.MfgBox( mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80 );
+            this.boxes = [
+                new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle,    360, 0,  40, 40 ),
+                new mfg.MfgBox( mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80 ),
+            ];
 
             // init items
-            this.items      = [
+            this.items = [
                 new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 800, 450, 25, 25 ),
                 new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 850, 450, 25, 25 ),
                 new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 900, 450, 25, 25 ),
@@ -72,14 +70,17 @@
 
 
             // add player body
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body    );
+            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body );
 
-            // add all game objects to the world
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.groundA.body   );
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.groundB.body   );
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.obstacleA.body );
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxA.body      );
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.boxB.body      );
+            // add all obstacles
+            for ( let obstacle of this.obstacles ) {
+                Matter.World.addBody( mfg.MfgInit.game.engine.world, obstacle.body );
+            }
+
+            // add all boxes
+            for ( let box of this.boxes ) {
+                Matter.World.addBody( mfg.MfgInit.game.engine.world, box.body );
+            }
 
             // add all items
             for ( let item of this.items )
@@ -100,18 +101,10 @@
             // render player
             this.player.render();
 
-            // check item collision
+            // render item
             for ( let item of this.items )
             {
-                if ( !item.picked )
-                {
-                    if ( Matter.Bounds.overlaps( item.body.bounds, this.player.body.bounds ) )
-                    {
-                        mfg.MfgDebug.item.log(">> Player picked item!");
-
-                        item.pick();
-                    }
-                }
+                item.render();
             }
         }
     }

@@ -4,8 +4,11 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Make render() abstract for game objects class.
     *   TODO ASAP   Checkout material parameters for different game objects!
-    *   TODO ASAP   Add circle objects.
+    *   TODO ASAP   Create object creation factory.
+    *   TODO ASAP   Add images.
+    *   TODO ASAP   Add TypeDoc via npm.
     *   TODO ASAP   Create enemies.
     *   TODO ASAP   Created animated platforms.
     *   TODO ASAP   CSS: improve margin, center canvas, etc.

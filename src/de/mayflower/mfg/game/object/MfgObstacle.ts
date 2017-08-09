@@ -14,4 +14,11 @@
         {
             super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true );
         }
+
+        /*****************************************************************************
+        *   Renders this obstacle.
+        *****************************************************************************/
+        public render()
+        {
+        }
     }

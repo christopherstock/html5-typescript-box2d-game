@@ -29,9 +29,25 @@
         }
 
         /*****************************************************************************
+        *   Render this item.
+        *****************************************************************************/
+        public render()
+        {
+            if ( !this.picked )
+            {
+                if ( Matter.Bounds.overlaps( this.body.bounds, mfg.MfgInit.game.level.player.body.bounds ) )
+                {
+                    mfg.MfgDebug.item.log(">> Player picked item!");
+
+                    this.pick();
+                }
+            }
+        }
+
+        /*****************************************************************************
         *   Picks up this item.
         *****************************************************************************/
-        public pick()
+        private pick()
         {
             // flag as picked
             this.picked = true;
