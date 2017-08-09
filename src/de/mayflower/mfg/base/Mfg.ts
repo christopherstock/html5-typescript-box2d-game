@@ -13,6 +13,7 @@
     *   TODO ASAP   Add sprites.
     *   TODO ASAP   Add images.
     *   TODO ASAP   Add TypeDoc via npm.
+    *   TODO HIGH   Create different enemy move patterns.
     *   TODO INIT   Add main menu and menu keys ..
     *   TODO ASAP   Create levels and sublevels.
     *   TODO ASAP   Created animated platforms.

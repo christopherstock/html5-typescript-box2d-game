@@ -1,6 +1,6 @@
 
     import * as Matter from 'matter-js';
-    import * as mfg    from '../mfg';
+    import * as mfg    from '../../mfg';
 
     /*****************************************************************************
     *   Specifies the initialization part of the game logic.
@@ -40,34 +40,34 @@
             );
 
             // adding bodies increases z-index!
-            this.gameObjects = [
+            this.gameObjects =
+            [
+
 
                 // add bg objects behind the game objects
 
+
                 // static obstacles
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0,    950, 600,  25 ),
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 650,  950, 600,  25 ),
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 1350, 950, 1650, 25 ),
-
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 870, 80,  80 ),
-
-
+                mfg.MfgGameObjectFactory.createObstacle( 0,    950, 600,  25 ),
+                mfg.MfgGameObjectFactory.createObstacle( 700,  950, 600,  25 ),
+                mfg.MfgGameObjectFactory.createObstacle( 1350, 950, 1650, 25 ),
+                mfg.MfgGameObjectFactory.createObstacle( 250, 870, 80,  80 ),
 
                 // moveable boxes
-                new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle,    360, 0,  40, 40 ),
-                new mfg.MfgBox( mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80 ),
+                mfg.MfgGameObjectFactory.createBox( 380, 60, 80, 80 ),
+                mfg.MfgGameObjectFactory.createSphere( 360, 0, 40, 40 ),
 
                 // items
-                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 800, 850, 25, 25 ),
-                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 850, 850, 25, 25 ),
-                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 900, 850, 25, 25 ),
+                mfg.MfgGameObjectFactory.createItem( 800, 850 ),
+                mfg.MfgGameObjectFactory.createItem( 850, 850 ),
+                mfg.MfgGameObjectFactory.createItem( 900, 850 ),
 
                 // enemies
-                new mfg.MfgEnemy( mfg.MfgGameObjectShape.ERectangle, 800, 0, 50, 50 ),
-
+                mfg.MfgGameObjectFactory.createEnemy( 800, 0 ),
 
 
                 // add fg objects behind the game objects
+
 
             ];
 

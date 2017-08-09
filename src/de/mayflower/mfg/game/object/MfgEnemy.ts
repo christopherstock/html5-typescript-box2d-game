@@ -25,7 +25,10 @@
         {
             if ( !this.dead )
             {
-                Matter.Body.translate( this.body, { x: -3.0, y: 0 });
+                // switch movement pattern
+
+
+                Matter.Body.translate( this.body, { x: -1.0, y: 0 });
 
                 this.renderJumping();
                 this.clipToHorizontalLevelBounds();

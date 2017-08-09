@@ -91,6 +91,7 @@ __export(__webpack_require__(19));
 __export(__webpack_require__(20));
 __export(__webpack_require__(21));
 __export(__webpack_require__(22));
+__export(__webpack_require__(23));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10993,6 +10994,7 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Add sprites.
 *   TODO ASAP   Add images.
 *   TODO ASAP   Add TypeDoc via npm.
+*   TODO HIGH   Create different enemy move patterns.
 *   TODO INIT   Add main menu and menu keys ..
 *   TODO ASAP   Create levels and sublevels.
 *   TODO ASAP   Created animated platforms.
@@ -11157,6 +11159,43 @@ module.exports = g;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   The abstract class of all game objects.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgGameObjectFactory = (function () {
+    function MfgGameObjectFactory() {
+    }
+    MfgGameObjectFactory.createBox = function (x, y, width, height) {
+        return new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, x, y, width, height);
+    };
+    MfgGameObjectFactory.createSphere = function (x, y, width, height) {
+        return new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, x, y, width, height);
+    };
+    MfgGameObjectFactory.createItem = function (x, y) {
+        return new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, x, y, 25.0, 25.0);
+    };
+    MfgGameObjectFactory.createObstacle = function (x, y, width, height) {
+        return new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, x, y, width, height);
+    };
+    MfgGameObjectFactory.createEnemy = function (x, y) {
+        return new mfg.MfgEnemy(mfg.MfgGameObjectShape.ERectangle, 800, 0, 50, 50);
+    };
+    return MfgGameObjectFactory;
+}());
+exports.MfgGameObjectFactory = MfgGameObjectFactory;
+//# sourceMappingURL=MfgGameObjectFactory.js.map
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -11285,7 +11324,7 @@ exports.MfgCharacter = MfgCharacter;
 //# sourceMappingURL=MfgCharacter.js.map
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11322,7 +11361,8 @@ var MfgEnemy = (function (_super) {
     *****************************************************************************/
     MfgEnemy.prototype.render = function () {
         if (!this.dead) {
-            Matter.Body.translate(this.body, { x: -3.0, y: 0 });
+            // switch movement pattern
+            Matter.Body.translate(this.body, { x: -1.0, y: 0 });
             this.renderJumping();
             this.clipToHorizontalLevelBounds();
             this.checkFallingDead();
@@ -11334,7 +11374,7 @@ exports.MfgEnemy = MfgEnemy;
 //# sourceMappingURL=MfgEnemy.js.map
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11409,7 +11449,7 @@ exports.MfgPlayer = MfgPlayer;
 //# sourceMappingURL=MfgPlayer.js.map
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11449,7 +11489,7 @@ exports.MfgBox = MfgBox;
 //# sourceMappingURL=MfgBox.js.map
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11516,7 +11556,7 @@ exports.MfgItem = MfgItem;
 //# sourceMappingURL=MfgItem.js.map
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11555,7 +11595,7 @@ exports.MfgObstacle = MfgObstacle;
 //# sourceMappingURL=MfgObstacle.js.map
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11665,7 +11705,7 @@ exports.MfgGame = MfgGame;
 //# sourceMappingURL=MfgGame.js.map
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11708,23 +11748,24 @@ var MfgLevel = (function () {
         // init player
         this.player = new mfg.MfgPlayer(null, 0, 0, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT);
         // adding bodies increases z-index!
-        this.gameObjects = [
-            // add bg objects behind the game objects
-            // static obstacles
-            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 950, 600, 25),
-            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 950, 600, 25),
-            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 1350, 950, 1650, 25),
-            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 870, 80, 80),
-            // moveable boxes
-            new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, 360, 0, 40, 40),
-            new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80),
-            // items
-            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 800, 850, 25, 25),
-            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 850, 850, 25, 25),
-            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 900, 850, 25, 25),
-            // enemies
-            new mfg.MfgEnemy(mfg.MfgGameObjectShape.ERectangle, 800, 0, 50, 50),
-        ];
+        this.gameObjects =
+            [
+                // add bg objects behind the game objects
+                // static obstacles
+                mfg.MfgGameObjectFactory.createObstacle(0, 950, 600, 25),
+                mfg.MfgGameObjectFactory.createObstacle(700, 950, 600, 25),
+                mfg.MfgGameObjectFactory.createObstacle(1350, 950, 1650, 25),
+                mfg.MfgGameObjectFactory.createObstacle(250, 870, 80, 80),
+                // moveable boxes
+                mfg.MfgGameObjectFactory.createBox(380, 60, 80, 80),
+                mfg.MfgGameObjectFactory.createSphere(360, 0, 40, 40),
+                // items
+                mfg.MfgGameObjectFactory.createItem(800, 850),
+                mfg.MfgGameObjectFactory.createItem(850, 850),
+                mfg.MfgGameObjectFactory.createItem(900, 850),
+                // enemies
+                mfg.MfgGameObjectFactory.createEnemy(800, 0),
+            ];
         // add player body
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
         try {
@@ -11771,7 +11812,7 @@ exports.MfgLevel = MfgLevel;
 //# sourceMappingURL=MfgLevel.js.map
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11849,7 +11890,7 @@ exports.MfgKeySystem = MfgKeySystem;
 //# sourceMappingURL=MfgKeySystem.js.map
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11914,7 +11955,7 @@ exports.MfgCamera = MfgCamera;
 //# sourceMappingURL=MfgCamera.js.map
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
