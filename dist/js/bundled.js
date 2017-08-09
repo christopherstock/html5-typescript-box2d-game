@@ -11067,6 +11067,10 @@ var MfgGameObject = (function () {
     function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic) {
         /** The game objects' body. */
         this.body = null;
+        this.width = 0;
+        this.height = 0;
+        this.width = width;
+        this.height = height;
         switch (+shape) {
             case mfg.MfgGameObjectShape.ERectangle:
                 {
@@ -11098,6 +11102,23 @@ var MfgGameObject = (function () {
                 }
         }
     }
+    /*****************************************************************************
+    *   Clips this body to level bounds.
+    *****************************************************************************/
+    MfgGameObject.prototype.clipToHorizontalLevelBounds = function () {
+        if (this.body.position.x < this.width / 2) {
+            Matter.Body.setPosition(this.body, {
+                x: this.width / 2,
+                y: this.body.position.y
+            });
+        }
+        if (this.body.position.x > mfg.MfgInit.game.level.width - this.width / 2) {
+            Matter.Body.setPosition(this.body, {
+                x: mfg.MfgInit.game.level.width - this.width / 2,
+                y: this.body.position.y
+            });
+        }
+    };
     return MfgGameObject;
 }());
 exports.MfgGameObject = MfgGameObject;
@@ -11205,6 +11226,7 @@ var MfgEnemy = (function (_super) {
     *****************************************************************************/
     MfgEnemy.prototype.render = function () {
         Matter.Body.translate(this.body, { x: -3.0, y: 0 });
+        this.clipToHorizontalLevelBounds();
     };
     return MfgEnemy;
 }(mfg.MfgGameObject));
@@ -11244,6 +11266,7 @@ var MfgBox = (function (_super) {
     *   Renders this box.
     *****************************************************************************/
     MfgBox.prototype.render = function () {
+        this.clipToHorizontalLevelBounds();
     };
     return MfgBox;
 }(mfg.MfgGameObject));
@@ -11456,28 +11479,10 @@ var MfgPlayer = (function (_super) {
     *****************************************************************************/
     MfgPlayer.prototype.render = function () {
         if (!this.dead) {
-            // handle player keys
             this.handleKeys();
             this.renderJumping();
             this.clipToHorizontalLevelBounds();
             this.checkFallingDead();
-        }
-    };
-    /*****************************************************************************
-    *   Clips this body to level bounds.
-    *****************************************************************************/
-    MfgPlayer.prototype.clipToHorizontalLevelBounds = function () {
-        if (this.body.position.x < mfg.MfgSettings.PLAYER_WIDTH / 2) {
-            Matter.Body.setPosition(this.body, {
-                x: mfg.MfgSettings.PLAYER_WIDTH / 2,
-                y: this.body.position.y
-            });
-        }
-        if (this.body.position.x > mfg.MfgInit.game.level.width - mfg.MfgSettings.PLAYER_WIDTH / 2) {
-            Matter.Body.setPosition(this.body, {
-                x: mfg.MfgInit.game.level.width - mfg.MfgSettings.PLAYER_WIDTH / 2,
-                y: this.body.position.y
-            });
         }
     };
     /*****************************************************************************
@@ -11706,9 +11711,11 @@ var MfgLevel = (function () {
             /*
                             new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 870, 80,  80 ),
             */
-            // moveable boxes
-            new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, 360, 0, 40, 40),
-            new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80),
+            /*
+                            // moveable boxes
+                            new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle,    360, 0,  40, 40 ),
+                            new mfg.MfgBox( mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80 ),
+            */
             // items
             new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 800, 850, 25, 25),
             new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 850, 850, 25, 25),

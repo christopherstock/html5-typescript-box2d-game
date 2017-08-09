@@ -62,5 +62,8 @@
         public render()
         {
             Matter.Body.translate( this.body, { x: -3.0, y: 0 });
+
+            this.clipToHorizontalLevelBounds();
+
         }
     }

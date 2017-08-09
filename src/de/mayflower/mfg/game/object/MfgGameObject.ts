@@ -13,10 +13,14 @@
         /** The game objects' body. */
         public          body                    :Matter.Body                    = null;
 
+        public          width                   :number                         = 0;
+
+        public          height                  :number                         = 0;
+
         /*****************************************************************************
         *   Creates a new game object.
         *****************************************************************************/
-        public constructor
+        protected constructor
         (
             shape:mfg.MfgGameObjectShape,
             x:number,
@@ -28,6 +32,9 @@
             isStatic:boolean
         )
         {
+            this.width  = width;
+            this.height = height;
+
             switch ( +shape )
             {
                 case mfg.MfgGameObjectShape.ERectangle:
@@ -103,4 +110,32 @@
         *   Renders the current game object.
         *****************************************************************************/
         public abstract render();
+
+        /*****************************************************************************
+        *   Clips this body to level bounds.
+        *****************************************************************************/
+        protected clipToHorizontalLevelBounds()
+        {
+            if ( this.body.position.x < this.width / 2 )
+            {
+                Matter.Body.setPosition(
+                    this.body,
+                    {
+                        x: this.width / 2,
+                        y: this.body.position.y
+                    }
+                );
+            }
+
+            if ( this.body.position.x > mfg.MfgInit.game.level.width - this.width / 2 )
+            {
+                Matter.Body.setPosition(
+                    this.body,
+                    {
+                        x: mfg.MfgInit.game.level.width - this.width / 2,
+                        y: this.body.position.y
+                    }
+                );
+            }
+        }
     }

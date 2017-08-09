@@ -105,41 +105,11 @@
         {
             if ( !this.dead )
             {
-                // handle player keys
                 this.handleKeys();
-
 
                 this.renderJumping();
                 this.clipToHorizontalLevelBounds();
                 this.checkFallingDead();
-            }
-        }
-
-        /*****************************************************************************
-        *   Clips this body to level bounds.
-        *****************************************************************************/
-        private clipToHorizontalLevelBounds()
-        {
-            if ( this.body.position.x < mfg.MfgSettings.PLAYER_WIDTH / 2 )
-            {
-                Matter.Body.setPosition(
-                    this.body,
-                    {
-                        x: mfg.MfgSettings.PLAYER_WIDTH / 2,
-                        y: this.body.position.y
-                    }
-                );
-            }
-
-            if ( this.body.position.x > mfg.MfgInit.game.level.width - mfg.MfgSettings.PLAYER_WIDTH / 2 )
-            {
-                Matter.Body.setPosition(
-                    this.body,
-                    {
-                        x: mfg.MfgInit.game.level.width - mfg.MfgSettings.PLAYER_WIDTH / 2,
-                        y: this.body.position.y
-                    }
-                );
             }
         }
 
