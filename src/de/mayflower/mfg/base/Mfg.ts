@@ -4,9 +4,6 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Create fg deco objects.
-    *   TODO ASAP   Create bg deco objects.
-    *
     *   TODO ASAP   Checkout material parameters for different game objects!
     *   TODO ASAP   Create object creation factory.
     *   TODO ASAP   Add doors / level portals.

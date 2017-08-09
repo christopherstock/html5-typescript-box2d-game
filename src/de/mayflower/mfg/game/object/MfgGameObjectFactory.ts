@@ -33,4 +33,9 @@
         {
             return new mfg.MfgEnemy( mfg.MfgGameObjectShape.ERectangle, 800, 0, 50, 50 );
         }
+
+        public static createDecoration( x:number, y:number, width:number, height:number ):mfg.MfgObstacle
+        {
+            return new mfg.MfgDecoration( mfg.MfgGameObjectShape.ERectangle, x, y, width, height );
+        }
     }

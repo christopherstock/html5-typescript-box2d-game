@@ -92,6 +92,7 @@ __export(__webpack_require__(20));
 __export(__webpack_require__(21));
 __export(__webpack_require__(22));
 __export(__webpack_require__(23));
+__export(__webpack_require__(24));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10823,6 +10824,8 @@ var MfgSettings = (function () {
     MfgSettings.COLOR_DEBUG_OBSTACLE = "#808080";
     /** The debug color for the item. */
     MfgSettings.COLOR_DEBUG_ITEM = "#ffff00";
+    /** The debug color for a decoration. */
+    MfgSettings.COLOR_DEBUG_DECORATION = "#33ff33";
     /** The collision group for items and player collision indicator. */
     MfgSettings.UNIQUE_COLLISION_GROUPS = {
         category: 0x0001,
@@ -10984,9 +10987,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
-*
-*   TODO ASAP   Create fg deco objects.
-*   TODO ASAP   Create bg deco objects.
 *
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Create object creation factory.
@@ -11184,6 +11184,9 @@ var MfgGameObjectFactory = (function () {
     };
     MfgGameObjectFactory.createEnemy = function (x, y) {
         return new mfg.MfgEnemy(mfg.MfgGameObjectShape.ERectangle, 800, 0, 50, 50);
+    };
+    MfgGameObjectFactory.createDecoration = function (x, y, width, height) {
+        return new mfg.MfgDecoration(mfg.MfgGameObjectShape.ERectangle, x, y, width, height);
     };
     return MfgGameObjectFactory;
 }());
@@ -11579,6 +11582,45 @@ var mfg = __webpack_require__(0);
 *   @author     Christopher Stock
 *   @version    0.0.1
 *****************************************************************************/
+var MfgDecoration = (function (_super) {
+    __extends(MfgDecoration, _super);
+    function MfgDecoration(shape, x, y, width, height) {
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true) || this;
+    }
+    /*****************************************************************************
+    *   Renders this obstacle.
+    *****************************************************************************/
+    MfgDecoration.prototype.render = function () {
+    };
+    return MfgDecoration;
+}(mfg.MfgGameObject));
+exports.MfgDecoration = MfgDecoration;
+//# sourceMappingURL=MfgDecoration.js.map
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   Represents the player being controled by the user.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
 var MfgObstacle = (function (_super) {
     __extends(MfgObstacle, _super);
     function MfgObstacle(shape, x, y, width, height) {
@@ -11595,7 +11637,7 @@ exports.MfgObstacle = MfgObstacle;
 //# sourceMappingURL=MfgObstacle.js.map
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11705,7 +11747,7 @@ exports.MfgGame = MfgGame;
 //# sourceMappingURL=MfgGame.js.map
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11750,7 +11792,8 @@ var MfgLevel = (function () {
         // adding bodies increases z-index!
         this.gameObjects =
             [
-                // add bg objects behind the game objects
+                // bg decoration
+                mfg.MfgGameObjectFactory.createDecoration(30, 860, 120, 120),
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle(0, 950, 600, 25),
                 mfg.MfgGameObjectFactory.createObstacle(700, 950, 600, 25),
@@ -11765,11 +11808,13 @@ var MfgLevel = (function () {
                 mfg.MfgGameObjectFactory.createItem(900, 850),
                 // enemies
                 mfg.MfgGameObjectFactory.createEnemy(800, 0),
+                // player
+                this.player,
+                // fg decoration
+                mfg.MfgGameObjectFactory.createDecoration(860, 860, 60, 120),
             ];
-        // add player body
-        Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
         try {
-            // add all game objects
+            // add all bodies of all game objects to the world
             for (var _a = __values(this.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
                 var gameObject = _b.value;
                 Matter.World.addBody(mfg.MfgInit.game.engine.world, gameObject.body);
@@ -11788,8 +11833,6 @@ var MfgLevel = (function () {
     *   Renders all level components.
     *****************************************************************************/
     MfgLevel.prototype.render = function () {
-        // render player
-        this.player.render();
         try {
             // render game objects
             for (var _a = __values(this.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
@@ -11812,7 +11855,7 @@ exports.MfgLevel = MfgLevel;
 //# sourceMappingURL=MfgLevel.js.map
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11890,7 +11933,7 @@ exports.MfgKeySystem = MfgKeySystem;
 //# sourceMappingURL=MfgKeySystem.js.map
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11955,7 +11998,7 @@ exports.MfgCamera = MfgCamera;
 //# sourceMappingURL=MfgCamera.js.map
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

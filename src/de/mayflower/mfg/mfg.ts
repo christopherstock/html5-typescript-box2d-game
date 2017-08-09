@@ -12,6 +12,7 @@
     export * from './game/object/MfgPlayer';
     export * from './game/object/MfgBox';
     export * from './game/object/MfgItem';
+    export * from './game/object/MfgDecoration';
     export * from './game/object/MfgObstacle';
     export * from './game/MfgGame';
     export * from './game/level/MfgLevel';

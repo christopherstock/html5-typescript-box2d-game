@@ -54,6 +54,8 @@
         public      static      COLOR_DEBUG_OBSTACLE                        :string                     = "#808080";
         /** The debug color for the item. */
         public      static      COLOR_DEBUG_ITEM                            :string                     = "#ffff00";
+        /** The debug color for a decoration. */
+        public      static      COLOR_DEBUG_DECORATION                      :string                     = "#33ff33";
 
         /** The collision group for items and player collision indicator. */
         public      static      UNIQUE_COLLISION_GROUPS                     :Matter.ICollisionFilter    = {

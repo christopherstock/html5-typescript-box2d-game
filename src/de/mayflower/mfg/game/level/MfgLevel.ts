@@ -14,7 +14,7 @@
         public      height                  :number                     = 0.0;
 
         public      player                  :mfg.MfgPlayer              = null;
-        public      gameObjects             :Array<mfg.MfgGameObject>   = null;
+        private     gameObjects             :Array<mfg.MfgGameObject>   = null;
 
         /*****************************************************************************
         *   Inits the game from scratch.
@@ -42,10 +42,8 @@
             // adding bodies increases z-index!
             this.gameObjects =
             [
-
-
-                // add bg objects behind the game objects
-
+                // bg decoration
+                mfg.MfgGameObjectFactory.createDecoration( 30, 860, 120, 120 ),
 
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle( 0,    950, 600,  25 ),
@@ -65,16 +63,14 @@
                 // enemies
                 mfg.MfgGameObjectFactory.createEnemy( 800, 0 ),
 
+                // player
+                this.player,
 
-                // add fg objects behind the game objects
-
-
+                // fg decoration
+                mfg.MfgGameObjectFactory.createDecoration( 860, 860, 60, 120 ),
             ];
 
-            // add player body
-            Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body );
-
-            // add all game objects
+            // add all bodies of all game objects to the world
             for ( let gameObject of this.gameObjects ) {
                 Matter.World.addBody( mfg.MfgInit.game.engine.world, gameObject.body );
             }
@@ -85,9 +81,6 @@
         *****************************************************************************/
         public render()
         {
-            // render player
-            this.player.render();
-
             // render game objects
             for ( let gameObject of this.gameObjects )
             {
