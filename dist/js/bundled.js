@@ -10793,9 +10793,9 @@ var MfgSettings = (function () {
     /** The desired canvas3D height. */
     MfgSettings.CANVAS_HEIGHT = 600;
     /** The player's width. */
-    MfgSettings.PLAYER_SIZE_X = 80.0;
+    MfgSettings.PLAYER_WIDTH = 80.0;
     /** The player's y dimension (height). */
-    MfgSettings.PLAYER_SIZE_Y = 120.0;
+    MfgSettings.PLAYER_HEIGHT = 120.0;
     /** The player's speed in world coordinate per tick. */
     MfgSettings.PLAYER_SPEED_MOVE = 7.5;
     /** The player's jump power in px per tick. */
@@ -10983,6 +10983,7 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Make render() abstract for game objects class.
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Create object creation factory.
+*   TODO ASAP   Check player falling dead.
 *   TODO ASAP   Add doors / level portals.
 *   TODO ASAP   Create levels and sublevels.
 *   TODO ASAP   Add images.
@@ -11367,6 +11368,25 @@ var MfgPlayer = (function (_super) {
     *****************************************************************************/
     MfgPlayer.prototype.render = function () {
         this.renderJumping();
+        this.clipToHorizontalLevelBounds();
+        // check player falling dead
+    };
+    /*****************************************************************************
+    *   Clips this body to level bounds.
+    *****************************************************************************/
+    MfgPlayer.prototype.clipToHorizontalLevelBounds = function () {
+        if (this.body.position.x < mfg.MfgSettings.PLAYER_WIDTH / 2) {
+            Matter.Body.setPosition(this.body, {
+                x: mfg.MfgSettings.PLAYER_WIDTH / 2,
+                y: this.body.position.y
+            });
+        }
+        if (this.body.position.x > mfg.MfgInit.game.level.width - mfg.MfgSettings.PLAYER_WIDTH / 2) {
+            Matter.Body.setPosition(this.body, {
+                x: mfg.MfgInit.game.level.width - mfg.MfgSettings.PLAYER_WIDTH / 2,
+                y: this.body.position.y
+            });
+        }
     };
     /*****************************************************************************
     *   Handles jumping.
@@ -11498,7 +11518,7 @@ var MfgGame = (function () {
     *   Inits the level.
     *****************************************************************************/
     MfgGame.prototype.initLevel = function () {
-        this.level = new mfg.MfgLevel(5000, 1000);
+        this.level = new mfg.MfgLevel(3000, 1000);
         this.level.init();
     };
     /*****************************************************************************
@@ -11567,13 +11587,14 @@ var MfgLevel = (function () {
     *****************************************************************************/
     MfgLevel.prototype.init = function () {
         // init player
-        this.player = new mfg.MfgPlayer(null, 0, 0, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y);
+        this.player = new mfg.MfgPlayer(null, 0, 0, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT);
         // adding bodies increases z-index!
         this.gameObjects = [
             // add bg objects behind the game objects
             // static obstacles
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 950, 600, 25),
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 950, 600, 25),
+            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 1300, 950, 1700, 25),
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 870, 80, 80),
             // moveable boxes
             new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, 360, 0, 40, 40),
@@ -11583,8 +11604,6 @@ var MfgLevel = (function () {
             new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 850, 850, 25, 25),
             new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 900, 850, 25, 25),
         ];
-        // add level bounds
-        this.addLevelBounds();
         // add player body
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
         try {
@@ -11624,15 +11643,6 @@ var MfgLevel = (function () {
             finally { if (e_2) throw e_2.error; }
         }
         var e_2, _c;
-    };
-    /*****************************************************************************
-    *   Adds the level boundaries for all four cardinal directions.
-    *****************************************************************************/
-    MfgLevel.prototype.addLevelBounds = function () {
-        this.gameObjects.push(new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0.0, 0.0, this.width, 1.0));
-        this.gameObjects.push(new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0.0, this.height, this.width, 1.0));
-        this.gameObjects.push(new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0.0, 0.0, 1.0, this.height));
-        this.gameObjects.push(new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, this.width, 0.0, 1.0, this.height));
     };
     return MfgLevel;
 }());

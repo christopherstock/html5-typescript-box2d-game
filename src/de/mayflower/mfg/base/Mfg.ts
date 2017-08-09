@@ -7,6 +7,7 @@
     *   TODO ASAP   Make render() abstract for game objects class.
     *   TODO ASAP   Checkout material parameters for different game objects!
     *   TODO ASAP   Create object creation factory.
+    *   TODO ASAP   Check player falling dead.
     *   TODO ASAP   Add doors / level portals.
     *   TODO ASAP   Create levels and sublevels.
     *   TODO ASAP   Add images.

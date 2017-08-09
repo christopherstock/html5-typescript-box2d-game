@@ -35,8 +35,8 @@
                 null,
                 0,
                 0,
-                mfg.MfgSettings.PLAYER_SIZE_X,
-                mfg.MfgSettings.PLAYER_SIZE_Y
+                mfg.MfgSettings.PLAYER_WIDTH,
+                mfg.MfgSettings.PLAYER_HEIGHT
             );
 
             // adding bodies increases z-index!
@@ -45,8 +45,10 @@
                 // add bg objects behind the game objects
 
                 // static obstacles
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0,   950, 600, 25 ),
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 650, 950, 600, 25 ),
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0,    950, 600,  25 ),
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 650,  950, 600,  25 ),
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 1300, 950, 1700, 25 ),
+
                 new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 870, 80,  80 ),
 
                 // moveable boxes
@@ -61,9 +63,6 @@
                 // add fg objects behind the game objects
 
             ];
-
-            // add level bounds
-            this.addLevelBounds();
 
             // add player body
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body );
@@ -87,16 +86,5 @@
             {
                 gameObject.render();
             }
-        }
-
-        /*****************************************************************************
-        *   Adds the level boundaries for all four cardinal directions.
-        *****************************************************************************/
-        private addLevelBounds()
-        {
-            this.gameObjects.push( new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0.0,        0.0,         this.width, 1.0         ) );
-            this.gameObjects.push( new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0.0,        this.height, this.width, 1.0         ) );
-            this.gameObjects.push( new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0.0,        0.0,         1.0,        this.height ) );
-            this.gameObjects.push( new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, this.width, 0.0,         1.0,        this.height ) );
         }
     }

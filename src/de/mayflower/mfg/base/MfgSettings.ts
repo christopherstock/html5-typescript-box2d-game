@@ -24,9 +24,9 @@
         public      static      CANVAS_HEIGHT                               :number                     = 600;
 
         /** The player's width. */
-        public      static      PLAYER_SIZE_X                               :number                     = 80.0;
+        public      static      PLAYER_WIDTH                                :number                     = 80.0;
         /** The player's y dimension (height). */
-        public      static      PLAYER_SIZE_Y                               :number                     = 120.0;
+        public      static      PLAYER_HEIGHT                               :number                     = 120.0;
         /** The player's speed in world coordinate per tick. */
         public      static      PLAYER_SPEED_MOVE                           :number                     = 7.5;
         /** The player's jump power in px per tick. */
