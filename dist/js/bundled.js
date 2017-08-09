@@ -90,6 +90,7 @@ __export(__webpack_require__(18));
 __export(__webpack_require__(19));
 __export(__webpack_require__(20));
 __export(__webpack_require__(21));
+__export(__webpack_require__(22));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10983,7 +10984,6 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Create enemies.
 *   TODO ASAP   Create fg deco objects.
 *   TODO ASAP   Create bg deco objects.
 *
@@ -11167,6 +11167,139 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __values = (this && this.__values) || function (o) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    if (m) return m.call(o);
+    return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   Represents a character.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgCharacter = (function (_super) {
+    __extends(MfgCharacter, _super);
+    /*****************************************************************************
+    *   Creates a new character instance.
+    *****************************************************************************/
+    function MfgCharacter(shape, x, y, width, height, debugColor) {
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false) || this;
+        _this.bottomSensor = null;
+        _this.jumpPower = 0.0;
+        _this.dead = false;
+        _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
+            render: {
+                lineWidth: 1.0,
+                strokeStyle: '#ffffff',
+                fillStyle: "#ffffff",
+                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+            },
+            isSensor: true
+        });
+        _this.body = Matter.Body.create({
+            parts: [
+                _this.body,
+                _this.bottomSensor
+            ]
+        });
+        // avoid body tilting
+        _this.body.inertia = Infinity;
+        _this.body.inverseInertia = 1 / Infinity;
+        // though tilting is off, increase the mass
+        _this.body.mass = 70.0;
+        _this.body.inverseMass = 1 / 70.0;
+        return _this;
+        // density ?
+        // this.body.density = 100.0;
+    }
+    /*****************************************************************************
+    *   Check if the player falls to death by falling out of the level.
+    *****************************************************************************/
+    MfgCharacter.prototype.checkFallingDead = function () {
+        if (this.body.position.y - this.height / 2 > mfg.MfgInit.game.level.height) {
+            mfg.MfgDebug.bugfix.log("character has fallen to dead!");
+            this.kill();
+        }
+    };
+    /*****************************************************************************
+    *   Check if the player's bottom sensor currently collides with any other body.
+    *****************************************************************************/
+    MfgCharacter.prototype.checkBottomCollision = function () {
+        var bodies = mfg.MfgInit.game.engine.world.bodies;
+        try {
+            for (var bodies_1 = __values(bodies), bodies_1_1 = bodies_1.next(); !bodies_1_1.done; bodies_1_1 = bodies_1.next()) {
+                var body = bodies_1_1.value;
+                if (body == this.body) {
+                    continue;
+                }
+                if (Matter.Bounds.overlaps(body.bounds, this.bottomSensor.bounds)) {
+                    return true;
+                }
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (bodies_1_1 && !bodies_1_1.done && (_a = bodies_1.return)) _a.call(bodies_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        return false;
+        var e_1, _a;
+    };
+    /*****************************************************************************
+    *   Kills the player.
+    *****************************************************************************/
+    MfgCharacter.prototype.kill = function () {
+        // remove character body
+        Matter.World.remove(mfg.MfgInit.game.engine.world, this.body);
+        // flag as dead
+        this.dead = true;
+    };
+    /*****************************************************************************
+    *   Handles jumping.
+    *****************************************************************************/
+    MfgCharacter.prototype.renderJumping = function () {
+        // render jumping
+        if (this.jumpPower > 0.0) {
+            // move body
+            Matter.Body.translate(this.body, { x: 0.0, y: -this.jumpPower });
+            this.jumpPower -= 2.0;
+            if (this.jumpPower < 0.0) {
+                this.jumpPower = 0.0;
+            }
+        }
+    };
+    return MfgCharacter;
+}(mfg.MfgGameObject));
+exports.MfgCharacter = MfgCharacter;
+//# sourceMappingURL=MfgCharacter.js.map
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
@@ -11182,59 +11315,101 @@ var MfgEnemy = (function (_super) {
     *   Creates a new enemy instance.
     *****************************************************************************/
     function MfgEnemy(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, false, false) || this;
-        /*
-                    this.bottomSensor = Matter.Bodies.rectangle(
-                        x + ( width  / 2 ),
-                        y + height + 1,
-                        width,
-                        1.0,
-                        {
-                            render:
-                            {
-                                lineWidth: 1.0,
-                                strokeStyle: '#ffffff',
-                                fillStyle: "#ffffff",
-                                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                            },
-                            isSensor: true
-                        }
-                    );
-        */
-        /*
-                    this.body = Matter.Body.create(
-                        {
-                            parts: [
-                                this.body,
-                                this.bottomSensor
-                            ]
-                        }
-                    );
-        */
-        // avoid body tilting
-        _this.body.inertia = Infinity;
-        _this.body.inverseInertia = 1 / Infinity;
-        // though tilting is off, increase the mass
-        _this.body.mass = 70.0;
-        _this.body.inverseMass = 1 / 70.0;
-        return _this;
-        // density ?
-        // this.body.density = 100.0;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY) || this;
     }
     /*****************************************************************************
     *   Renders the current player tick.
     *****************************************************************************/
     MfgEnemy.prototype.render = function () {
-        Matter.Body.translate(this.body, { x: -3.0, y: 0 });
-        this.clipToHorizontalLevelBounds();
+        if (!this.dead) {
+            Matter.Body.translate(this.body, { x: -3.0, y: 0 });
+            this.renderJumping();
+            this.clipToHorizontalLevelBounds();
+            this.checkFallingDead();
+        }
     };
     return MfgEnemy;
-}(mfg.MfgGameObject));
+}(mfg.MfgCharacter));
 exports.MfgEnemy = MfgEnemy;
 //# sourceMappingURL=MfgEnemy.js.map
 
 /***/ }),
-/* 13 */
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   Represents the player being controled by the user.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgPlayer = (function (_super) {
+    __extends(MfgPlayer, _super);
+    /*****************************************************************************
+    *   Creates a new player instance.
+    *****************************************************************************/
+    function MfgPlayer(shape, x, y, width, height) {
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER) || this;
+        _this.jumpKeyNeedsRelease = false;
+        return _this;
+    }
+    /*****************************************************************************
+    *   Checks all pressed player keys and performs according actions.
+    *****************************************************************************/
+    MfgPlayer.prototype.handleKeys = function () {
+        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_LEFT)) {
+            Matter.Body.translate(this.body, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+        }
+        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_RIGHT)) {
+            Matter.Body.translate(this.body, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+        }
+        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
+            if (!this.jumpKeyNeedsRelease) {
+                this.jumpKeyNeedsRelease = true;
+                var bottomCollides = this.checkBottomCollision();
+                // jump if colliding with bottom and not currently jumping
+                if (bottomCollides) {
+                    this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
+                }
+            }
+        }
+        else {
+            this.jumpKeyNeedsRelease = false;
+        }
+    };
+    /*****************************************************************************
+    *   Renders the current player tick.
+    *****************************************************************************/
+    MfgPlayer.prototype.render = function () {
+        if (!this.dead) {
+            this.handleKeys();
+            this.renderJumping();
+            this.clipToHorizontalLevelBounds();
+            this.checkFallingDead();
+        }
+    };
+    return MfgPlayer;
+}(mfg.MfgCharacter));
+exports.MfgPlayer = MfgPlayer;
+//# sourceMappingURL=MfgPlayer.js.map
+
+/***/ }),
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11274,7 +11449,7 @@ exports.MfgBox = MfgBox;
 //# sourceMappingURL=MfgBox.js.map
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11341,7 +11516,7 @@ exports.MfgItem = MfgItem;
 //# sourceMappingURL=MfgItem.js.map
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11380,176 +11555,7 @@ exports.MfgObstacle = MfgObstacle;
 //# sourceMappingURL=MfgObstacle.js.map
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __values = (this && this.__values) || function (o) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
-    if (m) return m.call(o);
-    return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
-/*****************************************************************************
-*   Represents the player being controled by the user.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*****************************************************************************/
-var MfgPlayer = (function (_super) {
-    __extends(MfgPlayer, _super);
-    /*****************************************************************************
-    *   Creates a new player instance.
-    *****************************************************************************/
-    function MfgPlayer(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, false) || this;
-        _this.bottomSensor = null;
-        _this.jumpPower = 0.0;
-        _this.jumpKeyNeedsRelease = false;
-        _this.dead = false;
-        _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
-            render: {
-                lineWidth: 1.0,
-                strokeStyle: '#ffffff',
-                fillStyle: "#ffffff",
-                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-            },
-            isSensor: true
-        });
-        _this.body = Matter.Body.create({
-            parts: [
-                _this.body,
-                _this.bottomSensor
-            ]
-        });
-        // avoid body tilting
-        _this.body.inertia = Infinity;
-        _this.body.inverseInertia = 1 / Infinity;
-        // though tilting is off, increase the mass
-        _this.body.mass = 70.0;
-        _this.body.inverseMass = 1 / 70.0;
-        return _this;
-        // density ?
-        // this.body.density = 100.0;
-    }
-    /*****************************************************************************
-    *   Checks all pressed player keys and performs according actions.
-    *****************************************************************************/
-    MfgPlayer.prototype.handleKeys = function () {
-        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_LEFT)) {
-            Matter.Body.translate(this.body, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
-        }
-        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_RIGHT)) {
-            Matter.Body.translate(this.body, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
-        }
-        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
-            if (!this.jumpKeyNeedsRelease) {
-                this.jumpKeyNeedsRelease = true;
-                var bottomCollides = this.checkBottomCollision();
-                // jump if colliding with bottom and not currently jumping
-                if (bottomCollides) {
-                    this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
-                }
-            }
-        }
-        else {
-            this.jumpKeyNeedsRelease = false;
-        }
-    };
-    /*****************************************************************************
-    *   Renders the current player tick.
-    *****************************************************************************/
-    MfgPlayer.prototype.render = function () {
-        if (!this.dead) {
-            this.handleKeys();
-            this.renderJumping();
-            this.clipToHorizontalLevelBounds();
-            this.checkFallingDead();
-        }
-    };
-    /*****************************************************************************
-    *   Handles jumping.
-    *****************************************************************************/
-    MfgPlayer.prototype.renderJumping = function () {
-        // render jumping
-        if (this.jumpPower > 0.0) {
-            // move body
-            Matter.Body.translate(this.body, { x: 0.0, y: -this.jumpPower });
-            this.jumpPower -= 2.0;
-            if (this.jumpPower < 0.0) {
-                this.jumpPower = 0.0;
-            }
-        }
-    };
-    /*****************************************************************************
-    *   Check if the player falls to death by falling out of the level.
-    *****************************************************************************/
-    MfgPlayer.prototype.checkFallingDead = function () {
-        if (this.body.position.y - mfg.MfgSettings.PLAYER_HEIGHT / 2 > mfg.MfgInit.game.level.height) {
-            mfg.MfgDebug.bugfix.log("PLayer has fallen to dead!");
-            this.kill();
-        }
-    };
-    /*****************************************************************************
-    *   Check if the player's bottom sensor currently collides with any other body.
-    *****************************************************************************/
-    MfgPlayer.prototype.checkBottomCollision = function () {
-        var bodies = mfg.MfgInit.game.engine.world.bodies;
-        try {
-            for (var bodies_1 = __values(bodies), bodies_1_1 = bodies_1.next(); !bodies_1_1.done; bodies_1_1 = bodies_1.next()) {
-                var body = bodies_1_1.value;
-                if (body == this.body) {
-                    continue;
-                }
-                if (Matter.Bounds.overlaps(body.bounds, this.bottomSensor.bounds)) {
-                    return true;
-                }
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (bodies_1_1 && !bodies_1_1.done && (_a = bodies_1.return)) _a.call(bodies_1);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
-        return false;
-        var e_1, _a;
-    };
-    /*****************************************************************************
-    *   Kills the player.
-    *****************************************************************************/
-    MfgPlayer.prototype.kill = function () {
-        // remove player body
-        Matter.World.remove(mfg.MfgInit.game.engine.world, this.body);
-        // flag as dead
-        this.dead = true;
-    };
-    return MfgPlayer;
-}(mfg.MfgGameObject));
-exports.MfgPlayer = MfgPlayer;
-//# sourceMappingURL=MfgPlayer.js.map
-
-/***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11659,7 +11665,7 @@ exports.MfgGame = MfgGame;
 //# sourceMappingURL=MfgGame.js.map
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11708,14 +11714,10 @@ var MfgLevel = (function () {
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 950, 600, 25),
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 950, 600, 25),
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 1350, 950, 1650, 25),
-            /*
-                            new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 870, 80,  80 ),
-            */
-            /*
-                            // moveable boxes
-                            new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle,    360, 0,  40, 40 ),
-                            new mfg.MfgBox( mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80 ),
-            */
+            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 870, 80, 80),
+            // moveable boxes
+            new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, 360, 0, 40, 40),
+            new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80),
             // items
             new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 800, 850, 25, 25),
             new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 850, 850, 25, 25),
@@ -11769,7 +11771,7 @@ exports.MfgLevel = MfgLevel;
 //# sourceMappingURL=MfgLevel.js.map
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11847,7 +11849,7 @@ exports.MfgKeySystem = MfgKeySystem;
 //# sourceMappingURL=MfgKeySystem.js.map
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11912,7 +11914,7 @@ exports.MfgCamera = MfgCamera;
 //# sourceMappingURL=MfgCamera.js.map
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

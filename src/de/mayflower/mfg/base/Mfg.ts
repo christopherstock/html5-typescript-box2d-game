@@ -4,7 +4,6 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Create enemies.
     *   TODO ASAP   Create fg deco objects.
     *   TODO ASAP   Create bg deco objects.
     *

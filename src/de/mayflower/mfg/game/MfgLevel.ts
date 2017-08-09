@@ -48,15 +48,15 @@
                 new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0,    950, 600,  25 ),
                 new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 650,  950, 600,  25 ),
                 new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 1350, 950, 1650, 25 ),
-/*
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 870, 80,  80 ),
-*/
 
-/*
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 870, 80,  80 ),
+
+
+
                 // moveable boxes
                 new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle,    360, 0,  40, 40 ),
                 new mfg.MfgBox( mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80 ),
-*/
+
                 // items
                 new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 800, 850, 25, 25 ),
                 new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 850, 850, 25, 25 ),
