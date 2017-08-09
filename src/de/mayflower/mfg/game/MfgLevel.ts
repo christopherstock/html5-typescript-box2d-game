@@ -10,13 +10,11 @@
     *****************************************************************************/
     export class MfgLevel
     {
-        public      width                   :number                 = 0.0;
-        public      height                  :number                 = 0.0;
+        public      width                   :number                     = 0.0;
+        public      height                  :number                     = 0.0;
 
-        public      player                  :mfg.MfgPlayer          = null;
-        public      obstacles               :Array<mfg.MfgObstacle> = null;
-        public      boxes                   :Array<mfg.MfgBox>      = null;
-        public      items                   :Array<mfg.MfgItem>     = null;
+        public      player                  :mfg.MfgPlayer              = null;
+        public      gameObjects             :Array<mfg.MfgGameObject>   = null;
 
         /*****************************************************************************
         *   Inits the game from scratch.
@@ -41,56 +39,39 @@
                 mfg.MfgSettings.PLAYER_SIZE_Y
             );
 
-            // init static obstacles
-            this.obstacles = [
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0,   550, 600, 25 ),
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 650, 550, 600, 25 ),
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 470, 80,  80 ),
-            ];
+            // adding bodies increases z-index!
+            this.gameObjects = [
 
-            // init moveable boxes
-            this.boxes = [
+                // add bg objects behind the game objects
+
+                // static obstacles
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0,   950, 600, 25 ),
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 650, 950, 600, 25 ),
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 870, 80,  80 ),
+
+                // moveable boxes
                 new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle,    360, 0,  40, 40 ),
                 new mfg.MfgBox( mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80 ),
+
+                // items
+                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 800, 850, 25, 25 ),
+                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 850, 850, 25, 25 ),
+                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 900, 850, 25, 25 ),
+
+                // add fg objects behind the game objects
+
             ];
 
-            // init items
-            this.items = [
-                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 800, 450, 25, 25 ),
-                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 850, 450, 25, 25 ),
-                new mfg.MfgItem( mfg.MfgGameObjectShape.ERectangle, 900, 450, 25, 25 ),
-            ];
-
-            // adding bodies increases z-index!
-
-
-
-
-            // add bg objects behind the game objects
-
+            // add level bounds
+            this.addLevelBounds();
 
             // add player body
             Matter.World.addBody( mfg.MfgInit.game.engine.world, this.player.body );
 
-            // add all obstacles
-            for ( let obstacle of this.obstacles ) {
-                Matter.World.addBody( mfg.MfgInit.game.engine.world, obstacle.body );
+            // add all game objects
+            for ( let gameObject of this.gameObjects ) {
+                Matter.World.addBody( mfg.MfgInit.game.engine.world, gameObject.body );
             }
-
-            // add all boxes
-            for ( let box of this.boxes ) {
-                Matter.World.addBody( mfg.MfgInit.game.engine.world, box.body );
-            }
-
-            // add all items
-            for ( let item of this.items )
-            {
-                Matter.World.addBody( mfg.MfgInit.game.engine.world, item.body );
-            }
-
-            // add deco objects in front of the game objects
-
-
         }
 
         /*****************************************************************************
@@ -101,10 +82,21 @@
             // render player
             this.player.render();
 
-            // render item
-            for ( let item of this.items )
+            // render game objects
+            for ( let gameObject of this.gameObjects )
             {
-                item.render();
+                gameObject.render();
             }
+        }
+
+        /*****************************************************************************
+        *   Adds the level boundaries for all four cardinal directions.
+        *****************************************************************************/
+        private addLevelBounds()
+        {
+            this.gameObjects.push( new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0.0,        0.0,         this.width, 1.0         ) );
+            this.gameObjects.push( new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0.0,        this.height, this.width, 1.0         ) );
+            this.gameObjects.push( new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0.0,        0.0,         1.0,        this.height ) );
+            this.gameObjects.push( new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, this.width, 0.0,         1.0,        this.height ) );
         }
     }

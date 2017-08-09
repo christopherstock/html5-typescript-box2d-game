@@ -10805,7 +10805,7 @@ var MfgSettings = (function () {
     /** The camera ration for the horizontal axis. */
     MfgSettings.CAMERA_RATIO_X = 0.5;
     /** The camera ration for the vertical axis. */
-    MfgSettings.CAMERA_RATIO_Y = 0.25;
+    MfgSettings.CAMERA_RATIO_Y = 0.5;
     /** The opacity for the debug colors. */
     MfgSettings.COLOR_DEBUG_OPACITY = 1.0;
     /** The debug color for the player block. */
@@ -10983,6 +10983,8 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Make render() abstract for game objects class.
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Create object creation factory.
+*   TODO ASAP   Add doors / level portals.
+*   TODO ASAP   Create levels and sublevels.
 *   TODO ASAP   Add images.
 *   TODO ASAP   Add TypeDoc via npm.
 *   TODO ASAP   Create enemies.
@@ -11496,7 +11498,7 @@ var MfgGame = (function () {
     *   Inits the level.
     *****************************************************************************/
     MfgGame.prototype.initLevel = function () {
-        this.level = new mfg.MfgLevel(5000, 600);
+        this.level = new mfg.MfgLevel(5000, 1000);
         this.level.init();
     };
     /*****************************************************************************
@@ -11556,9 +11558,7 @@ var MfgLevel = (function () {
         this.width = 0.0;
         this.height = 0.0;
         this.player = null;
-        this.obstacles = null;
-        this.boxes = null;
-        this.items = null;
+        this.gameObjects = null;
         this.width = width;
         this.height = height;
     }
@@ -11568,32 +11568,30 @@ var MfgLevel = (function () {
     MfgLevel.prototype.init = function () {
         // init player
         this.player = new mfg.MfgPlayer(null, 0, 0, mfg.MfgSettings.PLAYER_SIZE_X, mfg.MfgSettings.PLAYER_SIZE_Y);
-        // init static obstacles
-        this.obstacles = [
-            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 550, 600, 25),
-            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 550, 600, 25),
-            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 470, 80, 80),
-        ];
-        // init moveable boxes
-        this.boxes = [
+        // adding bodies increases z-index!
+        this.gameObjects = [
+            // add bg objects behind the game objects
+            // static obstacles
+            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 950, 600, 25),
+            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 950, 600, 25),
+            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 870, 80, 80),
+            // moveable boxes
             new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, 360, 0, 40, 40),
             new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80),
+            // items
+            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 800, 850, 25, 25),
+            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 850, 850, 25, 25),
+            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 900, 850, 25, 25),
         ];
-        // init items
-        this.items = [
-            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 800, 450, 25, 25),
-            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 850, 450, 25, 25),
-            new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 900, 450, 25, 25),
-        ];
-        // adding bodies increases z-index!
-        // add bg objects behind the game objects
+        // add level bounds
+        this.addLevelBounds();
         // add player body
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
         try {
-            // add all obstacles
-            for (var _a = __values(this.obstacles), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var obstacle = _b.value;
-                Matter.World.addBody(mfg.MfgInit.game.engine.world, obstacle.body);
+            // add all game objects
+            for (var _a = __values(this.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
+                var gameObject = _b.value;
+                Matter.World.addBody(mfg.MfgInit.game.engine.world, gameObject.body);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -11603,36 +11601,7 @@ var MfgLevel = (function () {
             }
             finally { if (e_1) throw e_1.error; }
         }
-        try {
-            // add all boxes
-            for (var _d = __values(this.boxes), _e = _d.next(); !_e.done; _e = _d.next()) {
-                var box = _e.value;
-                Matter.World.addBody(mfg.MfgInit.game.engine.world, box.body);
-            }
-        }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
-        finally {
-            try {
-                if (_e && !_e.done && (_f = _d.return)) _f.call(_d);
-            }
-            finally { if (e_2) throw e_2.error; }
-        }
-        try {
-            // add all items
-            for (var _g = __values(this.items), _h = _g.next(); !_h.done; _h = _g.next()) {
-                var item = _h.value;
-                Matter.World.addBody(mfg.MfgInit.game.engine.world, item.body);
-            }
-        }
-        catch (e_3_1) { e_3 = { error: e_3_1 }; }
-        finally {
-            try {
-                if (_h && !_h.done && (_j = _g.return)) _j.call(_g);
-            }
-            finally { if (e_3) throw e_3.error; }
-        }
-        var e_1, _c, e_2, _f, e_3, _j;
-        // add deco objects in front of the game objects
+        var e_1, _c;
     };
     /*****************************************************************************
     *   Renders all level components.
@@ -11641,20 +11610,29 @@ var MfgLevel = (function () {
         // render player
         this.player.render();
         try {
-            // render item
-            for (var _a = __values(this.items), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var item = _b.value;
-                item.render();
+            // render game objects
+            for (var _a = __values(this.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
+                var gameObject = _b.value;
+                gameObject.render();
             }
         }
-        catch (e_4_1) { e_4 = { error: e_4_1 }; }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
         finally {
             try {
                 if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
             }
-            finally { if (e_4) throw e_4.error; }
+            finally { if (e_2) throw e_2.error; }
         }
-        var e_4, _c;
+        var e_2, _c;
+    };
+    /*****************************************************************************
+    *   Adds the level boundaries for all four cardinal directions.
+    *****************************************************************************/
+    MfgLevel.prototype.addLevelBounds = function () {
+        this.gameObjects.push(new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0.0, 0.0, this.width, 1.0));
+        this.gameObjects.push(new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0.0, this.height, this.width, 1.0));
+        this.gameObjects.push(new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0.0, 0.0, 1.0, this.height));
+        this.gameObjects.push(new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, this.width, 0.0, 1.0, this.height));
     };
     return MfgLevel;
 }());
@@ -11780,10 +11758,10 @@ var MfgCamera = (function () {
         //clip camera-x to level bounds
         if (this.offsetX < 0)
             this.offsetX = 0;
-        if (this.offsetY > levelWidth - canvasWidth)
+        if (this.offsetX > levelWidth - canvasWidth)
             this.offsetX = levelWidth - canvasWidth;
         //clip camera-y to level bounds
-        if (this.offsetX < 0)
+        if (this.offsetY < 0)
             this.offsetY = 0;
         if (this.offsetY > levelHeight - canvasHeight)
             this.offsetY = levelHeight - canvasHeight;

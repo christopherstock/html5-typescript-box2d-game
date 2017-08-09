@@ -44,16 +44,17 @@
             renderer:Matter.Render
         )
         {
+
             //calculate scroll-offsets so camera is centered to subject
             this.offsetX = subjectX - ( canvasWidth  * this.ratioX );
             this.offsetY = subjectY - ( canvasHeight * this.ratioY );
 
             //clip camera-x to level bounds
-            if ( this.offsetX < 0                        ) this.offsetX = 0;
-            if ( this.offsetY > levelWidth - canvasWidth ) this.offsetX = levelWidth - canvasWidth;
+            if ( this.offsetX < 0                          ) this.offsetX = 0;
+            if ( this.offsetX > levelWidth - canvasWidth   ) this.offsetX = levelWidth - canvasWidth;
 
             //clip camera-y to level bounds
-            if ( this.offsetX < 0                          ) this.offsetY = 0;
+            if ( this.offsetY < 0                          ) this.offsetY = 0;
             if ( this.offsetY > levelHeight - canvasHeight ) this.offsetY = levelHeight - canvasHeight;
 
             // assign current camera offset to renderer

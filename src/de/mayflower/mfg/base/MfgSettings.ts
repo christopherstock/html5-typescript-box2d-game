@@ -38,7 +38,7 @@
         /** The camera ration for the horizontal axis. */
         public      static      CAMERA_RATIO_X                              :number                     = 0.5;
         /** The camera ration for the vertical axis. */
-        public      static      CAMERA_RATIO_Y                              :number                     = 0.25;
+        public      static      CAMERA_RATIO_Y                              :number                     = 0.5;
 
         /** The opacity for the debug colors. */
         public      static      COLOR_DEBUG_OPACITY                         :number                     = 1.0;
