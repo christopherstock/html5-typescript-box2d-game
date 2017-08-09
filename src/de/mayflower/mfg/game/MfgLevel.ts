@@ -47,7 +47,7 @@
                 // static obstacles
                 new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 0,    950, 600,  25 ),
                 new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 650,  950, 600,  25 ),
-                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 1300, 950, 1700, 25 ),
+                new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 1350, 950, 1650, 25 ),
 
                 new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 870, 80,  80 ),
 

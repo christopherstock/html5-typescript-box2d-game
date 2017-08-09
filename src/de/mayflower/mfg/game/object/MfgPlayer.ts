@@ -15,6 +15,8 @@
         public          jumpPower               :number                         = 0.0;
         private         jumpKeyNeedsRelease     :boolean                        = false;
 
+        private         dead                    :boolean                        = false;
+
         /*****************************************************************************
         *   Creates a new player instance.
         *****************************************************************************/
@@ -63,7 +65,7 @@
         /*****************************************************************************
         *   Checks all pressed player keys and performs according actions.
         *****************************************************************************/
-        public handleKeys()
+        private handleKeys()
         {
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_LEFT ) )
             {
@@ -101,13 +103,16 @@
         *****************************************************************************/
         public render()
         {
-            this.renderJumping();
+            if ( !this.dead )
+            {
+                // handle player keys
+                this.handleKeys();
 
-            this.clipToHorizontalLevelBounds();
 
-            // check player falling dead
-
-
+                this.renderJumping();
+                this.clipToHorizontalLevelBounds();
+                this.checkFallingDead();
+            }
         }
 
         /*****************************************************************************
@@ -158,6 +163,19 @@
         }
 
         /*****************************************************************************
+        *   Check if the player falls to death by falling out of the level.
+        *****************************************************************************/
+        private checkFallingDead()
+        {
+            if ( this.body.position.y - mfg.MfgSettings.PLAYER_HEIGHT / 2 > mfg.MfgInit.game.level.height )
+            {
+                mfg.MfgDebug.bugfix.log( "PLayer has fallen to dead!" );
+
+                this.kill();
+            }
+        }
+
+        /*****************************************************************************
         *   Check if the player's bottom sensor currently collides with any other body.
         *****************************************************************************/
         public checkBottomCollision()
@@ -178,5 +196,17 @@
             }
 
             return false;
+        }
+
+        /*****************************************************************************
+        *   Kills the player.
+        *****************************************************************************/
+        private kill()
+        {
+            // remove player body
+            Matter.World.remove( mfg.MfgInit.game.engine.world, this.body );
+
+            // flag as dead
+            this.dead = true;
         }
     }

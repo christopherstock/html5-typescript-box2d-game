@@ -10980,21 +10980,22 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Make render() abstract for game objects class.
+*   TODO ASAP   Create enemies.
+*
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Create object creation factory.
-*   TODO ASAP   Check player falling dead.
 *   TODO ASAP   Add doors / level portals.
-*   TODO ASAP   Create levels and sublevels.
-*   TODO ASAP   Add images.
 *   TODO ASAP   Add TypeDoc via npm.
-*   TODO ASAP   Create enemies.
+*   TODO INIT   Add main menu and menu keys ..
+*   TODO ASAP   Create levels and sublevels.
 *   TODO ASAP   Created animated platforms.
 *   TODO ASAP   CSS: improve margin, center canvas, etc.
 *   TODO ASAP   CameraY shall only change if player collides with the floor!!
 *   TODO ASAP   Create abstract level system.
-*   TODO INIT   Buffer camera.
+*   TODO HIGH   Buffer camera according to looking direction.
 *   TODO LOW    Enrich all JavaDoc items.
+*   TODO LOW    Add images.
+*   TODO LOW    Add sprites.
 *   TODO WEAK   Implement nice changing gravity effects.
 *
 *   @author     Christopher Stock
@@ -11314,6 +11315,7 @@ var MfgPlayer = (function (_super) {
         _this.bottomSensor = null;
         _this.jumpPower = 0.0;
         _this.jumpKeyNeedsRelease = false;
+        _this.dead = false;
         _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
             render: {
                 lineWidth: 1.0,
@@ -11367,9 +11369,13 @@ var MfgPlayer = (function (_super) {
     *   Renders the current player tick.
     *****************************************************************************/
     MfgPlayer.prototype.render = function () {
-        this.renderJumping();
-        this.clipToHorizontalLevelBounds();
-        // check player falling dead
+        if (!this.dead) {
+            // handle player keys
+            this.handleKeys();
+            this.renderJumping();
+            this.clipToHorizontalLevelBounds();
+            this.checkFallingDead();
+        }
     };
     /*****************************************************************************
     *   Clips this body to level bounds.
@@ -11403,6 +11409,15 @@ var MfgPlayer = (function (_super) {
         }
     };
     /*****************************************************************************
+    *   Check if the player falls to death by falling out of the level.
+    *****************************************************************************/
+    MfgPlayer.prototype.checkFallingDead = function () {
+        if (this.body.position.y - mfg.MfgSettings.PLAYER_HEIGHT / 2 > mfg.MfgInit.game.level.height) {
+            mfg.MfgDebug.bugfix.log("PLayer has fallen to dead!");
+            this.kill();
+        }
+    };
+    /*****************************************************************************
     *   Check if the player's bottom sensor currently collides with any other body.
     *****************************************************************************/
     MfgPlayer.prototype.checkBottomCollision = function () {
@@ -11427,6 +11442,15 @@ var MfgPlayer = (function (_super) {
         }
         return false;
         var e_1, _a;
+    };
+    /*****************************************************************************
+    *   Kills the player.
+    *****************************************************************************/
+    MfgPlayer.prototype.kill = function () {
+        // remove player body
+        Matter.World.remove(mfg.MfgInit.game.engine.world, this.body);
+        // flag as dead
+        this.dead = true;
     };
     return MfgPlayer;
 }(mfg.MfgGameObject));
@@ -11460,8 +11484,6 @@ var MfgGame = (function () {
         *   Being invoked each tick of the game loop in order to render the game.
         *****************************************************************************/
         this.tick = function () {
-            // handle player keys
-            _this.level.player.handleKeys();
             // render the engine
             _this.render();
             // update MatterJS 2d engine
@@ -11594,7 +11616,7 @@ var MfgLevel = (function () {
             // static obstacles
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 950, 600, 25),
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 950, 600, 25),
-            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 1300, 950, 1700, 25),
+            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 1350, 950, 1650, 25),
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 870, 80, 80),
             // moveable boxes
             new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, 360, 0, 40, 40),

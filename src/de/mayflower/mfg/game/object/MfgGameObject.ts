@@ -44,6 +44,16 @@
                                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                                 opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                                 lineWidth:   1.0,
+/*
+                                sprite:
+                                {
+                                    texture: './res/texture/stand.png',
+
+                                    xScale: 1.0,
+                                    yScale: 1.0,
+
+                                },
+*/
                             },
                             isSensor: isSensor,
                             isStatic: isStatic
@@ -66,6 +76,14 @@
                                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                                 opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                                 lineWidth:   1.0,
+/*
+                                sprite:
+                                {
+                                    texture: './res/texture/stand.png',
+                                    xScale: 1.0,
+                                    yScale: 1.0,
+                                },
+*/
                             },
                             isSensor: isSensor,
                             isStatic: isStatic

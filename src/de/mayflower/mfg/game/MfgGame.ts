@@ -112,9 +112,6 @@
         *****************************************************************************/
         private tick=()=>
         {
-            // handle player keys
-            this.level.player.handleKeys();
-
             // render the engine
             this.render();
 
