@@ -89,6 +89,7 @@ __export(__webpack_require__(17));
 __export(__webpack_require__(18));
 __export(__webpack_require__(19));
 __export(__webpack_require__(20));
+__export(__webpack_require__(21));
 //# sourceMappingURL=mfg.js.map
 
 /***/ }),
@@ -10812,6 +10813,8 @@ var MfgSettings = (function () {
     MfgSettings.COLOR_DEBUG_BORDER = "#dedede";
     /** The debug color for the player block. */
     MfgSettings.COLOR_DEBUG_PLAYER = "#43bfee";
+    /** The debug color for the enemy block. */
+    MfgSettings.COLOR_DEBUG_ENEMY = "#ff4444";
     /** The debug color for a box. */
     MfgSettings.COLOR_DEBUG_BOX = "#ffa95e";
     /** The debug color for an obstacle. */
@@ -10981,10 +10984,14 @@ var mfg = __webpack_require__(0);
 *   The main class contains the application's points of entry and termination.
 *
 *   TODO ASAP   Create enemies.
+*   TODO ASAP   Create fg deco objects.
+*   TODO ASAP   Create bg deco objects.
 *
 *   TODO ASAP   Checkout material parameters for different game objects!
 *   TODO ASAP   Create object creation factory.
 *   TODO ASAP   Add doors / level portals.
+*   TODO ASAP   Add sprites.
+*   TODO ASAP   Add images.
 *   TODO ASAP   Add TypeDoc via npm.
 *   TODO INIT   Add main menu and menu keys ..
 *   TODO ASAP   Create levels and sublevels.
@@ -10994,8 +11001,6 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Create abstract level system.
 *   TODO HIGH   Buffer camera according to looking direction.
 *   TODO LOW    Enrich all JavaDoc items.
-*   TODO LOW    Add images.
-*   TODO LOW    Add sprites.
 *   TODO WEAK   Implement nice changing gravity effects.
 *
 *   @author     Christopher Stock
@@ -11142,6 +11147,87 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   Represents an enemy being controled by the system.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*****************************************************************************/
+var MfgEnemy = (function (_super) {
+    __extends(MfgEnemy, _super);
+    /*****************************************************************************
+    *   Creates a new enemy instance.
+    *****************************************************************************/
+    function MfgEnemy(shape, x, y, width, height) {
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, false, false) || this;
+        /*
+                    this.bottomSensor = Matter.Bodies.rectangle(
+                        x + ( width  / 2 ),
+                        y + height + 1,
+                        width,
+                        1.0,
+                        {
+                            render:
+                            {
+                                lineWidth: 1.0,
+                                strokeStyle: '#ffffff',
+                                fillStyle: "#ffffff",
+                                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                            },
+                            isSensor: true
+                        }
+                    );
+        */
+        /*
+                    this.body = Matter.Body.create(
+                        {
+                            parts: [
+                                this.body,
+                                this.bottomSensor
+                            ]
+                        }
+                    );
+        */
+        // avoid body tilting
+        _this.body.inertia = Infinity;
+        _this.body.inverseInertia = 1 / Infinity;
+        // though tilting is off, increase the mass
+        _this.body.mass = 70.0;
+        _this.body.inverseMass = 1 / 70.0;
+        return _this;
+        // density ?
+        // this.body.density = 100.0;
+    }
+    /*****************************************************************************
+    *   Renders the current player tick.
+    *****************************************************************************/
+    MfgEnemy.prototype.render = function () {
+        Matter.Body.translate(this.body, { x: -3.0, y: 0 });
+    };
+    return MfgEnemy;
+}(mfg.MfgGameObject));
+exports.MfgEnemy = MfgEnemy;
+//# sourceMappingURL=MfgEnemy.js.map
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
 /*****************************************************************************
 *   Represents the player being controled by the user.
@@ -11165,7 +11251,7 @@ exports.MfgBox = MfgBox;
 //# sourceMappingURL=MfgBox.js.map
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11232,7 +11318,7 @@ exports.MfgItem = MfgItem;
 //# sourceMappingURL=MfgItem.js.map
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11271,7 +11357,7 @@ exports.MfgObstacle = MfgObstacle;
 //# sourceMappingURL=MfgObstacle.js.map
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11458,7 +11544,7 @@ exports.MfgPlayer = MfgPlayer;
 //# sourceMappingURL=MfgPlayer.js.map
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11568,7 +11654,7 @@ exports.MfgGame = MfgGame;
 //# sourceMappingURL=MfgGame.js.map
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11617,7 +11703,9 @@ var MfgLevel = (function () {
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 0, 950, 600, 25),
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 650, 950, 600, 25),
             new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 1350, 950, 1650, 25),
-            new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, 250, 870, 80, 80),
+            /*
+                            new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, 250, 870, 80,  80 ),
+            */
             // moveable boxes
             new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, 360, 0, 40, 40),
             new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, 380, 60, 80, 80),
@@ -11625,6 +11713,8 @@ var MfgLevel = (function () {
             new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 800, 850, 25, 25),
             new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 850, 850, 25, 25),
             new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, 900, 850, 25, 25),
+            // enemies
+            new mfg.MfgEnemy(mfg.MfgGameObjectShape.ERectangle, 800, 0, 50, 50),
         ];
         // add player body
         Matter.World.addBody(mfg.MfgInit.game.engine.world, this.player.body);
@@ -11672,7 +11762,7 @@ exports.MfgLevel = MfgLevel;
 //# sourceMappingURL=MfgLevel.js.map
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11750,7 +11840,7 @@ exports.MfgKeySystem = MfgKeySystem;
 //# sourceMappingURL=MfgKeySystem.js.map
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11815,7 +11905,7 @@ exports.MfgCamera = MfgCamera;
 //# sourceMappingURL=MfgCamera.js.map
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

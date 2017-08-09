@@ -46,6 +46,8 @@
         public      static      COLOR_DEBUG_BORDER                          :string                     = "#dedede";
         /** The debug color for the player block. */
         public      static      COLOR_DEBUG_PLAYER                          :string                     = "#43bfee";
+        /** The debug color for the enemy block. */
+        public      static      COLOR_DEBUG_ENEMY                           :string                     = "#ff4444";
         /** The debug color for a box. */
         public      static      COLOR_DEBUG_BOX                             :string                     = "#ffa95e";
         /** The debug color for an obstacle. */

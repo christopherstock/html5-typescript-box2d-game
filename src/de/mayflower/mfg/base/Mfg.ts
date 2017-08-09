@@ -5,10 +5,14 @@
     *   The main class contains the application's points of entry and termination.
     *
     *   TODO ASAP   Create enemies.
+    *   TODO ASAP   Create fg deco objects.
+    *   TODO ASAP   Create bg deco objects.
     *
     *   TODO ASAP   Checkout material parameters for different game objects!
     *   TODO ASAP   Create object creation factory.
     *   TODO ASAP   Add doors / level portals.
+    *   TODO ASAP   Add sprites.
+    *   TODO ASAP   Add images.
     *   TODO ASAP   Add TypeDoc via npm.
     *   TODO INIT   Add main menu and menu keys ..
     *   TODO ASAP   Create levels and sublevels.
@@ -18,8 +22,6 @@
     *   TODO ASAP   Create abstract level system.
     *   TODO HIGH   Buffer camera according to looking direction.
     *   TODO LOW    Enrich all JavaDoc items.
-    *   TODO LOW    Add images.
-    *   TODO LOW    Add sprites.
     *   TODO WEAK   Implement nice changing gravity effects.
     *
     *   @author     Christopher Stock

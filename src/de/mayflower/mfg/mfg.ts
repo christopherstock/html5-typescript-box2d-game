@@ -6,6 +6,7 @@
     export * from './base/Mfg';
     export * from './game/object/MfgGameObjectShape';
     export * from './game/object/MfgGameObject';
+    export * from './game/object/MfgEnemy';
     export * from './game/object/MfgBox';
     export * from './game/object/MfgItem';
     export * from './game/object/MfgObstacle';
