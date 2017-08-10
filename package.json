@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build:webpack",
-    "build:tsc": ".\\node_modules\\.bin\\tsc",
-    "build:webpack": "nodemon --config nodemon.config.json --exec webpack"
+    "start": "npm run build",
+    "build": "webpack --watch"
   },
   "keywords": [],
   "author": "Christopher Stock",
@@ -15,6 +14,7 @@
     "@types/node": "^8.0.19",
     "@types/typescript": "^2.0.0",
     "@types/webpack": "^3.0.5",
+    "awesome-typescript-loader": "^3.2.2",
     "nodemon": "^1.11.0",
     "typescript": "^2.4.2",
     "webpack": "^3.4.1"
