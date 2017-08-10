@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build:live_webpack",
-    "build:live_tsc": "nodemon --exec .\\node_modules\\.bin\\tsc",
-    "build:live_webpack": "nodemon --config nodemon.config.json --exec webpack",
-    "build": "webpack"
+    "start": "npm run build:webpack",
+    "build:tsc": ".\\node_modules\\.bin\\tsc",
+    "build:webpack": "nodemon --config nodemon.config.json --exec webpack"
   },
   "keywords": [],
   "author": "Christopher Stock",

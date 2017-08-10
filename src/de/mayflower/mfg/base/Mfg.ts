@@ -4,8 +4,12 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Unify all docblocks!
+    *
+    *   TODO ASAP   Let webpack bundle typeScript source mappings!
+    *   TODO ASAP   Add TypeDoc via npm.
     *   TODO ASAP   Create seesaw.
-    *   TODO HIGH   Add TypeDoc via npm.
+    *
     *   TODO HIGH   Buffer camera according to looking direction.
     *   TODO HIGH   Checkout material parameters for different game objects!
     *   TODO HIGH   Create levels and sublevels.

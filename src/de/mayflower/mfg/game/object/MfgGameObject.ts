@@ -23,6 +23,16 @@
 
         /*****************************************************************************
         *   Creates a new game object.
+        *
+        *   @param shape      The shape for this object.
+        *   @param x          Startup position X.
+        *   @param y          Startup position Y.
+        *   @param width      The new width.
+        *   @param height     The new height.
+        *   @param debugColor The color for the debug object.
+        *   @param isSensor   Specifies that this object is non-colliding and serves as a sensor only.
+        *   @param isStatic   Specifies that this object has a fixed position.
+        *   @param image      The image for this game object.
         *****************************************************************************/
         protected constructor
         (
