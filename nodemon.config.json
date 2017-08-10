@@ -1,9 +1,0 @@
-{
-  "verbose": true,
-  "watch dir": [
-        "lib/*"
-  ],
-  "ignore": [
-        "dist/*"
-  ]
-}
