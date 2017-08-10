@@ -2,7 +2,7 @@
   "name": "html5-typescript-box2d-game",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "de.mayflower.mfg",
   "scripts": {
     "start": "npm run build",
     "build": "webpack --watch"
@@ -11,11 +11,7 @@
   "author": "Christopher Stock",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^8.0.19",
-    "@types/typescript": "^2.0.0",
-    "@types/webpack": "^3.0.5",
     "awesome-typescript-loader": "^3.2.2",
-    "nodemon": "^1.11.0",
     "typescript": "^2.4.2",
     "webpack": "^3.4.1"
   },
