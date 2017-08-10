@@ -1,5 +1,5 @@
 
-    import * as mfg    from '../../mfg';
+    import * as mfg from '../../mfg';
 
     /*******************************************************************************************************************
     *   Creates customized instances of game objects.
@@ -87,5 +87,20 @@
         public static createDecoration( x:number, y:number, width:number, height:number, image:string ):mfg.MfgObstacle
         {
             return new mfg.MfgDecoration( mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image );
+        }
+
+        /***************************************************************************************************************
+        *   Creates a sigsaw.
+        *
+        *   @param x      Anchor X.
+        *   @param y      Anchor Y.
+        *   @param width  Object width.
+        *   @param height Object height.
+        *   @param image  The decoration image.
+        *   @return       The created decoration.
+        ***************************************************************************************************************/
+        public static createSigsaw( x:number, y:number, width:number, height:number, image:string ):mfg.MfgSigSaw
+        {
+            return new mfg.MfgSigSaw( mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image );
         }
     }

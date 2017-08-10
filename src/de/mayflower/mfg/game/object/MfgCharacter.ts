@@ -58,11 +58,11 @@
 
             // avoid body tilting
             this.body.inertia        = Infinity;
-            this.body.inverseInertia = 1 / Infinity;
+            this.body.inverseInertia = 1 / this.body.inertia;
 
             // though tilting is off, increase the mass
-            this.body.mass = 70.0;
-            this.body.inverseMass = 1 / 70.0;
+            this.body.mass        = 70.0;
+            this.body.inverseMass = 1 / this.body.mass;
 
             // density ?
             // this.body.density = 100.0;

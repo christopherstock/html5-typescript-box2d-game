@@ -52,6 +52,10 @@
         public      static      COLOR_DEBUG_BOX                             :string                     = "#ffbf54";
         /** The debug color for an obstacle. */
         public      static      COLOR_DEBUG_OBSTACLE                        :string                     = "#a6a6a6";
+        /** The debug color for a sigsaw. */
+        public      static      COLOR_DEBUG_SIGSAW                          :string                     = "#c46c9c";
+        /** The debug color for a sigsaw joint. */
+        public      static      COLOR_DEBUG_SIGSAW_JOINT                    :string                     = "#ba3380";
         /** The debug color for the item. */
         public      static      COLOR_DEBUG_ITEM                            :string                     = "#fdff72";
         /** The debug color for a decoration. */

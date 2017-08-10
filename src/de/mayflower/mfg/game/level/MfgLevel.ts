@@ -57,6 +57,7 @@
 
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle( 0,    950, 1380, 25 ),
+                mfg.MfgGameObjectFactory.createObstacle( 1840, 950, 1380, 25 ),
                 // mfg.MfgGameObjectFactory.createObstacle( 700,  950, 600,  25 ),
                 // mfg.MfgGameObjectFactory.createObstacle( 1320, 950, 1650, 25 ),
                 mfg.MfgGameObjectFactory.createObstacle( 320,  870, 80,   80 ),
@@ -65,6 +66,9 @@
                 mfg.MfgGameObjectFactory.createBox(    370,  100, 80, 80 ),
                 mfg.MfgGameObjectFactory.createSphere( 320,  0,   100    ),
                 mfg.MfgGameObjectFactory.createBox(    1000, 80,  80, 80 ),
+
+                // sigsaws
+                mfg.MfgGameObjectFactory.createSigsaw( 1420, 950, 400, 25, null ),
 
                 // items
                 mfg.MfgGameObjectFactory.createItem( 1100, 850 ),

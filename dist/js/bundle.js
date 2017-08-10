@@ -60,44 +60,115 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(4));
-__export(__webpack_require__(5));
-__export(__webpack_require__(6));
-__export(__webpack_require__(7));
-__export(__webpack_require__(8));
-__export(__webpack_require__(9));
-__export(__webpack_require__(10));
-__export(__webpack_require__(12));
-__export(__webpack_require__(13));
-__export(__webpack_require__(14));
-__export(__webpack_require__(15));
-__export(__webpack_require__(16));
-__export(__webpack_require__(17));
-__export(__webpack_require__(18));
-__export(__webpack_require__(19));
-__export(__webpack_require__(20));
-__export(__webpack_require__(21));
-__export(__webpack_require__(22));
-__export(__webpack_require__(23));
-__export(__webpack_require__(24));
-__export(__webpack_require__(25));
+module.exports = __webpack_require__(1);
 
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(4);
+var Matter = __webpack_require__(2);
+/*******************************************************************************************************************
+*   Being invoked when the page is loaded completely.
+*******************************************************************************************************************/
+window.onload = function () {
+    var Example = Example || {};
+    Example.doublePendulum = function () {
+        var Engine = Matter.Engine, Events = Matter.Events, Render = Matter.Render, Runner = Matter.Runner, Body = Matter.Body, Composite = Matter.Composite, Composites = Matter.Composites, Constraint = Matter.Constraint, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Bodies = Matter.Bodies, Vector = Matter.Vector;
+        // create engine
+        var engine = Engine.create(), world = engine.world;
+        // create renderer
+        var render = Render.create({
+            element: document.body,
+            engine: engine,
+            options: {
+                width: 800,
+                height: 600,
+                wireframes: false,
+                background: '#0f0f13'
+            }
+        });
+        Render.run(render);
+        // create runner
+        var runner = Runner.create();
+        Runner.run(runner, engine);
+        // add bodies
+        var group = Body.nextGroup(true), length = 200, width = 25;
+        var pendulum = Composites.stack(350, 160, 1, 1, -20, 0, function (x, y) {
+            return Bodies.rectangle(x, y, length, width, {
+                collisionFilter: { group: group },
+                frictionAir: 0,
+                chamfer: 5,
+                render: {
+                    fillStyle: 'transparent',
+                    lineWidth: 1
+                }
+            });
+        });
+        pendulum.bodies[0].render.strokeStyle = '#ff0000';
+        world.gravity.scale = 0.002;
+        /*
+            Composites.chain(pendulum, 0.45, 0, -0.45, 0, {
+                stiffness: 0.9,
+                length: 0,
+                angularStiffness: 0.7,
+                render: {
+                    strokeStyle: '#0000ff'
+                }
+            });
+        */
+        Composite.add(pendulum, Constraint.create({
+            bodyB: pendulum.bodies[0],
+            pointB: { x: -length * 0.42, y: 0 },
+            pointA: { x: pendulum.bodies[0].position.x - length * 0.42, y: pendulum.bodies[0].position.y },
+            stiffness: 0.9,
+            length: 0,
+            render: {
+                strokeStyle: '#ffff00'
+            }
+        }));
+        World.add(world, pendulum);
+        // fit the render viewport to the scene
+        Render.lookAt(render, {
+            min: { x: 0, y: 0 },
+            max: { x: 700, y: 600 }
+        });
+        // context for MatterTools.Demo
+        return {
+            engine: engine,
+            runner: runner,
+            render: render,
+            canvas: render.canvas,
+            stop: function () {
+                Matter.Render.stop(render);
+                Matter.Runner.stop(runner);
+            }
+        };
+    };
+    //Example.doublePendulum();
+    // invoke main method
+    mfg.Mfg.main();
+};
+/*******************************************************************************************************************
+*   Being invoked when the page is left.
+*******************************************************************************************************************/
+window.onunload = function () {
+};
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var require;var require;/**
@@ -10377,39 +10448,71 @@ var Vector = _dereq_('../geometry/Vector');
 
 },{"../body/Composite":2,"../core/Common":14,"../core/Events":16,"../geometry/Bounds":26,"../geometry/Vector":28}]},{},[30])(30)
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(3);
-
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
+var g;
 
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
-/*******************************************************************************************************************
-*   Being invoked when the page is loaded completely.
-*******************************************************************************************************************/
-window.onload = function () {
-    // invoke main method
-    mfg.Mfg.main();
-};
-/*******************************************************************************************************************
-*   Being invoked when the page is left.
-*******************************************************************************************************************/
-window.onunload = function () {
-};
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
 
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(5));
+__export(__webpack_require__(6));
+__export(__webpack_require__(7));
+__export(__webpack_require__(8));
+__export(__webpack_require__(9));
+__export(__webpack_require__(10));
+__export(__webpack_require__(11));
+__export(__webpack_require__(12));
+__export(__webpack_require__(13));
+__export(__webpack_require__(14));
+__export(__webpack_require__(15));
+__export(__webpack_require__(16));
+__export(__webpack_require__(17));
+__export(__webpack_require__(18));
+__export(__webpack_require__(19));
+__export(__webpack_require__(26));
+__export(__webpack_require__(20));
+__export(__webpack_require__(21));
+__export(__webpack_require__(22));
+__export(__webpack_require__(23));
+__export(__webpack_require__(24));
+__export(__webpack_require__(25));
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10460,6 +10563,10 @@ var MfgSettings = (function () {
     MfgSettings.COLOR_DEBUG_BOX = "#ffbf54";
     /** The debug color for an obstacle. */
     MfgSettings.COLOR_DEBUG_OBSTACLE = "#a6a6a6";
+    /** The debug color for a sigsaw. */
+    MfgSettings.COLOR_DEBUG_SIGSAW = "#c46c9c";
+    /** The debug color for a sigsaw joint. */
+    MfgSettings.COLOR_DEBUG_SIGSAW_JOINT = "#ba3380";
     /** The debug color for the item. */
     MfgSettings.COLOR_DEBUG_ITEM = "#fdff72";
     /** The debug color for a decoration. */
@@ -10478,13 +10585,13 @@ exports.MfgSettings = MfgSettings;
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Represents a debug group whose logging can be enabled or disabled.
 *
@@ -10527,13 +10634,13 @@ exports.MfgDebug = MfgDebug;
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Specifies the initialization part of the game logic.
 *
@@ -10559,7 +10666,7 @@ exports.MfgInit = MfgInit;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10608,25 +10715,24 @@ exports.MfgVersion = MfgVersion;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
-*
-*   TODO ASAP   Add TypeDoc via npm.
-*   TODO ASAP   Create seesaw.
 *
 *   TODO HIGH   Buffer camera according to looking direction.
 *   TODO HIGH   Checkout material parameters for different game objects!
 *   TODO HIGH   Create levels and sublevels.
+*   TODO HIGH   Support free-handed forms (elevated ramps etc.).
 *   TODO INIT   Improve switch problem for enums?
 *   TODO INIT   Created animated platforms.
 *   TODO INIT   Create different enemy move patterns.
+*   TODO INIT   Create lib/factory for assigning different masses and behaviours to bodies.
 *   TODO LOW    Add doors / level portals.
 *   TODO LOW    CameraY shall only change if player collides with the floor!!
 *   TODO LOW    Create abstract level system.
@@ -10634,7 +10740,7 @@ var mfg = __webpack_require__(0);
 *   TODO WEAK   Implement nice changing gravity effects.
 *   TODO WEAK   Add sprites.
 *   TODO WEAK   Add images.
-*   TODO WEAK   Try a graphic style..?
+*   TODO WEAK   Try discreet graphic style.
 *   TODO WEAK   Parallax bg.
 *
 *   @author     Christopher Stock
@@ -10662,7 +10768,7 @@ exports.Mfg = Mfg;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10684,14 +10790,14 @@ var MfgGameObjectShape;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
+var Matter = __webpack_require__(2);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   The abstract class of all game objects.
 *
@@ -10784,40 +10890,13 @@ exports.MfgGameObject = MfgGameObject;
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Creates customized instances of game objects.
 *
@@ -10895,6 +10974,19 @@ var MfgGameObjectFactory = (function () {
     MfgGameObjectFactory.createDecoration = function (x, y, width, height, image) {
         return new mfg.MfgDecoration(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image);
     };
+    /***************************************************************************************************************
+    *   Creates a sigsaw.
+    *
+    *   @param x      Anchor X.
+    *   @param y      Anchor Y.
+    *   @param width  Object width.
+    *   @param height Object height.
+    *   @param image  The decoration image.
+    *   @return       The created decoration.
+    ***************************************************************************************************************/
+    MfgGameObjectFactory.createSigsaw = function (x, y, width, height, image) {
+        return new mfg.MfgSigSaw(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image);
+    };
     return MfgGameObjectFactory;
 }());
 exports.MfgGameObjectFactory = MfgGameObjectFactory;
@@ -10927,8 +11019,8 @@ var __values = (this && this.__values) || function (o) {
     };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
+var Matter = __webpack_require__(2);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Represents a character.
 *
@@ -10970,10 +11062,10 @@ var MfgCharacter = (function (_super) {
         });
         // avoid body tilting
         _this.body.inertia = Infinity;
-        _this.body.inverseInertia = 1 / Infinity;
+        _this.body.inverseInertia = 1 / _this.body.inertia;
         // though tilting is off, increase the mass
         _this.body.mass = 70.0;
-        _this.body.inverseMass = 1 / 70.0;
+        _this.body.inverseMass = 1 / _this.body.mass;
         return _this;
         // density ?
         // this.body.density = 100.0;
@@ -11060,8 +11152,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
+var Matter = __webpack_require__(2);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Represents an enemy being controled by the system.
 *
@@ -11116,8 +11208,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
+var Matter = __webpack_require__(2);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Represents the player being controled by the user.
 *
@@ -11188,7 +11280,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Represents a movable box.
 *
@@ -11237,8 +11329,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
+var Matter = __webpack_require__(2);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Represents a pickable item.
 *
@@ -11304,7 +11396,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Represents a non-colliding decoration.
 *
@@ -11353,7 +11445,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Represents a collidable and solid obstacle.
 *
@@ -11391,8 +11483,8 @@ exports.MfgObstacle = MfgObstacle;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
+var Matter = __webpack_require__(2);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Specifies the game logic and specifies all primal parts of the game.
 *
@@ -11517,8 +11609,8 @@ var __values = (this && this.__values) || function (o) {
     };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
+var Matter = __webpack_require__(2);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   Represents the current level.
 *
@@ -11559,6 +11651,7 @@ var MfgLevel = (function () {
                 mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25),
+                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25),
                 // mfg.MfgGameObjectFactory.createObstacle( 700,  950, 600,  25 ),
                 // mfg.MfgGameObjectFactory.createObstacle( 1320, 950, 1650, 25 ),
                 mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80),
@@ -11566,6 +11659,8 @@ var MfgLevel = (function () {
                 mfg.MfgGameObjectFactory.createBox(370, 100, 80, 80),
                 mfg.MfgGameObjectFactory.createSphere(320, 0, 100),
                 mfg.MfgGameObjectFactory.createBox(1000, 80, 80, 80),
+                // sigsaws
+                mfg.MfgGameObjectFactory.createSigsaw(1420, 950, 400, 25, null),
                 // items
                 mfg.MfgGameObjectFactory.createItem(1100, 850),
                 mfg.MfgGameObjectFactory.createItem(1150, 850),
@@ -11625,7 +11720,7 @@ exports.MfgLevel = MfgLevel;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   The key system that manages all pressed keys.
 *
@@ -11717,7 +11812,7 @@ exports.MfgKeySystem = MfgKeySystem;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
+var Matter = __webpack_require__(2);
 /*******************************************************************************************************************
 *   Manages the camera that calculates the scrolling amounts.
 *
@@ -11793,7 +11888,7 @@ exports.MfgCamera = MfgCamera;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
+var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   All images the game makes use of.
 *
@@ -11871,6 +11966,77 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(2);
+var mfg = __webpack_require__(4);
+/*******************************************************************************************************************
+*   Represents a sigsaw.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgSigSaw = (function (_super) {
+    __extends(MfgSigSaw, _super);
+    /***************************************************************************************************************
+    *   Creates a new sigsaw.
+    *
+    *   @param shape  The shape for this object.
+    *   @param x      Startup position X.
+    *   @param y      Startup position Y.
+    *   @param width  The new width.
+    *   @param height The new height.
+    *   @param image  The image for this game object.
+    ***************************************************************************************************************/
+    function MfgSigSaw(shape, x, y, width, height, image) {
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image) || this;
+        Matter.Composite.add(mfg.MfgInit.game.engine.world, Matter.Constraint.create({
+            bodyB: _this.body,
+            pointA: { x: _this.body.position.x, y: _this.body.position.y },
+            pointB: { x: 0, y: 0 },
+            stiffness: 1.0,
+            length: 0,
+            render: {
+                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_SIGSAW_JOINT,
+                lineWidth: 1.0,
+                visible: true,
+            }
+        }));
+        /*
+                    // avoid body tilting
+                    this.body.inertia        = 10000.0;
+                    this.body.inverseInertia = 1 / this.body.inertia;
+        */
+        // though tilting is off, increase the mass
+        _this.body.mass = 100.0;
+        _this.body.inverseMass = 1 / _this.body.mass;
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Renders this sigsaw.
+    ***************************************************************************************************************/
+    MfgSigSaw.prototype.render = function () {
+    };
+    return MfgSigSaw;
+}(mfg.MfgGameObject));
+exports.MfgSigSaw = MfgSigSaw;
 
 
 /***/ })
