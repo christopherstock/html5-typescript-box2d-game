@@ -33,6 +33,7 @@
         *   @param isSensor   Specifies that this object is non-colliding and serves as a sensor only.
         *   @param isStatic   Specifies that this object has a fixed position.
         *   @param image      The image for this game object.
+        *   @param angle      The rotation of this body in degrees.
         ***************************************************************************************************************/
         protected constructor
         (
@@ -44,7 +45,8 @@
             debugColor:string,
             isSensor:boolean,
             isStatic:boolean,
-            image:string
+            image:string,
+            angle:number
         )
         {
             this.isSensor = isSensor;
@@ -67,7 +69,8 @@
                                 lineWidth:   1.0,
                             },
                             isSensor: isSensor,
-                            isStatic: isStatic
+                            isStatic: isStatic,
+                            angle: ( angle * Math.PI / 180.0 ),
                         }
                     );
 
@@ -94,7 +97,8 @@
                                 lineWidth:   1.0,
                             },
                             isSensor: isSensor,
-                            isStatic: isStatic
+                            isStatic: isStatic,
+                            angle: ( angle * Math.PI / 180.0 ),
                         }
                     );
 

@@ -22,7 +22,7 @@
         ***************************************************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, image:string )
         {
-            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image );
+            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image, 0.0 );
 
             Matter.Composite.add(
                 mfg.MfgInit.game.engine.world,

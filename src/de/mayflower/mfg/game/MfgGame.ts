@@ -65,9 +65,10 @@
             this.engine = Matter.Engine.create();
 
             let options:any = {
-                hasBounds:      true,
-                wireframes:     false,
-                showCollisions: true,
+                hasBounds:          true,
+                wireframes:         false,
+                showCollisions:     true,
+                showAngleIndicator: true,
             };
 
             this.renderer = Matter.Render.create(

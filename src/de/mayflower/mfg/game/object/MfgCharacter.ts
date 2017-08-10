@@ -30,7 +30,7 @@
         ***************************************************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, debugColor:string, image:string )
         {
-            super( shape, x, y, width, height, debugColor, false, false, image );
+            super( shape, x, y, width, height, debugColor, false, false, image, 0.0 );
 
             this.bottomSensor = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),

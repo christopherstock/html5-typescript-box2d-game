@@ -78,85 +78,11 @@ module.exports = __webpack_require__(1);
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(4);
-var Matter = __webpack_require__(2);
+// let Matter = require( 'matter-js' );
 /*******************************************************************************************************************
 *   Being invoked when the page is loaded completely.
 *******************************************************************************************************************/
 window.onload = function () {
-    var Example = Example || {};
-    Example.doublePendulum = function () {
-        var Engine = Matter.Engine, Events = Matter.Events, Render = Matter.Render, Runner = Matter.Runner, Body = Matter.Body, Composite = Matter.Composite, Composites = Matter.Composites, Constraint = Matter.Constraint, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Bodies = Matter.Bodies, Vector = Matter.Vector;
-        // create engine
-        var engine = Engine.create(), world = engine.world;
-        // create renderer
-        var render = Render.create({
-            element: document.body,
-            engine: engine,
-            options: {
-                width: 800,
-                height: 600,
-                wireframes: false,
-                background: '#0f0f13'
-            }
-        });
-        Render.run(render);
-        // create runner
-        var runner = Runner.create();
-        Runner.run(runner, engine);
-        // add bodies
-        var group = Body.nextGroup(true), length = 200, width = 25;
-        var pendulum = Composites.stack(350, 160, 1, 1, -20, 0, function (x, y) {
-            return Bodies.rectangle(x, y, length, width, {
-                collisionFilter: { group: group },
-                frictionAir: 0,
-                chamfer: 5,
-                render: {
-                    fillStyle: 'transparent',
-                    lineWidth: 1
-                }
-            });
-        });
-        pendulum.bodies[0].render.strokeStyle = '#ff0000';
-        world.gravity.scale = 0.002;
-        /*
-            Composites.chain(pendulum, 0.45, 0, -0.45, 0, {
-                stiffness: 0.9,
-                length: 0,
-                angularStiffness: 0.7,
-                render: {
-                    strokeStyle: '#0000ff'
-                }
-            });
-        */
-        Composite.add(pendulum, Constraint.create({
-            bodyB: pendulum.bodies[0],
-            pointB: { x: -length * 0.42, y: 0 },
-            pointA: { x: pendulum.bodies[0].position.x - length * 0.42, y: pendulum.bodies[0].position.y },
-            stiffness: 0.9,
-            length: 0,
-            render: {
-                strokeStyle: '#ffff00'
-            }
-        }));
-        World.add(world, pendulum);
-        // fit the render viewport to the scene
-        Render.lookAt(render, {
-            min: { x: 0, y: 0 },
-            max: { x: 700, y: 600 }
-        });
-        // context for MatterTools.Demo
-        return {
-            engine: engine,
-            runner: runner,
-            render: render,
-            canvas: render.canvas,
-            stop: function () {
-                Matter.Render.stop(render);
-                Matter.Runner.stop(runner);
-            }
-        };
-    };
-    //Example.doublePendulum();
     // invoke main method
     mfg.Mfg.main();
 };
@@ -10725,12 +10651,12 @@ var mfg = __webpack_require__(4);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO HIGH   Buffer camera according to looking direction.
 *   TODO HIGH   Checkout material parameters for different game objects!
 *   TODO HIGH   Create levels and sublevels.
-*   TODO HIGH   Support free-handed forms (elevated ramps etc.).
+*   TODO HIGH   Stop jump power on colliding top!
+*   TODO INIT   Buffer camera according to looking direction.
 *   TODO INIT   Improve switch problem for enums?
-*   TODO INIT   Created animated platforms.
+*   TODO INIT   Create animated platforms.
 *   TODO INIT   Create different enemy move patterns.
 *   TODO INIT   Create lib/factory for assigning different masses and behaviours to bodies.
 *   TODO LOW    Add doors / level portals.
@@ -10817,8 +10743,9 @@ var MfgGameObject = (function () {
     *   @param isSensor   Specifies that this object is non-colliding and serves as a sensor only.
     *   @param isStatic   Specifies that this object has a fixed position.
     *   @param image      The image for this game object.
+    *   @param angle      The rotation of this body in degrees.
     ***************************************************************************************************************/
-    function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic, image) {
+    function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic, image, angle) {
         /** The game objects' body. */
         this.body = null;
         /** The width of this object. */
@@ -10839,7 +10766,8 @@ var MfgGameObject = (function () {
                             lineWidth: 1.0,
                         },
                         isSensor: isSensor,
-                        isStatic: isStatic
+                        isStatic: isStatic,
+                        angle: (angle * Math.PI / 180.0),
                     });
                     this.width = width;
                     this.height = height;
@@ -10856,7 +10784,8 @@ var MfgGameObject = (function () {
                             lineWidth: 1.0,
                         },
                         isSensor: isSensor,
-                        isStatic: isStatic
+                        isStatic: isStatic,
+                        angle: (angle * Math.PI / 180.0),
                     });
                     this.width = diameter;
                     this.height = diameter;
@@ -10946,10 +10875,11 @@ var MfgGameObjectFactory = (function () {
     *   @param y      Anchor Y.
     *   @param width  Object width.
     *   @param height Object height.
+    *   @param angle  The initial rotation.
     *   @return       The created obstacle.
     ***************************************************************************************************************/
-    MfgGameObjectFactory.createObstacle = function (x, y, width, height) {
-        return new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, x, y, width, height);
+    MfgGameObjectFactory.createObstacle = function (x, y, width, height, angle) {
+        return new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, angle);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -11041,7 +10971,7 @@ var MfgCharacter = (function (_super) {
     *   @param image      The image for this game object.
     ***************************************************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor, image) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image) || this;
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0) || this;
         /** The bottom line that checks collisions with the body. */
         _this.bottomSensor = null;
         /** The current jump force. */
@@ -11299,7 +11229,7 @@ var MfgBox = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgBox(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0) || this;
     }
     /***************************************************************************************************************
     *   Renders this box.
@@ -11349,7 +11279,7 @@ var MfgItem = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgItem(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true, null) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true, null, 0.0) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
         return _this;
@@ -11416,7 +11346,7 @@ var MfgDecoration = (function (_super) {
     *   @param image  The image source to use.
     ***************************************************************************************************************/
     function MfgDecoration(shape, x, y, width, height, image) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true, image) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true, image, 0.0) || this;
     }
     /***************************************************************************************************************
     *   Renders this obstacle.
@@ -11462,9 +11392,10 @@ var MfgObstacle = (function (_super) {
     *   @param y      Startup position Y.
     *   @param width  The new width.
     *   @param height The new height.
+    *   @param angle  The initial rotation.
     ***************************************************************************************************************/
-    function MfgObstacle(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null) || this;
+    function MfgObstacle(shape, x, y, width, height, angle) {
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle) || this;
     }
     /***************************************************************************************************************
     *   Renders this obstacle.
@@ -11547,6 +11478,7 @@ var MfgGame = (function () {
             hasBounds: true,
             wireframes: false,
             showCollisions: true,
+            showAngleIndicator: true,
         };
         this.renderer = Matter.Render.create({
             element: document.body,
@@ -11649,12 +11581,12 @@ var MfgLevel = (function () {
                 // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
                 // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
                 // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25),
-                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25),
-                // mfg.MfgGameObjectFactory.createObstacle( 700,  950, 600,  25 ),
-                // mfg.MfgGameObjectFactory.createObstacle( 1320, 950, 1650, 25 ),
-                mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80),
+                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(1320, 700, 400, 15, -15.0),
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(370, 100, 80, 80),
                 mfg.MfgGameObjectFactory.createSphere(320, 0, 100),
@@ -11665,12 +11597,16 @@ var MfgLevel = (function () {
                 mfg.MfgGameObjectFactory.createItem(1100, 850),
                 mfg.MfgGameObjectFactory.createItem(1150, 850),
                 mfg.MfgGameObjectFactory.createItem(1200, 850),
+                mfg.MfgGameObjectFactory.createItem(2600, 850),
+                mfg.MfgGameObjectFactory.createItem(2650, 850),
+                mfg.MfgGameObjectFactory.createItem(2700, 850),
                 // enemies
                 mfg.MfgGameObjectFactory.createEnemy(800, 0),
                 // player
                 this.player,
                 // fg decoration
                 mfg.MfgGameObjectFactory.createDecoration(700, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2000, 860, 120, 90, null),
             ];
         try {
             // add all bodies of all game objects to the world
@@ -12006,7 +11942,7 @@ var MfgSigSaw = (function (_super) {
     *   @param image  The image for this game object.
     ***************************************************************************************************************/
     function MfgSigSaw(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image, 0.0) || this;
         Matter.Composite.add(mfg.MfgInit.game.engine.world, Matter.Constraint.create({
             bodyB: _this.body,
             pointA: { x: _this.body.position.x, y: _this.body.position.y },

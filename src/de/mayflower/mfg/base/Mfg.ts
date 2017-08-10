@@ -4,12 +4,12 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO HIGH   Buffer camera according to looking direction.
     *   TODO HIGH   Checkout material parameters for different game objects!
     *   TODO HIGH   Create levels and sublevels.
-    *   TODO HIGH   Support free-handed forms (elevated ramps etc.).
+    *   TODO HIGH   Stop jump power on colliding top!
+    *   TODO INIT   Buffer camera according to looking direction.
     *   TODO INIT   Improve switch problem for enums?
-    *   TODO INIT   Created animated platforms.
+    *   TODO INIT   Create animated platforms.
     *   TODO INIT   Create different enemy move patterns.
     *   TODO INIT   Create lib/factory for assigning different masses and behaviours to bodies.
     *   TODO LOW    Add doors / level portals.

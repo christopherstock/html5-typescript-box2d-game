@@ -55,11 +55,12 @@
         *   @param y      Anchor Y.
         *   @param width  Object width.
         *   @param height Object height.
+        *   @param angle  The initial rotation.
         *   @return       The created obstacle.
         ***************************************************************************************************************/
-        public static createObstacle( x:number, y:number, width:number, height:number ):mfg.MfgObstacle
+        public static createObstacle( x:number, y:number, width:number, height:number, angle:number ):mfg.MfgObstacle
         {
-            return new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, x, y, width, height );
+            return new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, x, y, width, height, angle );
         }
 
         /***************************************************************************************************************
