@@ -4,7 +4,6 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Add TypeDoc via npm.
     *   TODO ASAP   Create seesaw.
     *
     *   TODO HIGH   Buffer camera according to looking direction.

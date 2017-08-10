@@ -4,8 +4,9 @@
   "description": "",
   "main": "de.mayflower.mfg",
   "scripts": {
-    "start": "npm run build",
-    "build": "webpack --watch"
+    "start": "npm run build:webpack",
+    "build:webpack": "webpack --watch",
+    "build:typedoc": "typedoc --out doc\\ --name \"TypeScript MatterJS primer, (c) 2017 Mayflower GmbH\" src"
   },
   "keywords": [],
   "author": "Christopher Stock",
