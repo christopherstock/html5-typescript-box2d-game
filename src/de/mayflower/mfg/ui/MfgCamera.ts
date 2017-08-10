@@ -1,12 +1,12 @@
 
     import * as Matter from 'matter-js';
 
-    /*****************************************************************************
+    /*******************************************************************************************************************
     *   Manages the camera that calculates the scrolling amounts.
     *
     *   @author     Christopher Stock
     *   @version    0.0.8
-    *****************************************************************************/
+    *******************************************************************************************************************/
     export class MfgCamera
     {
         /** Current camera offset X. */
@@ -19,19 +19,19 @@
         /** Camera centering ratio X. */
         private     ratioY                      :number                 = 0.0;
 
-        /*****************************************************************************
+        /***************************************************************************************************************
         *   Constructs a new camera.
         *
         *   @param ratioX Camera ratio X for horizontal centering of the player.
         *   @param ratioY Camera ratio Y for vertical centering   of the player.
-        *****************************************************************************/
+        ***************************************************************************************************************/
         public constructor( ratioX:number, ratioY:number )
         {
             this.ratioX = ratioX;
             this.ratioY = ratioY;
         }
 
-        /*****************************************************************************
+        /***************************************************************************************************************
         *   Updates the singleton instance of the camera by reassigning
         *   it's horizontal and vertical offset.
         *
@@ -42,7 +42,7 @@
         *   @param subjectX     The subject coordinate X to center the camera.
         *   @param subjectY     The subject coordinate Y to center the camera.
         *   @param renderer     The MatterJS renderer.
-        *****************************************************************************/
+        ***************************************************************************************************************/
         public update
         (
             levelWidth:number,
