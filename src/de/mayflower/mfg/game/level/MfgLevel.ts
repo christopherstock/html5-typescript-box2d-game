@@ -50,25 +50,26 @@
             this.gameObjects =
             [
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
+                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
 
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 30, 860, 120, 120, null ),
+                mfg.MfgGameObjectFactory.createDecoration( 860, 860, 120, 90, null ),
 
                 // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle( 0,    950, 680,  25 ),
-                mfg.MfgGameObjectFactory.createObstacle( 700,  950, 600,  25 ),
-                mfg.MfgGameObjectFactory.createObstacle( 1320, 950, 1650, 25 ),
-                mfg.MfgGameObjectFactory.createObstacle( 1000, 870, 80,   80 ),
+                mfg.MfgGameObjectFactory.createObstacle( 0,    950, 1380, 25 ),
+                // mfg.MfgGameObjectFactory.createObstacle( 700,  950, 600,  25 ),
+                // mfg.MfgGameObjectFactory.createObstacle( 1320, 950, 1650, 25 ),
+                mfg.MfgGameObjectFactory.createObstacle( 320,  870, 80,   80 ),
 
                 // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(    380, 60, 80, 80 ),
-                mfg.MfgGameObjectFactory.createSphere( 360, 0, 40 ),
+                mfg.MfgGameObjectFactory.createBox(    370,  100, 80, 80 ),
+                mfg.MfgGameObjectFactory.createSphere( 320,  0,   100    ),
+                mfg.MfgGameObjectFactory.createBox(    1000, 80,  80, 80 ),
 
                 // items
-                mfg.MfgGameObjectFactory.createItem( 800, 850 ),
-                mfg.MfgGameObjectFactory.createItem( 850, 850 ),
-                mfg.MfgGameObjectFactory.createItem( 900, 850 ),
+                mfg.MfgGameObjectFactory.createItem( 1100, 850 ),
+                mfg.MfgGameObjectFactory.createItem( 1150, 850 ),
+                mfg.MfgGameObjectFactory.createItem( 1200, 850 ),
 
                 // enemies
                 mfg.MfgGameObjectFactory.createEnemy( 800, 0 ),
@@ -77,7 +78,7 @@
                 this.player,
 
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 860, 860, 60, 120, null ),
+                mfg.MfgGameObjectFactory.createDecoration( 700, 860, 120, 90, null ),
             ];
 
             // add all bodies of all game objects to the world

@@ -26,14 +26,14 @@
         /*****************************************************************************
         *   Creates a sphere.
         *
-        *   @param x      Anchor X.
-        *   @param y      Anchor Y.
-        *   @param radius Sphere radius.
-        *   @return       The created sphere.
+        *   @param x        Anchor X.
+        *   @param y        Anchor Y.
+        *   @param diameter Sphere diameter.
+        *   @return         The created sphere.
         *****************************************************************************/
-        public static createSphere( x:number, y:number, radius:number ):mfg.MfgBox
+        public static createSphere( x:number, y:number, diameter:number ):mfg.MfgBox
         {
-            return new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle, x, y, radius, radius );
+            return new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle, x, y, diameter, diameter );
         }
 
         /*****************************************************************************

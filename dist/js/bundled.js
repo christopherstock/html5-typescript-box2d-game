@@ -10814,27 +10814,27 @@ var MfgSettings = (function () {
     /** The opacity for the debug colors. */
     MfgSettings.COLOR_DEBUG_OPACITY = 1.0;
     /** The debug color for the player block. */
-    MfgSettings.COLOR_DEBUG_BORDER = "#dedede";
+    MfgSettings.COLOR_DEBUG_BORDER = "#ffffff";
     /** The debug color for the player block. */
-    MfgSettings.COLOR_DEBUG_PLAYER = "#43bfee";
+    MfgSettings.COLOR_DEBUG_PLAYER = "#7cd1ee";
     /** The debug color for the enemy block. */
-    MfgSettings.COLOR_DEBUG_ENEMY = "#ff4444";
+    MfgSettings.COLOR_DEBUG_ENEMY = "#ff7e68";
     /** The debug color for a box. */
-    MfgSettings.COLOR_DEBUG_BOX = "#ffa95e";
+    MfgSettings.COLOR_DEBUG_BOX = "#ffbf54";
     /** The debug color for an obstacle. */
-    MfgSettings.COLOR_DEBUG_OBSTACLE = "#808080";
+    MfgSettings.COLOR_DEBUG_OBSTACLE = "#a6a6a6";
     /** The debug color for the item. */
-    MfgSettings.COLOR_DEBUG_ITEM = "#ffff00";
+    MfgSettings.COLOR_DEBUG_ITEM = "#fdff72";
     /** The debug color for a decoration. */
-    MfgSettings.COLOR_DEBUG_DECORATION = "#33ff33";
+    MfgSettings.COLOR_DEBUG_DECORATION = "#98ffa3";
+    /** The relative path from index.html where all background images reside. */
+    MfgSettings.PATH_IMAGE_BG = "res/image/bg/";
     /** The collision group for items and player collision indicator. */
     MfgSettings.UNIQUE_COLLISION_GROUPS = {
         category: 0x0001,
         mask: 0x00002,
         group: 0x0003
     };
-    /** The relative path from index.html where all background images reside. */
-    MfgSettings.PATH_IMAGE_BG = "res/image/bg/";
     return MfgSettings;
 }());
 exports.MfgSettings = MfgSettings;
@@ -10985,21 +10985,23 @@ var mfg = __webpack_require__(0);
 /************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Try a graphic style..?
-*   TODO ASAP   Parallax bg.
-*   TODO ASAP   Buffer camera according to looking direction.
-*   TODO ASAP   Checkout material parameters for different game objects!
-*   TODO ASAP   Add doors / level portals.
-*   TODO ASAP   Add sprites.
-*   TODO ASAP   Add images.
-*   TODO ASAP   Add TypeDoc via npm.
-*   TODO ASAP   Create levels and sublevels.
-*   TODO HIGH   Created animated platforms.
+*   TODO ASAP   Create seesaw.
+*   TODO HIGH   Add TypeDoc via npm.
+*   TODO HIGH   Buffer camera according to looking direction.
+*   TODO HIGH   Checkout material parameters for different game objects!
+*   TODO HIGH   Create levels and sublevels.
+*   TODO INIT   Improve switch problem for enums?
+*   TODO INIT   Created animated platforms.
 *   TODO INIT   Create different enemy move patterns.
-*   TODO INIT   Add main menu and menu keys ..
-*   TODO ASAP   CameraY shall only change if player collides with the floor!!
-*   TODO ASAP   Create abstract level system.
+*   TODO LOW    Add doors / level portals.
+*   TODO LOW    CameraY shall only change if player collides with the floor!!
+*   TODO LOW    Create abstract level system.
+*   TODO LOW    Add main menu and menu keys ..
 *   TODO WEAK   Implement nice changing gravity effects.
+*   TODO WEAK   Add sprites.
+*   TODO WEAK   Add images.
+*   TODO WEAK   Try a graphic style..?
+*   TODO WEAK   Parallax bg.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -11075,8 +11077,6 @@ var MfgGameObject = (function () {
         this.height = 0;
         /** Specifies if this object is non-colliding. */
         this.isSensor = false;
-        this.width = width;
-        this.height = height;
         this.isSensor = isSensor;
         switch (+shape) {
             case mfg.MfgGameObjectShape.ERectangle:
@@ -11091,11 +11091,14 @@ var MfgGameObject = (function () {
                         isSensor: isSensor,
                         isStatic: isStatic
                     });
+                    this.width = width;
+                    this.height = height;
                     break;
                 }
             case mfg.MfgGameObjectShape.ECircle:
                 {
-                    this.body = Matter.Bodies.circle(x + (width / 2), y + (width / 2), width, {
+                    var diameter = width;
+                    this.body = Matter.Bodies.circle(x + (diameter / 2), y + (diameter / 2), (diameter / 2), {
                         render: {
                             fillStyle: debugColor,
                             strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
@@ -11105,6 +11108,8 @@ var MfgGameObject = (function () {
                         isSensor: isSensor,
                         isStatic: isStatic
                     });
+                    this.width = diameter;
+                    this.height = diameter;
                     break;
                 }
         }
@@ -11193,13 +11198,13 @@ var MfgGameObjectFactory = (function () {
     /*****************************************************************************
     *   Creates a sphere.
     *
-    *   @param x      Anchor X.
-    *   @param y      Anchor Y.
-    *   @param radius Sphere radius.
-    *   @return       The created sphere.
+    *   @param x        Anchor X.
+    *   @param y        Anchor Y.
+    *   @param diameter Sphere diameter.
+    *   @return         The created sphere.
     *****************************************************************************/
-    MfgGameObjectFactory.createSphere = function (x, y, radius) {
-        return new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, x, y, radius, radius);
+    MfgGameObjectFactory.createSphere = function (x, y, diameter) {
+        return new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, x, y, diameter, diameter);
     };
     /*****************************************************************************
     *   Creates an item.
@@ -11309,17 +11314,14 @@ var MfgCharacter = (function (_super) {
         _this.dead = false;
         _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
             render: {
-                lineWidth: 1.0,
-                strokeStyle: '#ffffff',
-                fillStyle: "#ffffff",
-                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                opacity: 0.0,
             },
             isSensor: true
         });
         _this.body = Matter.Body.create({
             parts: [
                 _this.body,
-                _this.bottomSensor
+                _this.bottomSensor,
             ]
         });
         // avoid body tilting
@@ -11337,7 +11339,7 @@ var MfgCharacter = (function (_super) {
     *****************************************************************************/
     MfgCharacter.prototype.checkFallingDead = function () {
         if (this.body.position.y - this.height / 2 > mfg.MfgInit.game.level.height) {
-            mfg.MfgDebug.bugfix.log("character has fallen to dead!");
+            mfg.MfgDebug.bugfix.log("Character has fallen to dead");
             this.kill();
         }
     };
@@ -11614,8 +11616,6 @@ var MfgItem = (function (_super) {
         var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true, null) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
-        // put the item into a unique collision group so its uncollidable
-        _this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUPS;
         return _this;
     }
     /*****************************************************************************
@@ -11624,18 +11624,10 @@ var MfgItem = (function (_super) {
     MfgItem.prototype.render = function () {
         if (!this.picked) {
             if (Matter.Bounds.overlaps(this.body.bounds, mfg.MfgInit.game.level.player.body.bounds)) {
-                mfg.MfgDebug.item.log(">> Player picked item!");
+                mfg.MfgDebug.item.log("Player picked item");
                 this.pick();
             }
         }
-        /*
-                    if ( Math.random() * 2 > 1 )
-                    {
-                        this.body.render.sprite.texture = "res/image/texture/EStand.png";
-                    } else {
-                        this.body.render.sprite.texture = "res/image/texture/ETree1.png";
-                    }
-        */
     };
     /*****************************************************************************
     *   Picks up this item.
@@ -11815,14 +11807,15 @@ var MfgGame = (function () {
     *****************************************************************************/
     MfgGame.prototype.initEngine2D = function () {
         this.engine = Matter.Engine.create();
+        var options = {
+            hasBounds: true,
+            wireframes: false,
+            showCollisions: true,
+        };
         this.renderer = Matter.Render.create({
             element: document.body,
             engine: this.engine,
-            options: {
-                hasBounds: true,
-                wireframes: false
-                // showCollisions: true,
-            }
+            options: options,
         });
         this.renderer.canvas.width = mfg.MfgSettings.CANVAS_WIDTH;
         this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
@@ -11836,7 +11829,7 @@ var MfgGame = (function () {
     *   Inits the level.
     *****************************************************************************/
     MfgGame.prototype.initLevel = function () {
-        this.level = new mfg.MfgLevel(3000, 1000);
+        this.level = new mfg.MfgLevel(3000, 1100);
         this.level.init();
     };
     /*****************************************************************************
@@ -11917,27 +11910,28 @@ var MfgLevel = (function () {
         this.gameObjects =
             [
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN),
+                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(30, 860, 120, 120, null),
+                mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
                 // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle(0, 950, 680, 25),
-                mfg.MfgGameObjectFactory.createObstacle(700, 950, 600, 25),
-                mfg.MfgGameObjectFactory.createObstacle(1320, 950, 1650, 25),
-                mfg.MfgGameObjectFactory.createObstacle(1000, 870, 80, 80),
+                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25),
+                // mfg.MfgGameObjectFactory.createObstacle( 700,  950, 600,  25 ),
+                // mfg.MfgGameObjectFactory.createObstacle( 1320, 950, 1650, 25 ),
+                mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80),
                 // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(380, 60, 80, 80),
-                mfg.MfgGameObjectFactory.createSphere(360, 0, 40),
+                mfg.MfgGameObjectFactory.createBox(370, 100, 80, 80),
+                mfg.MfgGameObjectFactory.createSphere(320, 0, 100),
+                mfg.MfgGameObjectFactory.createBox(1000, 80, 80, 80),
                 // items
-                mfg.MfgGameObjectFactory.createItem(800, 850),
-                mfg.MfgGameObjectFactory.createItem(850, 850),
-                mfg.MfgGameObjectFactory.createItem(900, 850),
+                mfg.MfgGameObjectFactory.createItem(1100, 850),
+                mfg.MfgGameObjectFactory.createItem(1150, 850),
+                mfg.MfgGameObjectFactory.createItem(1200, 850),
                 // enemies
                 mfg.MfgGameObjectFactory.createEnemy(800, 0),
                 // player
                 this.player,
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration(860, 860, 60, 120, null),
+                mfg.MfgGameObjectFactory.createDecoration(700, 860, 120, 90, null),
             ];
         try {
             // add all bodies of all game objects to the world

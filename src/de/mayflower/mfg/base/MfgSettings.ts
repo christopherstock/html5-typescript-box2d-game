@@ -43,27 +43,27 @@
         /** The opacity for the debug colors. */
         public      static      COLOR_DEBUG_OPACITY                         :number                     = 1.0;
         /** The debug color for the player block. */
-        public      static      COLOR_DEBUG_BORDER                          :string                     = "#dedede";
+        public      static      COLOR_DEBUG_BORDER                          :string                     = "#ffffff";
         /** The debug color for the player block. */
-        public      static      COLOR_DEBUG_PLAYER                          :string                     = "#43bfee";
+        public      static      COLOR_DEBUG_PLAYER                          :string                     = "#7cd1ee";
         /** The debug color for the enemy block. */
-        public      static      COLOR_DEBUG_ENEMY                           :string                     = "#ff4444";
+        public      static      COLOR_DEBUG_ENEMY                           :string                     = "#ff7e68";
         /** The debug color for a box. */
-        public      static      COLOR_DEBUG_BOX                             :string                     = "#ffa95e";
+        public      static      COLOR_DEBUG_BOX                             :string                     = "#ffbf54";
         /** The debug color for an obstacle. */
-        public      static      COLOR_DEBUG_OBSTACLE                        :string                     = "#808080";
+        public      static      COLOR_DEBUG_OBSTACLE                        :string                     = "#a6a6a6";
         /** The debug color for the item. */
-        public      static      COLOR_DEBUG_ITEM                            :string                     = "#ffff00";
+        public      static      COLOR_DEBUG_ITEM                            :string                     = "#fdff72";
         /** The debug color for a decoration. */
-        public      static      COLOR_DEBUG_DECORATION                      :string                     = "#33ff33";
+        public      static      COLOR_DEBUG_DECORATION                      :string                     = "#98ffa3";
+
+        /** The relative path from index.html where all background images reside. */
+        public      static      PATH_IMAGE_BG                               :string                     = "res/image/bg/";
 
         /** The collision group for items and player collision indicator. */
         public      static      UNIQUE_COLLISION_GROUPS                     :Matter.ICollisionFilter    = {
                 category: 0x0001,
-                mask: 0x00002,
-                group: 0x0003
+                mask:     0x00002,
+                group:    0x0003
         };
-
-        /** The relative path from index.html where all background images reside. */
-        public      static      PATH_IMAGE_BG                               :string                     = "res/image/bg/";
     }

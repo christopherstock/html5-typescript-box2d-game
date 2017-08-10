@@ -1,7 +1,4 @@
 
-    import * as Matter from 'matter-js';
-    import * as mfg    from '../../mfg';
-
     /*****************************************************************************
     *   The abstract class of all game objects.
     *

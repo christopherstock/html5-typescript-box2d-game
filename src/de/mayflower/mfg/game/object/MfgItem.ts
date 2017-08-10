@@ -25,9 +25,6 @@
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
         {
             super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true, null );
-
-            // put the item into a unique collision group so its uncollidable
-            this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUPS;
         }
 
         /*****************************************************************************
@@ -39,19 +36,11 @@
             {
                 if ( Matter.Bounds.overlaps( this.body.bounds, mfg.MfgInit.game.level.player.body.bounds ) )
                 {
-                    mfg.MfgDebug.item.log(">> Player picked item!");
+                    mfg.MfgDebug.item.log("Player picked item");
 
                     this.pick();
                 }
             }
-/*
-            if ( Math.random() * 2 > 1 )
-            {
-                this.body.render.sprite.texture = "res/image/texture/EStand.png";
-            } else {
-                this.body.render.sprite.texture = "res/image/texture/ETree1.png";
-            }
-*/
         }
 
         /*****************************************************************************

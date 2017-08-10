@@ -64,15 +64,17 @@
         {
             this.engine = Matter.Engine.create();
 
+            let options:any = {
+                hasBounds:      true,
+                wireframes:     false,
+                showCollisions: true,
+            };
+
             this.renderer = Matter.Render.create(
                 {
                     element: document.body,
                     engine:  this.engine,
-                    options: {
-                        hasBounds: true,
-                        wireframes: false
-                        // showCollisions: true,
-                    }
+                    options: options,
                 }
             );
 
@@ -91,7 +93,7 @@
         *****************************************************************************/
         private initLevel()
         {
-            this.level = new mfg.MfgLevel( 3000, 1000 );
+            this.level = new mfg.MfgLevel( 3000, 1100 );
             this.level.init();
         }
 

@@ -37,9 +37,6 @@
             image:string
         )
         {
-            this.width  = width;
-            this.height = height;
-
             this.isSensor = isSensor;
 
             switch ( +shape )
@@ -64,15 +61,20 @@
                         }
                     );
 
+                    this.width  = width;
+                    this.height = height;
+
                     break;
                 }
 
                 case mfg.MfgGameObjectShape.ECircle:
                 {
+                    let diameter:number = width;
+
                     this.body = Matter.Bodies.circle(
-                        x + ( width  / 2 ),
-                        y + ( width / 2 ),
-                        width,
+                        x + ( diameter / 2 ),
+                        y + ( diameter / 2 ),
+                        ( diameter / 2 ),
                         {
                             render:
                             {
@@ -85,6 +87,9 @@
                             isStatic: isStatic
                         }
                     );
+
+                    this.width  = diameter;
+                    this.height = diameter;
 
                     break;
                 }

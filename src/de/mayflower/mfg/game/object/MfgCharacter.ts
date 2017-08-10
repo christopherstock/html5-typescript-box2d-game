@@ -40,10 +40,7 @@
                 {
                     render:
                     {
-                        lineWidth: 1.0,
-                        strokeStyle: '#ffffff',
-                        fillStyle: "#ffffff",
-                        opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                        opacity: 0.0,
                     },
                     isSensor: true
                 }
@@ -51,9 +48,10 @@
 
             this.body = Matter.Body.create(
                 {
-                    parts: [
+                    parts:
+                    [
                         this.body,
-                        this.bottomSensor
+                        this.bottomSensor,
                     ]
                 }
             );
@@ -77,7 +75,7 @@
         {
             if ( this.body.position.y - this.height / 2 > mfg.MfgInit.game.level.height )
             {
-                mfg.MfgDebug.bugfix.log( "character has fallen to dead!" );
+                mfg.MfgDebug.bugfix.log( "Character has fallen to dead" );
 
                 this.kill();
             }

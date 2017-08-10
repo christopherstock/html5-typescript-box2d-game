@@ -4,21 +4,23 @@
     /************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Try a graphic style..?
-    *   TODO ASAP   Parallax bg.
-    *   TODO ASAP   Buffer camera according to looking direction.
-    *   TODO ASAP   Checkout material parameters for different game objects!
-    *   TODO ASAP   Add doors / level portals.
-    *   TODO ASAP   Add sprites.
-    *   TODO ASAP   Add images.
-    *   TODO ASAP   Add TypeDoc via npm.
-    *   TODO ASAP   Create levels and sublevels.
-    *   TODO HIGH   Created animated platforms.
+    *   TODO ASAP   Create seesaw.
+    *   TODO HIGH   Add TypeDoc via npm.
+    *   TODO HIGH   Buffer camera according to looking direction.
+    *   TODO HIGH   Checkout material parameters for different game objects!
+    *   TODO HIGH   Create levels and sublevels.
+    *   TODO INIT   Improve switch problem for enums?
+    *   TODO INIT   Created animated platforms.
     *   TODO INIT   Create different enemy move patterns.
-    *   TODO INIT   Add main menu and menu keys ..
-    *   TODO ASAP   CameraY shall only change if player collides with the floor!!
-    *   TODO ASAP   Create abstract level system.
+    *   TODO LOW    Add doors / level portals.
+    *   TODO LOW    CameraY shall only change if player collides with the floor!!
+    *   TODO LOW    Create abstract level system.
+    *   TODO LOW    Add main menu and menu keys ..
     *   TODO WEAK   Implement nice changing gravity effects.
+    *   TODO WEAK   Add sprites.
+    *   TODO WEAK   Add images.
+    *   TODO WEAK   Try a graphic style..?
+    *   TODO WEAK   Parallax bg.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
