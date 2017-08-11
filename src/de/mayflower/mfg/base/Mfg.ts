@@ -4,10 +4,13 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO HIGH   Skew image (sensor) for waving grass effect?
+    *
+    *   TODO HIGH   Create levels and sublevels.
+    *
     *   TODO INIT   Create animated platforms.
     *
     *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies
-    *   TODO HIGH   Create levels and sublevels.
     *   TODO HIGH   Create different enemy move patterns.
     *   TODO HIGH   Parallax bg.
     *   TODO LOW    Add doors / level portals.

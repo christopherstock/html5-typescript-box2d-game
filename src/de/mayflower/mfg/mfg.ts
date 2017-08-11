@@ -18,6 +18,7 @@
     export * from './game/object/MfgSigSaw';
     export * from './game/MfgGame';
     export * from './game/level/MfgLevel';
+    export * from './game/level/MfgLevelDev';
     export * from './hid/MfgKeySystem';
     export * from './ui/MfgCamera';
     export * from './ui/MfgImages';

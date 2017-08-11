@@ -96,7 +96,7 @@
         ***************************************************************************************************************/
         private initLevel()
         {
-            this.level = new mfg.MfgLevel( 3000, 1100 );
+            this.level = new mfg.MfgLevelDev( 3000, 1100 );
             this.level.init();
         }
 

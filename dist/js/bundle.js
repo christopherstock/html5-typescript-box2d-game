@@ -92,6 +92,7 @@ __export(__webpack_require__(20));
 __export(__webpack_require__(21));
 __export(__webpack_require__(22));
 __export(__webpack_require__(23));
+__export(__webpack_require__(28));
 __export(__webpack_require__(24));
 __export(__webpack_require__(25));
 __export(__webpack_require__(26));
@@ -10629,10 +10630,13 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO HIGH   Skew image (sensor) for waving grass effect?
+*
+*   TODO HIGH   Create levels and sublevels.
+*
 *   TODO INIT   Create animated platforms.
 *
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies
-*   TODO HIGH   Create levels and sublevels.
 *   TODO HIGH   Create different enemy move patterns.
 *   TODO HIGH   Parallax bg.
 *   TODO LOW    Add doors / level portals.
@@ -10917,7 +10921,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created enemy.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createEnemy = function (x, y) {
-        return new mfg.MfgEnemy(mfg.MfgGameObjectShape.ERectangle, 800, 0, 50, 50);
+        return new mfg.MfgEnemy(mfg.MfgGameObjectShape.ERectangle, x, y, 50, 50);
     };
     /***************************************************************************************************************
     *   Creates a decoration.
@@ -11643,7 +11647,7 @@ var MfgGame = (function () {
     *   Inits the level.
     ***************************************************************************************************************/
     MfgGame.prototype.initLevel = function () {
-        this.level = new mfg.MfgLevel(3000, 1100);
+        this.level = new mfg.MfgLevelDev(3000, 1100);
         this.level.init();
     };
     /***************************************************************************************************************
@@ -11718,45 +11722,7 @@ var MfgLevel = (function () {
     *   Inits a new level.
     ***************************************************************************************************************/
     MfgLevel.prototype.init = function () {
-        // init player
-        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT);
-        // setup all game objects
-        this.gameObjects =
-            [
-                // bg decoration
-                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
-                // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
-                // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(80, 700, 400, 15, -15.0),
-                mfg.MfgGameObjectFactory.createObstacle(380, 500, 400, 15, -15.0),
-                mfg.MfgGameObjectFactory.createObstacle(1320, 700, 400, 15, -15.0),
-                mfg.MfgGameObjectFactory.createObstacle(2000, 300, 400, 15, -15.0),
-                // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(370, 100, 80, 80),
-                mfg.MfgGameObjectFactory.createSphere(320, 0, 100),
-                mfg.MfgGameObjectFactory.createBox(1000, 80, 80, 80),
-                // sigsaws
-                mfg.MfgGameObjectFactory.createSigsaw(1420, 950, 400, 25, null),
-                // items
-                mfg.MfgGameObjectFactory.createItem(1100, 850),
-                mfg.MfgGameObjectFactory.createItem(1150, 850),
-                mfg.MfgGameObjectFactory.createItem(1200, 850),
-                mfg.MfgGameObjectFactory.createItem(2600, 850),
-                mfg.MfgGameObjectFactory.createItem(2650, 850),
-                mfg.MfgGameObjectFactory.createItem(2700, 850),
-                // enemies
-                mfg.MfgGameObjectFactory.createEnemy(800, 0),
-                // player
-                this.player,
-                // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration(700, 860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(2000, 860, 120, 90, null),
-            ];
+        this.createGameObjects();
         try {
             // add all bodies of all game objects to the world
             for (var _a = __values(this.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
@@ -12116,6 +12082,84 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   The level set for the dev level.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgLevelDev = (function (_super) {
+    __extends(MfgLevelDev, _super);
+    function MfgLevelDev() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    /***************************************************************************************************************
+    *   Inits a new level.
+    ***************************************************************************************************************/
+    MfgLevelDev.prototype.createGameObjects = function () {
+        // init player
+        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT);
+        // setup all game objects
+        this.gameObjects =
+            [
+                // bg decoration
+                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
+                // bg decoration
+                mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
+                // static obstacles
+                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(80, 700, 400, 15, -15.0),
+                mfg.MfgGameObjectFactory.createObstacle(380, 500, 400, 15, -15.0),
+                mfg.MfgGameObjectFactory.createObstacle(1320, 700, 400, 15, -15.0),
+                mfg.MfgGameObjectFactory.createObstacle(2000, 300, 400, 15, -15.0),
+                // moveable boxes
+                mfg.MfgGameObjectFactory.createBox(370, 100, 80, 80),
+                mfg.MfgGameObjectFactory.createSphere(320, 0, 100),
+                mfg.MfgGameObjectFactory.createBox(1000, 80, 80, 80),
+                // sigsaws
+                mfg.MfgGameObjectFactory.createSigsaw(1420, 950, 400, 25, null),
+                // items
+                mfg.MfgGameObjectFactory.createItem(1100, 850),
+                mfg.MfgGameObjectFactory.createItem(1150, 850),
+                mfg.MfgGameObjectFactory.createItem(1200, 850),
+                mfg.MfgGameObjectFactory.createItem(2600, 850),
+                mfg.MfgGameObjectFactory.createItem(2650, 850),
+                mfg.MfgGameObjectFactory.createItem(2700, 850),
+                // enemies
+                mfg.MfgGameObjectFactory.createEnemy(800, 0),
+                // player
+                this.player,
+                // fg decoration
+                mfg.MfgGameObjectFactory.createDecoration(700, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2000, 860, 120, 90, null),
+            ];
+    };
+    return MfgLevelDev;
+}(mfg.MfgLevel));
+exports.MfgLevelDev = MfgLevelDev;
 
 
 /***/ })

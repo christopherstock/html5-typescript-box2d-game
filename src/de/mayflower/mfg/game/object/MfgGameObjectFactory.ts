@@ -72,7 +72,7 @@
         ***************************************************************************************************************/
         public static createEnemy( x:number, y:number ):mfg.MfgEnemy
         {
-            return new mfg.MfgEnemy( mfg.MfgGameObjectShape.ERectangle, 800, 0, 50, 50 );
+            return new mfg.MfgEnemy( mfg.MfgGameObjectShape.ERectangle, x, y, 50, 50 );
         }
 
         /***************************************************************************************************************

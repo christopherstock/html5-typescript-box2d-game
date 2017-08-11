@@ -107,6 +107,8 @@
             this.body.mass        = 70.0;
             this.body.inverseMass = 1 / this.body.mass;
 
+
+
             // density ?
             // this.body.density = 100.0;
         }
