@@ -21,18 +21,6 @@
         public      gameObjects             :Array<mfg.MfgGameObject>   = null;
 
         /***************************************************************************************************************
-        *   Creates a new level.
-        *
-        *   @param width  The width for the new level.
-        *   @param height The height for the new level.
-        ***************************************************************************************************************/
-        public constructor( width:number, height:number )
-        {
-            this.width  = width;
-            this.height = height;
-        }
-
-        /***************************************************************************************************************
         *   Sets the player and the game objects.
         ***************************************************************************************************************/
         protected abstract createGameObjects();

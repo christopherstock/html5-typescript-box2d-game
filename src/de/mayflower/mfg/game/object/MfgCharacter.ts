@@ -98,7 +98,7 @@
                     ]
                 }
             );
-
+/*
             // avoid body tilting
             this.body.inertia        = Infinity;
             this.body.inverseInertia = 1 / this.body.inertia;
@@ -106,11 +106,21 @@
             // though tilting is off, increase the mass
             this.body.mass        = 70.0;
             this.body.inverseMass = 1 / this.body.mass;
+*/
+        }
 
+        /***************************************************************************************************************
+        *   Renders the current character tick.
+        ***************************************************************************************************************/
+        public render()
+        {
+            // check top and bottom collision state
+            this.collidesTop    = this.isColliding( this.topSensor,    true  );
+            this.collidesBottom = this.isColliding( this.bottomSensor, false );
 
-
-            // density ?
-            // this.body.density = 100.0;
+            // avoid this body from rotating!
+            Matter.Body.setAngularVelocity( this.body, 0.0 );
+            Matter.Body.setAngle( this.body, 0.0 );
         }
 
         /***************************************************************************************************************
@@ -162,7 +172,7 @@
                 }
 
                 // skip boxes
-                if ( ignoreBoxes && gameObject.isBox )
+                if ( ignoreBoxes && gameObject instanceof mfg.MfgBox )
                 {
                     continue;
                 }
@@ -205,13 +215,4 @@
             }
         }
 
-        /***************************************************************************************************************
-        *   Renders the current character tick.
-        ***************************************************************************************************************/
-        public render()
-        {
-            this.collidesTop    = this.isColliding( this.topSensor,    true  );
-            this.collidesBottom = this.isColliding( this.bottomSensor, false );
-
-        }
     }

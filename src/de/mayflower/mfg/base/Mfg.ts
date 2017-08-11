@@ -4,16 +4,15 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Refactor player methods moveLeft etc.
+    *   TODO ASAP   Fix red inertia problem.
+    *   TODO ASAP   Create animated platforms.
     *   TODO HIGH   Skew image (sensor) for waving grass effect?
-    *
-    *   TODO HIGH   Create levels and sublevels.
-    *
-    *   TODO INIT   Create animated platforms.
-    *
     *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies
     *   TODO HIGH   Create different enemy move patterns.
-    *   TODO HIGH   Parallax bg.
+    *   TODO INIT   Parallax bg.
     *   TODO LOW    Add doors / level portals.
+    *   TODO LOW    Create levels and sublevels?
     *   TODO LOW    Create abstract level system.
     *   TODO WEAK   Add menu keys for main menu and level map ..
     *   TODO WEAK   Add sprites.

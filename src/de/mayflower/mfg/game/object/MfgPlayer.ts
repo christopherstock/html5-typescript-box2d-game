@@ -15,18 +15,16 @@
         *
         *   @param x      Startup position X.
         *   @param y      Startup position Y.
-        *   @param width  The new width.
-        *   @param height The new height.
         ***************************************************************************************************************/
-        public constructor( x:number, y:number, width:number, height:number )
+        public constructor( x:number, y:number )
         {
             super
             (
                 mfg.MfgGameObjectShape.ERectangle,
                 x,
                 y,
-                width,
-                height,
+                mfg.MfgSettings.PLAYER_WIDTH,
+                mfg.MfgSettings.PLAYER_HEIGHT,
                 mfg.MfgSettings.COLOR_DEBUG_PLAYER,
                 null,
                 mfg.MfgCharacterLookingDirection.ERight

@@ -2,12 +2,12 @@
     import * as mfg    from '../../mfg';
 
     /*******************************************************************************************************************
-    *   The level set for the dev level.
+    *   The level set for the level 'enchanted woods'.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
     *******************************************************************************************************************/
-    export class MfgLevelDev extends mfg.MfgLevel
+    export class MfgLevelEnchantedWoods extends mfg.MfgLevel
     {
         /** The width of this level. */
         public      width                   :number                     = 3000.0;
@@ -35,32 +35,14 @@
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle( 0,    950, 1380, 25, 0.0 ),
                 mfg.MfgGameObjectFactory.createObstacle( 1840, 950, 1380, 25, 0.0 ),
-                mfg.MfgGameObjectFactory.createObstacle( 320,  870, 80,   80, 0.0 ),
-
-                mfg.MfgGameObjectFactory.createObstacle( 80,    700, 400, 15, -15.0 ),
-                mfg.MfgGameObjectFactory.createObstacle( 380,   500, 400, 15, -15.0 ),
-                mfg.MfgGameObjectFactory.createObstacle( 1320,  700, 400, 15, -15.0 ),
-                mfg.MfgGameObjectFactory.createObstacle( 2000,  300, 400, 15, -15.0 ),
 
                 // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(    370,  100, 80, 80 ),
-                mfg.MfgGameObjectFactory.createSphere( 320,  0,   100    ),
-                mfg.MfgGameObjectFactory.createBox(    1000, 80,  80, 80 ),
 
                 // sigsaws
-                mfg.MfgGameObjectFactory.createSigsaw( 1420, 950, 400, 25, null ),
 
                 // items
-                mfg.MfgGameObjectFactory.createItem( 1100, 850 ),
-                mfg.MfgGameObjectFactory.createItem( 1150, 850 ),
-                mfg.MfgGameObjectFactory.createItem( 1200, 850 ),
-
-                mfg.MfgGameObjectFactory.createItem( 2600, 850 ),
-                mfg.MfgGameObjectFactory.createItem( 2650, 850 ),
-                mfg.MfgGameObjectFactory.createItem( 2700, 850 ),
 
                 // enemies
-                mfg.MfgGameObjectFactory.createEnemy( 845, 0 ),
 
                 // player
                 this.player,

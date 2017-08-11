@@ -84,6 +84,7 @@ __export(__webpack_require__(11));
 __export(__webpack_require__(13));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
+__export(__webpack_require__(30));
 __export(__webpack_require__(16));
 __export(__webpack_require__(17));
 __export(__webpack_require__(18));
@@ -93,6 +94,7 @@ __export(__webpack_require__(21));
 __export(__webpack_require__(22));
 __export(__webpack_require__(23));
 __export(__webpack_require__(28));
+__export(__webpack_require__(29));
 __export(__webpack_require__(24));
 __export(__webpack_require__(25));
 __export(__webpack_require__(26));
@@ -10630,16 +10632,15 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Refactor player methods moveLeft etc.
+*   TODO ASAP   Fix red inertia problem.
+*   TODO ASAP   Create animated platforms.
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
-*
-*   TODO HIGH   Create levels and sublevels.
-*
-*   TODO INIT   Create animated platforms.
-*
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies
 *   TODO HIGH   Create different enemy move patterns.
-*   TODO HIGH   Parallax bg.
+*   TODO INIT   Parallax bg.
 *   TODO LOW    Add doors / level portals.
+*   TODO LOW    Create levels and sublevels?
 *   TODO LOW    Create abstract level system.
 *   TODO WEAK   Add menu keys for main menu and level map ..
 *   TODO WEAK   Add sprites.
@@ -11043,16 +11044,28 @@ var MfgCharacter = (function (_super) {
                 _this.topSensor,
             ]
         });
-        // avoid body tilting
-        _this.body.inertia = Infinity;
-        _this.body.inverseInertia = 1 / _this.body.inertia;
-        // though tilting is off, increase the mass
-        _this.body.mass = 70.0;
-        _this.body.inverseMass = 1 / _this.body.mass;
         return _this;
-        // density ?
-        // this.body.density = 100.0;
+        /*
+                    // avoid body tilting
+                    this.body.inertia        = Infinity;
+                    this.body.inverseInertia = 1 / this.body.inertia;
+        
+                    // though tilting is off, increase the mass
+                    this.body.mass        = 70.0;
+                    this.body.inverseMass = 1 / this.body.mass;
+        */
     }
+    /***************************************************************************************************************
+    *   Renders the current character tick.
+    ***************************************************************************************************************/
+    MfgCharacter.prototype.render = function () {
+        // check top and bottom collision state
+        this.collidesTop = this.isColliding(this.topSensor, true);
+        this.collidesBottom = this.isColliding(this.bottomSensor, false);
+        // avoid this body from rotating!
+        Matter.Body.setAngularVelocity(this.body, 0.0);
+        Matter.Body.setAngle(this.body, 0.0);
+    };
     /***************************************************************************************************************
     *   Check if the player falls to death by falling out of the level.
     ***************************************************************************************************************/
@@ -11092,7 +11105,7 @@ var MfgCharacter = (function (_super) {
                     continue;
                 }
                 // skip boxes
-                if (ignoreBoxes && gameObject.isBox) {
+                if (ignoreBoxes && gameObject instanceof mfg.MfgBox) {
                     continue;
                 }
                 bodiesToCheck.push(gameObject.body);
@@ -11127,13 +11140,6 @@ var MfgCharacter = (function (_super) {
                 }
             }
         }
-    };
-    /***************************************************************************************************************
-    *   Renders the current character tick.
-    ***************************************************************************************************************/
-    MfgCharacter.prototype.render = function () {
-        this.collidesTop = this.isColliding(this.topSensor, true);
-        this.collidesBottom = this.isColliding(this.bottomSensor, false);
     };
     return MfgCharacter;
 }(mfg.MfgGameObject));
@@ -11183,9 +11189,10 @@ var MfgEnemy = (function (_super) {
     *   Renders the current player tick.
     ***************************************************************************************************************/
     MfgEnemy.prototype.render = function () {
+        _super.prototype.render.call(this);
         if (!this.dead) {
             // switch movement pattern
-            Matter.Body.translate(this.body, { x: -1.0, y: 0 });
+            Matter.Body.translate(this.body, { x: -2.0, y: 0 });
             this.renderJumping();
             this.clipToHorizontalLevelBounds();
             this.checkFallingDead();
@@ -11228,11 +11235,9 @@ var MfgPlayer = (function (_super) {
     *
     *   @param x      Startup position X.
     *   @param y      Startup position Y.
-    *   @param width  The new width.
-    *   @param height The new height.
     ***************************************************************************************************************/
-    function MfgPlayer(x, y, width, height) {
-        return _super.call(this, mfg.MfgGameObjectShape.ERectangle, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, mfg.MfgCharacterLookingDirection.ERight) || this;
+    function MfgPlayer(x, y) {
+        return _super.call(this, mfg.MfgGameObjectShape.ERectangle, x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, mfg.MfgCharacterLookingDirection.ERight) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -11601,9 +11606,9 @@ var MfgGame = (function () {
     MfgGame.prototype.init = function () {
         mfg.MfgDebug.init.log("Initing game engine");
         this.initEngine2D();
-        this.initLevel();
-        this.initKeySystem();
         this.initCamera();
+        this.initKeySystem();
+        this.resetAndLaunchLevel(new mfg.MfgLevelDev());
         // start the game loop
         this.start();
     };
@@ -11646,9 +11651,14 @@ var MfgGame = (function () {
     /***************************************************************************************************************
     *   Inits the level.
     ***************************************************************************************************************/
-    MfgGame.prototype.initLevel = function () {
-        this.level = new mfg.MfgLevelDev(3000, 1100);
+    MfgGame.prototype.resetAndLaunchLevel = function (levelToLaunch) {
+        // clear world
+        Matter.World.clear(this.engine.world, false);
+        // assign and init level
+        this.level = levelToLaunch;
         this.level.init();
+        // reset camera
+        this.camera.reset();
     };
     /***************************************************************************************************************
     *   Starts the game loop.
@@ -11664,10 +11674,27 @@ var MfgGame = (function () {
     *   Renders all game components.
     ***************************************************************************************************************/
     MfgGame.prototype.render = function () {
+        // handle menu key
+        this.handleMenuKey();
         // render level
         this.level.render();
         // render camera
         this.camera.update(this.level.width, this.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT, this.level.player.body.position.x, this.level.player.body.position.y, this.level.player.lookingDirection, this.level.player.collidesBottom, this.renderer);
+    };
+    /***************************************************************************************************************
+    *   Handles pressed menu keys.
+    ***************************************************************************************************************/
+    MfgGame.prototype.handleMenuKey = function () {
+        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_1)) {
+            mfg.MfgInit.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_1);
+            mfg.MfgDebug.init.log("Switching to level 1");
+            this.resetAndLaunchLevel(new mfg.MfgLevelDev());
+        }
+        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_2)) {
+            mfg.MfgInit.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_2);
+            mfg.MfgDebug.init.log("Switching to level 2");
+            this.resetAndLaunchLevel(new mfg.MfgLevelEnchantedWoods());
+        }
     };
     return MfgGame;
 }());
@@ -11700,13 +11727,7 @@ var mfg = __webpack_require__(0);
 *   @version    0.0.1
 *******************************************************************************************************************/
 var MfgLevel = (function () {
-    /***************************************************************************************************************
-    *   Creates a new level.
-    *
-    *   @param width  The width for the new level.
-    *   @param height The height for the new level.
-    ***************************************************************************************************************/
-    function MfgLevel(width, height) {
+    function MfgLevel() {
         /** The width of this level. */
         this.width = 0.0;
         /** The height of this level. */
@@ -11715,8 +11736,6 @@ var MfgLevel = (function () {
         this.player = null;
         /** ALL game objects for this level, including the player. */
         this.gameObjects = null;
-        this.width = width;
-        this.height = height;
     }
     /***************************************************************************************************************
     *   Inits a new level.
@@ -11845,6 +11864,16 @@ var MfgKeySystem = (function () {
     MfgKeySystem.KEY_RIGHT = 39;
     /** The keycode that represents the 'ARROW DOWN' key. */
     MfgKeySystem.KEY_DOWN = 40;
+    /** The keycode that represents the '1' key. */
+    MfgKeySystem.KEY_1 = 49;
+    /** The keycode that represents the '1' key. */
+    MfgKeySystem.KEY_2 = 50;
+    /** The keycode that represents the '1' key. */
+    MfgKeySystem.KEY_3 = 51;
+    /** The keycode that represents the '1' key. */
+    MfgKeySystem.KEY_4 = 52;
+    /** The keycode that represents the '1' key. */
+    MfgKeySystem.KEY_5 = 53;
     /** The keycode that represents the 'ENTER' key. */
     MfgKeySystem.KEY_ENTER = 13;
     /** The keycode that represents the 'ESCAPE' key. */
@@ -11881,14 +11910,6 @@ var MfgCamera = (function () {
     *   @param minimumCameraMove The minimum camera movement step in px.
     ***************************************************************************************************************/
     function MfgCamera(ratioX, ratioY, movingSpeed, minimumCameraMove) {
-        /** Current camera target X. */
-        this.targetX = 0.0;
-        /** Current camera target Y. */
-        this.targetY = 0.0;
-        /** Current camera offset X. */
-        this.offsetX = 0.0;
-        /** Current camera offset Y. */
-        this.offsetY = 0.0;
         /** Camera centering ratio X. */
         this.ratioX = 0.0;
         /** Camera centering ratio X. */
@@ -11897,6 +11918,14 @@ var MfgCamera = (function () {
         this.movingSpeed = 0.0;
         /** Minimum camera moving speed in px. */
         this.minimumCameraMove = 0.0;
+        /** Current camera target X. */
+        this.targetX = 0.0;
+        /** Current camera target Y. */
+        this.targetY = 0.0;
+        /** Current camera offset X. */
+        this.offsetX = 0.0;
+        /** Current camera offset Y. */
+        this.offsetY = 0.0;
         this.ratioX = ratioX;
         this.ratioY = ratioY;
         this.movingSpeed = movingSpeed;
@@ -11991,6 +12020,15 @@ var MfgCamera = (function () {
                 y: this.offsetY + canvasHeight
             }
         ]);
+    };
+    /***************************************************************************************************************
+    *   Resets the camera targets and offsets to 0.0.
+    ***************************************************************************************************************/
+    MfgCamera.prototype.reset = function () {
+        this.targetX = 0;
+        this.targetY = 0;
+        this.offsetX = 0;
+        this.offsetY = 0;
     };
     return MfgCamera;
 }());
@@ -12111,14 +12149,19 @@ var mfg = __webpack_require__(0);
 var MfgLevelDev = (function (_super) {
     __extends(MfgLevelDev, _super);
     function MfgLevelDev() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /** The width of this level. */
+        _this.width = 3000.0;
+        /** The height of this level. */
+        _this.height = 1500.0;
+        return _this;
     }
     /***************************************************************************************************************
     *   Inits a new level.
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT);
+        this.player = new mfg.MfgPlayer(0, 0);
         // setup all game objects
         this.gameObjects =
             [
@@ -12149,7 +12192,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createItem(2650, 850),
                 mfg.MfgGameObjectFactory.createItem(2700, 850),
                 // enemies
-                mfg.MfgGameObjectFactory.createEnemy(800, 0),
+                mfg.MfgGameObjectFactory.createEnemy(845, 0),
                 // player
                 this.player,
                 // fg decoration
@@ -12160,6 +12203,129 @@ var MfgLevelDev = (function (_super) {
     return MfgLevelDev;
 }(mfg.MfgLevel));
 exports.MfgLevelDev = MfgLevelDev;
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   The level set for the level 'enchanted woods'.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgLevelEnchantedWoods = (function (_super) {
+    __extends(MfgLevelEnchantedWoods, _super);
+    function MfgLevelEnchantedWoods() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /** The width of this level. */
+        _this.width = 3000.0;
+        /** The height of this level. */
+        _this.height = 1500.0;
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Inits a new level.
+    ***************************************************************************************************************/
+    MfgLevelEnchantedWoods.prototype.createGameObjects = function () {
+        // init player
+        this.player = new mfg.MfgPlayer(0, 0);
+        // setup all game objects
+        this.gameObjects =
+            [
+                // bg decoration
+                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
+                // bg decoration
+                mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
+                // static obstacles
+                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
+                // moveable boxes
+                // sigsaws
+                // items
+                // enemies
+                // player
+                this.player,
+                // fg decoration
+                mfg.MfgGameObjectFactory.createDecoration(700, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2000, 860, 120, 90, null),
+            ];
+    };
+    return MfgLevelEnchantedWoods;
+}(mfg.MfgLevel));
+exports.MfgLevelEnchantedWoods = MfgLevelEnchantedWoods;
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   Represents a platform that moves.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgPlatform = (function (_super) {
+    __extends(MfgPlatform, _super);
+    /***************************************************************************************************************
+    *   Creates a new platform.
+    *
+    *   @param shape     The shape for this object.
+    *   @param x         Startup position X.
+    *   @param y         Startup position Y.
+    *   @param width     The new width.
+    *   @param height    The new height.
+    *   @param angle     The initial rotation.
+    *   @param waypoints The waypoints for this platform to move.
+    ***************************************************************************************************************/
+    function MfgPlatform(shape, x, y, width, height, angle, waypoints) {
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle) || this;
+        /** The waypoints for this platform to move. */
+        _this.waypoints = null;
+        /** The current waypoint to move to. */
+        _this.currentWaypointIndex = 0;
+        _this.waypoints = waypoints;
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Renders this obstacle.
+    ***************************************************************************************************************/
+    MfgPlatform.prototype.render = function () {
+    };
+    return MfgPlatform;
+}(mfg.MfgGameObject));
+exports.MfgPlatform = MfgPlatform;
 
 
 /***/ })

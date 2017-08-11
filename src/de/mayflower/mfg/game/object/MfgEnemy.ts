@@ -39,12 +39,14 @@
         ***************************************************************************************************************/
         public render()
         {
+            super.render();
+
             if ( !this.dead )
             {
                 // switch movement pattern
 
 
-                Matter.Body.translate( this.body, { x: -1.0, y: 0 });
+                Matter.Body.translate( this.body, { x: -2.0, y: 0 });
 
                 this.renderJumping();
                 this.clipToHorizontalLevelBounds();

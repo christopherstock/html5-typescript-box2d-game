@@ -30,9 +30,10 @@
             mfg.MfgDebug.init.log( "Initing game engine" );
 
             this.initEngine2D();
-            this.initLevel();
-            this.initKeySystem();
             this.initCamera();
+            this.initKeySystem();
+
+            this.resetAndLaunchLevel( new mfg.MfgLevelDev() );
 
             // start the game loop
             this.start();
@@ -94,10 +95,17 @@
         /***************************************************************************************************************
         *   Inits the level.
         ***************************************************************************************************************/
-        private initLevel()
+        private resetAndLaunchLevel( levelToLaunch:mfg.MfgLevel )
         {
-            this.level = new mfg.MfgLevelDev( 3000, 1100 );
+            // clear world
+            Matter.World.clear( this.engine.world, false );
+
+            // assign and init level
+            this.level = levelToLaunch;
             this.level.init();
+
+            // reset camera
+            this.camera.reset();
         }
 
         /***************************************************************************************************************
@@ -134,6 +142,9 @@
         ***************************************************************************************************************/
         private render()
         {
+            // handle menu key
+            this.handleMenuKey();
+
             // render level
             this.level.render();
 
@@ -149,5 +160,27 @@
                 this.level.player.collidesBottom,
                 this.renderer
             );
+        }
+
+        /***************************************************************************************************************
+        *   Handles pressed menu keys.
+        ***************************************************************************************************************/
+        private handleMenuKey()
+        {
+            if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_1 ) )
+            {
+                mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_1 );
+
+                mfg.MfgDebug.init.log( "Switching to level 1" );
+                this.resetAndLaunchLevel( new mfg.MfgLevelDev() );
+            }
+
+            if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_2 ) )
+            {
+                mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_2 );
+
+                mfg.MfgDebug.init.log( "Switching to level 2" );
+                this.resetAndLaunchLevel( new mfg.MfgLevelEnchantedWoods() );
+            }
         }
     }

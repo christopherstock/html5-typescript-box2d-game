@@ -10,16 +10,6 @@
     *******************************************************************************************************************/
     export class MfgCamera
     {
-        /** Current camera target X. */
-        private     targetX                     :number                 = 0.0;
-        /** Current camera target Y. */
-        private     targetY                     :number                 = 0.0;
-
-        /** Current camera offset X. */
-        private     offsetX                     :number                 = 0.0;
-        /** Current camera offset Y. */
-        private     offsetY                     :number                 = 0.0;
-
         /** Camera centering ratio X. */
         private     ratioX                      :number                 = 0.0;
         /** Camera centering ratio X. */
@@ -29,6 +19,16 @@
         private     movingSpeed                 :number                 = 0.0;
         /** Minimum camera moving speed in px. */
         private     minimumCameraMove           :number                 = 0.0;
+
+        /** Current camera target X. */
+        private     targetX                     :number                 = 0.0;
+        /** Current camera target Y. */
+        private     targetY                     :number                 = 0.0;
+
+        /** Current camera offset X. */
+        private     offsetX                     :number                 = 0.0;
+        /** Current camera offset Y. */
+        private     offsetY                     :number                 = 0.0;
 
         /***************************************************************************************************************
         *   Constructs a new camera.
@@ -152,5 +152,17 @@
                     }
                 ]
             );
+        }
+
+        /***************************************************************************************************************
+        *   Resets the camera targets and offsets to 0.0.
+        ***************************************************************************************************************/
+        public reset()
+        {
+            this.targetX = 0;
+            this.targetY = 0;
+
+            this.offsetX = 0;
+            this.offsetY = 0;
         }
     }

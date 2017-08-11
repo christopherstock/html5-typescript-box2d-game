@@ -10,6 +10,7 @@
     export * from './game/object/MfgGameObjectFactory';
     export * from './game/object/MfgCharacter';
     export * from './game/object/MfgEnemy';
+    export * from './game/object/MfgPlatform';
     export * from './game/object/MfgPlayer';
     export * from './game/object/MfgBox';
     export * from './game/object/MfgItem';
@@ -19,6 +20,7 @@
     export * from './game/MfgGame';
     export * from './game/level/MfgLevel';
     export * from './game/level/MfgLevelDev';
+    export * from './game/level/MfgLevelEnchantedWoods';
     export * from './hid/MfgKeySystem';
     export * from './ui/MfgCamera';
     export * from './ui/MfgImages';
