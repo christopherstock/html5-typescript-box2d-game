@@ -20,6 +20,11 @@
 
         /** Specifies if this object is non-colliding. */
         public          isSensor                :boolean                        = false;
+        /** Specifies if this object is static. */
+        public          isStatic                :boolean                        = false;
+
+        /** TODO Fix usage of the instanceof operator .. :( */
+        public          isBox                   :boolean                        = false;
 
         /***************************************************************************************************************
         *   Creates a new game object.
@@ -50,6 +55,7 @@
         )
         {
             this.isSensor = isSensor;
+            this.isStatic = isStatic;
 
             switch ( +shape )
             {

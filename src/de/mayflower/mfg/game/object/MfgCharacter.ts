@@ -12,8 +12,12 @@
     {
         /** The looking direction for this character. */
         public          lookingDirection        :mfg.MfgCharacterLookingDirection   = null;
-        /** The bottom line that checks collisions with the body. */
+
+        /** The bottom line that checks collisions with the floor. */
         protected       bottomSensor            :Matter.Body                        = null;
+        /** The top line that checks collisions with the ceiling. */
+        protected       topSensor               :Matter.Body                        = null;
+
         /** The current jump force. */
         protected       jumpPower               :number                             = 0.0;
         /** Flags if this character is dead. */
@@ -55,7 +59,25 @@
                 {
                     render:
                     {
-                        opacity: 0.0,
+                        opacity: 1.0,
+                        strokeStyle: '#ff0000',
+                        lineWidth: 5.0,
+                    },
+                    isSensor: true
+                }
+            );
+
+            this.topSensor = Matter.Bodies.rectangle(
+                x + ( width  / 2 ),
+                y - 1,
+                width,
+                1.0,
+                {
+                    render:
+                    {
+                        opacity: 1.0,
+                        strokeStyle: '#00ff00',
+                        lineWidth: 5.0,
                     },
                     isSensor: true
                 }
@@ -67,6 +89,7 @@
                     [
                         this.body,
                         this.bottomSensor,
+                        this.topSensor,
                     ]
                 }
             );
@@ -97,30 +120,6 @@
         }
 
         /***************************************************************************************************************
-        *   Check if the character's bottom sensor currently
-        *   collides with any other colliding body.
-        *
-        *   @return <code>true</code> if a bottom collision is currently active.
-        ***************************************************************************************************************/
-        public checkBottomCollision()
-        {
-            for ( let object of mfg.MfgInit.game.level.gameObjects )
-            {
-                if ( object.body == this.body || object.isSensor )
-                {
-                    continue;
-                }
-
-                if ( Matter.Bounds.overlaps( object.body.bounds, this.bottomSensor.bounds ) )
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /***************************************************************************************************************
         *   Kills this character.
         ***************************************************************************************************************/
         public kill()
@@ -133,6 +132,50 @@
         }
 
         /***************************************************************************************************************
+        *   Check if the specified sensor currently collides with any other colliding body.
+        *
+        *   This function is an entire TECHNICAL DEBT!
+        *
+        *   @param sensor      The sensor body to check collision for.
+        *   @param ignoreBoxes Specifies if boxes shall be considered for collision checks.
+        *
+        *   @return <code>true</code> if a bottom collision is currently active.
+        ***************************************************************************************************************/
+        protected isColliding( sensor:Matter.Body, ignoreBoxes:boolean )
+        {
+            let bodiesToCheck:Array<Matter.Body> = [];
+
+            // browse all game objects
+            for ( let gameObject of mfg.MfgInit.game.level.gameObjects )
+            {
+                // skip own body and sensors
+                if ( gameObject.body == this.body || gameObject.isSensor )
+                {
+                    continue;
+                }
+
+                // skip boxes
+                if ( ignoreBoxes && gameObject.isBox )
+                {
+                    continue;
+                }
+
+                bodiesToCheck.push( gameObject.body );
+            }
+
+            let collisions:Array<any> = Matter.Query.ray
+            (
+                bodiesToCheck,
+                Matter.Vector.create( sensor.position.x - ( this.width / 2 ), sensor.position.y ),
+                Matter.Vector.create( sensor.position.x + ( this.width / 2 ), sensor.position.y )
+            );
+
+            console.dir( collisions );
+
+            return ( collisions.length > 0 );
+        }
+
+        /***************************************************************************************************************
         *   Handles jumping.
         ***************************************************************************************************************/
         protected renderJumping()
@@ -140,13 +183,21 @@
             // render jumping
             if ( this.jumpPower > 0.0 )
             {
-                // move body
-                Matter.Body.translate( this.body, { x: 0.0, y: -this.jumpPower });
-
-                this.jumpPower -= 2.0;
-
-                if ( this.jumpPower < 0.0 ) {
+                // check top collision
+                if ( this.isColliding( this.topSensor, true ) )
+                {
                     this.jumpPower = 0.0;
+                }
+                else
+                {
+                    // move body
+                    Matter.Body.translate( this.body, { x: 0.0, y: -this.jumpPower });
+
+                    this.jumpPower -= 2.0;
+
+                    if ( this.jumpPower < 0.0 ) {
+                        this.jumpPower = 0.0;
+                    }
                 }
             }
         }

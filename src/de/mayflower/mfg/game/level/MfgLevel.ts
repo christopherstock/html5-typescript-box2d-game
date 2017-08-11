@@ -61,6 +61,7 @@
                 mfg.MfgGameObjectFactory.createObstacle( 1840, 950, 1380, 25, 0.0 ),
                 mfg.MfgGameObjectFactory.createObstacle( 320,  870, 80,   80, 0.0 ),
 
+                mfg.MfgGameObjectFactory.createObstacle( 80,    700, 400, 15, -15.0 ),
                 mfg.MfgGameObjectFactory.createObstacle( 1320,  700, 400, 15, -15.0 ),
 
                 // moveable boxes

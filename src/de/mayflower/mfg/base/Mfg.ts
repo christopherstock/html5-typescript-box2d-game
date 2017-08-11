@@ -4,9 +4,10 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO HIGH   Vertical camera movement buffering.
+    *
     *   TODO HIGH   Checkout material parameters for different game objects!
     *   TODO HIGH   Create levels and sublevels.
-    *   TODO HIGH   Stop jump power on colliding top!
     *   TODO INIT   Improve switch problem for enums (valueOf?)?
     *   TODO INIT   Create animated platforms.
     *   TODO INIT   Create different enemy move patterns.

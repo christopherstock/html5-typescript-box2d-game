@@ -10627,9 +10627,10 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO HIGH   Vertical camera movement buffering.
+*
 *   TODO HIGH   Checkout material parameters for different game objects!
 *   TODO HIGH   Create levels and sublevels.
-*   TODO HIGH   Stop jump power on colliding top!
 *   TODO INIT   Improve switch problem for enums (valueOf?)?
 *   TODO INIT   Create animated platforms.
 *   TODO INIT   Create different enemy move patterns.
@@ -10751,7 +10752,12 @@ var MfgGameObject = (function () {
         this.height = 0;
         /** Specifies if this object is non-colliding. */
         this.isSensor = false;
+        /** Specifies if this object is static. */
+        this.isStatic = false;
+        /** TODO Fix usage of the instanceof operator .. :( */
+        this.isBox = false;
         this.isSensor = isSensor;
+        this.isStatic = isStatic;
         switch (+shape) {
             case mfg.MfgGameObjectShape.ERectangle:
                 {
@@ -10999,8 +11005,10 @@ var MfgCharacter = (function (_super) {
         var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
-        /** The bottom line that checks collisions with the body. */
+        /** The bottom line that checks collisions with the floor. */
         _this.bottomSensor = null;
+        /** The top line that checks collisions with the ceiling. */
+        _this.topSensor = null;
         /** The current jump force. */
         _this.jumpPower = 0.0;
         /** Flags if this character is dead. */
@@ -11008,7 +11016,17 @@ var MfgCharacter = (function (_super) {
         _this.lookingDirection = lookingDirection;
         _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
             render: {
-                opacity: 0.0,
+                opacity: 1.0,
+                strokeStyle: '#ff0000',
+                lineWidth: 5.0,
+            },
+            isSensor: true
+        });
+        _this.topSensor = Matter.Bodies.rectangle(x + (width / 2), y - 1, width, 1.0, {
+            render: {
+                opacity: 1.0,
+                strokeStyle: '#00ff00',
+                lineWidth: 5.0,
             },
             isSensor: true
         });
@@ -11016,6 +11034,7 @@ var MfgCharacter = (function (_super) {
             parts: [
                 _this.body,
                 _this.bottomSensor,
+                _this.topSensor,
             ]
         });
         // avoid body tilting
@@ -11038,34 +11057,6 @@ var MfgCharacter = (function (_super) {
         }
     };
     /***************************************************************************************************************
-    *   Check if the character's bottom sensor currently
-    *   collides with any other colliding body.
-    *
-    *   @return <code>true</code> if a bottom collision is currently active.
-    ***************************************************************************************************************/
-    MfgCharacter.prototype.checkBottomCollision = function () {
-        try {
-            for (var _a = __values(mfg.MfgInit.game.level.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var object = _b.value;
-                if (object.body == this.body || object.isSensor) {
-                    continue;
-                }
-                if (Matter.Bounds.overlaps(object.body.bounds, this.bottomSensor.bounds)) {
-                    return true;
-                }
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
-        return false;
-        var e_1, _c;
-    };
-    /***************************************************************************************************************
     *   Kills this character.
     ***************************************************************************************************************/
     MfgCharacter.prototype.kill = function () {
@@ -11075,16 +11066,61 @@ var MfgCharacter = (function (_super) {
         this.dead = true;
     };
     /***************************************************************************************************************
+    *   Check if the specified sensor currently collides with any other colliding body.
+    *
+    *   This function is an entire TECHNICAL DEBT!
+    *
+    *   @param sensor      The sensor body to check collision for.
+    *   @param ignoreBoxes Specifies if boxes shall be considered for collision checks.
+    *
+    *   @return <code>true</code> if a bottom collision is currently active.
+    ***************************************************************************************************************/
+    MfgCharacter.prototype.isColliding = function (sensor, ignoreBoxes) {
+        var bodiesToCheck = [];
+        try {
+            // browse all game objects
+            for (var _a = __values(mfg.MfgInit.game.level.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
+                var gameObject = _b.value;
+                // skip own body and sensors
+                if (gameObject.body == this.body || gameObject.isSensor) {
+                    continue;
+                }
+                // skip boxes
+                if (ignoreBoxes && gameObject.isBox) {
+                    continue;
+                }
+                bodiesToCheck.push(gameObject.body);
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        var collisions = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(sensor.position.x - (this.width / 2), sensor.position.y), Matter.Vector.create(sensor.position.x + (this.width / 2), sensor.position.y));
+        console.dir(collisions);
+        return (collisions.length > 0);
+        var e_1, _c;
+    };
+    /***************************************************************************************************************
     *   Handles jumping.
     ***************************************************************************************************************/
     MfgCharacter.prototype.renderJumping = function () {
         // render jumping
         if (this.jumpPower > 0.0) {
-            // move body
-            Matter.Body.translate(this.body, { x: 0.0, y: -this.jumpPower });
-            this.jumpPower -= 2.0;
-            if (this.jumpPower < 0.0) {
+            // check top collision
+            if (this.isColliding(this.topSensor, true)) {
                 this.jumpPower = 0.0;
+            }
+            else {
+                // move body
+                Matter.Body.translate(this.body, { x: 0.0, y: -this.jumpPower });
+                this.jumpPower -= 2.0;
+                if (this.jumpPower < 0.0) {
+                    this.jumpPower = 0.0;
+                }
             }
         }
     };
@@ -11202,7 +11238,7 @@ var MfgPlayer = (function (_super) {
         }
         if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
             mfg.MfgInit.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_UP);
-            if (this.checkBottomCollision()) {
+            if (this.isColliding(this.bottomSensor, false)) {
                 this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
             }
         }
@@ -11259,7 +11295,9 @@ var MfgBox = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgBox(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0) || this;
+        _this.isBox = true;
+        return _this;
     }
     /***************************************************************************************************************
     *   Renders this box.
@@ -11687,6 +11725,7 @@ var MfgLevel = (function () {
                 mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
                 mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
                 mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(80, 700, 400, 15, -15.0),
                 mfg.MfgGameObjectFactory.createObstacle(1320, 700, 400, 15, -15.0),
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(370, 100, 80, 80),

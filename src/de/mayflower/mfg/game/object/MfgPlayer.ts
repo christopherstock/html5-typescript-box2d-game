@@ -57,7 +57,7 @@
             {
                 mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_UP );
 
-                if ( this.checkBottomCollision() )
+                if ( this.isColliding( this.bottomSensor, false ) )
                 {
                     this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
                 }
