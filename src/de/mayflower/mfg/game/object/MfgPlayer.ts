@@ -13,17 +13,16 @@
         /***************************************************************************************************************
         *   Creates a new player instance.
         *
-        *   @param shape  The shape for this object.
         *   @param x      Startup position X.
         *   @param y      Startup position Y.
         *   @param width  The new width.
         *   @param height The new height.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
+        public constructor( x:number, y:number, width:number, height:number )
         {
             super
             (
-                shape,
+                mfg.MfgGameObjectShape.ERectangle,
                 x,
                 y,
                 width,
@@ -57,7 +56,7 @@
             {
                 mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_UP );
 
-                if ( this.isColliding( this.bottomSensor, false ) )
+                if ( this.collidesBottom )
                 {
                     this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
                 }
@@ -69,6 +68,8 @@
         ***************************************************************************************************************/
         public render()
         {
+            super.render();
+
             if ( !this.dead )
             {
                 this.handleKeys();

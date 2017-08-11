@@ -9,7 +9,7 @@
     *******************************************************************************************************************/
     export class MfgSettings
     {
-        /** The debug switch. */
+        /** The global debug switch. */
         public      static      DEBUG_MODE                                  :boolean                    = true;
 
         /** The application's internal name. */

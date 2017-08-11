@@ -38,13 +38,7 @@
         public init()
         {
             // init player
-            this.player = new mfg.MfgPlayer(
-                null,
-                0,
-                0,
-                mfg.MfgSettings.PLAYER_WIDTH,
-                mfg.MfgSettings.PLAYER_HEIGHT
-            );
+            this.player = new mfg.MfgPlayer( 0, 0, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT );
 
             // setup all game objects
             this.gameObjects =
@@ -62,6 +56,7 @@
                 mfg.MfgGameObjectFactory.createObstacle( 320,  870, 80,   80, 0.0 ),
 
                 mfg.MfgGameObjectFactory.createObstacle( 80,    700, 400, 15, -15.0 ),
+                mfg.MfgGameObjectFactory.createObstacle( 380,   500, 400, 15, -15.0 ),
                 mfg.MfgGameObjectFactory.createObstacle( 1320,  700, 400, 15, -15.0 ),
 
                 // moveable boxes

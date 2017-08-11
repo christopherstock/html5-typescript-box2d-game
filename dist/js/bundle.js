@@ -10427,7 +10427,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var MfgSettings = (function () {
     function MfgSettings() {
     }
-    /** The debug switch. */
+    /** The global debug switch. */
     MfgSettings.DEBUG_MODE = true;
     /** The application's internal name. */
     MfgSettings.TITLE = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH";
@@ -10627,18 +10627,18 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO LOW    CameraY shall only change if player collides with the floor!!
 *   TODO HIGH   Vertical camera movement buffering.
 *
 *   TODO HIGH   Checkout material parameters for different game objects!
+*   TODO HIGH   Create lib/factory for assigning different masses and behaviours to bodies.
 *   TODO HIGH   Create levels and sublevels.
+*   TODO HIGH   Create different enemy move patterns.
 *   TODO INIT   Improve switch problem for enums (valueOf?)?
 *   TODO INIT   Create animated platforms.
-*   TODO INIT   Create different enemy move patterns.
-*   TODO INIT   Create lib/factory for assigning different masses and behaviours to bodies.
 *   TODO LOW    Add doors / level portals.
-*   TODO LOW    CameraY shall only change if player collides with the floor!!
 *   TODO LOW    Create abstract level system.
-*   TODO LOW    Add main menu and menu keys ..
+*   TODO WEAK   Add main menu and menu keys ..
 *   TODO WEAK   Implement nice changing gravity effects.
 *   TODO WEAK   Add sprites.
 *   TODO WEAK   Add images.
@@ -10758,7 +10758,7 @@ var MfgGameObject = (function () {
         this.isBox = false;
         this.isSensor = isSensor;
         this.isStatic = isStatic;
-        switch (+shape) {
+        switch (shape.valueOf()) {
             case mfg.MfgGameObjectShape.ERectangle:
                 {
                     this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, {
@@ -11005,14 +11005,18 @@ var MfgCharacter = (function (_super) {
         var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
-        /** The bottom line that checks collisions with the floor. */
-        _this.bottomSensor = null;
         /** The top line that checks collisions with the ceiling. */
         _this.topSensor = null;
+        /** The bottom line that checks collisions with the floor. */
+        _this.bottomSensor = null;
         /** The current jump force. */
         _this.jumpPower = 0.0;
         /** Flags if this character is dead. */
         _this.dead = false;
+        /** flags if the character collides with the top sensor. */
+        _this.collidesTop = false;
+        /** flags if the character collides with the bottom sensor. */
+        _this.collidesBottom = false;
         _this.lookingDirection = lookingDirection;
         _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
             render: {
@@ -11099,9 +11103,7 @@ var MfgCharacter = (function (_super) {
             }
             finally { if (e_1) throw e_1.error; }
         }
-        var collisions = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(sensor.position.x - (this.width / 2), sensor.position.y), Matter.Vector.create(sensor.position.x + (this.width / 2), sensor.position.y));
-        console.dir(collisions);
-        return (collisions.length > 0);
+        return Matter.Query.ray(bodiesToCheck, Matter.Vector.create(sensor.position.x - (this.width / 2), sensor.position.y), Matter.Vector.create(sensor.position.x + (this.width / 2), sensor.position.y)).length > 0;
         var e_1, _c;
     };
     /***************************************************************************************************************
@@ -11111,7 +11113,7 @@ var MfgCharacter = (function (_super) {
         // render jumping
         if (this.jumpPower > 0.0) {
             // check top collision
-            if (this.isColliding(this.topSensor, true)) {
+            if (this.collidesTop) {
                 this.jumpPower = 0.0;
             }
             else {
@@ -11123,6 +11125,13 @@ var MfgCharacter = (function (_super) {
                 }
             }
         }
+    };
+    /***************************************************************************************************************
+    *   Renders the current character tick.
+    ***************************************************************************************************************/
+    MfgCharacter.prototype.render = function () {
+        this.collidesTop = this.isColliding(this.topSensor, true);
+        this.collidesBottom = this.isColliding(this.bottomSensor, false);
     };
     return MfgCharacter;
 }(mfg.MfgGameObject));
@@ -11215,14 +11224,13 @@ var MfgPlayer = (function (_super) {
     /***************************************************************************************************************
     *   Creates a new player instance.
     *
-    *   @param shape  The shape for this object.
     *   @param x      Startup position X.
     *   @param y      Startup position Y.
     *   @param width  The new width.
     *   @param height The new height.
     ***************************************************************************************************************/
-    function MfgPlayer(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, mfg.MfgCharacterLookingDirection.ERight) || this;
+    function MfgPlayer(x, y, width, height) {
+        return _super.call(this, mfg.MfgGameObjectShape.ERectangle, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, mfg.MfgCharacterLookingDirection.ERight) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -11238,7 +11246,7 @@ var MfgPlayer = (function (_super) {
         }
         if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
             mfg.MfgInit.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_UP);
-            if (this.isColliding(this.bottomSensor, false)) {
+            if (this.collidesBottom) {
                 this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
             }
         }
@@ -11247,6 +11255,7 @@ var MfgPlayer = (function (_super) {
     *   Renders the current player tick.
     ***************************************************************************************************************/
     MfgPlayer.prototype.render = function () {
+        _super.prototype.render.call(this);
         if (!this.dead) {
             this.handleKeys();
             this.renderJumping();
@@ -11656,7 +11665,7 @@ var MfgGame = (function () {
         // render level
         this.level.render();
         // render camera
-        this.camera.update(this.level.width, this.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT, this.level.player.body.position.x, this.level.player.body.position.y, this.level.player.lookingDirection, this.renderer);
+        this.camera.update(this.level.width, this.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT, this.level.player.body.position.x, this.level.player.body.position.y, this.level.player.lookingDirection, this.level.player.collidesBottom, this.renderer);
     };
     return MfgGame;
 }());
@@ -11712,7 +11721,7 @@ var MfgLevel = (function () {
     ***************************************************************************************************************/
     MfgLevel.prototype.init = function () {
         // init player
-        this.player = new mfg.MfgPlayer(null, 0, 0, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT);
+        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT);
         // setup all game objects
         this.gameObjects =
             [
@@ -11726,6 +11735,7 @@ var MfgLevel = (function () {
                 mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
                 mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80, 0.0),
                 mfg.MfgGameObjectFactory.createObstacle(80, 700, 400, 15, -15.0),
+                mfg.MfgGameObjectFactory.createObstacle(380, 500, 400, 15, -15.0),
                 mfg.MfgGameObjectFactory.createObstacle(1320, 700, 400, 15, -15.0),
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(370, 100, 80, 80),
@@ -11934,11 +11944,12 @@ var MfgCamera = (function () {
     *   @param subjectX         The subject coordinate X to center the camera.
     *   @param subjectY         The subject coordinate Y to center the camera.
     *   @param lookingDirection The current direction the player looks at.
+    *   @param ascendY          Allows camera ascent Y.
     *   @param renderer         The MatterJS renderer.
     ***************************************************************************************************************/
-    MfgCamera.prototype.update = function (levelWidth, levelHeight, canvasWidth, canvasHeight, subjectX, subjectY, lookingDirection, renderer) {
+    MfgCamera.prototype.update = function (levelWidth, levelHeight, canvasWidth, canvasHeight, subjectX, subjectY, lookingDirection, ascendY, renderer) {
         // calculate scroll-offsets so camera is centered to subject
-        switch (+lookingDirection) {
+        switch (lookingDirection.valueOf()) {
             case mfg.MfgCharacterLookingDirection.ELeft:
                 {
                     this.targetX = subjectX - (canvasWidth * (1.0 - this.ratioX));
@@ -11975,7 +11986,9 @@ var MfgCamera = (function () {
             if (this.offsetX < this.targetX)
                 this.offsetX = this.targetX;
         }
-        this.offsetY = this.targetY;
+        if (ascendY || this.targetY > this.offsetY) {
+            this.offsetY = this.targetY;
+        }
         // assign current camera offset to renderer
         renderer.bounds = Matter.Bounds.create([
             {

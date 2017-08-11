@@ -4,18 +4,18 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO LOW    CameraY shall only change if player collides with the floor!!
     *   TODO HIGH   Vertical camera movement buffering.
     *
     *   TODO HIGH   Checkout material parameters for different game objects!
+    *   TODO HIGH   Create lib/factory for assigning different masses and behaviours to bodies.
     *   TODO HIGH   Create levels and sublevels.
+    *   TODO HIGH   Create different enemy move patterns.
     *   TODO INIT   Improve switch problem for enums (valueOf?)?
     *   TODO INIT   Create animated platforms.
-    *   TODO INIT   Create different enemy move patterns.
-    *   TODO INIT   Create lib/factory for assigning different masses and behaviours to bodies.
     *   TODO LOW    Add doors / level portals.
-    *   TODO LOW    CameraY shall only change if player collides with the floor!!
     *   TODO LOW    Create abstract level system.
-    *   TODO LOW    Add main menu and menu keys ..
+    *   TODO WEAK   Add main menu and menu keys ..
     *   TODO WEAK   Implement nice changing gravity effects.
     *   TODO WEAK   Add sprites.
     *   TODO WEAK   Add images.

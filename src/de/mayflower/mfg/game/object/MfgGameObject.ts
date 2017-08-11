@@ -57,7 +57,7 @@
             this.isSensor = isSensor;
             this.isStatic = isStatic;
 
-            switch ( +shape )
+            switch ( shape.valueOf() )
             {
                 case mfg.MfgGameObjectShape.ERectangle:
                 {

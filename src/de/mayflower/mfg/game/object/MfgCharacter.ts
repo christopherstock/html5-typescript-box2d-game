@@ -13,15 +13,20 @@
         /** The looking direction for this character. */
         public          lookingDirection        :mfg.MfgCharacterLookingDirection   = null;
 
-        /** The bottom line that checks collisions with the floor. */
-        protected       bottomSensor            :Matter.Body                        = null;
         /** The top line that checks collisions with the ceiling. */
         protected       topSensor               :Matter.Body                        = null;
+        /** The bottom line that checks collisions with the floor. */
+        protected       bottomSensor            :Matter.Body                        = null;
 
         /** The current jump force. */
         protected       jumpPower               :number                             = 0.0;
         /** Flags if this character is dead. */
         protected       dead                    :boolean                            = false;
+
+        /** flags if the character collides with the top sensor. */
+        public          collidesTop             :boolean                            = false;
+        /** flags if the character collides with the bottom sensor. */
+        public          collidesBottom          :boolean                            = false;
 
         /***************************************************************************************************************
         *   Creates a new character.
@@ -141,7 +146,7 @@
         *
         *   @return <code>true</code> if a bottom collision is currently active.
         ***************************************************************************************************************/
-        protected isColliding( sensor:Matter.Body, ignoreBoxes:boolean )
+        private isColliding( sensor:Matter.Body, ignoreBoxes:boolean )
         {
             let bodiesToCheck:Array<Matter.Body> = [];
 
@@ -163,16 +168,12 @@
                 bodiesToCheck.push( gameObject.body );
             }
 
-            let collisions:Array<any> = Matter.Query.ray
+            return Matter.Query.ray
             (
                 bodiesToCheck,
                 Matter.Vector.create( sensor.position.x - ( this.width / 2 ), sensor.position.y ),
                 Matter.Vector.create( sensor.position.x + ( this.width / 2 ), sensor.position.y )
-            );
-
-            console.dir( collisions );
-
-            return ( collisions.length > 0 );
+            ).length > 0;
         }
 
         /***************************************************************************************************************
@@ -184,7 +185,7 @@
             if ( this.jumpPower > 0.0 )
             {
                 // check top collision
-                if ( this.isColliding( this.topSensor, true ) )
+                if ( this.collidesTop )
                 {
                     this.jumpPower = 0.0;
                 }
@@ -200,5 +201,15 @@
                     }
                 }
             }
+        }
+
+        /***************************************************************************************************************
+        *   Renders the current character tick.
+        ***************************************************************************************************************/
+        public render()
+        {
+            this.collidesTop    = this.isColliding( this.topSensor,    true  );
+            this.collidesBottom = this.isColliding( this.bottomSensor, false );
+
         }
     }

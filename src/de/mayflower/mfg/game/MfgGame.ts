@@ -145,6 +145,7 @@
                 this.level.player.body.position.x,
                 this.level.player.body.position.y,
                 this.level.player.lookingDirection,
+                this.level.player.collidesBottom,
                 this.renderer
             );
         }

@@ -54,6 +54,7 @@
         *   @param subjectX         The subject coordinate X to center the camera.
         *   @param subjectY         The subject coordinate Y to center the camera.
         *   @param lookingDirection The current direction the player looks at.
+        *   @param ascendY          Allows camera ascent Y.
         *   @param renderer         The MatterJS renderer.
         ***************************************************************************************************************/
         public update
@@ -65,11 +66,12 @@
             subjectX:number,
             subjectY:number,
             lookingDirection:mfg.MfgCharacterLookingDirection,
+            ascendY:boolean,
             renderer:Matter.Render
         )
         {
             // calculate scroll-offsets so camera is centered to subject
-            switch ( +lookingDirection )
+            switch ( lookingDirection.valueOf() )
             {
                 case mfg.MfgCharacterLookingDirection.ELeft:
                 {
@@ -107,7 +109,10 @@
                 this.offsetX -= cameraMoveX;
                 if ( this.offsetX < this.targetX ) this.offsetX = this.targetX;
             }
-            this.offsetY = this.targetY;
+
+            if ( ascendY || this.targetY > this.offsetY ) {
+                this.offsetY = this.targetY;
+            }
 
             // assign current camera offset to renderer
             renderer.bounds = Matter.Bounds.create(
