@@ -7,6 +7,7 @@
     *   TODO ASAP   Refactor player methods moveLeft etc.
     *   TODO ASAP   Fix red inertia problem.
     *   TODO ASAP   Create animated platforms.
+    *   TODO HIGH   Replace own jump implementation.
     *   TODO HIGH   Skew image (sensor) for waving grass effect?
     *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies
     *   TODO HIGH   Create different enemy move patterns.

@@ -28,6 +28,9 @@
         /** flags if the character collides with the bottom sensor. */
         public          collidesBottom          :boolean                            = false;
 
+        /** The speed for horizontal movements. */
+        private         speedMove               :number                             = 0.0;
+
         /***************************************************************************************************************
         *   Creates a new character.
         *
@@ -39,6 +42,7 @@
         *   @param debugColor       The color for the debug object.
         *   @param image            The image for this game object.
         *   @param lookingDirection The initial looking direction.
+        *   @param speedMove        The speed for horizontal movement.
         ***************************************************************************************************************/
         public constructor
         (
@@ -49,12 +53,14 @@
             height:number,
             debugColor:string,
             image:string,
-            lookingDirection:mfg.MfgCharacterLookingDirection
+            lookingDirection:mfg.MfgCharacterLookingDirection,
+            speedMove:number
         )
         {
             super( shape, x, y, width, height, debugColor, false, false, image, 0.0 );
 
             this.lookingDirection = lookingDirection;
+            this.speedMove        = speedMove;
 
             this.bottomSensor = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),
@@ -98,15 +104,8 @@
                     ]
                 }
             );
-/*
-            // avoid body tilting
-            this.body.inertia        = Infinity;
-            this.body.inverseInertia = 1 / this.body.inertia;
 
-            // though tilting is off, increase the mass
-            this.body.mass        = 70.0;
-            this.body.inverseMass = 1 / this.body.mass;
-*/
+            Matter.Body.setMass( this.body, 70.0 );
         }
 
         /***************************************************************************************************************
@@ -121,6 +120,10 @@
             // avoid this body from rotating!
             Matter.Body.setAngularVelocity( this.body, 0.0 );
             Matter.Body.setAngle( this.body, 0.0 );
+
+            this.renderJumping();
+            this.clipToHorizontalLevelBounds();
+            this.checkFallingDead();
         }
 
         /***************************************************************************************************************
@@ -215,4 +218,32 @@
             }
         }
 
+        /***************************************************************************************************************
+        *   Lets this character jump.
+        ***************************************************************************************************************/
+        protected jump()
+        {
+            if ( this.collidesBottom )
+            {
+                this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
+            }
+        }
+
+        /***************************************************************************************************************
+        *   Moves this character left.
+        ***************************************************************************************************************/
+        protected moveLeft()
+        {
+            Matter.Body.translate( this.body, { x: -this.speedMove, y: 0 });
+            this.lookingDirection = mfg.MfgCharacterLookingDirection.ELeft;
+        }
+
+        /***************************************************************************************************************
+        *   Moves this character left.
+        ***************************************************************************************************************/
+        protected moveRight()
+        {
+            Matter.Body.translate( this.body, { x: this.speedMove, y: 0 });
+            this.lookingDirection = mfg.MfgCharacterLookingDirection.ERight;
+        }
     }

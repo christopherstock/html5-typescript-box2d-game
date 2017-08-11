@@ -30,7 +30,8 @@
                 height,
                 mfg.MfgSettings.COLOR_DEBUG_ENEMY,
                 null,
-                mfg.MfgCharacterLookingDirection.ELeft
+                mfg.MfgCharacterLookingDirection.ELeft,
+                1.0
             );
         }
 
@@ -45,12 +46,7 @@
             {
                 // switch movement pattern
 
-
-                Matter.Body.translate( this.body, { x: -2.0, y: 0 });
-
-                this.renderJumping();
-                this.clipToHorizontalLevelBounds();
-                this.checkFallingDead();
+                this.moveLeft();
             }
         }
     }

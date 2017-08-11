@@ -10635,6 +10635,7 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Refactor player methods moveLeft etc.
 *   TODO ASAP   Fix red inertia problem.
 *   TODO ASAP   Create animated platforms.
+*   TODO HIGH   Replace own jump implementation.
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies
 *   TODO HIGH   Create different enemy move patterns.
@@ -11003,8 +11004,9 @@ var MfgCharacter = (function (_super) {
     *   @param debugColor       The color for the debug object.
     *   @param image            The image for this game object.
     *   @param lookingDirection The initial looking direction.
+    *   @param speedMove        The speed for horizontal movement.
     ***************************************************************************************************************/
-    function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection) {
+    function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove) {
         var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
@@ -11020,7 +11022,10 @@ var MfgCharacter = (function (_super) {
         _this.collidesTop = false;
         /** flags if the character collides with the bottom sensor. */
         _this.collidesBottom = false;
+        /** The speed for horizontal movements. */
+        _this.speedMove = 0.0;
         _this.lookingDirection = lookingDirection;
+        _this.speedMove = speedMove;
         _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
             render: {
                 opacity: 1.0,
@@ -11044,16 +11049,8 @@ var MfgCharacter = (function (_super) {
                 _this.topSensor,
             ]
         });
+        Matter.Body.setMass(_this.body, 70.0);
         return _this;
-        /*
-                    // avoid body tilting
-                    this.body.inertia        = Infinity;
-                    this.body.inverseInertia = 1 / this.body.inertia;
-        
-                    // though tilting is off, increase the mass
-                    this.body.mass        = 70.0;
-                    this.body.inverseMass = 1 / this.body.mass;
-        */
     }
     /***************************************************************************************************************
     *   Renders the current character tick.
@@ -11065,6 +11062,9 @@ var MfgCharacter = (function (_super) {
         // avoid this body from rotating!
         Matter.Body.setAngularVelocity(this.body, 0.0);
         Matter.Body.setAngle(this.body, 0.0);
+        this.renderJumping();
+        this.clipToHorizontalLevelBounds();
+        this.checkFallingDead();
     };
     /***************************************************************************************************************
     *   Check if the player falls to death by falling out of the level.
@@ -11141,6 +11141,28 @@ var MfgCharacter = (function (_super) {
             }
         }
     };
+    /***************************************************************************************************************
+    *   Lets this character jump.
+    ***************************************************************************************************************/
+    MfgCharacter.prototype.jump = function () {
+        if (this.collidesBottom) {
+            this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
+        }
+    };
+    /***************************************************************************************************************
+    *   Moves this character left.
+    ***************************************************************************************************************/
+    MfgCharacter.prototype.moveLeft = function () {
+        Matter.Body.translate(this.body, { x: -this.speedMove, y: 0 });
+        this.lookingDirection = mfg.MfgCharacterLookingDirection.ELeft;
+    };
+    /***************************************************************************************************************
+    *   Moves this character left.
+    ***************************************************************************************************************/
+    MfgCharacter.prototype.moveRight = function () {
+        Matter.Body.translate(this.body, { x: this.speedMove, y: 0 });
+        this.lookingDirection = mfg.MfgCharacterLookingDirection.ERight;
+    };
     return MfgCharacter;
 }(mfg.MfgGameObject));
 exports.MfgCharacter = MfgCharacter;
@@ -11163,7 +11185,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents an enemy being controled by the system.
@@ -11183,7 +11204,7 @@ var MfgEnemy = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgEnemy(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null, mfg.MfgCharacterLookingDirection.ELeft) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null, mfg.MfgCharacterLookingDirection.ELeft, 1.0) || this;
     }
     /***************************************************************************************************************
     *   Renders the current player tick.
@@ -11192,10 +11213,7 @@ var MfgEnemy = (function (_super) {
         _super.prototype.render.call(this);
         if (!this.dead) {
             // switch movement pattern
-            Matter.Body.translate(this.body, { x: -2.0, y: 0 });
-            this.renderJumping();
-            this.clipToHorizontalLevelBounds();
-            this.checkFallingDead();
+            this.moveLeft();
         }
     };
     return MfgEnemy;
@@ -11220,7 +11238,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents the player being controled by the user.
@@ -11237,25 +11254,21 @@ var MfgPlayer = (function (_super) {
     *   @param y      Startup position Y.
     ***************************************************************************************************************/
     function MfgPlayer(x, y) {
-        return _super.call(this, mfg.MfgGameObjectShape.ERectangle, x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, mfg.MfgCharacterLookingDirection.ERight) || this;
+        return _super.call(this, mfg.MfgGameObjectShape.ERectangle, x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, mfg.MfgCharacterLookingDirection.ERight, mfg.MfgSettings.PLAYER_SPEED_MOVE) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
     ***************************************************************************************************************/
     MfgPlayer.prototype.handleKeys = function () {
         if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_LEFT)) {
-            Matter.Body.translate(this.body, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
-            this.lookingDirection = mfg.MfgCharacterLookingDirection.ELeft;
+            this.moveLeft();
         }
         if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_RIGHT)) {
-            Matter.Body.translate(this.body, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
-            this.lookingDirection = mfg.MfgCharacterLookingDirection.ERight;
+            this.moveRight();
         }
         if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
             mfg.MfgInit.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_UP);
-            if (this.collidesBottom) {
-                this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
-            }
+            this.jump();
         }
     };
     /***************************************************************************************************************
@@ -11265,9 +11278,6 @@ var MfgPlayer = (function (_super) {
         _super.prototype.render.call(this);
         if (!this.dead) {
             this.handleKeys();
-            this.renderJumping();
-            this.clipToHorizontalLevelBounds();
-            this.checkFallingDead();
         }
     };
     return MfgPlayer;
@@ -11292,6 +11302,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents a movable box.
@@ -11313,6 +11324,7 @@ var MfgBox = (function (_super) {
     function MfgBox(shape, x, y, width, height) {
         var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0) || this;
         _this.isBox = true;
+        Matter.Body.setMass(_this.body, 10.0);
         return _this;
     }
     /***************************************************************************************************************

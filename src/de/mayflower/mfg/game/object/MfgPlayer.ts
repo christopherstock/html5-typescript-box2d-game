@@ -27,7 +27,8 @@
                 mfg.MfgSettings.PLAYER_HEIGHT,
                 mfg.MfgSettings.COLOR_DEBUG_PLAYER,
                 null,
-                mfg.MfgCharacterLookingDirection.ERight
+                mfg.MfgCharacterLookingDirection.ERight,
+                mfg.MfgSettings.PLAYER_SPEED_MOVE
             );
         }
 
@@ -38,26 +39,19 @@
         {
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_LEFT ) )
             {
-                Matter.Body.translate( this.body, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
-
-                this.lookingDirection = mfg.MfgCharacterLookingDirection.ELeft;
+                this.moveLeft();
             }
 
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_RIGHT ) )
             {
-                Matter.Body.translate( this.body, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
-
-                this.lookingDirection = mfg.MfgCharacterLookingDirection.ERight;
+                this.moveRight();
             }
 
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_UP ) )
             {
                 mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_UP );
 
-                if ( this.collidesBottom )
-                {
-                    this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
-                }
+                this.jump();
             }
         }
 
@@ -71,10 +65,6 @@
             if ( !this.dead )
             {
                 this.handleKeys();
-
-                this.renderJumping();
-                this.clipToHorizontalLevelBounds();
-                this.checkFallingDead();
             }
         }
     }

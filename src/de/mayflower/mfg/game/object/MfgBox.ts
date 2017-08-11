@@ -1,4 +1,5 @@
 
+    import * as Matter from 'matter-js';
     import * as mfg    from '../../mfg';
 
     /*******************************************************************************************************************
@@ -23,6 +24,8 @@
             super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0 );
 
             this.isBox = true;
+
+            Matter.Body.setMass( this.body, 10.0 );
         }
 
         /***************************************************************************************************************
