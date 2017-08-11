@@ -41,6 +41,8 @@
         public      static      CAMERA_RATIO_Y                              :number                     = 0.5;
         /** The camera moving speed from 0.0 to 1.0. */
         public      static      CAMERA_MOVING_SPEED                         :number                     = 0.075;
+        /** The minimum camera moving speed in px per move. */
+        public      static      CAMERA_MOVING_MINIMUM                       :number                     = 2.0;
 
         /** The opacity for the debug colors. */
         public      static      COLOR_DEBUG_OPACITY                         :number                     = 1.0;

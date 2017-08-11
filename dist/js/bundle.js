@@ -10453,6 +10453,8 @@ var MfgSettings = (function () {
     MfgSettings.CAMERA_RATIO_Y = 0.5;
     /** The camera moving speed from 0.0 to 1.0. */
     MfgSettings.CAMERA_MOVING_SPEED = 0.075;
+    /** The minimum camera moving speed in px per move. */
+    MfgSettings.CAMERA_MOVING_MINIMUM = 2.0;
     /** The opacity for the debug colors. */
     MfgSettings.COLOR_DEBUG_OPACITY = 1.0;
     /** The debug color for the player block. */
@@ -10627,19 +10629,19 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO HIGH   Checkout material parameters for different game objects!
-*   TODO HIGH   Create lib/factory for assigning different masses and behaviours to bodies.
+*   TODO INIT   Create animated platforms.
+*
+*   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies
 *   TODO HIGH   Create levels and sublevels.
 *   TODO HIGH   Create different enemy move patterns.
-*   TODO INIT   Create animated platforms.
+*   TODO HIGH   Parallax bg.
 *   TODO LOW    Add doors / level portals.
 *   TODO LOW    Create abstract level system.
-*   TODO WEAK   Add main menu and menu keys ..
-*   TODO WEAK   Implement nice changing gravity effects.
+*   TODO WEAK   Add menu keys for main menu and level map ..
 *   TODO WEAK   Add sprites.
 *   TODO WEAK   Add images.
 *   TODO WEAK   Try discreet graphic style.
-*   TODO WEAK   Parallax bg.
+*   TODO WEAK   Implement nice changing gravity effects.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -11611,7 +11613,7 @@ var MfgGame = (function () {
     *   Inits the camera.
     ***************************************************************************************************************/
     MfgGame.prototype.initCamera = function () {
-        this.camera = new mfg.MfgCamera(mfg.MfgSettings.CAMERA_RATIO_X, mfg.MfgSettings.CAMERA_RATIO_Y, mfg.MfgSettings.CAMERA_MOVING_SPEED);
+        this.camera = new mfg.MfgCamera(mfg.MfgSettings.CAMERA_RATIO_X, mfg.MfgSettings.CAMERA_RATIO_Y, mfg.MfgSettings.CAMERA_MOVING_SPEED, mfg.MfgSettings.CAMERA_MOVING_MINIMUM);
     };
     /***************************************************************************************************************
     *   Inits the 2D engine.
@@ -11733,6 +11735,7 @@ var MfgLevel = (function () {
                 mfg.MfgGameObjectFactory.createObstacle(80, 700, 400, 15, -15.0),
                 mfg.MfgGameObjectFactory.createObstacle(380, 500, 400, 15, -15.0),
                 mfg.MfgGameObjectFactory.createObstacle(1320, 700, 400, 15, -15.0),
+                mfg.MfgGameObjectFactory.createObstacle(2000, 300, 400, 15, -15.0),
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(370, 100, 80, 80),
                 mfg.MfgGameObjectFactory.createSphere(320, 0, 100),
