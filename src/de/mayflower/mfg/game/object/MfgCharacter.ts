@@ -10,27 +10,42 @@
     *******************************************************************************************************************/
     export abstract class MfgCharacter extends mfg.MfgGameObject
     {
+        /** The looking direction for this character. */
+        public          lookingDirection        :mfg.MfgCharacterLookingDirection   = null;
         /** The bottom line that checks collisions with the body. */
-        protected       bottomSensor            :Matter.Body                    = null;
+        protected       bottomSensor            :Matter.Body                        = null;
         /** The current jump force. */
-        protected       jumpPower               :number                         = 0.0;
+        protected       jumpPower               :number                             = 0.0;
         /** Flags if this character is dead. */
-        protected       dead                    :boolean                        = false;
+        protected       dead                    :boolean                            = false;
 
         /***************************************************************************************************************
         *   Creates a new character.
         *
-        *   @param shape      The shape for this object.
-        *   @param x          Startup position X.
-        *   @param y          Startup position Y.
-        *   @param width      The new width.
-        *   @param height     The new height.
-        *   @param debugColor The color for the debug object.
-        *   @param image      The image for this game object.
+        *   @param shape            The shape for this object.
+        *   @param x                Startup position X.
+        *   @param y                Startup position Y.
+        *   @param width            The new width.
+        *   @param height           The new height.
+        *   @param debugColor       The color for the debug object.
+        *   @param image            The image for this game object.
+        *   @param lookingDirection The initial looking direction.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, debugColor:string, image:string )
+        public constructor
+        (
+            shape:mfg.MfgGameObjectShape,
+            x:number,
+            y:number,
+            width:number,
+            height:number,
+            debugColor:string,
+            image:string,
+            lookingDirection:mfg.MfgCharacterLookingDirection
+        )
         {
             super( shape, x, y, width, height, debugColor, false, false, image, 0.0 );
+
+            this.lookingDirection = lookingDirection;
 
             this.bottomSensor = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),

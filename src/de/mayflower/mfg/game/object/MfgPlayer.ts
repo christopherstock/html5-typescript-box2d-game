@@ -21,7 +21,17 @@
         ***************************************************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
         {
-            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null );
+            super
+            (
+                shape,
+                x,
+                y,
+                width,
+                height,
+                mfg.MfgSettings.COLOR_DEBUG_PLAYER,
+                null,
+                mfg.MfgCharacterLookingDirection.ERight
+            );
         }
 
         /***************************************************************************************************************
@@ -32,16 +42,20 @@
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_LEFT ) )
             {
                 Matter.Body.translate( this.body, { x: -mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+
+                this.lookingDirection = mfg.MfgCharacterLookingDirection.ELeft;
             }
 
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_RIGHT ) )
             {
                 Matter.Body.translate( this.body, { x: mfg.MfgSettings.PLAYER_SPEED_MOVE, y: 0 });
+
+                this.lookingDirection = mfg.MfgCharacterLookingDirection.ERight;
             }
 
             if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_UP ) )
             {
-                mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_UP )
+                mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_UP );
 
                 if ( this.checkBottomCollision() )
                 {

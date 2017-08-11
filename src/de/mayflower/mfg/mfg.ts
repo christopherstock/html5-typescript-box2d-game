@@ -4,6 +4,7 @@
     export * from './base/MfgInit';
     export * from './base/MfgVersion';
     export * from './base/Mfg';
+    export * from './game/object/MfgCharacterLookingDirection';
     export * from './game/object/MfgGameObjectShape';
     export * from './game/object/MfgGameObject';
     export * from './game/object/MfgGameObjectFactory';

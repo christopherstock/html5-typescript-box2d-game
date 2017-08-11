@@ -1,5 +1,6 @@
 
     import * as Matter from 'matter-js';
+    import * as mfg    from '../mfg';
 
     /*******************************************************************************************************************
     *   Manages the camera that calculates the scrolling amounts.
@@ -9,6 +10,11 @@
     *******************************************************************************************************************/
     export class MfgCamera
     {
+        /** Current camera target X. */
+        private     targetX                     :number                 = 0.0;
+        /** Current camera target Y. */
+        private     targetY                     :number                 = 0.0;
+
         /** Current camera offset X. */
         private     offsetX                     :number                 = 0.0;
         /** Current camera offset Y. */
@@ -35,13 +41,14 @@
         *   Updates the singleton instance of the camera by reassigning
         *   it's horizontal and vertical offset.
         *
-        *   @param levelWidth   The width of the level.
-        *   @param levelHeight  The height of the level.
-        *   @param canvasWidth  The width of the canvas.
-        *   @param canvasHeight The height of the canvas.
-        *   @param subjectX     The subject coordinate X to center the camera.
-        *   @param subjectY     The subject coordinate Y to center the camera.
-        *   @param renderer     The MatterJS renderer.
+        *   @param levelWidth       The width of the level.
+        *   @param levelHeight      The height of the level.
+        *   @param canvasWidth      The width of the canvas.
+        *   @param canvasHeight     The height of the canvas.
+        *   @param subjectX         The subject coordinate X to center the camera.
+        *   @param subjectY         The subject coordinate Y to center the camera.
+        *   @param lookingDirection The current direction the player looks at.
+        *   @param renderer         The MatterJS renderer.
         ***************************************************************************************************************/
         public update
         (
@@ -51,13 +58,30 @@
             canvasHeight:number,
             subjectX:number,
             subjectY:number,
+            lookingDirection:mfg.MfgCharacterLookingDirection,
             renderer:Matter.Render
         )
         {
+            let cameraCenterX:number = 0.0;
+            switch ( +lookingDirection )
+            {
+                case mfg.MfgCharacterLookingDirection.ELeft:
+                {
+                    cameraCenterX = ( canvasWidth  * ( 1.0 - this.ratioX ) );
+                    break;
+                }
+
+                case mfg.MfgCharacterLookingDirection.ERight:
+                {
+                    cameraCenterX = ( canvasWidth  * this.ratioX );
+                    break;
+                }
+            }
+            let cameraCenterY:number = ( canvasHeight * this.ratioY );
 
             //calculate scroll-offsets so camera is centered to subject
-            this.offsetX = subjectX - ( canvasWidth  * this.ratioX );
-            this.offsetY = subjectY - ( canvasHeight * this.ratioY );
+            this.offsetX = subjectX - cameraCenterX;
+            this.offsetY = subjectY - cameraCenterY;
 
             //clip camera-x to level bounds
             if ( this.offsetX < 0                          ) this.offsetX = 0;

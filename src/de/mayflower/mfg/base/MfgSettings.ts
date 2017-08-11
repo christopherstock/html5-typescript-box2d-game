@@ -36,7 +36,7 @@
         public      static      DEFAULT_GRAVITY_Y                           :number                     = 1.0;
 
         /** The camera ration for the horizontal axis. */
-        public      static      CAMERA_RATIO_X                              :number                     = 0.5;
+        public      static      CAMERA_RATIO_X                              :number                     = 0.25;
         /** The camera ration for the vertical axis. */
         public      static      CAMERA_RATIO_Y                              :number                     = 0.5;
 
