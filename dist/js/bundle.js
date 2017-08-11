@@ -10451,6 +10451,8 @@ var MfgSettings = (function () {
     MfgSettings.CAMERA_RATIO_X = 0.25;
     /** The camera ration for the vertical axis. */
     MfgSettings.CAMERA_RATIO_Y = 0.5;
+    /** The camera moving speed from 0.0 to 1.0. */
+    MfgSettings.CAMERA_MOVING_SPEED = 0.1;
     /** The opacity for the debug colors. */
     MfgSettings.COLOR_DEBUG_OPACITY = 1.0;
     /** The debug color for the player block. */
@@ -10624,8 +10626,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
-*
-*   TODO INIT   Buffer camera according to looking direction.
 *
 *   TODO HIGH   Checkout material parameters for different game objects!
 *   TODO HIGH   Create levels and sublevels.
@@ -11568,7 +11568,7 @@ var MfgGame = (function () {
     *   Inits the camera.
     ***************************************************************************************************************/
     MfgGame.prototype.initCamera = function () {
-        this.camera = new mfg.MfgCamera(mfg.MfgSettings.CAMERA_RATIO_X, mfg.MfgSettings.CAMERA_RATIO_Y);
+        this.camera = new mfg.MfgCamera(mfg.MfgSettings.CAMERA_RATIO_X, mfg.MfgSettings.CAMERA_RATIO_Y, mfg.MfgSettings.CAMERA_MOVING_SPEED);
     };
     /***************************************************************************************************************
     *   Inits the 2D engine.
@@ -11861,10 +11861,11 @@ var MfgCamera = (function () {
     /***************************************************************************************************************
     *   Constructs a new camera.
     *
-    *   @param ratioX Camera ratio X for horizontal centering of the player.
-    *   @param ratioY Camera ratio Y for vertical centering   of the player.
+    *   @param ratioX      Camera ratio X for horizontal centering of the player.
+    *   @param ratioY      Camera ratio Y for vertical centering   of the player.
+    *   @param movingSpeed The moving speed for the camera.
     ***************************************************************************************************************/
-    function MfgCamera(ratioX, ratioY) {
+    function MfgCamera(ratioX, ratioY, movingSpeed) {
         /** Current camera target X. */
         this.targetX = 0.0;
         /** Current camera target Y. */
@@ -11877,8 +11878,11 @@ var MfgCamera = (function () {
         this.ratioX = 0.0;
         /** Camera centering ratio X. */
         this.ratioY = 0.0;
+        /** Camera moving speed. */
+        this.movingSpeed = 0.0;
         this.ratioX = ratioX;
         this.ratioY = ratioY;
+        this.movingSpeed = movingSpeed;
     }
     /***************************************************************************************************************
     *   Updates the singleton instance of the camera by reassigning
@@ -11894,33 +11898,45 @@ var MfgCamera = (function () {
     *   @param renderer         The MatterJS renderer.
     ***************************************************************************************************************/
     MfgCamera.prototype.update = function (levelWidth, levelHeight, canvasWidth, canvasHeight, subjectX, subjectY, lookingDirection, renderer) {
-        var cameraCenterX = 0.0;
+        // calculate scroll-offsets so camera is centered to subject
         switch (+lookingDirection) {
             case mfg.MfgCharacterLookingDirection.ELeft:
                 {
-                    cameraCenterX = (canvasWidth * (1.0 - this.ratioX));
+                    this.targetX = subjectX - (canvasWidth * (1.0 - this.ratioX));
                     break;
                 }
             case mfg.MfgCharacterLookingDirection.ERight:
                 {
-                    cameraCenterX = (canvasWidth * this.ratioX);
+                    this.targetX = subjectX - (canvasWidth * this.ratioX);
                     break;
                 }
         }
-        var cameraCenterY = (canvasHeight * this.ratioY);
-        //calculate scroll-offsets so camera is centered to subject
-        this.offsetX = subjectX - cameraCenterX;
-        this.offsetY = subjectY - cameraCenterY;
-        //clip camera-x to level bounds
-        if (this.offsetX < 0)
-            this.offsetX = 0;
-        if (this.offsetX > levelWidth - canvasWidth)
-            this.offsetX = levelWidth - canvasWidth;
-        //clip camera-y to level bounds
-        if (this.offsetY < 0)
-            this.offsetY = 0;
-        if (this.offsetY > levelHeight - canvasHeight)
-            this.offsetY = levelHeight - canvasHeight;
+        this.targetY = subjectY - (canvasHeight * this.ratioY);
+        // clip camera target x to level bounds
+        if (this.targetX < 0)
+            this.targetX = 0;
+        if (this.targetX > levelWidth - canvasWidth)
+            this.targetX = levelWidth - canvasWidth;
+        // clip camera target y to level bounds
+        if (this.targetY < 0)
+            this.targetY = 0;
+        if (this.targetY > levelHeight - canvasHeight)
+            this.targetY = levelHeight - canvasHeight;
+        // move actual camera offsets to camera target
+        var cameraMoveX = 0.0;
+        if (this.offsetX < this.targetX) {
+            cameraMoveX = (this.targetX - this.offsetX) * this.movingSpeed;
+            this.offsetX += cameraMoveX;
+            if (this.offsetX > this.targetX)
+                this.offsetX = this.targetX;
+        }
+        else if (this.offsetX > this.targetX) {
+            cameraMoveX = (this.offsetX - this.targetX) * this.movingSpeed;
+            this.offsetX -= cameraMoveX;
+            if (this.offsetX < this.targetX)
+                this.offsetX = this.targetX;
+        }
+        this.offsetY = this.targetY;
         // assign current camera offset to renderer
         renderer.bounds = Matter.Bounds.create([
             {

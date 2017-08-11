@@ -53,7 +53,8 @@
         {
             this.camera = new mfg.MfgCamera(
                 mfg.MfgSettings.CAMERA_RATIO_X,
-                mfg.MfgSettings.CAMERA_RATIO_Y
+                mfg.MfgSettings.CAMERA_RATIO_Y,
+                mfg.MfgSettings.CAMERA_MOVING_SPEED
             );
         }
 

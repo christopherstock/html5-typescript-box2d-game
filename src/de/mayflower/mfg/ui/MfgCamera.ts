@@ -25,16 +25,22 @@
         /** Camera centering ratio X. */
         private     ratioY                      :number                 = 0.0;
 
+        /** Camera moving speed. */
+        private     movingSpeed                 :number                 = 0.0;
+
         /***************************************************************************************************************
         *   Constructs a new camera.
         *
-        *   @param ratioX Camera ratio X for horizontal centering of the player.
-        *   @param ratioY Camera ratio Y for vertical centering   of the player.
+        *   @param ratioX      Camera ratio X for horizontal centering of the player.
+        *   @param ratioY      Camera ratio Y for vertical centering   of the player.
+        *   @param movingSpeed The moving speed for the camera.
         ***************************************************************************************************************/
-        public constructor( ratioX:number, ratioY:number )
+        public constructor( ratioX:number, ratioY:number, movingSpeed:number )
         {
-            this.ratioX = ratioX;
-            this.ratioY = ratioY;
+            this.ratioX      = ratioX;
+            this.ratioY      = ratioY;
+
+            this.movingSpeed = movingSpeed;
         }
 
         /***************************************************************************************************************
@@ -62,34 +68,46 @@
             renderer:Matter.Render
         )
         {
-            let cameraCenterX:number = 0.0;
+            // calculate scroll-offsets so camera is centered to subject
             switch ( +lookingDirection )
             {
                 case mfg.MfgCharacterLookingDirection.ELeft:
                 {
-                    cameraCenterX = ( canvasWidth  * ( 1.0 - this.ratioX ) );
+                    this.targetX = subjectX - ( canvasWidth  * ( 1.0 - this.ratioX ) );
                     break;
                 }
 
                 case mfg.MfgCharacterLookingDirection.ERight:
                 {
-                    cameraCenterX = ( canvasWidth  * this.ratioX );
+                    this.targetX = subjectX - ( canvasWidth  * this.ratioX );
                     break;
                 }
             }
-            let cameraCenterY:number = ( canvasHeight * this.ratioY );
+            this.targetY = subjectY - ( canvasHeight * this.ratioY );
 
-            //calculate scroll-offsets so camera is centered to subject
-            this.offsetX = subjectX - cameraCenterX;
-            this.offsetY = subjectY - cameraCenterY;
+            // clip camera target x to level bounds
+            if ( this.targetX < 0                          ) this.targetX = 0;
+            if ( this.targetX > levelWidth - canvasWidth   ) this.targetX = levelWidth - canvasWidth;
 
-            //clip camera-x to level bounds
-            if ( this.offsetX < 0                          ) this.offsetX = 0;
-            if ( this.offsetX > levelWidth - canvasWidth   ) this.offsetX = levelWidth - canvasWidth;
+            // clip camera target y to level bounds
+            if ( this.targetY < 0                          ) this.targetY = 0;
+            if ( this.targetY > levelHeight - canvasHeight ) this.targetY = levelHeight - canvasHeight;
 
-            //clip camera-y to level bounds
-            if ( this.offsetY < 0                          ) this.offsetY = 0;
-            if ( this.offsetY > levelHeight - canvasHeight ) this.offsetY = levelHeight - canvasHeight;
+            // move actual camera offsets to camera target
+            let cameraMoveX:number = 0.0;
+            if ( this.offsetX < this.targetX )
+            {
+                cameraMoveX = ( this.targetX - this.offsetX ) * this.movingSpeed;
+                this.offsetX += cameraMoveX;
+                if ( this.offsetX > this.targetX ) this.offsetX = this.targetX;
+            }
+            else if ( this.offsetX > this.targetX )
+            {
+                cameraMoveX = ( this.offsetX - this.targetX ) * this.movingSpeed;
+                this.offsetX -= cameraMoveX;
+                if ( this.offsetX < this.targetX ) this.offsetX = this.targetX;
+            }
+            this.offsetY = this.targetY;
 
             // assign current camera offset to renderer
             renderer.bounds = Matter.Bounds.create(
