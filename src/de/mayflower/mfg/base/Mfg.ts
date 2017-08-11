@@ -8,7 +8,6 @@
     *   TODO HIGH   Create lib/factory for assigning different masses and behaviours to bodies.
     *   TODO HIGH   Create levels and sublevels.
     *   TODO HIGH   Create different enemy move patterns.
-    *   TODO INIT   Improve switch problem for enums (valueOf?)?
     *   TODO INIT   Create animated platforms.
     *   TODO LOW    Add doors / level portals.
     *   TODO LOW    Create abstract level system.

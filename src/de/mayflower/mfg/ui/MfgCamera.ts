@@ -75,7 +75,7 @@
         )
         {
             // calculate scroll-offsets so camera is centered to subject
-            switch ( lookingDirection.valueOf() )
+            switch ( lookingDirection )
             {
                 case mfg.MfgCharacterLookingDirection.ELeft:
                 {

@@ -10631,7 +10631,6 @@ var mfg = __webpack_require__(0);
 *   TODO HIGH   Create lib/factory for assigning different masses and behaviours to bodies.
 *   TODO HIGH   Create levels and sublevels.
 *   TODO HIGH   Create different enemy move patterns.
-*   TODO INIT   Improve switch problem for enums (valueOf?)?
 *   TODO INIT   Create animated platforms.
 *   TODO LOW    Add doors / level portals.
 *   TODO LOW    Create abstract level system.
@@ -10755,7 +10754,7 @@ var MfgGameObject = (function () {
         this.isBox = false;
         this.isSensor = isSensor;
         this.isStatic = isStatic;
-        switch (shape.valueOf()) {
+        switch (shape) {
             case mfg.MfgGameObjectShape.ERectangle:
                 {
                     this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, {
@@ -11950,7 +11949,7 @@ var MfgCamera = (function () {
     ***************************************************************************************************************/
     MfgCamera.prototype.update = function (levelWidth, levelHeight, canvasWidth, canvasHeight, subjectX, subjectY, lookingDirection, ascendY, renderer) {
         // calculate scroll-offsets so camera is centered to subject
-        switch (lookingDirection.valueOf()) {
+        switch (lookingDirection) {
             case mfg.MfgCharacterLookingDirection.ELeft:
                 {
                     this.targetX = subjectX - (canvasWidth * (1.0 - this.ratioX));
