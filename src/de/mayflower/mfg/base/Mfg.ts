@@ -4,9 +4,6 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO LOW    CameraY shall only change if player collides with the floor!!
-    *   TODO HIGH   Vertical camera movement buffering.
-    *
     *   TODO HIGH   Checkout material parameters for different game objects!
     *   TODO HIGH   Create lib/factory for assigning different masses and behaviours to bodies.
     *   TODO HIGH   Create levels and sublevels.

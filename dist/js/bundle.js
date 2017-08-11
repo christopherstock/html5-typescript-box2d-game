@@ -10452,7 +10452,7 @@ var MfgSettings = (function () {
     /** The camera ration for the vertical axis. */
     MfgSettings.CAMERA_RATIO_Y = 0.5;
     /** The camera moving speed from 0.0 to 1.0. */
-    MfgSettings.CAMERA_MOVING_SPEED = 0.1;
+    MfgSettings.CAMERA_MOVING_SPEED = 0.075;
     /** The opacity for the debug colors. */
     MfgSettings.COLOR_DEBUG_OPACITY = 1.0;
     /** The debug color for the player block. */
@@ -10626,9 +10626,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
-*
-*   TODO LOW    CameraY shall only change if player collides with the floor!!
-*   TODO HIGH   Vertical camera movement buffering.
 *
 *   TODO HIGH   Checkout material parameters for different game objects!
 *   TODO HIGH   Create lib/factory for assigning different masses and behaviours to bodies.
@@ -11910,11 +11907,12 @@ var MfgCamera = (function () {
     /***************************************************************************************************************
     *   Constructs a new camera.
     *
-    *   @param ratioX      Camera ratio X for horizontal centering of the player.
-    *   @param ratioY      Camera ratio Y for vertical centering   of the player.
-    *   @param movingSpeed The moving speed for the camera.
+    *   @param ratioX            Camera ratio X for horizontal centering of the player.
+    *   @param ratioY            Camera ratio Y for vertical centering   of the player.
+    *   @param movingSpeed       The moving speed for the camera.
+    *   @param minimumCameraMove The minimum camera movement step in px.
     ***************************************************************************************************************/
-    function MfgCamera(ratioX, ratioY, movingSpeed) {
+    function MfgCamera(ratioX, ratioY, movingSpeed, minimumCameraMove) {
         /** Current camera target X. */
         this.targetX = 0.0;
         /** Current camera target Y. */
@@ -11929,9 +11927,12 @@ var MfgCamera = (function () {
         this.ratioY = 0.0;
         /** Camera moving speed. */
         this.movingSpeed = 0.0;
+        /** Minimum camera moving speed in px. */
+        this.minimumCameraMove = 0.0;
         this.ratioX = ratioX;
         this.ratioY = ratioY;
         this.movingSpeed = movingSpeed;
+        this.minimumCameraMove = minimumCameraMove;
     }
     /***************************************************************************************************************
     *   Updates the singleton instance of the camera by reassigning
@@ -11976,18 +11977,40 @@ var MfgCamera = (function () {
         var cameraMoveX = 0.0;
         if (this.offsetX < this.targetX) {
             cameraMoveX = (this.targetX - this.offsetX) * this.movingSpeed;
+            if (cameraMoveX < this.minimumCameraMove)
+                cameraMoveX = this.minimumCameraMove;
             this.offsetX += cameraMoveX;
             if (this.offsetX > this.targetX)
                 this.offsetX = this.targetX;
         }
         else if (this.offsetX > this.targetX) {
             cameraMoveX = (this.offsetX - this.targetX) * this.movingSpeed;
+            if (cameraMoveX < this.minimumCameraMove)
+                cameraMoveX = this.minimumCameraMove;
             this.offsetX -= cameraMoveX;
             if (this.offsetX < this.targetX)
                 this.offsetX = this.targetX;
         }
         if (ascendY || this.targetY > this.offsetY) {
-            this.offsetY = this.targetY;
+            // this.offsetY = this.targetY;
+            // move actual camera offsets to camera target
+            var cameraMoveY = 0.0;
+            if (this.offsetY < this.targetY) {
+                cameraMoveY = (this.targetY - this.offsetY) * this.movingSpeed;
+                if (cameraMoveY < this.minimumCameraMove)
+                    cameraMoveY = this.minimumCameraMove;
+                this.offsetY += cameraMoveY;
+                if (this.offsetY > this.targetY)
+                    this.offsetY = this.targetY;
+            }
+            else if (this.offsetY > this.targetY) {
+                cameraMoveY = (this.offsetY - this.targetY) * this.movingSpeed;
+                if (cameraMoveY < this.minimumCameraMove)
+                    cameraMoveY = this.minimumCameraMove;
+                this.offsetY -= cameraMoveY;
+                if (this.offsetY < this.targetY)
+                    this.offsetY = this.targetY;
+            }
         }
         // assign current camera offset to renderer
         renderer.bounds = Matter.Bounds.create([

@@ -40,7 +40,7 @@
         /** The camera ration for the vertical axis. */
         public      static      CAMERA_RATIO_Y                              :number                     = 0.5;
         /** The camera moving speed from 0.0 to 1.0. */
-        public      static      CAMERA_MOVING_SPEED                         :number                     = 0.1;
+        public      static      CAMERA_MOVING_SPEED                         :number                     = 0.075;
 
         /** The opacity for the debug colors. */
         public      static      COLOR_DEBUG_OPACITY                         :number                     = 1.0;

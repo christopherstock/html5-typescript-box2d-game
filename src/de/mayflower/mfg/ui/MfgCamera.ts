@@ -27,20 +27,24 @@
 
         /** Camera moving speed. */
         private     movingSpeed                 :number                 = 0.0;
+        /** Minimum camera moving speed in px. */
+        private     minimumCameraMove           :number                 = 0.0;
 
         /***************************************************************************************************************
         *   Constructs a new camera.
         *
-        *   @param ratioX      Camera ratio X for horizontal centering of the player.
-        *   @param ratioY      Camera ratio Y for vertical centering   of the player.
-        *   @param movingSpeed The moving speed for the camera.
+        *   @param ratioX            Camera ratio X for horizontal centering of the player.
+        *   @param ratioY            Camera ratio Y for vertical centering   of the player.
+        *   @param movingSpeed       The moving speed for the camera.
+        *   @param minimumCameraMove The minimum camera movement step in px.
         ***************************************************************************************************************/
-        public constructor( ratioX:number, ratioY:number, movingSpeed:number )
+        public constructor( ratioX:number, ratioY:number, movingSpeed:number, minimumCameraMove:number )
         {
-            this.ratioX      = ratioX;
-            this.ratioY      = ratioY;
+            this.ratioX            = ratioX;
+            this.ratioY            = ratioY;
 
-            this.movingSpeed = movingSpeed;
+            this.movingSpeed       = movingSpeed;
+            this.minimumCameraMove = minimumCameraMove;
         }
 
         /***************************************************************************************************************
@@ -100,18 +104,39 @@
             if ( this.offsetX < this.targetX )
             {
                 cameraMoveX = ( this.targetX - this.offsetX ) * this.movingSpeed;
+                if ( cameraMoveX < this.minimumCameraMove ) cameraMoveX = this.minimumCameraMove;
                 this.offsetX += cameraMoveX;
                 if ( this.offsetX > this.targetX ) this.offsetX = this.targetX;
             }
             else if ( this.offsetX > this.targetX )
             {
                 cameraMoveX = ( this.offsetX - this.targetX ) * this.movingSpeed;
+                if ( cameraMoveX < this.minimumCameraMove ) cameraMoveX = this.minimumCameraMove;
                 this.offsetX -= cameraMoveX;
                 if ( this.offsetX < this.targetX ) this.offsetX = this.targetX;
             }
 
             if ( ascendY || this.targetY > this.offsetY ) {
-                this.offsetY = this.targetY;
+
+
+                // this.offsetY = this.targetY;
+
+                // move actual camera offsets to camera target
+                let cameraMoveY:number = 0.0;
+                if ( this.offsetY < this.targetY )
+                {
+                    cameraMoveY = ( this.targetY - this.offsetY ) * this.movingSpeed;
+                    if ( cameraMoveY < this.minimumCameraMove ) cameraMoveY = this.minimumCameraMove;
+                    this.offsetY += cameraMoveY;
+                    if ( this.offsetY > this.targetY ) this.offsetY = this.targetY;
+                }
+                else if ( this.offsetY > this.targetY )
+                {
+                    cameraMoveY = ( this.offsetY - this.targetY ) * this.movingSpeed;
+                    if ( cameraMoveY < this.minimumCameraMove ) cameraMoveY = this.minimumCameraMove;
+                    this.offsetY -= cameraMoveY;
+                    if ( this.offsetY < this.targetY ) this.offsetY = this.targetY;
+                }
             }
 
             // assign current camera offset to renderer
