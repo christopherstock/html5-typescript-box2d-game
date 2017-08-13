@@ -10,7 +10,7 @@
     export class MfgLevelDev extends mfg.MfgLevel
     {
         /** The width of this level. */
-        public      width                   :number                     = 3000.0;
+        public      width                   :number                     = 5000.0;
         /** The height of this level. */
         public      height                  :number                     = 1500.0;
 
@@ -20,7 +20,7 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 1500, 0 );
+            this.player = new mfg.MfgPlayer( 3000, 0 );
 
             // setup all game objects
             this.gameObjects =
@@ -34,7 +34,7 @@
 
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle( 0,    950, 1380, 25, 0.0 ),
-//                mfg.MfgGameObjectFactory.createObstacle( 1840, 950, 1380, 25, 0.0 ),
+                mfg.MfgGameObjectFactory.createObstacle( 2260, 950, 2000, 25, 0.0 ),
                 mfg.MfgGameObjectFactory.createObstacle( 320,  870, 80,   80, 0.0 ),
 
                 mfg.MfgGameObjectFactory.createObstacle( 80,    700, 400, 15, -15.0 ),

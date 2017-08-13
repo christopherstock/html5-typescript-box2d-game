@@ -4,7 +4,6 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Improve SigSaw inertia behaviour.
     *   TODO ASAP   Create animated platforms.
     *   TODO ASAP   Check sprite or image clipping and scaling to player size?
     *   TODO HIGH   Replace own jump implementation.

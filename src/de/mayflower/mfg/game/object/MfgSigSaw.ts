@@ -53,44 +53,41 @@
         /***************************************************************************************************************
         *   Renders this sigsaw.
         ***************************************************************************************************************/
-        public render() {
+        public render()
+        {
+            this.clipRotation();
 
-            const minAngle = mfg.MfgMath.angleToRad( -15.0 );
-            const maxAngle = mfg.MfgMath.angleToRad( 15.0  );
+            const maxRotationSpeed = 0.005;
+
+            if ( this.body.angularVelocity < -maxRotationSpeed )
+            {
+                Matter.Body.setAngularVelocity( this.body, -maxRotationSpeed );
+            }
+            else if ( this.body.angularVelocity > maxRotationSpeed )
+            {
+                Matter.Body.setAngularVelocity( this.body, maxRotationSpeed );
+            }
+        }
+
+        /***************************************************************************************************************
+        *   Clips the rotation of the sigsaw.
+        ***************************************************************************************************************/
+        private clipRotation()
+        {
+            const clipAngle = 15.0;
+
+            const minAngle = mfg.MfgMath.angleToRad( -clipAngle );
+            const maxAngle = mfg.MfgMath.angleToRad( clipAngle  );
 
             if ( this.body.angle < minAngle )
             {
                 Matter.Body.setAngle(           this.body, minAngle );
                 Matter.Body.setAngularVelocity( this.body, 0.0       );
             }
-
-            if ( this.body.angle > maxAngle )
+            else if ( this.body.angle > maxAngle )
             {
                 Matter.Body.setAngle(           this.body, maxAngle );
                 Matter.Body.setAngularVelocity( this.body, 0.0       );
             }
-
-
-
-
-//            Matter.Body.setDensity( this.body, 200.0 );
-
-            //            mfg.MfgDebug.bugfix.log( "angle sig saw: " + this.body.angle );
-/*
-            if ( this.body.angularSpeed > 0.00001 )
-            {
-                this.body.angularSpeed = 0.00001;
-            }
-*/
-            //mfg.MfgDebug.bugfix.log( " angle speed sig saw: " + this.body.angularSpeed );
-
-            //            mfg.MfgDebug.bugfix.log( "  angle velo: " + this.body.angularVelocity );
-
-//            this.body.angularSpeed = 0.000001;
-
-/*
-            Matter.Body.setAngle( this.body, 0.0 );
-            Matter.Body.setAngularVelocity( this.body, 0.0 );
-*/
         }
     }

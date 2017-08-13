@@ -10637,7 +10637,6 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Improve SigSaw inertia behaviour.
 *   TODO ASAP   Create animated platforms.
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
 *   TODO HIGH   Replace own jump implementation.
@@ -11643,31 +11642,30 @@ var MfgSigSaw = (function (_super) {
     *   Renders this sigsaw.
     ***************************************************************************************************************/
     MfgSigSaw.prototype.render = function () {
-        var minAngle = mfg.MfgMath.angleToRad(-15.0);
-        var maxAngle = mfg.MfgMath.angleToRad(15.0);
+        this.clipRotation();
+        var maxRotationSpeed = 0.005;
+        if (this.body.angularVelocity < -maxRotationSpeed) {
+            Matter.Body.setAngularVelocity(this.body, -maxRotationSpeed);
+        }
+        else if (this.body.angularVelocity > maxRotationSpeed) {
+            Matter.Body.setAngularVelocity(this.body, maxRotationSpeed);
+        }
+    };
+    /***************************************************************************************************************
+    *   Clips the rotation of the sigsaw.
+    ***************************************************************************************************************/
+    MfgSigSaw.prototype.clipRotation = function () {
+        var clipAngle = 15.0;
+        var minAngle = mfg.MfgMath.angleToRad(-clipAngle);
+        var maxAngle = mfg.MfgMath.angleToRad(clipAngle);
         if (this.body.angle < minAngle) {
             Matter.Body.setAngle(this.body, minAngle);
             Matter.Body.setAngularVelocity(this.body, 0.0);
         }
-        if (this.body.angle > maxAngle) {
+        else if (this.body.angle > maxAngle) {
             Matter.Body.setAngle(this.body, maxAngle);
             Matter.Body.setAngularVelocity(this.body, 0.0);
         }
-        //            Matter.Body.setDensity( this.body, 200.0 );
-        //            mfg.MfgDebug.bugfix.log( "angle sig saw: " + this.body.angle );
-        /*
-                    if ( this.body.angularSpeed > 0.00001 )
-                    {
-                        this.body.angularSpeed = 0.00001;
-                    }
-        */
-        //mfg.MfgDebug.bugfix.log( " angle speed sig saw: " + this.body.angularSpeed );
-        //            mfg.MfgDebug.bugfix.log( "  angle velo: " + this.body.angularVelocity );
-        //            this.body.angularSpeed = 0.000001;
-        /*
-                    Matter.Body.setAngle( this.body, 0.0 );
-                    Matter.Body.setAngularVelocity( this.body, 0.0 );
-        */
     };
     return MfgSigSaw;
 }(mfg.MfgGameObject));
@@ -11925,7 +11923,7 @@ var MfgLevelDev = (function (_super) {
     function MfgLevelDev() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         /** The width of this level. */
-        _this.width = 3000.0;
+        _this.width = 5000.0;
         /** The height of this level. */
         _this.height = 1500.0;
         return _this;
@@ -11935,7 +11933,7 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(1500, 0);
+        this.player = new mfg.MfgPlayer(3000, 0);
         // setup all game objects
         this.gameObjects =
             [
@@ -11946,7 +11944,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
-                //                mfg.MfgGameObjectFactory.createObstacle( 1840, 950, 1380, 25, 0.0 ),
+                mfg.MfgGameObjectFactory.createObstacle(2260, 950, 2000, 25, 0.0),
                 mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80, 0.0),
                 mfg.MfgGameObjectFactory.createObstacle(80, 700, 400, 15, -15.0),
                 mfg.MfgGameObjectFactory.createObstacle(380, 500, 400, 15, -15.0),
