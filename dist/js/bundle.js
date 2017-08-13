@@ -91,6 +91,7 @@ __export(__webpack_require__(19));
 __export(__webpack_require__(20));
 __export(__webpack_require__(21));
 __export(__webpack_require__(22));
+__export(__webpack_require__(31));
 __export(__webpack_require__(23));
 __export(__webpack_require__(24));
 __export(__webpack_require__(25));
@@ -10473,6 +10474,10 @@ var MfgSettings = (function () {
     MfgSettings.COLOR_DEBUG_SIGSAW = "#c46c9c";
     /** The debug color for a sigsaw joint. */
     MfgSettings.COLOR_DEBUG_SIGSAW_JOINT = "#ba3380";
+    /** The debug color for a bounce. */
+    MfgSettings.COLOR_DEBUG_BOUNCE = "#d815a9";
+    /** The debug color for a bounce joint. */
+    MfgSettings.COLOR_DEBUG_BOUNCE_JOINT = "#e629a2";
     /** The debug color for the item. */
     MfgSettings.COLOR_DEBUG_ITEM = "#fdff72";
     /** The debug color for a decoration. */
@@ -10948,6 +10953,19 @@ var MfgGameObjectFactory = (function () {
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSigsaw = function (x, y, width, height, image) {
         return new mfg.MfgSigSaw(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image);
+    };
+    /***************************************************************************************************************
+     *   Creates a bounce.
+     *
+     *   @param x      Anchor X.
+     *   @param y      Anchor Y.
+     *   @param width  Object width.
+     *   @param height Object height.
+     *   @param image  The decoration image.
+     *   @return       The created decoration.
+     ***************************************************************************************************************/
+    MfgGameObjectFactory.createBounce = function (x, y, width, height, image) {
+        return new mfg.MfgBounce(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image);
     };
     return MfgGameObjectFactory;
 }());
@@ -11604,7 +11622,7 @@ var MfgSigSaw = (function (_super) {
             bodyB: _this.body,
             pointA: { x: _this.body.position.x, y: _this.body.position.y },
             pointB: { x: 0, y: 0 },
-            stiffness: 0.01,
+            stiffness: 1.00,
             length: 0,
             render: {
                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_SIGSAW_JOINT,
@@ -11612,10 +11630,7 @@ var MfgSigSaw = (function (_super) {
                 visible: true,
             }
         });
-        /*
-                    Matter.Body.setMass(    this.body, 1000000.0 );
-                    Matter.Body.setInertia( this.body, 1000000.0 );
-        */
+        Matter.Body.setMass(_this.body, 25.0);
         Matter.Composite.add(mfg.MfgInit.game.engine.world, _this.constraint);
         return _this;
     }
@@ -11623,8 +11638,10 @@ var MfgSigSaw = (function (_super) {
     *   Renders this sigsaw.
     ***************************************************************************************************************/
     MfgSigSaw.prototype.render = function () {
-        Matter.Body.setAngle(this.body, 0.0);
-        Matter.Body.setAngularVelocity(this.body, 0.0);
+        /*
+                    Matter.Body.setAngle( this.body, 0.0 );
+                    Matter.Body.setAngularVelocity( this.body, 0.0 );
+        */
     };
     return MfgSigSaw;
 }(mfg.MfgGameObject));
@@ -11902,7 +11919,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
+                //                mfg.MfgGameObjectFactory.createObstacle( 1840, 950, 1380, 25, 0.0 ),
                 mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80, 0.0),
                 mfg.MfgGameObjectFactory.createObstacle(80, 700, 400, 15, -15.0),
                 mfg.MfgGameObjectFactory.createObstacle(380, 500, 400, 15, -15.0),
@@ -11914,6 +11931,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createBox(1000, 80, 80, 80),
                 // sigsaws
                 mfg.MfgGameObjectFactory.createSigsaw(1420, 950, 400, 25, null),
+                mfg.MfgGameObjectFactory.createBounce(1840, 950, 400, 25, null),
                 // items
                 mfg.MfgGameObjectFactory.createItem(1100, 850),
                 mfg.MfgGameObjectFactory.createItem(1150, 850),
@@ -12343,6 +12361,75 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   Represents a bounce.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgBounce = (function (_super) {
+    __extends(MfgBounce, _super);
+    /***************************************************************************************************************
+    *   Creates a new bounce.
+    *
+    *   @param shape  The shape for this object.
+    *   @param x      Startup position X.
+    *   @param y      Startup position Y.
+    *   @param width  The new width.
+    *   @param height The new height.
+    *   @param image  The image for this game object.
+    ***************************************************************************************************************/
+    function MfgBounce(shape, x, y, width, height, image) {
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, false, image, 0.0) || this;
+        /** The constraint that builds the turning point for the bounce. */
+        _this.constraint = null;
+        _this.constraint = Matter.Constraint.create({
+            bodyB: _this.body,
+            pointA: { x: _this.body.position.x, y: _this.body.position.y },
+            pointB: { x: 0, y: 0 },
+            stiffness: 0.01,
+            length: 0,
+            render: {
+                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BOUNCE_JOINT,
+                lineWidth: 1.0,
+                visible: true,
+            }
+        });
+        Matter.Body.setMass(_this.body, 25.0);
+        Matter.Composite.add(mfg.MfgInit.game.engine.world, _this.constraint);
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Renders this sigsaw.
+    ***************************************************************************************************************/
+    MfgBounce.prototype.render = function () {
+        Matter.Body.setAngle(this.body, 0.0);
+        Matter.Body.setAngularVelocity(this.body, 0.0);
+    };
+    return MfgBounce;
+}(mfg.MfgGameObject));
+exports.MfgBounce = MfgBounce;
 
 
 /***/ })

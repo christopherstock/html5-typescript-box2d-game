@@ -3,18 +3,18 @@
     import * as mfg    from '../../mfg';
 
     /*******************************************************************************************************************
-    *   Represents a sigsaw.
+    *   Represents a bounce.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
     *******************************************************************************************************************/
-    export class MfgSigSaw extends mfg.MfgGameObject
+    export class MfgBounce extends mfg.MfgGameObject
     {
-        /** The constraint that builds the turning point for the sigsaw. */
+        /** The constraint that builds the turning point for the bounce. */
         private                     constraint                      :Matter.Constraint                  = null;
 
         /***************************************************************************************************************
-        *   Creates a new sigsaw.
+        *   Creates a new bounce.
         *
         *   @param shape  The shape for this object.
         *   @param x      Startup position X.
@@ -25,17 +25,17 @@
         ***************************************************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, image:string )
         {
-            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image, 0.0 );
+            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, false, image, 0.0 );
 
             this.constraint = Matter.Constraint.create(
                 {
                     bodyB: this.body,
                     pointA: { x: this.body.position.x, y: this.body.position.y },
                     pointB: { x: 0, y: 0 },
-                    stiffness: 1.00,
+                    stiffness: 0.01,
                     length: 0,
                     render: {
-                        strokeStyle: mfg.MfgSettings.COLOR_DEBUG_SIGSAW_JOINT,
+                        strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BOUNCE_JOINT,
                         lineWidth: 1.0,
                         visible:   true,
                     }
@@ -55,9 +55,7 @@
         ***************************************************************************************************************/
         public render()
         {
-/*
-            Matter.Body.setAngle( this.body, 0.0 );
+            Matter.Body.setAngle(           this.body, 0.0 );
             Matter.Body.setAngularVelocity( this.body, 0.0 );
-*/
         }
     }

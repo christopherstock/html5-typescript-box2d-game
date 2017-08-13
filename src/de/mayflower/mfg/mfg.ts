@@ -17,6 +17,7 @@
     export * from './game/object/MfgDecoration';
     export * from './game/object/MfgObstacle';
     export * from './game/object/MfgSigSaw';
+    export * from './game/object/MfgBounce';
     export * from './game/MfgGame';
     export * from './game/level/MfgLevel';
     export * from './game/level/MfgLevelDev';

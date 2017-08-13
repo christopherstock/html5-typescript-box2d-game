@@ -60,6 +60,10 @@
         public      static      COLOR_DEBUG_SIGSAW                          :string                     = "#c46c9c";
         /** The debug color for a sigsaw joint. */
         public      static      COLOR_DEBUG_SIGSAW_JOINT                    :string                     = "#ba3380";
+        /** The debug color for a bounce. */
+        public      static      COLOR_DEBUG_BOUNCE                          :string                     = "#d815a9";
+        /** The debug color for a bounce joint. */
+        public      static      COLOR_DEBUG_BOUNCE_JOINT                    :string                     = "#e629a2";
         /** The debug color for the item. */
         public      static      COLOR_DEBUG_ITEM                            :string                     = "#fdff72";
         /** The debug color for a decoration. */

@@ -104,4 +104,19 @@
         {
             return new mfg.MfgSigSaw( mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image );
         }
+
+        /***************************************************************************************************************
+         *   Creates a bounce.
+         *
+         *   @param x      Anchor X.
+         *   @param y      Anchor Y.
+         *   @param width  Object width.
+         *   @param height Object height.
+         *   @param image  The decoration image.
+         *   @return       The created decoration.
+         ***************************************************************************************************************/
+        public static createBounce( x:number, y:number, width:number, height:number, image:string ):mfg.MfgBounce
+        {
+            return new mfg.MfgBounce( mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image );
+        }
     }
