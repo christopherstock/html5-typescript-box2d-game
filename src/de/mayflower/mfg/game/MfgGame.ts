@@ -67,11 +67,13 @@
         {
             this.engine = Matter.Engine.create();
 
-            let options:any = {
+            let options:any =
+            {
                 hasBounds:          true,
                 wireframes:         false,
                 showCollisions:     true,
                 showAngleIndicator: true,
+                showVelocity:       true,
             };
 
             this.renderer = Matter.Render.create(

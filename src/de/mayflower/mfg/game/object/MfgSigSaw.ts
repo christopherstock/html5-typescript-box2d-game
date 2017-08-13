@@ -32,7 +32,7 @@
                     bodyB: this.body,
                     pointA: { x: this.body.position.x, y: this.body.position.y },
                     pointB: { x: 0, y: 0 },
-                    stiffness: 1.00,
+                    stiffness: 1.0,
                     length: 0,
                     render: {
                         strokeStyle: mfg.MfgSettings.COLOR_DEBUG_SIGSAW_JOINT,
@@ -53,8 +53,41 @@
         /***************************************************************************************************************
         *   Renders this sigsaw.
         ***************************************************************************************************************/
-        public render()
-        {
+        public render() {
+
+            const minAngle = mfg.MfgMath.angleToRad( -15.0 );
+            const maxAngle = mfg.MfgMath.angleToRad( 15.0  );
+
+            if ( this.body.angle < minAngle )
+            {
+                Matter.Body.setAngle(           this.body, minAngle );
+                Matter.Body.setAngularVelocity( this.body, 0.0       );
+            }
+
+            if ( this.body.angle > maxAngle )
+            {
+                Matter.Body.setAngle(           this.body, maxAngle );
+                Matter.Body.setAngularVelocity( this.body, 0.0       );
+            }
+
+
+
+
+//            Matter.Body.setDensity( this.body, 200.0 );
+
+            //            mfg.MfgDebug.bugfix.log( "angle sig saw: " + this.body.angle );
+/*
+            if ( this.body.angularSpeed > 0.00001 )
+            {
+                this.body.angularSpeed = 0.00001;
+            }
+*/
+            //mfg.MfgDebug.bugfix.log( " angle speed sig saw: " + this.body.angularSpeed );
+
+            //            mfg.MfgDebug.bugfix.log( "  angle velo: " + this.body.angularVelocity );
+
+//            this.body.angularSpeed = 0.000001;
+
 /*
             Matter.Body.setAngle( this.body, 0.0 );
             Matter.Body.setAngularVelocity( this.body, 0.0 );

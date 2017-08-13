@@ -23,9 +23,6 @@
         /** Specifies if this object is static. */
         public          isStatic                :boolean                        = false;
 
-        /** TODO Fix usage of the instanceof operator .. :( */
-        public          isBox                   :boolean                        = false;
-
         /***************************************************************************************************************
         *   Creates a new game object.
         *
@@ -76,7 +73,15 @@
                             },
                             isSensor: isSensor,
                             isStatic: isStatic,
-                            angle: ( angle * Math.PI / 180.0 ),
+                            angle: mfg.MfgMath.angleToRad( angle ),
+                            chamfer:
+                            {
+                                radius: [ 5.0, 5.0, 5.0, 5.0 ]
+                            },
+                            // friction: 1.0,   // not slippery
+                            // friction: 0.5,   // medium slippery
+                            friction: 0.05,     // default
+                            // friction: 0.001, // slippery
                         }
                     );
 
@@ -104,7 +109,7 @@
                             },
                             isSensor: isSensor,
                             isStatic: isStatic,
-                            angle: ( angle * Math.PI / 180.0 ),
+                            angle: mfg.MfgMath.angleToRad( angle ),
                         }
                     );
 

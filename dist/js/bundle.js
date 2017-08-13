@@ -99,6 +99,7 @@ __export(__webpack_require__(26));
 __export(__webpack_require__(27));
 __export(__webpack_require__(28));
 __export(__webpack_require__(29));
+__export(__webpack_require__(32));
 __export(__webpack_require__(30));
 
 
@@ -10638,6 +10639,7 @@ var mfg = __webpack_require__(0);
 *
 *   TODO ASAP   Improve SigSaw inertia behaviour.
 *   TODO ASAP   Create animated platforms.
+*   TODO ASAP   Check sprite or image clipping and scaling to player size?
 *   TODO HIGH   Replace own jump implementation.
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies
@@ -10761,8 +10763,6 @@ var MfgGameObject = (function () {
         this.isSensor = false;
         /** Specifies if this object is static. */
         this.isStatic = false;
-        /** TODO Fix usage of the instanceof operator .. :( */
-        this.isBox = false;
         this.isSensor = isSensor;
         this.isStatic = isStatic;
         switch (shape) {
@@ -10777,7 +10777,13 @@ var MfgGameObject = (function () {
                         },
                         isSensor: isSensor,
                         isStatic: isStatic,
-                        angle: (angle * Math.PI / 180.0),
+                        angle: mfg.MfgMath.angleToRad(angle),
+                        chamfer: {
+                            radius: [5.0, 5.0, 5.0, 5.0]
+                        },
+                        // friction: 1.0,   // not slippery
+                        // friction: 0.5,   // medium slippery
+                        friction: 0.05,
                     });
                     this.width = width;
                     this.height = height;
@@ -10795,7 +10801,7 @@ var MfgGameObject = (function () {
                         },
                         isSensor: isSensor,
                         isStatic: isStatic,
-                        angle: (angle * Math.PI / 180.0),
+                        angle: mfg.MfgMath.angleToRad(angle),
                     });
                     this.width = diameter;
                     this.height = diameter;
@@ -11397,7 +11403,6 @@ var MfgBox = (function (_super) {
     ***************************************************************************************************************/
     function MfgBox(shape, x, y, width, height) {
         var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0) || this;
-        _this.isBox = true;
         Matter.Body.setMass(_this.body, 10.0);
         return _this;
     }
@@ -11622,7 +11627,7 @@ var MfgSigSaw = (function (_super) {
             bodyB: _this.body,
             pointA: { x: _this.body.position.x, y: _this.body.position.y },
             pointB: { x: 0, y: 0 },
-            stiffness: 1.00,
+            stiffness: 1.0,
             length: 0,
             render: {
                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_SIGSAW_JOINT,
@@ -11638,6 +11643,27 @@ var MfgSigSaw = (function (_super) {
     *   Renders this sigsaw.
     ***************************************************************************************************************/
     MfgSigSaw.prototype.render = function () {
+        var minAngle = mfg.MfgMath.angleToRad(-15.0);
+        var maxAngle = mfg.MfgMath.angleToRad(15.0);
+        if (this.body.angle < minAngle) {
+            Matter.Body.setAngle(this.body, minAngle);
+            Matter.Body.setAngularVelocity(this.body, 0.0);
+        }
+        if (this.body.angle > maxAngle) {
+            Matter.Body.setAngle(this.body, maxAngle);
+            Matter.Body.setAngularVelocity(this.body, 0.0);
+        }
+        //            Matter.Body.setDensity( this.body, 200.0 );
+        //            mfg.MfgDebug.bugfix.log( "angle sig saw: " + this.body.angle );
+        /*
+                    if ( this.body.angularSpeed > 0.00001 )
+                    {
+                        this.body.angularSpeed = 0.00001;
+                    }
+        */
+        //mfg.MfgDebug.bugfix.log( " angle speed sig saw: " + this.body.angularSpeed );
+        //            mfg.MfgDebug.bugfix.log( "  angle velo: " + this.body.angularVelocity );
+        //            this.body.angularSpeed = 0.000001;
         /*
                     Matter.Body.setAngle( this.body, 0.0 );
                     Matter.Body.setAngularVelocity( this.body, 0.0 );
@@ -11720,6 +11746,7 @@ var MfgGame = (function () {
             wireframes: false,
             showCollisions: true,
             showAngleIndicator: true,
+            showVelocity: true,
         };
         this.renderer = Matter.Render.create({
             element: document.body,
@@ -12430,6 +12457,36 @@ var MfgBounce = (function (_super) {
     return MfgBounce;
 }(mfg.MfgGameObject));
 exports.MfgBounce = MfgBounce;
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*******************************************************************************************************************
+*   Offers additional mathematical functionality.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgMath = (function () {
+    function MfgMath() {
+    }
+    /***************************************************************************************************************
+    *   Converts angles to radians.
+    *
+    *   @param  angle   The angle in degrees.
+    *   @return         The specified angle in radians.
+    ***************************************************************************************************************/
+    MfgMath.angleToRad = function (angle) {
+        return (angle * Math.PI / 180.0);
+    };
+    return MfgMath;
+}());
+exports.MfgMath = MfgMath;
 
 
 /***/ })

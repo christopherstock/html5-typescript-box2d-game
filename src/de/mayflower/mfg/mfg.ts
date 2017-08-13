@@ -25,4 +25,5 @@
     export * from './hid/MfgKeySystem';
     export * from './ui/MfgCamera';
     export * from './ui/MfgImages';
+    export * from './util/MfgMath';
     export * from './util/MfgString';
