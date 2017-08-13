@@ -123,7 +123,11 @@
 
             this.renderJumping();
             this.clipToHorizontalLevelBounds();
-            this.checkFallingDead();
+
+            if ( !this.dead )
+            {
+                this.checkFallingDead();
+            }
         }
 
         /***************************************************************************************************************

@@ -33,7 +33,7 @@
                     bodyB: this.body,
                     pointA: { x: this.body.position.x, y: this.body.position.y },
                     pointB: { x: 0, y: 0 },
-                    stiffness: 0.001,
+                    stiffness: 0.01,
                     length: 0,
                     render: {
                         strokeStyle: mfg.MfgSettings.COLOR_DEBUG_SIGSAW_JOINT,
@@ -57,5 +57,7 @@
         ***************************************************************************************************************/
         public render()
         {
+            Matter.Body.setAngle( this.body, 0.0 );
+            Matter.Body.setAngularVelocity( this.body, 0.0 );
         }
     }

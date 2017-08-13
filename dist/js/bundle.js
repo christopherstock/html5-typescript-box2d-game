@@ -11062,7 +11062,9 @@ var MfgCharacter = (function (_super) {
         Matter.Body.setAngle(this.body, 0.0);
         this.renderJumping();
         this.clipToHorizontalLevelBounds();
-        this.checkFallingDead();
+        if (!this.dead) {
+            this.checkFallingDead();
+        }
     };
     /***************************************************************************************************************
     *   Check if the player falls to death by falling out of the level.
@@ -11602,7 +11604,7 @@ var MfgSigSaw = (function (_super) {
             bodyB: _this.body,
             pointA: { x: _this.body.position.x, y: _this.body.position.y },
             pointB: { x: 0, y: 0 },
-            stiffness: 0.001,
+            stiffness: 0.01,
             length: 0,
             render: {
                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_SIGSAW_JOINT,
@@ -11621,6 +11623,8 @@ var MfgSigSaw = (function (_super) {
     *   Renders this sigsaw.
     ***************************************************************************************************************/
     MfgSigSaw.prototype.render = function () {
+        Matter.Body.setAngle(this.body, 0.0);
+        Matter.Body.setAngularVelocity(this.body, 0.0);
     };
     return MfgSigSaw;
 }(mfg.MfgGameObject));
