@@ -63,10 +63,13 @@
         ***************************************************************************************************************/
         public update
         (
+            // TODO to constructor!
+
             levelWidth:number,
             levelHeight:number,
             canvasWidth:number,
             canvasHeight:number,
+
             subjectX:number,
             subjectY:number,
             lookingDirection:mfg.MfgCharacterLookingDirection,
@@ -74,30 +77,16 @@
             renderer:Matter.Render
         )
         {
-            // calculate scroll-offsets so camera is centered to subject
-            switch ( lookingDirection )
-            {
-                case mfg.MfgCharacterLookingDirection.ELeft:
-                {
-                    this.targetX = subjectX - ( canvasWidth  * ( 1.0 - this.ratioX ) );
-                    break;
-                }
-
-                case mfg.MfgCharacterLookingDirection.ERight:
-                {
-                    this.targetX = subjectX - ( canvasWidth  * this.ratioX );
-                    break;
-                }
-            }
-            this.targetY = subjectY - ( canvasHeight * this.ratioY );
-
-            // clip camera target x to level bounds
-            if ( this.targetX < 0                          ) this.targetX = 0;
-            if ( this.targetX > levelWidth - canvasWidth   ) this.targetX = levelWidth - canvasWidth;
-
-            // clip camera target y to level bounds
-            if ( this.targetY < 0                          ) this.targetY = 0;
-            if ( this.targetY > levelHeight - canvasHeight ) this.targetY = levelHeight - canvasHeight;
+            this.calculateTargets
+            (
+                lookingDirection,
+                subjectX,
+                subjectY,
+                levelWidth,
+                levelHeight,
+                canvasWidth,
+                canvasHeight
+            );
 
             // move actual camera offsets to camera target
             let cameraMoveX:number = 0.0;
@@ -117,7 +106,6 @@
             }
 
             if ( ascendY || this.targetY > this.offsetY ) {
-
 
                 // this.offsetY = this.targetY;
 
@@ -154,15 +142,60 @@
             );
         }
 
+        private calculateTargets
+        (
+            lookingDirection:mfg.MfgCharacterLookingDirection,
+            subjectX:number,
+            subjectY:number,
+            levelWidth:number,
+            levelHeight:number,
+            canvasWidth:number,
+            canvasHeight:number,
+        )
+        {
+            // calculate scroll-offsets so camera is centered to subject
+            switch ( lookingDirection )
+            {
+                case mfg.MfgCharacterLookingDirection.ELeft:
+                {
+                    this.targetX = subjectX - ( canvasWidth  * ( 1.0 - this.ratioX ) );
+                    break;
+                }
+
+                case mfg.MfgCharacterLookingDirection.ERight:
+                {
+                    this.targetX = subjectX - ( canvasWidth  * this.ratioX );
+                    break;
+                }
+            }
+            this.targetY = subjectY - ( canvasHeight * this.ratioY );
+
+            // clip camera target x to level bounds
+            if ( this.targetX < 0                          ) this.targetX = 0;
+            if ( this.targetX > levelWidth - canvasWidth   ) this.targetX = levelWidth - canvasWidth;
+
+            // clip camera target y to level bounds
+            if ( this.targetY < 0                          ) this.targetY = 0;
+            if ( this.targetY > levelHeight - canvasHeight ) this.targetY = levelHeight - canvasHeight;
+        }
+
         /***************************************************************************************************************
-        *   Resets the camera targets and offsets to 0.0.
+        *   Resets the camera targets and offsets to the current player position without buffering.
         ***************************************************************************************************************/
         public reset()
         {
-            this.targetX = 0;
-            this.targetY = 0;
+            this.calculateTargets
+            (
+                mfg.MfgInit.game.level.player.lookingDirection,
+                mfg.MfgInit.game.level.player.body.position.x,
+                mfg.MfgInit.game.level.player.body.position.y,
+                mfg.MfgInit.game.level.width,
+                mfg.MfgInit.game.level.height,
+                mfg.MfgSettings.CANVAS_WIDTH,
+                mfg.MfgSettings.CANVAS_HEIGHT
+            );
 
-            this.offsetX = 0;
-            this.offsetY = 0;
+            this.offsetX = this.targetX;
+            this.offsetY = this.targetY;
         }
     }

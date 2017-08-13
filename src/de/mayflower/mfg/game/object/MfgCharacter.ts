@@ -72,7 +72,7 @@
                     {
                         opacity: 1.0,
                         strokeStyle: '#ff0000',
-                        lineWidth: 5.0,
+                        lineWidth: 2.0,
                     },
                     isSensor: true
                 }
@@ -88,7 +88,7 @@
                     {
                         opacity: 1.0,
                         strokeStyle: '#00ff00',
-                        lineWidth: 5.0,
+                        lineWidth: 2.0,
                     },
                     isSensor: true
                 }

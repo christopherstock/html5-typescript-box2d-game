@@ -4,8 +4,7 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Refactor player methods moveLeft etc.
-    *   TODO ASAP   Fix red inertia problem.
+    *   TODO ASAP   Improve SigSaw inertia behaviour.
     *   TODO ASAP   Create animated platforms.
     *   TODO HIGH   Replace own jump implementation.
     *   TODO HIGH   Skew image (sensor) for waving grass effect?

@@ -84,7 +84,6 @@ __export(__webpack_require__(11));
 __export(__webpack_require__(13));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
-__export(__webpack_require__(30));
 __export(__webpack_require__(16));
 __export(__webpack_require__(17));
 __export(__webpack_require__(18));
@@ -93,12 +92,13 @@ __export(__webpack_require__(20));
 __export(__webpack_require__(21));
 __export(__webpack_require__(22));
 __export(__webpack_require__(23));
-__export(__webpack_require__(28));
-__export(__webpack_require__(29));
 __export(__webpack_require__(24));
 __export(__webpack_require__(25));
 __export(__webpack_require__(26));
 __export(__webpack_require__(27));
+__export(__webpack_require__(28));
+__export(__webpack_require__(29));
+__export(__webpack_require__(30));
 
 
 /***/ }),
@@ -10399,7 +10399,6 @@ module.exports = __webpack_require__(3);
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
-// let Matter = require( 'matter-js' );
 /*******************************************************************************************************************
 *   Being invoked when the page is loaded completely.
 *******************************************************************************************************************/
@@ -10632,8 +10631,7 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Refactor player methods moveLeft etc.
-*   TODO ASAP   Fix red inertia problem.
+*   TODO ASAP   Improve SigSaw inertia behaviour.
 *   TODO ASAP   Create animated platforms.
 *   TODO HIGH   Replace own jump implementation.
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
@@ -11030,7 +11028,7 @@ var MfgCharacter = (function (_super) {
             render: {
                 opacity: 1.0,
                 strokeStyle: '#ff0000',
-                lineWidth: 5.0,
+                lineWidth: 2.0,
             },
             isSensor: true
         });
@@ -11038,7 +11036,7 @@ var MfgCharacter = (function (_super) {
             render: {
                 opacity: 1.0,
                 strokeStyle: '#00ff00',
-                lineWidth: 5.0,
+                lineWidth: 2.0,
             },
             isSensor: true
         });
@@ -11240,7 +11238,63 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
-*   Represents the player being controled by the user.
+*   Represents a platform that moves.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgPlatform = (function (_super) {
+    __extends(MfgPlatform, _super);
+    /***************************************************************************************************************
+    *   Creates a new platform.
+    *
+    *   @param shape     The shape for this object.
+    *   @param x         Startup position X.
+    *   @param y         Startup position Y.
+    *   @param width     The new width.
+    *   @param height    The new height.
+    *   @param angle     The initial rotation.
+    *   @param waypoints The waypoints for this platform to move.
+    ***************************************************************************************************************/
+    function MfgPlatform(shape, x, y, width, height, angle, waypoints) {
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle) || this;
+        /** The waypoints for this platform to move. */
+        _this.waypoints = null;
+        /** The current waypoint to move to. */
+        _this.currentWaypointIndex = 0;
+        _this.waypoints = waypoints;
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Renders this obstacle.
+    ***************************************************************************************************************/
+    MfgPlatform.prototype.render = function () {
+    };
+    return MfgPlatform;
+}(mfg.MfgGameObject));
+exports.MfgPlatform = MfgPlatform;
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   Represents the player being controlled by the user.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -11286,7 +11340,7 @@ exports.MfgPlayer = MfgPlayer;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11339,7 +11393,7 @@ exports.MfgBox = MfgBox;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11406,7 +11460,7 @@ exports.MfgItem = MfgItem;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11455,7 +11509,7 @@ exports.MfgDecoration = MfgDecoration;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11504,7 +11558,7 @@ exports.MfgObstacle = MfgObstacle;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11542,26 +11596,25 @@ var MfgSigSaw = (function (_super) {
     ***************************************************************************************************************/
     function MfgSigSaw(shape, x, y, width, height, image) {
         var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image, 0.0) || this;
-        Matter.Composite.add(mfg.MfgInit.game.engine.world, Matter.Constraint.create({
+        /** The constraint that builds the turning point for the sigsaw. */
+        _this.constraint = null;
+        _this.constraint = Matter.Constraint.create({
             bodyB: _this.body,
             pointA: { x: _this.body.position.x, y: _this.body.position.y },
             pointB: { x: 0, y: 0 },
-            stiffness: 1.0,
+            stiffness: 0.001,
             length: 0,
             render: {
                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_SIGSAW_JOINT,
                 lineWidth: 1.0,
                 visible: true,
             }
-        }));
+        });
         /*
-                    // avoid body tilting
-                    this.body.inertia        = 10000.0;
-                    this.body.inverseInertia = 1 / this.body.inertia;
+                    Matter.Body.setMass(    this.body, 1000000.0 );
+                    Matter.Body.setInertia( this.body, 1000000.0 );
         */
-        // though tilting is off, increase the mass
-        _this.body.mass = 100.0;
-        _this.body.inverseMass = 1 / _this.body.mass;
+        Matter.Composite.add(mfg.MfgInit.game.engine.world, _this.constraint);
         return _this;
     }
     /***************************************************************************************************************
@@ -11575,7 +11628,7 @@ exports.MfgSigSaw = MfgSigSaw;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11714,7 +11767,7 @@ exports.MfgGame = MfgGame;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11796,7 +11849,157 @@ exports.MfgLevel = MfgLevel;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   The level set for the dev level.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgLevelDev = (function (_super) {
+    __extends(MfgLevelDev, _super);
+    function MfgLevelDev() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /** The width of this level. */
+        _this.width = 3000.0;
+        /** The height of this level. */
+        _this.height = 1500.0;
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Inits a new level.
+    ***************************************************************************************************************/
+    MfgLevelDev.prototype.createGameObjects = function () {
+        // init player
+        this.player = new mfg.MfgPlayer(1500, 0);
+        // setup all game objects
+        this.gameObjects =
+            [
+                // bg decoration
+                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
+                // bg decoration
+                mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
+                // static obstacles
+                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(80, 700, 400, 15, -15.0),
+                mfg.MfgGameObjectFactory.createObstacle(380, 500, 400, 15, -15.0),
+                mfg.MfgGameObjectFactory.createObstacle(1320, 700, 400, 15, -15.0),
+                mfg.MfgGameObjectFactory.createObstacle(2000, 300, 400, 15, -15.0),
+                // moveable boxes
+                mfg.MfgGameObjectFactory.createBox(370, 100, 80, 80),
+                mfg.MfgGameObjectFactory.createSphere(320, 0, 100),
+                mfg.MfgGameObjectFactory.createBox(1000, 80, 80, 80),
+                // sigsaws
+                mfg.MfgGameObjectFactory.createSigsaw(1420, 950, 400, 25, null),
+                // items
+                mfg.MfgGameObjectFactory.createItem(1100, 850),
+                mfg.MfgGameObjectFactory.createItem(1150, 850),
+                mfg.MfgGameObjectFactory.createItem(1200, 850),
+                mfg.MfgGameObjectFactory.createItem(2600, 850),
+                mfg.MfgGameObjectFactory.createItem(2650, 850),
+                mfg.MfgGameObjectFactory.createItem(2700, 850),
+                // enemies
+                mfg.MfgGameObjectFactory.createEnemy(845, 0),
+                // player
+                this.player,
+                // fg decoration
+                mfg.MfgGameObjectFactory.createDecoration(700, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2000, 860, 120, 90, null),
+            ];
+    };
+    return MfgLevelDev;
+}(mfg.MfgLevel));
+exports.MfgLevelDev = MfgLevelDev;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   The level set for the level 'enchanted woods'.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgLevelEnchantedWoods = (function (_super) {
+    __extends(MfgLevelEnchantedWoods, _super);
+    function MfgLevelEnchantedWoods() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /** The width of this level. */
+        _this.width = 3000.0;
+        /** The height of this level. */
+        _this.height = 1500.0;
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Inits a new level.
+    ***************************************************************************************************************/
+    MfgLevelEnchantedWoods.prototype.createGameObjects = function () {
+        // init player
+        this.player = new mfg.MfgPlayer(0, 0);
+        // setup all game objects
+        this.gameObjects =
+            [
+                // bg decoration
+                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
+                // bg decoration
+                mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
+                // static obstacles
+                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
+                // moveable boxes
+                // sigsaws
+                // items
+                // enemies
+                // player
+                this.player,
+                // fg decoration
+                mfg.MfgGameObjectFactory.createDecoration(700, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2000, 860, 120, 90, null),
+            ];
+    };
+    return MfgLevelEnchantedWoods;
+}(mfg.MfgLevel));
+exports.MfgLevelEnchantedWoods = MfgLevelEnchantedWoods;
+
+
+/***/ }),
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11898,7 +12101,7 @@ exports.MfgKeySystem = MfgKeySystem;
 
 
 /***/ }),
-/* 25 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11957,31 +12160,10 @@ var MfgCamera = (function () {
     *   @param ascendY          Allows camera ascent Y.
     *   @param renderer         The MatterJS renderer.
     ***************************************************************************************************************/
-    MfgCamera.prototype.update = function (levelWidth, levelHeight, canvasWidth, canvasHeight, subjectX, subjectY, lookingDirection, ascendY, renderer) {
-        // calculate scroll-offsets so camera is centered to subject
-        switch (lookingDirection) {
-            case mfg.MfgCharacterLookingDirection.ELeft:
-                {
-                    this.targetX = subjectX - (canvasWidth * (1.0 - this.ratioX));
-                    break;
-                }
-            case mfg.MfgCharacterLookingDirection.ERight:
-                {
-                    this.targetX = subjectX - (canvasWidth * this.ratioX);
-                    break;
-                }
-        }
-        this.targetY = subjectY - (canvasHeight * this.ratioY);
-        // clip camera target x to level bounds
-        if (this.targetX < 0)
-            this.targetX = 0;
-        if (this.targetX > levelWidth - canvasWidth)
-            this.targetX = levelWidth - canvasWidth;
-        // clip camera target y to level bounds
-        if (this.targetY < 0)
-            this.targetY = 0;
-        if (this.targetY > levelHeight - canvasHeight)
-            this.targetY = levelHeight - canvasHeight;
+    MfgCamera.prototype.update = function (
+        // TODO to constructor!
+        levelWidth, levelHeight, canvasWidth, canvasHeight, subjectX, subjectY, lookingDirection, ascendY, renderer) {
+        this.calculateTargets(lookingDirection, subjectX, subjectY, levelWidth, levelHeight, canvasWidth, canvasHeight);
         // move actual camera offsets to camera target
         var cameraMoveX = 0.0;
         if (this.offsetX < this.targetX) {
@@ -12033,14 +12215,39 @@ var MfgCamera = (function () {
             }
         ]);
     };
+    MfgCamera.prototype.calculateTargets = function (lookingDirection, subjectX, subjectY, levelWidth, levelHeight, canvasWidth, canvasHeight) {
+        // calculate scroll-offsets so camera is centered to subject
+        switch (lookingDirection) {
+            case mfg.MfgCharacterLookingDirection.ELeft:
+                {
+                    this.targetX = subjectX - (canvasWidth * (1.0 - this.ratioX));
+                    break;
+                }
+            case mfg.MfgCharacterLookingDirection.ERight:
+                {
+                    this.targetX = subjectX - (canvasWidth * this.ratioX);
+                    break;
+                }
+        }
+        this.targetY = subjectY - (canvasHeight * this.ratioY);
+        // clip camera target x to level bounds
+        if (this.targetX < 0)
+            this.targetX = 0;
+        if (this.targetX > levelWidth - canvasWidth)
+            this.targetX = levelWidth - canvasWidth;
+        // clip camera target y to level bounds
+        if (this.targetY < 0)
+            this.targetY = 0;
+        if (this.targetY > levelHeight - canvasHeight)
+            this.targetY = levelHeight - canvasHeight;
+    };
     /***************************************************************************************************************
-    *   Resets the camera targets and offsets to 0.0.
+    *   Resets the camera targets and offsets to the current player position without buffering.
     ***************************************************************************************************************/
     MfgCamera.prototype.reset = function () {
-        this.targetX = 0;
-        this.targetY = 0;
-        this.offsetX = 0;
-        this.offsetY = 0;
+        this.calculateTargets(mfg.MfgInit.game.level.player.lookingDirection, mfg.MfgInit.game.level.player.body.position.x, mfg.MfgInit.game.level.player.body.position.y, mfg.MfgInit.game.level.width, mfg.MfgInit.game.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT);
+        this.offsetX = this.targetX;
+        this.offsetY = this.targetY;
     };
     return MfgCamera;
 }());
@@ -12048,7 +12255,7 @@ exports.MfgCamera = MfgCamera;
 
 
 /***/ }),
-/* 26 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12071,7 +12278,7 @@ exports.MfgImages = MfgImages;
 
 
 /***/ }),
-/* 27 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12132,212 +12339,6 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
-/*******************************************************************************************************************
-*   The level set for the dev level.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgLevelDev = (function (_super) {
-    __extends(MfgLevelDev, _super);
-    function MfgLevelDev() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /** The width of this level. */
-        _this.width = 3000.0;
-        /** The height of this level. */
-        _this.height = 1500.0;
-        return _this;
-    }
-    /***************************************************************************************************************
-    *   Inits a new level.
-    ***************************************************************************************************************/
-    MfgLevelDev.prototype.createGameObjects = function () {
-        // init player
-        this.player = new mfg.MfgPlayer(0, 0);
-        // setup all game objects
-        this.gameObjects =
-            [
-                // bg decoration
-                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
-                // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
-                // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(320, 870, 80, 80, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(80, 700, 400, 15, -15.0),
-                mfg.MfgGameObjectFactory.createObstacle(380, 500, 400, 15, -15.0),
-                mfg.MfgGameObjectFactory.createObstacle(1320, 700, 400, 15, -15.0),
-                mfg.MfgGameObjectFactory.createObstacle(2000, 300, 400, 15, -15.0),
-                // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(370, 100, 80, 80),
-                mfg.MfgGameObjectFactory.createSphere(320, 0, 100),
-                mfg.MfgGameObjectFactory.createBox(1000, 80, 80, 80),
-                // sigsaws
-                mfg.MfgGameObjectFactory.createSigsaw(1420, 950, 400, 25, null),
-                // items
-                mfg.MfgGameObjectFactory.createItem(1100, 850),
-                mfg.MfgGameObjectFactory.createItem(1150, 850),
-                mfg.MfgGameObjectFactory.createItem(1200, 850),
-                mfg.MfgGameObjectFactory.createItem(2600, 850),
-                mfg.MfgGameObjectFactory.createItem(2650, 850),
-                mfg.MfgGameObjectFactory.createItem(2700, 850),
-                // enemies
-                mfg.MfgGameObjectFactory.createEnemy(845, 0),
-                // player
-                this.player,
-                // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration(700, 860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(2000, 860, 120, 90, null),
-            ];
-    };
-    return MfgLevelDev;
-}(mfg.MfgLevel));
-exports.MfgLevelDev = MfgLevelDev;
-
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
-/*******************************************************************************************************************
-*   The level set for the level 'enchanted woods'.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgLevelEnchantedWoods = (function (_super) {
-    __extends(MfgLevelEnchantedWoods, _super);
-    function MfgLevelEnchantedWoods() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /** The width of this level. */
-        _this.width = 3000.0;
-        /** The height of this level. */
-        _this.height = 1500.0;
-        return _this;
-    }
-    /***************************************************************************************************************
-    *   Inits a new level.
-    ***************************************************************************************************************/
-    MfgLevelEnchantedWoods.prototype.createGameObjects = function () {
-        // init player
-        this.player = new mfg.MfgPlayer(0, 0);
-        // setup all game objects
-        this.gameObjects =
-            [
-                // bg decoration
-                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
-                // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
-                // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
-                // moveable boxes
-                // sigsaws
-                // items
-                // enemies
-                // player
-                this.player,
-                // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration(700, 860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(2000, 860, 120, 90, null),
-            ];
-    };
-    return MfgLevelEnchantedWoods;
-}(mfg.MfgLevel));
-exports.MfgLevelEnchantedWoods = MfgLevelEnchantedWoods;
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
-/*******************************************************************************************************************
-*   Represents a platform that moves.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgPlatform = (function (_super) {
-    __extends(MfgPlatform, _super);
-    /***************************************************************************************************************
-    *   Creates a new platform.
-    *
-    *   @param shape     The shape for this object.
-    *   @param x         Startup position X.
-    *   @param y         Startup position Y.
-    *   @param width     The new width.
-    *   @param height    The new height.
-    *   @param angle     The initial rotation.
-    *   @param waypoints The waypoints for this platform to move.
-    ***************************************************************************************************************/
-    function MfgPlatform(shape, x, y, width, height, angle, waypoints) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle) || this;
-        /** The waypoints for this platform to move. */
-        _this.waypoints = null;
-        /** The current waypoint to move to. */
-        _this.currentWaypointIndex = 0;
-        _this.waypoints = waypoints;
-        return _this;
-    }
-    /***************************************************************************************************************
-    *   Renders this obstacle.
-    ***************************************************************************************************************/
-    MfgPlatform.prototype.render = function () {
-    };
-    return MfgPlatform;
-}(mfg.MfgGameObject));
-exports.MfgPlatform = MfgPlatform;
 
 
 /***/ })

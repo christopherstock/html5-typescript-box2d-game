@@ -3,7 +3,7 @@
     import * as mfg    from '../../mfg';
 
     /*******************************************************************************************************************
-    *   Represents the player being controled by the user.
+    *   Represents the player being controlled by the user.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
