@@ -12,13 +12,14 @@
   "author": "Christopher Stock",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^2.4.2",
-    "webpack": "^3.4.1",
+    "@types/matter-js": "^0.9.32",
+    "@types/webpack": "^3.0.8",
     "awesome-typescript-loader": "^3.2.2",
-    "typedoc": "^0.8.0"
+    "typedoc": "^0.8.0",
+    "typescript": "^2.4.2",
+    "webpack": "^3.4.1"
   },
   "dependencies": {
-    "@types/matter-js": "^0.9.32",
     "matter-js": "^0.13.0"
   }
 }
