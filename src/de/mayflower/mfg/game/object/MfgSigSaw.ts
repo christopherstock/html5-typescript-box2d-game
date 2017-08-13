@@ -27,7 +27,6 @@
         {
             super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image, 0.0 );
 
-
             this.constraint = Matter.Constraint.create(
                 {
                     bodyB: this.body,
@@ -38,7 +37,7 @@
                     render: {
                         strokeStyle: mfg.MfgSettings.COLOR_DEBUG_SIGSAW_JOINT,
                         lineWidth: 1.0,
-                        visible: true,
+                        visible:   true,
                     }
                 }
             );
