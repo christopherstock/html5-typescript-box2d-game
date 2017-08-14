@@ -4,6 +4,7 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO HIGH   Pass-through walls?
     *   TODO ASAP   Create animated platforms.
     *   TODO ASAP   Check sprite or image clipping and scaling to player size?
     *   TODO HIGH   Replace own jump implementation?
@@ -13,6 +14,7 @@
     *   TODO INIT   Parallax bg.
     *   TODO LOW    Add doors / level portals.
     *   TODO LOW    Create levels and sublevels?
+    *   TODO LOW    Maximum camera ascend distance if player is superjumped upwards.
     *   TODO WEAK   Add menu keys for main menu and level map ..
     *   TODO WEAK   Add sprites.
     *   TODO WEAK   Add images.
@@ -29,15 +31,9 @@
         *****************************************************************************/
         public static main():void
         {
-            let title:string = (
-                    mfg.MfgSettings.TITLE
-                +   ", "
-                +   mfg.MfgVersion.CURRENT_VERSION.getVersionDescriptor()
-            );
-
             // acclaim debug console and set title
-            mfg.MfgDebug.init.log( title );
-            document.title = title;
+            mfg.MfgDebug.init.log( mfg.MfgSettings.TITLE );
+            document.title = mfg.MfgSettings.TITLE;
 
             //init game engine
             mfg.MfgInit.init();

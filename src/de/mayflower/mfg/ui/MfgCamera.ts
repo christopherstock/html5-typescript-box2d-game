@@ -30,6 +30,16 @@
         /** Current camera offset Y. */
         private     offsetY                     :number                 = 0.0;
 
+        /** The width of the level. */
+        private     levelWidth                  :number                 = 0.0;
+        /** The height of the level. */
+        private     levelHeight                 :number                 = 0.0;
+
+        /** The width of the canvas. */
+        private     canvasWidth                 :number                 = 0.0;
+        /** The height of the canvas. */
+        private     canvasHeight                :number                 = 0.0;
+
         /***************************************************************************************************************
         *   Constructs a new camera.
         *
@@ -37,43 +47,52 @@
         *   @param ratioY            Camera ratio Y for vertical centering   of the player.
         *   @param movingSpeed       The moving speed for the camera.
         *   @param minimumCameraMove The minimum camera movement step in px.
+        *   @param levelWidth        The width of the level.
+        *   @param levelHeight       The height of the level.
+        *   @param canvasWidth       The width of the canvas.
+        *   @param canvasHeight      The height of the canvas.
         ***************************************************************************************************************/
-        public constructor( ratioX:number, ratioY:number, movingSpeed:number, minimumCameraMove:number )
+        public constructor
+        (
+            ratioX:number,
+            ratioY:number,
+            movingSpeed:number,
+            minimumCameraMove:number,
+            levelWidth:number,
+            levelHeight:number,
+            canvasWidth:number,
+            canvasHeight:number
+        )
         {
             this.ratioX            = ratioX;
             this.ratioY            = ratioY;
 
             this.movingSpeed       = movingSpeed;
             this.minimumCameraMove = minimumCameraMove;
+
+            this.levelWidth        = levelWidth;
+            this.levelHeight       = levelHeight;
+
+            this.canvasWidth       = canvasWidth;
+            this.canvasHeight      = canvasHeight;
         }
 
         /***************************************************************************************************************
         *   Updates the singleton instance of the camera by reassigning
         *   it's horizontal and vertical offset.
         *
-        *   @param levelWidth       The width of the level.
-        *   @param levelHeight      The height of the level.
-        *   @param canvasWidth      The width of the canvas.
-        *   @param canvasHeight     The height of the canvas.
         *   @param subjectX         The subject coordinate X to center the camera.
         *   @param subjectY         The subject coordinate Y to center the camera.
         *   @param lookingDirection The current direction the player looks at.
-        *   @param ascendY          Allows camera ascent Y.
+        *   @param allowAscendY     Allows camera ascending Y.
         *   @param renderer         The MatterJS renderer.
         ***************************************************************************************************************/
         public update
         (
-            // TODO to constructor!
-
-            levelWidth:number,
-            levelHeight:number,
-            canvasWidth:number,
-            canvasHeight:number,
-
             subjectX:number,
             subjectY:number,
             lookingDirection:mfg.MfgCharacterLookingDirection,
-            ascendY:boolean,
+            allowAscendY:boolean,
             renderer:Matter.Render
         )
         {
@@ -82,10 +101,6 @@
                 lookingDirection,
                 subjectX,
                 subjectY,
-                levelWidth,
-                levelHeight,
-                canvasWidth,
-                canvasHeight
             );
 
             // move horizontal camera offsets to camera target
@@ -105,13 +120,12 @@
                 if ( this.offsetX < this.targetX ) this.offsetX = this.targetX;
             }
 
-            // move vertical camera offsets to camera target
-            let cameraMoveY:number = 0.0;
-            if ( ascendY && this.targetY < this.offsetY )
+            // buffer camera on ascending, if allowed
+            if ( allowAscendY && this.targetY < this.offsetY )
             {
                 if ( this.offsetY > this.targetY )
                 {
-                    cameraMoveY = ( this.offsetY - this.targetY ) * this.movingSpeed;
+                    let cameraMoveY:number = ( this.offsetY - this.targetY ) * this.movingSpeed;
                     if ( cameraMoveY < this.minimumCameraMove ) cameraMoveY = this.minimumCameraMove;
                     this.offsetY -= cameraMoveY;
                     if ( this.offsetY < this.targetY ) this.offsetY = this.targetY;
@@ -138,8 +152,8 @@
                         y: this.offsetY
                     },
                     {
-                        x: this.offsetX + canvasWidth,
-                        y: this.offsetY + canvasHeight
+                        x: this.offsetX + this.canvasWidth,
+                        y: this.offsetY + this.canvasHeight
                     }
                 ]
             );
@@ -150,10 +164,6 @@
             lookingDirection:mfg.MfgCharacterLookingDirection,
             subjectX:number,
             subjectY:number,
-            levelWidth:number,
-            levelHeight:number,
-            canvasWidth:number,
-            canvasHeight:number,
         )
         {
             // calculate scroll-offsets so camera is centered to subject
@@ -161,25 +171,25 @@
             {
                 case mfg.MfgCharacterLookingDirection.ELeft:
                 {
-                    this.targetX = subjectX - ( canvasWidth  * ( 1.0 - this.ratioX ) );
+                    this.targetX = subjectX - ( this.canvasWidth  * ( 1.0 - this.ratioX ) );
                     break;
                 }
 
                 case mfg.MfgCharacterLookingDirection.ERight:
                 {
-                    this.targetX = subjectX - ( canvasWidth  * this.ratioX );
+                    this.targetX = subjectX - ( this.canvasWidth  * this.ratioX );
                     break;
                 }
             }
-            this.targetY = subjectY - ( canvasHeight * this.ratioY );
+            this.targetY = subjectY - ( this.canvasHeight * this.ratioY );
 
             // clip camera target x to level bounds
-            if ( this.targetX < 0                          ) this.targetX = 0;
-            if ( this.targetX > levelWidth - canvasWidth   ) this.targetX = levelWidth - canvasWidth;
+            if ( this.targetX < 0                                  ) this.targetX = 0;
+            if ( this.targetX > this.levelWidth - this.canvasWidth ) this.targetX = this.levelWidth - this.canvasWidth;
 
             // clip camera target y to level bounds
-            if ( this.targetY < 0                          ) this.targetY = 0;
-            if ( this.targetY > levelHeight - canvasHeight ) this.targetY = levelHeight - canvasHeight;
+            if ( this.targetY < 0                                    ) this.targetY = 0;
+            if ( this.targetY > this.levelHeight - this.canvasHeight ) this.targetY = this.levelHeight - this.canvasHeight;
         }
 
         /***************************************************************************************************************
@@ -192,10 +202,6 @@
                 mfg.MfgInit.game.level.player.lookingDirection,
                 mfg.MfgInit.game.level.player.body.position.x,
                 mfg.MfgInit.game.level.player.body.position.y,
-                mfg.MfgInit.game.level.width,
-                mfg.MfgInit.game.level.height,
-                mfg.MfgSettings.CANVAS_WIDTH,
-                mfg.MfgSettings.CANVAS_HEIGHT
             );
 
             this.offsetX = this.targetX;

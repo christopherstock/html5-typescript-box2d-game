@@ -1,8 +1,8 @@
 
+    export * from './base/MfgVersion';
     export * from './base/MfgSettings';
     export * from './base/MfgDebug';
     export * from './base/MfgInit';
-    export * from './base/MfgVersion';
     export * from './base/Mfg';
     export * from './game/object/MfgCharacterLookingDirection';
     export * from './game/object/MfgGameObjectShape';

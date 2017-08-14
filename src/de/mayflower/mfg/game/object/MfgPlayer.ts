@@ -1,6 +1,7 @@
 
     import * as Matter from 'matter-js';
     import * as mfg    from '../../mfg';
+    import {MfgCharacterLookingDirection} from "./MfgCharacterLookingDirection";
 
     /*******************************************************************************************************************
     *   Represents the player being controlled by the user.
@@ -13,10 +14,11 @@
         /***************************************************************************************************************
         *   Creates a new player instance.
         *
-        *   @param x      Startup position X.
-        *   @param y      Startup position Y.
+        *   @param x                Startup position X.
+        *   @param y                Startup position Y.
+        *   @param lookingDirection The initial looking direction.
         ***************************************************************************************************************/
-        public constructor( x:number, y:number )
+        public constructor( x:number, y:number, lookingDirection:MfgCharacterLookingDirection )
         {
             super
             (
@@ -27,7 +29,7 @@
                 mfg.MfgSettings.PLAYER_HEIGHT,
                 mfg.MfgSettings.COLOR_DEBUG_PLAYER,
                 null,
-                mfg.MfgCharacterLookingDirection.ERight,
+                lookingDirection,
                 mfg.MfgSettings.PLAYER_SPEED_MOVE
             );
         }

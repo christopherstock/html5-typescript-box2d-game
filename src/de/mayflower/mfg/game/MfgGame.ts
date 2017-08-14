@@ -30,7 +30,6 @@
             mfg.MfgDebug.init.log( "Initing game engine" );
 
             this.initEngine2D();
-            this.initCamera();
             this.initKeySystem();
 
             this.resetAndLaunchLevel( new mfg.MfgLevelDev() );
@@ -45,19 +44,6 @@
         private initKeySystem()
         {
             this.keySystem = new mfg.MfgKeySystem();
-        }
-
-        /***************************************************************************************************************
-        *   Inits the camera.
-        ***************************************************************************************************************/
-        private initCamera()
-        {
-            this.camera = new mfg.MfgCamera(
-                mfg.MfgSettings.CAMERA_RATIO_X,
-                mfg.MfgSettings.CAMERA_RATIO_Y,
-                mfg.MfgSettings.CAMERA_MOVING_SPEED,
-                mfg.MfgSettings.CAMERA_MOVING_MINIMUM
-            );
         }
 
         /***************************************************************************************************************
@@ -92,6 +78,16 @@
                 y: mfg.MfgSettings.DEFAULT_GRAVITY_Y,
                 scale: 0.001
             };
+
+            Matter.Events.on(
+                this.engine, 'afterRender', function( event ) {
+                let context = mfg.MfgInit.game.renderer.context;
+                context.font = "45px 'Cabin Sketch'";
+                context.fillText("THROW OBJECT HERE", 150, 80);
+
+                context.fillStyle = "#ff0000";
+                context.fillRect(0, 0, 200, 100);
+            });
         }
 
         /***************************************************************************************************************
@@ -107,6 +103,16 @@
             this.level.init();
 
             // reset camera
+            this.camera = new mfg.MfgCamera(
+                mfg.MfgSettings.CAMERA_RATIO_X,
+                mfg.MfgSettings.CAMERA_RATIO_Y,
+                mfg.MfgSettings.CAMERA_MOVING_SPEED,
+                mfg.MfgSettings.CAMERA_MOVING_MINIMUM,
+                this.level.width,
+                this.level.height,
+                mfg.MfgSettings.CANVAS_WIDTH,
+                mfg.MfgSettings.CANVAS_HEIGHT
+            );
             this.camera.reset();
         }
 
@@ -152,10 +158,6 @@
 
             // render camera
             this.camera.update(
-                this.level.width,
-                this.level.height,
-                mfg.MfgSettings.CANVAS_WIDTH,
-                mfg.MfgSettings.CANVAS_HEIGHT,
                 this.level.player.body.position.x,
                 this.level.player.body.position.y,
                 this.level.player.lookingDirection,

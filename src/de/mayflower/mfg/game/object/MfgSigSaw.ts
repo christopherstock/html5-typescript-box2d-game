@@ -56,17 +56,7 @@
         public render()
         {
             this.clipRotation();
-
-            const maxRotationSpeed = 0.005;
-
-            if ( this.body.angularVelocity < -maxRotationSpeed )
-            {
-                Matter.Body.setAngularVelocity( this.body, -maxRotationSpeed );
-            }
-            else if ( this.body.angularVelocity > maxRotationSpeed )
-            {
-                Matter.Body.setAngularVelocity( this.body, maxRotationSpeed );
-            }
+            this.clipRotationSpeed();
         }
 
         /***************************************************************************************************************
@@ -88,6 +78,23 @@
             {
                 Matter.Body.setAngle(           this.body, maxAngle );
                 Matter.Body.setAngularVelocity( this.body, 0.0       );
+            }
+        }
+
+        /***************************************************************************************************************
+        *   Clips the rotation speed of the sigsaw.
+        ***************************************************************************************************************/
+        private clipRotationSpeed()
+        {
+            const maxRotationSpeed = 0.005;
+
+            if ( this.body.angularVelocity < -maxRotationSpeed )
+            {
+                Matter.Body.setAngularVelocity( this.body, -maxRotationSpeed );
+            }
+            else if ( this.body.angularVelocity > maxRotationSpeed )
+            {
+                Matter.Body.setAngularVelocity( this.body, maxRotationSpeed );
             }
         }
     }

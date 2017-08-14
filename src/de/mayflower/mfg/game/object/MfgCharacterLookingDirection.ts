@@ -1,6 +1,6 @@
 
     /*******************************************************************************************************************
-    *   Represents a character.
+    *   Represents a character's looking direction.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1

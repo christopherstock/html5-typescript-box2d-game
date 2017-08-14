@@ -1,4 +1,5 @@
 
+    import * as mfg    from '../mfg';
     import * as Matter from 'matter-js';
 
     /*******************************************************************************************************************
@@ -13,7 +14,7 @@
         public      static      DEBUG_MODE                                  :boolean                    = true;
 
         /** The application's internal name. */
-        public      static      TITLE                                       :string                     = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH";
+        public      static      TITLE                                       :string                     = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH" + ", " + mfg.MfgVersion.CURRENT_VERSION.getVersionDescriptor();
 
         /** The delta between render ticks in ms. */
         public      static      RENDER_DELTA                                :number                     = 16.66;

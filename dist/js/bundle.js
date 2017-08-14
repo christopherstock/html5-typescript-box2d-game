@@ -73,10 +73,10 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(7));
 __export(__webpack_require__(4));
 __export(__webpack_require__(5));
 __export(__webpack_require__(6));
-__export(__webpack_require__(7));
 __export(__webpack_require__(8));
 __export(__webpack_require__(9));
 __export(__webpack_require__(10));
@@ -10422,6 +10422,7 @@ window.onunload = function () {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   All adjustments and balancings for the application.
 *
@@ -10434,7 +10435,7 @@ var MfgSettings = (function () {
     /** The global debug switch. */
     MfgSettings.DEBUG_MODE = true;
     /** The application's internal name. */
-    MfgSettings.TITLE = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH";
+    MfgSettings.TITLE = "TypeScript MatterJS primer, (c) 2017 Mayflower GmbH" + ", " + mfg.MfgVersion.CURRENT_VERSION.getVersionDescriptor();
     /** The delta between render ticks in ms. */
     MfgSettings.RENDER_DELTA = 16.66;
     /** The desired canvas3D width. */
@@ -10556,6 +10557,8 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Specifies the initialization part of the game logic.
 *
+*   TODO remove and move to Mfg!
+*
 *   @author     Christopher Stock
 *   @version    0.0.1
 *******************************************************************************************************************/
@@ -10566,7 +10569,6 @@ var MfgInit = (function () {
     *   Inits the game from scratch.
     ***************************************************************************************************************/
     MfgInit.init = function () {
-        // init the game engine
         MfgInit.game = new mfg.MfgGame();
         MfgInit.game.init();
     };
@@ -10637,6 +10639,7 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO HIGH   Pass-through walls?
 *   TODO ASAP   Create animated platforms.
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
 *   TODO HIGH   Replace own jump implementation?
@@ -10646,6 +10649,7 @@ var mfg = __webpack_require__(0);
 *   TODO INIT   Parallax bg.
 *   TODO LOW    Add doors / level portals.
 *   TODO LOW    Create levels and sublevels?
+*   TODO LOW    Maximum camera ascend distance if player is superjumped upwards.
 *   TODO WEAK   Add menu keys for main menu and level map ..
 *   TODO WEAK   Add sprites.
 *   TODO WEAK   Add images.
@@ -10662,12 +10666,9 @@ var Mfg = (function () {
     *   This method is invoked when the application starts.
     *****************************************************************************/
     Mfg.main = function () {
-        var title = (mfg.MfgSettings.TITLE
-            + ", "
-            + mfg.MfgVersion.CURRENT_VERSION.getVersionDescriptor());
         // acclaim debug console and set title
-        mfg.MfgDebug.init.log(title);
-        document.title = title;
+        mfg.MfgDebug.init.log(mfg.MfgSettings.TITLE);
+        document.title = mfg.MfgSettings.TITLE;
         //init game engine
         mfg.MfgInit.init();
     };
@@ -10684,7 +10685,7 @@ exports.Mfg = Mfg;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 /*******************************************************************************************************************
-*   Represents a character.
+*   Represents a character's looking direction.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -11328,11 +11329,12 @@ var MfgPlayer = (function (_super) {
     /***************************************************************************************************************
     *   Creates a new player instance.
     *
-    *   @param x      Startup position X.
-    *   @param y      Startup position Y.
+    *   @param x                Startup position X.
+    *   @param y                Startup position Y.
+    *   @param lookingDirection The initial looking direction.
     ***************************************************************************************************************/
-    function MfgPlayer(x, y) {
-        return _super.call(this, mfg.MfgGameObjectShape.ERectangle, x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, mfg.MfgCharacterLookingDirection.ERight, mfg.MfgSettings.PLAYER_SPEED_MOVE) || this;
+    function MfgPlayer(x, y, lookingDirection) {
+        return _super.call(this, mfg.MfgGameObjectShape.ERectangle, x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -11642,13 +11644,7 @@ var MfgSigSaw = (function (_super) {
     ***************************************************************************************************************/
     MfgSigSaw.prototype.render = function () {
         this.clipRotation();
-        var maxRotationSpeed = 0.005;
-        if (this.body.angularVelocity < -maxRotationSpeed) {
-            Matter.Body.setAngularVelocity(this.body, -maxRotationSpeed);
-        }
-        else if (this.body.angularVelocity > maxRotationSpeed) {
-            Matter.Body.setAngularVelocity(this.body, maxRotationSpeed);
-        }
+        this.clipRotationSpeed();
     };
     /***************************************************************************************************************
     *   Clips the rotation of the sigsaw.
@@ -11664,6 +11660,18 @@ var MfgSigSaw = (function (_super) {
         else if (this.body.angle > maxAngle) {
             Matter.Body.setAngle(this.body, maxAngle);
             Matter.Body.setAngularVelocity(this.body, 0.0);
+        }
+    };
+    /***************************************************************************************************************
+    *   Clips the rotation speed of the sigsaw.
+    ***************************************************************************************************************/
+    MfgSigSaw.prototype.clipRotationSpeed = function () {
+        var maxRotationSpeed = 0.005;
+        if (this.body.angularVelocity < -maxRotationSpeed) {
+            Matter.Body.setAngularVelocity(this.body, -maxRotationSpeed);
+        }
+        else if (this.body.angularVelocity > maxRotationSpeed) {
+            Matter.Body.setAngularVelocity(this.body, maxRotationSpeed);
         }
     };
     return MfgSigSaw;
@@ -11715,7 +11723,6 @@ var MfgGame = (function () {
     MfgGame.prototype.init = function () {
         mfg.MfgDebug.init.log("Initing game engine");
         this.initEngine2D();
-        this.initCamera();
         this.initKeySystem();
         this.resetAndLaunchLevel(new mfg.MfgLevelDev());
         // start the game loop
@@ -11726,12 +11733,6 @@ var MfgGame = (function () {
     ***************************************************************************************************************/
     MfgGame.prototype.initKeySystem = function () {
         this.keySystem = new mfg.MfgKeySystem();
-    };
-    /***************************************************************************************************************
-    *   Inits the camera.
-    ***************************************************************************************************************/
-    MfgGame.prototype.initCamera = function () {
-        this.camera = new mfg.MfgCamera(mfg.MfgSettings.CAMERA_RATIO_X, mfg.MfgSettings.CAMERA_RATIO_Y, mfg.MfgSettings.CAMERA_MOVING_SPEED, mfg.MfgSettings.CAMERA_MOVING_MINIMUM);
     };
     /***************************************************************************************************************
     *   Inits the 2D engine.
@@ -11757,6 +11758,13 @@ var MfgGame = (function () {
             y: mfg.MfgSettings.DEFAULT_GRAVITY_Y,
             scale: 0.001
         };
+        Matter.Events.on(this.engine, 'afterRender', function (event) {
+            var context = mfg.MfgInit.game.renderer.context;
+            context.font = "45px 'Cabin Sketch'";
+            context.fillText("THROW OBJECT HERE", 150, 80);
+            context.fillStyle = "#ff0000";
+            context.fillRect(0, 0, 200, 100);
+        });
     };
     /***************************************************************************************************************
     *   Inits the level.
@@ -11768,6 +11776,7 @@ var MfgGame = (function () {
         this.level = levelToLaunch;
         this.level.init();
         // reset camera
+        this.camera = new mfg.MfgCamera(mfg.MfgSettings.CAMERA_RATIO_X, mfg.MfgSettings.CAMERA_RATIO_Y, mfg.MfgSettings.CAMERA_MOVING_SPEED, mfg.MfgSettings.CAMERA_MOVING_MINIMUM, this.level.width, this.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT);
         this.camera.reset();
     };
     /***************************************************************************************************************
@@ -11789,7 +11798,7 @@ var MfgGame = (function () {
         // render level
         this.level.render();
         // render camera
-        this.camera.update(this.level.width, this.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT, this.level.player.body.position.x, this.level.player.body.position.y, this.level.player.lookingDirection, this.level.player.collidesBottom, this.renderer);
+        this.camera.update(this.level.player.body.position.x, this.level.player.body.position.y, this.level.player.lookingDirection, this.level.player.collidesBottom, this.renderer);
     };
     /***************************************************************************************************************
     *   Handles pressed menu keys.
@@ -11932,7 +11941,7 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(3000, 0);
+        this.player = new mfg.MfgPlayer(3000, 2650, mfg.MfgCharacterLookingDirection.ELeft);
         // setup all game objects
         this.gameObjects =
             [
@@ -12016,7 +12025,7 @@ var MfgLevelEnchantedWoods = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelEnchantedWoods.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 0);
+        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgCharacterLookingDirection.ERight);
         // setup all game objects
         this.gameObjects =
             [
@@ -12169,8 +12178,12 @@ var MfgCamera = (function () {
     *   @param ratioY            Camera ratio Y for vertical centering   of the player.
     *   @param movingSpeed       The moving speed for the camera.
     *   @param minimumCameraMove The minimum camera movement step in px.
+    *   @param levelWidth        The width of the level.
+    *   @param levelHeight       The height of the level.
+    *   @param canvasWidth       The width of the canvas.
+    *   @param canvasHeight      The height of the canvas.
     ***************************************************************************************************************/
-    function MfgCamera(ratioX, ratioY, movingSpeed, minimumCameraMove) {
+    function MfgCamera(ratioX, ratioY, movingSpeed, minimumCameraMove, levelWidth, levelHeight, canvasWidth, canvasHeight) {
         /** Camera centering ratio X. */
         this.ratioX = 0.0;
         /** Camera centering ratio X. */
@@ -12187,29 +12200,35 @@ var MfgCamera = (function () {
         this.offsetX = 0.0;
         /** Current camera offset Y. */
         this.offsetY = 0.0;
+        /** The width of the level. */
+        this.levelWidth = 0.0;
+        /** The height of the level. */
+        this.levelHeight = 0.0;
+        /** The width of the canvas. */
+        this.canvasWidth = 0.0;
+        /** The height of the canvas. */
+        this.canvasHeight = 0.0;
         this.ratioX = ratioX;
         this.ratioY = ratioY;
         this.movingSpeed = movingSpeed;
         this.minimumCameraMove = minimumCameraMove;
+        this.levelWidth = levelWidth;
+        this.levelHeight = levelHeight;
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
     }
     /***************************************************************************************************************
     *   Updates the singleton instance of the camera by reassigning
     *   it's horizontal and vertical offset.
     *
-    *   @param levelWidth       The width of the level.
-    *   @param levelHeight      The height of the level.
-    *   @param canvasWidth      The width of the canvas.
-    *   @param canvasHeight     The height of the canvas.
     *   @param subjectX         The subject coordinate X to center the camera.
     *   @param subjectY         The subject coordinate Y to center the camera.
     *   @param lookingDirection The current direction the player looks at.
-    *   @param ascendY          Allows camera ascent Y.
+    *   @param allowAscendY     Allows camera ascending Y.
     *   @param renderer         The MatterJS renderer.
     ***************************************************************************************************************/
-    MfgCamera.prototype.update = function (
-        // TODO to constructor!
-        levelWidth, levelHeight, canvasWidth, canvasHeight, subjectX, subjectY, lookingDirection, ascendY, renderer) {
-        this.calculateTargets(lookingDirection, subjectX, subjectY, levelWidth, levelHeight, canvasWidth, canvasHeight);
+    MfgCamera.prototype.update = function (subjectX, subjectY, lookingDirection, allowAscendY, renderer) {
+        this.calculateTargets(lookingDirection, subjectX, subjectY);
         // move horizontal camera offsets to camera target
         var cameraMoveX = 0.0;
         if (this.offsetX < this.targetX) {
@@ -12228,11 +12247,10 @@ var MfgCamera = (function () {
             if (this.offsetX < this.targetX)
                 this.offsetX = this.targetX;
         }
-        // move vertical camera offsets to camera target
-        var cameraMoveY = 0.0;
-        if (ascendY && this.targetY < this.offsetY) {
+        // buffer camera on ascending, if allowed
+        if (allowAscendY && this.targetY < this.offsetY) {
             if (this.offsetY > this.targetY) {
-                cameraMoveY = (this.offsetY - this.targetY) * this.movingSpeed;
+                var cameraMoveY = (this.offsetY - this.targetY) * this.movingSpeed;
                 if (cameraMoveY < this.minimumCameraMove)
                     cameraMoveY = this.minimumCameraMove;
                 this.offsetY -= cameraMoveY;
@@ -12257,42 +12275,42 @@ var MfgCamera = (function () {
                 y: this.offsetY
             },
             {
-                x: this.offsetX + canvasWidth,
-                y: this.offsetY + canvasHeight
+                x: this.offsetX + this.canvasWidth,
+                y: this.offsetY + this.canvasHeight
             }
         ]);
     };
-    MfgCamera.prototype.calculateTargets = function (lookingDirection, subjectX, subjectY, levelWidth, levelHeight, canvasWidth, canvasHeight) {
+    MfgCamera.prototype.calculateTargets = function (lookingDirection, subjectX, subjectY) {
         // calculate scroll-offsets so camera is centered to subject
         switch (lookingDirection) {
             case mfg.MfgCharacterLookingDirection.ELeft:
                 {
-                    this.targetX = subjectX - (canvasWidth * (1.0 - this.ratioX));
+                    this.targetX = subjectX - (this.canvasWidth * (1.0 - this.ratioX));
                     break;
                 }
             case mfg.MfgCharacterLookingDirection.ERight:
                 {
-                    this.targetX = subjectX - (canvasWidth * this.ratioX);
+                    this.targetX = subjectX - (this.canvasWidth * this.ratioX);
                     break;
                 }
         }
-        this.targetY = subjectY - (canvasHeight * this.ratioY);
+        this.targetY = subjectY - (this.canvasHeight * this.ratioY);
         // clip camera target x to level bounds
         if (this.targetX < 0)
             this.targetX = 0;
-        if (this.targetX > levelWidth - canvasWidth)
-            this.targetX = levelWidth - canvasWidth;
+        if (this.targetX > this.levelWidth - this.canvasWidth)
+            this.targetX = this.levelWidth - this.canvasWidth;
         // clip camera target y to level bounds
         if (this.targetY < 0)
             this.targetY = 0;
-        if (this.targetY > levelHeight - canvasHeight)
-            this.targetY = levelHeight - canvasHeight;
+        if (this.targetY > this.levelHeight - this.canvasHeight)
+            this.targetY = this.levelHeight - this.canvasHeight;
     };
     /***************************************************************************************************************
     *   Resets the camera targets and offsets to the current player position without buffering.
     ***************************************************************************************************************/
     MfgCamera.prototype.reset = function () {
-        this.calculateTargets(mfg.MfgInit.game.level.player.lookingDirection, mfg.MfgInit.game.level.player.body.position.x, mfg.MfgInit.game.level.player.body.position.y, mfg.MfgInit.game.level.width, mfg.MfgInit.game.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT);
+        this.calculateTargets(mfg.MfgInit.game.level.player.lookingDirection, mfg.MfgInit.game.level.player.body.position.x, mfg.MfgInit.game.level.player.body.position.y);
         this.offsetX = this.targetX;
         this.offsetY = this.targetY;
     };
