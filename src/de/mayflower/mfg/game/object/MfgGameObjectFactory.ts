@@ -85,7 +85,7 @@
         *   @param image  The decoration image.
         *   @return       The created decoration.
         ***************************************************************************************************************/
-        public static createDecoration( x:number, y:number, width:number, height:number, image:string ):mfg.MfgObstacle
+        public static createDecoration( x:number, y:number, width:number, height:number, image:string ):mfg.MfgDecoration
         {
             return new mfg.MfgDecoration( mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image );
         }

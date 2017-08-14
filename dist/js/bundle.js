@@ -10538,13 +10538,7 @@ var MfgSettings = (function () {
     MfgSettings.UNIQUE_COLLISION_GROUP_1 = {
         category: 0x0001,
         mask: 0x00002,
-        group: 0x0003
-    };
-    /** The collision group for items and player collision indicator. */
-    MfgSettings.UNIQUE_COLLISION_GROUP_2 = {
-        category: 0x0004,
-        mask: 0x00005,
-        group: 0x0006
+        group: 0x0003,
     };
     return MfgSettings;
 }());
@@ -11583,25 +11577,25 @@ var MfgObstacle = (function (_super) {
     *   @param angle  The initial rotation.
     ***************************************************************************************************************/
     function MfgObstacle(shape, x, y, width, height, angle) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
+        _this.defaultCollisionFilter = null;
+        _this.defaultCollisionFilter = _this.body.collisionFilter;
+        return _this;
     }
     /***************************************************************************************************************
     *   Renders this obstacle.
     ***************************************************************************************************************/
     MfgObstacle.prototype.render = function () {
         /*
-        console.dir( this.body.collisionFilter );
-        
-        
                     if ( this.body.position.y > mfg.Mfg.game.level.player.body.position.y )
+                    {
+                        this.body.collisionFilter = this.defaultCollisionFilter;
+                    }
+                    else
                     {
                         this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUP_1;
                     }
-                    else
         */
-        {
-            //                this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUP_2;
-        }
     };
     return MfgObstacle;
 }(mfg.MfgGameObject));
