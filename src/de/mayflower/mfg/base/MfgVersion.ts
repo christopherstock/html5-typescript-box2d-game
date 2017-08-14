@@ -3,7 +3,7 @@
     *   Contains the project history with all current and completed version information.
     *
     *   @author     Christopher Stock
-    *   @version    0.0.8
+    *   @version    0.0.1
     *******************************************************************************************************************/
     export class MfgVersion
     {

@@ -1,7 +1,6 @@
 
     import * as Matter from 'matter-js';
     import * as mfg    from '../../mfg';
-    import {MfgCharacterLookingDirection} from "./MfgCharacterLookingDirection";
 
     /*******************************************************************************************************************
     *   Represents the player being controlled by the user.
@@ -18,7 +17,7 @@
         *   @param y                Startup position Y.
         *   @param lookingDirection The initial looking direction.
         ***************************************************************************************************************/
-        public constructor( x:number, y:number, lookingDirection:MfgCharacterLookingDirection )
+        public constructor( x:number, y:number, lookingDirection:mfg.MfgCharacterLookingDirection )
         {
             super
             (

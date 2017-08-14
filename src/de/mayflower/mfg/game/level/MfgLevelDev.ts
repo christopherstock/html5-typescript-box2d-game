@@ -1,4 +1,5 @@
 
+    import * as Matter from 'matter-js';
     import * as mfg    from '../../mfg';
 
     /*******************************************************************************************************************
@@ -20,7 +21,7 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 3000, 2650, mfg.MfgCharacterLookingDirection.ELeft );
+            this.player = new mfg.MfgPlayer( 3000, 2650, mfg.MfgCharacterLookingDirection.ERight );
 
             // setup all game objects
             this.gameObjects =
@@ -31,6 +32,7 @@
                 // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration( 860,  2860, 120, 90, null ),
                 mfg.MfgGameObjectFactory.createDecoration( 2200, 2860, 120, 90, null ),
+                mfg.MfgGameObjectFactory.createDecoration( 3600, 2860, 120, 90, null ),
 
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle( 0,    2950, 1380, 25, 0.0 ),
@@ -50,6 +52,15 @@
                 // sigsaws
                 mfg.MfgGameObjectFactory.createSigsaw( 1420, 2950, 400, 25, null ),
                 mfg.MfgGameObjectFactory.createBounce( 1840, 2950, 400, 25, null ),
+
+                // animated platforms
+                new mfg.MfgPlatform( mfg.MfgGameObjectShape.ERectangle, 75.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL,
+                    [
+                        Matter.Vector.create( 3650.0, 2850.0 ),
+                        Matter.Vector.create( 3700.0, 2900.0 ),
+                        Matter.Vector.create( 3700.0, 2500.0 ),
+                    ]
+                ),
 
                 // items
                 mfg.MfgGameObjectFactory.createItem( 1100, 2850 ),

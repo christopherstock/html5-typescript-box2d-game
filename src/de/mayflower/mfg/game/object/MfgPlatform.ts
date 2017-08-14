@@ -10,27 +10,93 @@
     *******************************************************************************************************************/
     export class MfgPlatform extends mfg.MfgGameObject
     {
+        /** Normal moving speed. */
+        public  static      SPEED_NORMAL            :number                         = 100.0;
+
         /** The waypoints for this platform to move. */
-        protected           waypoints               :Array<Matter.Vector>           = null;
+        private             waypoints               :Array<Matter.Vector>           = null;
         /** The current waypoint to move to. */
-        protected           currentWaypointIndex    :number                         = 0;
+        private             currentWaypointIndex    :number                         = 0;
+
+        /** A counter for the current step to the next waypoint. */
+        private             currentStep             :number                         = 0;
+
+        /** Step size X per tick in px. */
+        private             stepSizeX               :number                         = 0.0;
+        /** Step size Y per tick in px. */
+        private             stepSizeY               :number                         = 0.0;
+
+        /** The number of ticks till the next waypoint is reached. */
+        private             speed                   :number                         = 0.0;
 
         /***************************************************************************************************************
-        *   Creates a new platform.
+        *   Creates a new platform. Initial position is the first waypoint.
         *
         *   @param shape     The shape for this object.
-        *   @param x         Startup position X.
-        *   @param y         Startup position Y.
         *   @param width     The new width.
         *   @param height    The new height.
         *   @param angle     The initial rotation.
-        *   @param waypoints The waypoints for this platform to move.
+        *   @param waypoints The waypoints for this platform to move to.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, angle:number, waypoints:Array<Matter.Vector> )
+        public constructor
+        (
+            shape:mfg.MfgGameObjectShape,
+            width:number,
+            height:number,
+            angle:number,
+            speed:number,
+            waypoints:Array<Matter.Vector>
+        )
         {
-            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle );
+            super
+            (
+                shape,
+                0.0,
+                0.0,
+                width,
+                height,
+                mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
+                false,
+                true,
+                null,
+                angle
+            );
 
-            this.waypoints = waypoints;
+            this.waypoints            = waypoints;
+            this.speed                = speed;
+
+            this.currentWaypointIndex = -1;
+
+            this.assignNextWaypoint();
+        }
+
+        /***************************************************************************************************************
+        *   Assigns the next waypoint to aim to.
+        ***************************************************************************************************************/
+        private assignNextWaypoint()
+        {
+            // assign current wp
+            ++this.currentWaypointIndex;
+            if ( this.currentWaypointIndex >= this.waypoints.length ) this.currentWaypointIndex = 0;
+
+            // assign next wp
+            let nextWaypointIndex = this.currentWaypointIndex + 1;
+            if ( nextWaypointIndex >= this.waypoints.length ) nextWaypointIndex = 0;
+
+            // set player to starting wp
+            Matter.Body.setPosition( this.body, this.waypoints[ this.currentWaypointIndex ] );
+
+            // reset step counter
+            this.currentStep = 0;
+
+            // calculate deltas
+            let deltaX:number = Math.abs( this.waypoints[ nextWaypointIndex ].x - this.waypoints[ this.currentWaypointIndex ].x );
+            let deltaY:number = Math.abs( this.waypoints[ nextWaypointIndex ].y - this.waypoints[ this.currentWaypointIndex ].y );
+
+
+
+            this.stepSizeX = ( this.waypoints[ nextWaypointIndex ].x - this.waypoints[ this.currentWaypointIndex ].x ) / this.speed;
+            this.stepSizeY = ( this.waypoints[ nextWaypointIndex ].y - this.waypoints[ this.currentWaypointIndex ].y ) / this.speed;
         }
 
         /***************************************************************************************************************
@@ -38,8 +104,12 @@
         ***************************************************************************************************************/
         public render()
         {
+            ++this.currentStep;
+            if ( this.currentStep > this.speed )
+            {
+                this.assignNextWaypoint();
+            }
 
-
-
+            Matter.Body.translate( this.body, Matter.Vector.create( this.stepSizeX, this.stepSizeY ) );
         }
     }

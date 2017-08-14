@@ -6,7 +6,7 @@
     *   All images the game makes use of.
     *
     *   @author     Christopher Stock
-    *   @version    0.0.8
+    *   @version    0.0.1
     *******************************************************************************************************************/
     export class MfgImages
     {

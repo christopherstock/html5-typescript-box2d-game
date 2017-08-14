@@ -238,7 +238,7 @@
         ***************************************************************************************************************/
         protected moveLeft()
         {
-            Matter.Body.translate( this.body, { x: -this.speedMove, y: 0 });
+            Matter.Body.translate( this.body, Matter.Vector.create( -this.speedMove, 0 ) );
             this.lookingDirection = mfg.MfgCharacterLookingDirection.ELeft;
         }
 
@@ -247,7 +247,7 @@
         ***************************************************************************************************************/
         protected moveRight()
         {
-            Matter.Body.translate( this.body, { x: this.speedMove, y: 0 });
+            Matter.Body.translate( this.body, Matter.Vector.create( this.speedMove, 0 ) );
             this.lookingDirection = mfg.MfgCharacterLookingDirection.ERight;
         }
     }
