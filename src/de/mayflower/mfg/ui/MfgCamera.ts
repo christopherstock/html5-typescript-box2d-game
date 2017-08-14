@@ -6,10 +6,13 @@
     *   Manages the camera that calculates the scrolling amounts.
     *
     *   @author     Christopher Stock
-    *   @version    0.0.8
+    *   @version    0.0.1
     *******************************************************************************************************************/
     export class MfgCamera
     {
+        /** The renderer for the MatterJS engine. */
+        private     renderer                    :Matter.Render          = null;
+
         /** Camera centering ratio X. */
         private     ratioX                      :number                 = 0.0;
         /** Camera centering ratio X. */
@@ -43,6 +46,7 @@
         /***************************************************************************************************************
         *   Constructs a new camera.
         *
+        *   @param renderer         The MatterJS renderer to set the viewport to.
         *   @param ratioX            Camera ratio X for horizontal centering of the player.
         *   @param ratioY            Camera ratio Y for vertical centering   of the player.
         *   @param movingSpeed       The moving speed for the camera.
@@ -54,6 +58,7 @@
         ***************************************************************************************************************/
         public constructor
         (
+            renderer:Matter.Render,
             ratioX:number,
             ratioY:number,
             movingSpeed:number,
@@ -64,6 +69,8 @@
             canvasHeight:number
         )
         {
+            this.renderer          = renderer;
+
             this.ratioX            = ratioX;
             this.ratioY            = ratioY;
 
@@ -85,15 +92,13 @@
         *   @param subjectY         The subject coordinate Y to center the camera.
         *   @param lookingDirection The current direction the player looks at.
         *   @param allowAscendY     Allows camera ascending Y.
-        *   @param renderer         The MatterJS renderer.
         ***************************************************************************************************************/
         public update
         (
             subjectX:number,
             subjectY:number,
             lookingDirection:mfg.MfgCharacterLookingDirection,
-            allowAscendY:boolean,
-            renderer:Matter.Render
+            allowAscendY:boolean
         )
         {
             this.calculateTargets
@@ -145,7 +150,7 @@
             }
 
             // assign current camera offset to renderer
-            renderer.bounds = Matter.Bounds.create(
+            this.renderer.bounds = Matter.Bounds.create(
                 [
                     {
                         x: this.offsetX,

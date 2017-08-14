@@ -11731,13 +11731,6 @@ var MfgGame = (function () {
             y: mfg.MfgSettings.DEFAULT_GRAVITY_Y,
             scale: 0.001
         };
-        Matter.Events.on(this.engine, 'afterRender', function (event) {
-            var context = mfg.Mfg.game.renderer.context;
-            context.font = "45px 'Cabin Sketch'";
-            context.fillText("THROW OBJECT HERE", 150, 80);
-            context.fillStyle = "#ff0000";
-            context.fillRect(0, 0, 200, 100);
-        });
     };
     /***************************************************************************************************************
     *   Inits the key system.
@@ -11755,7 +11748,7 @@ var MfgGame = (function () {
         this.level = levelToLaunch;
         this.level.init();
         // reset camera
-        this.camera = new mfg.MfgCamera(mfg.MfgSettings.CAMERA_RATIO_X, mfg.MfgSettings.CAMERA_RATIO_Y, mfg.MfgSettings.CAMERA_MOVING_SPEED, mfg.MfgSettings.CAMERA_MOVING_MINIMUM, this.level.width, this.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT);
+        this.camera = new mfg.MfgCamera(this.renderer, mfg.MfgSettings.CAMERA_RATIO_X, mfg.MfgSettings.CAMERA_RATIO_Y, mfg.MfgSettings.CAMERA_MOVING_SPEED, mfg.MfgSettings.CAMERA_MOVING_MINIMUM, this.level.width, this.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT);
         this.camera.reset();
     };
     /***************************************************************************************************************
@@ -11767,7 +11760,7 @@ var MfgGame = (function () {
         // render level
         this.level.render();
         // render camera
-        this.camera.update(this.level.player.body.position.x, this.level.player.body.position.y, this.level.player.lookingDirection, this.level.player.collidesBottom, this.renderer);
+        this.camera.update(this.level.player.body.position.x, this.level.player.body.position.y, this.level.player.lookingDirection, this.level.player.collidesBottom);
     };
     /***************************************************************************************************************
     *   Handles pressed menu keys.
@@ -12137,12 +12130,13 @@ var mfg = __webpack_require__(0);
 *   Manages the camera that calculates the scrolling amounts.
 *
 *   @author     Christopher Stock
-*   @version    0.0.8
+*   @version    0.0.1
 *******************************************************************************************************************/
 var MfgCamera = (function () {
     /***************************************************************************************************************
     *   Constructs a new camera.
     *
+    *   @param renderer         The MatterJS renderer to set the viewport to.
     *   @param ratioX            Camera ratio X for horizontal centering of the player.
     *   @param ratioY            Camera ratio Y for vertical centering   of the player.
     *   @param movingSpeed       The moving speed for the camera.
@@ -12152,7 +12146,9 @@ var MfgCamera = (function () {
     *   @param canvasWidth       The width of the canvas.
     *   @param canvasHeight      The height of the canvas.
     ***************************************************************************************************************/
-    function MfgCamera(ratioX, ratioY, movingSpeed, minimumCameraMove, levelWidth, levelHeight, canvasWidth, canvasHeight) {
+    function MfgCamera(renderer, ratioX, ratioY, movingSpeed, minimumCameraMove, levelWidth, levelHeight, canvasWidth, canvasHeight) {
+        /** The renderer for the MatterJS engine. */
+        this.renderer = null;
         /** Camera centering ratio X. */
         this.ratioX = 0.0;
         /** Camera centering ratio X. */
@@ -12177,6 +12173,7 @@ var MfgCamera = (function () {
         this.canvasWidth = 0.0;
         /** The height of the canvas. */
         this.canvasHeight = 0.0;
+        this.renderer = renderer;
         this.ratioX = ratioX;
         this.ratioY = ratioY;
         this.movingSpeed = movingSpeed;
@@ -12194,9 +12191,8 @@ var MfgCamera = (function () {
     *   @param subjectY         The subject coordinate Y to center the camera.
     *   @param lookingDirection The current direction the player looks at.
     *   @param allowAscendY     Allows camera ascending Y.
-    *   @param renderer         The MatterJS renderer.
     ***************************************************************************************************************/
-    MfgCamera.prototype.update = function (subjectX, subjectY, lookingDirection, allowAscendY, renderer) {
+    MfgCamera.prototype.update = function (subjectX, subjectY, lookingDirection, allowAscendY) {
         this.calculateTargets(lookingDirection, subjectX, subjectY);
         // move horizontal camera offsets to camera target
         var cameraMoveX = 0.0;
@@ -12238,7 +12234,7 @@ var MfgCamera = (function () {
             */
         }
         // assign current camera offset to renderer
-        renderer.bounds = Matter.Bounds.create([
+        this.renderer.bounds = Matter.Bounds.create([
             {
                 x: this.offsetX,
                 y: this.offsetY

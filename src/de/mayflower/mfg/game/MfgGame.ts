@@ -84,16 +84,6 @@
                 y: mfg.MfgSettings.DEFAULT_GRAVITY_Y,
                 scale: 0.001
             };
-
-            Matter.Events.on(
-                this.engine, 'afterRender', function( event ) {
-                let context = mfg.Mfg.game.renderer.context;
-                context.font = "45px 'Cabin Sketch'";
-                context.fillText("THROW OBJECT HERE", 150, 80);
-
-                context.fillStyle = "#ff0000";
-                context.fillRect(0, 0, 200, 100);
-            });
         }
 
         /***************************************************************************************************************
@@ -118,6 +108,7 @@
 
             // reset camera
             this.camera = new mfg.MfgCamera(
+                this.renderer,
                 mfg.MfgSettings.CAMERA_RATIO_X,
                 mfg.MfgSettings.CAMERA_RATIO_Y,
                 mfg.MfgSettings.CAMERA_MOVING_SPEED,
@@ -158,8 +149,7 @@
                 this.level.player.body.position.x,
                 this.level.player.body.position.y,
                 this.level.player.lookingDirection,
-                this.level.player.collidesBottom,
-                this.renderer
+                this.level.player.collidesBottom
             );
         }
 
