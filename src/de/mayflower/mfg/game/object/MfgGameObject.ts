@@ -88,9 +88,7 @@
                                 radius: [ 5.0, 5.0, 5.0, 5.0 ]
                             },
                             friction: friction,
-
-                            frictionStatic: 1.0,
-
+                            frictionStatic: Infinity,
 
                         }
                     );
@@ -120,6 +118,8 @@
                             isSensor: isSensor,
                             isStatic: isStatic,
                             angle: mfg.MfgMath.angleToRad( angle ),
+                            friction: friction,
+                            frictionStatic: Infinity,
                         }
                     );
 
