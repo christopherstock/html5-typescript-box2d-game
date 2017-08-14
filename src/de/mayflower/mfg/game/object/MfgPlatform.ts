@@ -11,13 +11,17 @@
     export class MfgPlatform extends mfg.MfgGameObject
     {
         /** Normal moving speed. */
-        public  static      SPEED_NORMAL            :number                         = 100.0;
+        public  static      SPEED_NORMAL            :number                         = 1.0;
 
         /** The waypoints for this platform to move. */
         private             waypoints               :Array<Matter.Vector>           = null;
+        /** The number of ticks till the next waypoint is reached. */
+        private             speed                   :number                         = 0.0;
         /** The current waypoint to move to. */
         private             currentWaypointIndex    :number                         = 0;
 
+        /** The number of animation steps till the next waypoint. */
+        private             stepsTillNextWaypoint   :number                         = 0;
         /** A counter for the current step to the next waypoint. */
         private             currentStep             :number                         = 0;
 
@@ -25,9 +29,6 @@
         private             stepSizeX               :number                         = 0.0;
         /** Step size Y per tick in px. */
         private             stepSizeY               :number                         = 0.0;
-
-        /** The number of ticks till the next waypoint is reached. */
-        private             speed                   :number                         = 0.0;
 
         /***************************************************************************************************************
         *   Creates a new platform. Initial position is the first waypoint.
@@ -62,11 +63,10 @@
                 angle
             );
 
-            this.waypoints            = waypoints;
-            this.speed                = speed;
+            this.waypoints = waypoints;
+            this.speed     = speed;
 
             this.currentWaypointIndex = -1;
-
             this.assignNextWaypoint();
         }
 
@@ -86,17 +86,16 @@
             // set player to starting wp
             Matter.Body.setPosition( this.body, this.waypoints[ this.currentWaypointIndex ] );
 
-            // reset step counter
-            this.currentStep = 0;
-
-            // calculate deltas
             let deltaX:number = Math.abs( this.waypoints[ nextWaypointIndex ].x - this.waypoints[ this.currentWaypointIndex ].x );
             let deltaY:number = Math.abs( this.waypoints[ nextWaypointIndex ].y - this.waypoints[ this.currentWaypointIndex ].y );
 
+            let directDistance:number = Math.sqrt( ( deltaX * deltaX ) + ( deltaY * deltaY ) );
 
+            this.currentStep = 0;
+            this.stepsTillNextWaypoint = directDistance / this.speed;
 
-            this.stepSizeX = ( this.waypoints[ nextWaypointIndex ].x - this.waypoints[ this.currentWaypointIndex ].x ) / this.speed;
-            this.stepSizeY = ( this.waypoints[ nextWaypointIndex ].y - this.waypoints[ this.currentWaypointIndex ].y ) / this.speed;
+            this.stepSizeX = ( this.waypoints[ nextWaypointIndex ].x - this.waypoints[ this.currentWaypointIndex ].x ) / this.stepsTillNextWaypoint;
+            this.stepSizeY = ( this.waypoints[ nextWaypointIndex ].y - this.waypoints[ this.currentWaypointIndex ].y ) / this.stepsTillNextWaypoint;
         }
 
         /***************************************************************************************************************
@@ -105,11 +104,12 @@
         public render()
         {
             ++this.currentStep;
-            if ( this.currentStep > this.speed )
+            if ( this.currentStep > this.stepsTillNextWaypoint )
             {
                 this.assignNextWaypoint();
             }
 
+            // move
             Matter.Body.translate( this.body, Matter.Vector.create( this.stepSizeX, this.stepSizeY ) );
         }
     }

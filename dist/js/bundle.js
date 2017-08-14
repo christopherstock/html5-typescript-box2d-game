@@ -10605,7 +10605,6 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Create animated platforms.
 *   TODO ASAP   Solve friction for platforms.
 *   TODO HIGH   Pass-through walls?
 *   TODO ASAP   Create custom renderer that extends Matter.Render!
@@ -11256,16 +11255,18 @@ var MfgPlatform = (function (_super) {
         var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle) || this;
         /** The waypoints for this platform to move. */
         _this.waypoints = null;
+        /** The number of ticks till the next waypoint is reached. */
+        _this.speed = 0.0;
         /** The current waypoint to move to. */
         _this.currentWaypointIndex = 0;
+        /** The number of animation steps till the next waypoint. */
+        _this.stepsTillNextWaypoint = 0;
         /** A counter for the current step to the next waypoint. */
         _this.currentStep = 0;
         /** Step size X per tick in px. */
         _this.stepSizeX = 0.0;
         /** Step size Y per tick in px. */
         _this.stepSizeY = 0.0;
-        /** The number of ticks till the next waypoint is reached. */
-        _this.speed = 0.0;
         _this.waypoints = waypoints;
         _this.speed = speed;
         _this.currentWaypointIndex = -1;
@@ -11286,26 +11287,27 @@ var MfgPlatform = (function (_super) {
             nextWaypointIndex = 0;
         // set player to starting wp
         Matter.Body.setPosition(this.body, this.waypoints[this.currentWaypointIndex]);
-        // reset step counter
-        this.currentStep = 0;
-        // calculate deltas
         var deltaX = Math.abs(this.waypoints[nextWaypointIndex].x - this.waypoints[this.currentWaypointIndex].x);
         var deltaY = Math.abs(this.waypoints[nextWaypointIndex].y - this.waypoints[this.currentWaypointIndex].y);
-        this.stepSizeX = (this.waypoints[nextWaypointIndex].x - this.waypoints[this.currentWaypointIndex].x) / this.speed;
-        this.stepSizeY = (this.waypoints[nextWaypointIndex].y - this.waypoints[this.currentWaypointIndex].y) / this.speed;
+        var directDistance = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
+        this.currentStep = 0;
+        this.stepsTillNextWaypoint = directDistance / this.speed;
+        this.stepSizeX = (this.waypoints[nextWaypointIndex].x - this.waypoints[this.currentWaypointIndex].x) / this.stepsTillNextWaypoint;
+        this.stepSizeY = (this.waypoints[nextWaypointIndex].y - this.waypoints[this.currentWaypointIndex].y) / this.stepsTillNextWaypoint;
     };
     /***************************************************************************************************************
     *   Renders this obstacle.
     ***************************************************************************************************************/
     MfgPlatform.prototype.render = function () {
         ++this.currentStep;
-        if (this.currentStep > this.speed) {
+        if (this.currentStep > this.stepsTillNextWaypoint) {
             this.assignNextWaypoint();
         }
+        // move
         Matter.Body.translate(this.body, Matter.Vector.create(this.stepSizeX, this.stepSizeY));
     };
     /** Normal moving speed. */
-    MfgPlatform.SPEED_NORMAL = 100.0;
+    MfgPlatform.SPEED_NORMAL = 1.0;
     return MfgPlatform;
 }(mfg.MfgGameObject));
 exports.MfgPlatform = MfgPlatform;
@@ -12042,7 +12044,7 @@ var MfgLevelDev = (function (_super) {
                 new mfg.MfgPlatform(mfg.MfgGameObjectShape.ERectangle, 75.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
                     Matter.Vector.create(3650.0, 2850.0),
                     Matter.Vector.create(3700.0, 2900.0),
-                    Matter.Vector.create(3700.0, 2500.0),
+                    Matter.Vector.create(3750.0, 2600.0),
                 ]),
                 // items
                 mfg.MfgGameObjectFactory.createItem(1100, 2850),

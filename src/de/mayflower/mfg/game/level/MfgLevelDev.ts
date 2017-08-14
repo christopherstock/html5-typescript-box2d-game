@@ -58,7 +58,7 @@
                     [
                         Matter.Vector.create( 3650.0, 2850.0 ),
                         Matter.Vector.create( 3700.0, 2900.0 ),
-                        Matter.Vector.create( 3700.0, 2500.0 ),
+                        Matter.Vector.create( 3750.0, 2600.0 ),
                     ]
                 ),
 
