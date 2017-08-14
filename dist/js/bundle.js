@@ -10535,10 +10535,16 @@ var MfgSettings = (function () {
     /** The relative path from index.html where all background images reside. */
     MfgSettings.PATH_IMAGE_BG = "res/image/bg/";
     /** The collision group for items and player collision indicator. */
-    MfgSettings.UNIQUE_COLLISION_GROUPS = {
+    MfgSettings.UNIQUE_COLLISION_GROUP_1 = {
         category: 0x0001,
         mask: 0x00002,
         group: 0x0003
+    };
+    /** The collision group for items and player collision indicator. */
+    MfgSettings.UNIQUE_COLLISION_GROUP_2 = {
+        category: 0x0004,
+        mask: 0x00005,
+        group: 0x0006
     };
     return MfgSettings;
 }());
@@ -10608,6 +10614,7 @@ var mfg = __webpack_require__(0);
 *   TODO HIGH   Pass-through walls?
 *   TODO ASAP   Create custom renderer that extends Matter.Render!
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
+*   TODO ASAP   Avoid sliding down on platforms on falling and touching platform side?
 *   TODO HIGH   Replace own jump implementation?
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
@@ -10752,7 +10759,6 @@ var MfgGameObject = (function () {
                             radius: [5.0, 5.0, 5.0, 5.0]
                         },
                         friction: friction,
-                        frictionStatic: Infinity,
                     });
                     this.width = width;
                     this.height = height;
@@ -10772,7 +10778,6 @@ var MfgGameObject = (function () {
                         isStatic: isStatic,
                         angle: mfg.MfgMath.angleToRad(angle),
                         friction: friction,
-                        frictionStatic: Infinity,
                     });
                     this.width = diameter;
                     this.height = diameter;
@@ -10782,6 +10787,7 @@ var MfgGameObject = (function () {
         if (image != null) {
             this.body.render.sprite.texture = image;
         }
+        Matter.Body.setMass(this.body, 70.0);
     }
     /***************************************************************************************************************
     *   Clips this body to level bounds.
@@ -11279,6 +11285,7 @@ var MfgPlatform = (function (_super) {
         _this.speed = speed;
         _this.currentWaypointIndex = -1;
         _this.assignNextWaypoint();
+        _this.body.frictionStatic = Infinity;
         return _this;
         // Matter.Body.setMass( this.body, 70.0 );
     }
@@ -11599,6 +11606,19 @@ var MfgObstacle = (function (_super) {
     *   Renders this obstacle.
     ***************************************************************************************************************/
     MfgObstacle.prototype.render = function () {
+        /*
+        console.dir( this.body.collisionFilter );
+        
+        
+                    if ( this.body.position.y > mfg.Mfg.game.level.player.body.position.y )
+                    {
+                        this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUP_1;
+                    }
+                    else
+        */
+        {
+            //                this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUP_2;
+        }
     };
     return MfgObstacle;
 }(mfg.MfgGameObject));
@@ -12043,6 +12063,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createObstacle(380, 2500, 400, 15, -15.0),
                 mfg.MfgGameObjectFactory.createObstacle(1320, 2700, 400, 15, -15.0),
                 mfg.MfgGameObjectFactory.createObstacle(2000, 2300, 400, 15, -15.0),
+                mfg.MfgGameObjectFactory.createObstacle(3800, 2700, 400, 20, 0.0),
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(370, 2100, 80, 80),
                 mfg.MfgGameObjectFactory.createSphere(320, 2000, 100),

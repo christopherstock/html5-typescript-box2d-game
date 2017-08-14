@@ -30,5 +30,22 @@
         ***************************************************************************************************************/
         public render()
         {
+
+
+/*
+console.dir( this.body.collisionFilter );
+
+
+            if ( this.body.position.y > mfg.Mfg.game.level.player.body.position.y )
+            {
+                this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUP_1;
+            }
+            else
+*/
+            {
+//                this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUP_2;
+            }
+
+
         }
     }

@@ -74,9 +74,15 @@
         public      static      PATH_IMAGE_BG                               :string                     = "res/image/bg/";
 
         /** The collision group for items and player collision indicator. */
-        public      static      UNIQUE_COLLISION_GROUPS                     :Matter.ICollisionFilter    = {
+        public      static      UNIQUE_COLLISION_GROUP_1                     :Matter.ICollisionFilter    = {
                 category: 0x0001,
                 mask:     0x00002,
                 group:    0x0003
+        };
+        /** The collision group for items and player collision indicator. */
+        public      static      UNIQUE_COLLISION_GROUP_2                     :Matter.ICollisionFilter    = {
+                category: 0x0004,
+                mask:     0x00005,
+                group:    0x0006
         };
     }

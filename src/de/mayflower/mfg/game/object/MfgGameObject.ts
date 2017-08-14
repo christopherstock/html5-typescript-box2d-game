@@ -88,8 +88,7 @@
                                 radius: [ 5.0, 5.0, 5.0, 5.0 ]
                             },
                             friction: friction,
-                            frictionStatic: Infinity,
-
+                            // collisionFilter: mfg.MfgSettings.UNIQUE_COLLISION_GROUP_1,
                         }
                     );
 
@@ -119,7 +118,7 @@
                             isStatic: isStatic,
                             angle: mfg.MfgMath.angleToRad( angle ),
                             friction: friction,
-                            frictionStatic: Infinity,
+                            // collisionFilter: mfg.MfgSettings.UNIQUE_COLLISION_GROUP_1,
                         }
                     );
 
@@ -134,6 +133,9 @@
             {
                 this.body.render.sprite.texture = image;
             }
+
+
+            Matter.Body.setMass( this.body, 70.0 );
         }
 
         /***************************************************************************************************************

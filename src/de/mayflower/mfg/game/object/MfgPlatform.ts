@@ -71,6 +71,8 @@
             this.currentWaypointIndex = -1;
             this.assignNextWaypoint();
 
+            this.body.frictionStatic = Infinity;
+
             // Matter.Body.setMass( this.body, 70.0 );
         }
 
