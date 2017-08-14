@@ -8,7 +8,6 @@
     *   TODO ASAP   Create custom renderer that extends Matter.Render!
     *   TODO ASAP   Check sprite or image clipping and scaling to player size?
     *   TODO ASAP   Avoid sliding down on platforms on falling and touching platform side?
-    *   TODO HIGH   Replace own jump implementation?
     *   TODO HIGH   Skew image (sensor) for waving grass effect?
     *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
     *   TODO HIGH   Create different enemy move patterns.

@@ -14,17 +14,15 @@
         public          lookingDirection        :mfg.MfgCharacterLookingDirection   = null;
 
         /** The top line that checks collisions with the ceiling. */
-        protected       topSensor               :Matter.Body                        = null;
+    //  protected       topSensor               :Matter.Body                        = null;
         /** The bottom line that checks collisions with the floor. */
         protected       bottomSensor            :Matter.Body                        = null;
 
-        /** The current jump force. */
-        protected       jumpPower               :number                             = 0.0;
         /** Flags if this character is dead. */
         protected       dead                    :boolean                            = false;
 
         /** flags if the character collides with the top sensor. */
-        public          collidesTop             :boolean                            = false;
+     // public          collidesTop             :boolean                            = false;
         /** flags if the character collides with the bottom sensor. */
         public          collidesBottom          :boolean                            = false;
 
@@ -90,7 +88,7 @@
                     isSensor: true
                 }
             );
-
+/*
             this.topSensor = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),
                 y - 1,
@@ -106,19 +104,17 @@
                     isSensor: true
                 }
             );
-
+*/
             this.body = Matter.Body.create(
                 {
                     parts:
                     [
                         this.body,
                         this.bottomSensor,
-                        this.topSensor,
+//                      this.topSensor,
                     ]
                 }
             );
-
-            // Matter.Body.setMass( this.body, 70.0 );
         }
 
         /***************************************************************************************************************
@@ -127,14 +123,13 @@
         public render()
         {
             // check top and bottom collision state
-            this.collidesTop    = this.isColliding( this.topSensor,    true  );
+         // this.collidesTop    = this.isColliding( this.topSensor,    true  );
             this.collidesBottom = this.isColliding( this.bottomSensor, false );
 
             // avoid this body from rotating!
             Matter.Body.setAngularVelocity( this.body, 0.0 );
             Matter.Body.setAngle( this.body, 0.0 );
 
-            this.renderJumping();
             this.clipToHorizontalLevelBounds();
 
             if ( !this.dead )
@@ -209,40 +204,13 @@
         }
 
         /***************************************************************************************************************
-        *   Handles jumping.
-        ***************************************************************************************************************/
-        protected renderJumping()
-        {
-            // render jumping
-            if ( this.jumpPower > 0.0 )
-            {
-                // check top collision
-                if ( this.collidesTop )
-                {
-                    this.jumpPower = 0.0;
-                }
-                else
-                {
-                    // move body
-                    Matter.Body.translate( this.body, { x: 0.0, y: -this.jumpPower });
-
-                    this.jumpPower -= 2.0;
-
-                    if ( this.jumpPower < 0.0 ) {
-                        this.jumpPower = 0.0;
-                    }
-                }
-            }
-        }
-
-        /***************************************************************************************************************
         *   Lets this character jump.
         ***************************************************************************************************************/
         protected jump()
         {
             if ( this.collidesBottom )
             {
-                this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
+                Matter.Body.applyForce( this.body, this.body.position, Matter.Vector.create( 0.0, -3.0 ) );
             }
         }
 

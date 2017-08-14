@@ -10615,7 +10615,6 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Create custom renderer that extends Matter.Render!
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
 *   TODO ASAP   Avoid sliding down on platforms on falling and touching platform side?
-*   TODO HIGH   Replace own jump implementation?
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
 *   TODO HIGH   Create different enemy move patterns.
@@ -11016,15 +11015,13 @@ var MfgCharacter = (function (_super) {
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** The top line that checks collisions with the ceiling. */
-        _this.topSensor = null;
+        //  protected       topSensor               :Matter.Body                        = null;
         /** The bottom line that checks collisions with the floor. */
         _this.bottomSensor = null;
-        /** The current jump force. */
-        _this.jumpPower = 0.0;
         /** Flags if this character is dead. */
         _this.dead = false;
         /** flags if the character collides with the top sensor. */
-        _this.collidesTop = false;
+        // public          collidesTop             :boolean                            = false;
         /** flags if the character collides with the bottom sensor. */
         _this.collidesBottom = false;
         /** The speed for horizontal movements. */
@@ -11039,35 +11036,41 @@ var MfgCharacter = (function (_super) {
             },
             isSensor: true
         });
-        _this.topSensor = Matter.Bodies.rectangle(x + (width / 2), y - 1, width, 1.0, {
-            render: {
-                opacity: 1.0,
-                strokeStyle: '#00ff00',
-                lineWidth: 2.0,
-            },
-            isSensor: true
-        });
+        /*
+                    this.topSensor = Matter.Bodies.rectangle(
+                        x + ( width  / 2 ),
+                        y - 1,
+                        width,
+                        1.0,
+                        {
+                            render:
+                            {
+                                opacity: 1.0,
+                                strokeStyle: '#00ff00',
+                                lineWidth: 2.0,
+                            },
+                            isSensor: true
+                        }
+                    );
+        */
         _this.body = Matter.Body.create({
             parts: [
                 _this.body,
                 _this.bottomSensor,
-                _this.topSensor,
             ]
         });
         return _this;
-        // Matter.Body.setMass( this.body, 70.0 );
     }
     /***************************************************************************************************************
     *   Renders the current character tick.
     ***************************************************************************************************************/
     MfgCharacter.prototype.render = function () {
         // check top and bottom collision state
-        this.collidesTop = this.isColliding(this.topSensor, true);
+        // this.collidesTop    = this.isColliding( this.topSensor,    true  );
         this.collidesBottom = this.isColliding(this.bottomSensor, false);
         // avoid this body from rotating!
         Matter.Body.setAngularVelocity(this.body, 0.0);
         Matter.Body.setAngle(this.body, 0.0);
-        this.renderJumping();
         this.clipToHorizontalLevelBounds();
         if (!this.dead) {
             this.checkFallingDead();
@@ -11129,31 +11132,11 @@ var MfgCharacter = (function (_super) {
         var e_1, _c;
     };
     /***************************************************************************************************************
-    *   Handles jumping.
-    ***************************************************************************************************************/
-    MfgCharacter.prototype.renderJumping = function () {
-        // render jumping
-        if (this.jumpPower > 0.0) {
-            // check top collision
-            if (this.collidesTop) {
-                this.jumpPower = 0.0;
-            }
-            else {
-                // move body
-                Matter.Body.translate(this.body, { x: 0.0, y: -this.jumpPower });
-                this.jumpPower -= 2.0;
-                if (this.jumpPower < 0.0) {
-                    this.jumpPower = 0.0;
-                }
-            }
-        }
-    };
-    /***************************************************************************************************************
     *   Lets this character jump.
     ***************************************************************************************************************/
     MfgCharacter.prototype.jump = function () {
         if (this.collidesBottom) {
-            this.jumpPower = mfg.MfgSettings.PLAYER_JUMP_POWER;
+            Matter.Body.applyForce(this.body, this.body.position, Matter.Vector.create(0.0, -3.0));
         }
     };
     /***************************************************************************************************************
