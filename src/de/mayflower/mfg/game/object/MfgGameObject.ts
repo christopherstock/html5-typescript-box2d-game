@@ -88,6 +88,10 @@
                                 radius: [ 5.0, 5.0, 5.0, 5.0 ]
                             },
                             friction: friction,
+
+                            frictionStatic: 1.0,
+
+
                         }
                     );
 

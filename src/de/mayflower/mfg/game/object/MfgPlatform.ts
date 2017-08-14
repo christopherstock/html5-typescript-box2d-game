@@ -37,6 +37,7 @@
         *   @param width     The new width.
         *   @param height    The new height.
         *   @param angle     The initial rotation.
+        *   @param speed     The speed in pixels per tick.
         *   @param waypoints The waypoints for this platform to move to.
         ***************************************************************************************************************/
         public constructor
@@ -61,7 +62,7 @@
                 true,
                 null,
                 angle,
-                mfg.MfgGameObject.FRICTION_DEFAULT
+                mfg.MfgGameObject.FRICTION_HIGH
             );
 
             this.waypoints = waypoints;
@@ -69,6 +70,8 @@
 
             this.currentWaypointIndex = -1;
             this.assignNextWaypoint();
+
+            // Matter.Body.setMass( this.body, 70.0 );
         }
 
         /***************************************************************************************************************
@@ -110,7 +113,8 @@
                 this.assignNextWaypoint();
             }
 
-            // move
-            Matter.Body.translate( this.body, Matter.Vector.create( this.stepSizeX, this.stepSizeY ) );
+            // move platform
+            Matter.Body.setVelocity( this.body, Matter.Vector.create( this.stepSizeX, this.stepSizeY ) );
+            Matter.Body.translate(   this.body, Matter.Vector.create( this.stepSizeX, this.stepSizeY ) );
         }
     }

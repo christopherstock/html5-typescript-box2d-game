@@ -1,0 +1,61 @@
+var Engine = Matter.Engine
+var Render = Matter.Render
+var World = Matter.World
+var Bodies = Matter.Bodies
+var Body = Matter.Body
+
+var engine = Engine.create()
+var render = Render.create({
+	element: document.body,
+  engine: engine,
+  options: {
+  	width: 400,
+    height: 200,
+    wireframes: false
+  }
+})
+
+Engine.run(engine)
+Render.run(render)
+
+var add = function (body) {
+	World.add(engine.world, [body])
+}
+
+var floor = Bodies.rectangle(200, 200, 400, 20)
+Body.setStatic(floor, true)
+add(floor)
+
+var movingBox = Bodies.rectangle(100, 180, 100, 10)
+movingBox.frictionStatic = 1
+movingBox.friction = 1
+movingBox.isStatic = true
+add(movingBox)
+
+var boringBox = Bodies.rectangle(100, 140, 50, 50)
+boringBox.frictionStatic = 1
+boringBox.friction = 1
+add(boringBox)
+
+// Timeout to let blocks fall first
+setTimeout(function () {
+  // === MOVING PLATFORM === //
+  var ts = 0; var last_ts = 0; var direction = 1;
+  Matter.Events.on(engine, 'beforeUpdate', function (ev) {
+    // Calculate deltaT
+    ts = ev.timestamp
+    var deltaT = ts - last_ts
+    last_ts = ts
+    // Set velocity
+    var v = {
+      x: direction*2,
+      y: 0
+    }
+    Body.setVelocity(movingBox, v)
+    Body.translate(movingBox, v)
+    // Change direction at end
+    p = movingBox.position
+    if (direction > 0 && p.x > 300
+    || direction < 0 && p.x < 100) direction*=-1
+  })
+}, 500);

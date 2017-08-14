@@ -10753,6 +10753,7 @@ var MfgGameObject = (function () {
                             radius: [5.0, 5.0, 5.0, 5.0]
                         },
                         friction: friction,
+                        frictionStatic: 1.0,
                     });
                     this.width = width;
                     this.height = height;
@@ -11004,7 +11005,7 @@ var MfgCharacter = (function (_super) {
     *   @param speedMove        The speed for horizontal movement.
     ***************************************************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_HIGH) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** The top line that checks collisions with the ceiling. */
@@ -11046,8 +11047,8 @@ var MfgCharacter = (function (_super) {
                 _this.topSensor,
             ]
         });
-        Matter.Body.setMass(_this.body, 70.0);
         return _this;
+        // Matter.Body.setMass( this.body, 70.0 );
     }
     /***************************************************************************************************************
     *   Renders the current character tick.
@@ -11254,10 +11255,11 @@ var MfgPlatform = (function (_super) {
     *   @param width     The new width.
     *   @param height    The new height.
     *   @param angle     The initial rotation.
+    *   @param speed     The speed in pixels per tick.
     *   @param waypoints The waypoints for this platform to move to.
     ***************************************************************************************************************/
     function MfgPlatform(shape, width, height, angle, speed, waypoints) {
-        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
+        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_HIGH) || this;
         /** The waypoints for this platform to move. */
         _this.waypoints = null;
         /** The number of ticks till the next waypoint is reached. */
@@ -11277,6 +11279,7 @@ var MfgPlatform = (function (_super) {
         _this.currentWaypointIndex = -1;
         _this.assignNextWaypoint();
         return _this;
+        // Matter.Body.setMass( this.body, 70.0 );
     }
     /***************************************************************************************************************
     *   Assigns the next waypoint to aim to.
@@ -11308,7 +11311,8 @@ var MfgPlatform = (function (_super) {
         if (this.currentStep > this.stepsTillNextWaypoint) {
             this.assignNextWaypoint();
         }
-        // move
+        // move platform
+        Matter.Body.setVelocity(this.body, Matter.Vector.create(this.stepSizeX, this.stepSizeY));
         Matter.Body.translate(this.body, Matter.Vector.create(this.stepSizeX, this.stepSizeY));
     };
     /** Medium moving speed. */
@@ -12046,7 +12050,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createSigsaw(1420, 2950, 400, 25, null),
                 mfg.MfgGameObjectFactory.createBounce(1840, 2950, 400, 25, null),
                 // animated platforms
-                new mfg.MfgPlatform(mfg.MfgGameObjectShape.ERectangle, 75.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
+                new mfg.MfgPlatform(mfg.MfgGameObjectShape.ERectangle, 175.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
                     /*
                                             Matter.Vector.create( 3650.0, 2850.0 ),
                                             Matter.Vector.create( 3700.0, 2900.0 ),
