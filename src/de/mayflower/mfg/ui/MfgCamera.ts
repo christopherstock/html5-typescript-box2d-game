@@ -88,7 +88,7 @@
                 canvasHeight
             );
 
-            // move actual camera offsets to camera target
+            // move horizontal camera offsets to camera target
             let cameraMoveX:number = 0.0;
             if ( this.offsetX < this.targetX )
             {
@@ -105,26 +105,29 @@
                 if ( this.offsetX < this.targetX ) this.offsetX = this.targetX;
             }
 
-            if ( ascendY || this.targetY > this.offsetY ) {
-
-                // this.offsetY = this.targetY;
-
-                // move actual camera offsets to camera target
-                let cameraMoveY:number = 0.0;
-                if ( this.offsetY < this.targetY )
-                {
-                    cameraMoveY = ( this.targetY - this.offsetY ) * this.movingSpeed;
-                    if ( cameraMoveY < this.minimumCameraMove ) cameraMoveY = this.minimumCameraMove;
-                    this.offsetY += cameraMoveY;
-                    if ( this.offsetY > this.targetY ) this.offsetY = this.targetY;
-                }
-                else if ( this.offsetY > this.targetY )
+            // move vertical camera offsets to camera target
+            let cameraMoveY:number = 0.0;
+            if ( ascendY && this.targetY < this.offsetY )
+            {
+                if ( this.offsetY > this.targetY )
                 {
                     cameraMoveY = ( this.offsetY - this.targetY ) * this.movingSpeed;
                     if ( cameraMoveY < this.minimumCameraMove ) cameraMoveY = this.minimumCameraMove;
                     this.offsetY -= cameraMoveY;
                     if ( this.offsetY < this.targetY ) this.offsetY = this.targetY;
                 }
+            }
+
+            // direct assignment on falling down
+            if ( this.targetY > this.offsetY )
+            {
+                this.offsetY = this.targetY;
+/*
+                cameraMoveY = ( this.targetY - this.offsetY ) * this.movingSpeed;
+                if ( cameraMoveY < this.minimumCameraMove ) cameraMoveY = this.minimumCameraMove;
+                this.offsetY += cameraMoveY;
+                if ( this.offsetY > this.targetY ) this.offsetY = this.targetY;
+*/
             }
 
             // assign current camera offset to renderer

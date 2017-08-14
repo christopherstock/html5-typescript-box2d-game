@@ -6,14 +6,13 @@
     *
     *   TODO ASAP   Create animated platforms.
     *   TODO ASAP   Check sprite or image clipping and scaling to player size?
-    *   TODO HIGH   Replace own jump implementation.
+    *   TODO HIGH   Replace own jump implementation?
     *   TODO HIGH   Skew image (sensor) for waving grass effect?
     *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies
     *   TODO HIGH   Create different enemy move patterns.
     *   TODO INIT   Parallax bg.
     *   TODO LOW    Add doors / level portals.
     *   TODO LOW    Create levels and sublevels?
-    *   TODO LOW    Create abstract level system.
     *   TODO WEAK   Add menu keys for main menu and level map ..
     *   TODO WEAK   Add sprites.
     *   TODO WEAK   Add images.
