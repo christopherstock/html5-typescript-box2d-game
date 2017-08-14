@@ -45,7 +45,7 @@
             Matter.Body.setMass( this.body, 25.0 );
 
             Matter.Composite.add(
-                mfg.MfgInit.game.engine.world,
+                mfg.Mfg.game.engine.world,
                 this.constraint
             );
         }

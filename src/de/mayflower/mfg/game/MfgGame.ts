@@ -33,17 +33,23 @@
             this.initKeySystem();
 
             this.resetAndLaunchLevel( new mfg.MfgLevelDev() );
-
-            // start the game loop
-            this.start();
         }
 
         /***************************************************************************************************************
-        *   Inits the key system.
+        *   Starts the game loop.
         ***************************************************************************************************************/
-        private initKeySystem()
+        public start()
         {
-            this.keySystem = new mfg.MfgKeySystem();
+            // render 1st engine tick
+            this.tick();
+
+            // start the renderer
+            Matter.Render.run( this.renderer );
+
+            window.setInterval(
+                this.tick,
+                mfg.MfgSettings.RENDER_DELTA
+            );
         }
 
         /***************************************************************************************************************
@@ -81,13 +87,21 @@
 
             Matter.Events.on(
                 this.engine, 'afterRender', function( event ) {
-                let context = mfg.MfgInit.game.renderer.context;
+                let context = mfg.Mfg.game.renderer.context;
                 context.font = "45px 'Cabin Sketch'";
                 context.fillText("THROW OBJECT HERE", 150, 80);
 
                 context.fillStyle = "#ff0000";
                 context.fillRect(0, 0, 200, 100);
             });
+        }
+
+        /***************************************************************************************************************
+        *   Inits the key system.
+        ***************************************************************************************************************/
+        private initKeySystem()
+        {
+            this.keySystem = new mfg.MfgKeySystem();
         }
 
         /***************************************************************************************************************
@@ -114,23 +128,6 @@
                 mfg.MfgSettings.CANVAS_HEIGHT
             );
             this.camera.reset();
-        }
-
-        /***************************************************************************************************************
-        *   Starts the game loop.
-        ***************************************************************************************************************/
-        private start()
-        {
-            // render 1st engine tick
-            this.tick();
-
-            // start the renderer
-            Matter.Render.run( this.renderer );
-
-            window.setInterval(
-                this.tick,
-                mfg.MfgSettings.RENDER_DELTA
-            );
         }
 
         /***************************************************************************************************************
@@ -171,17 +168,17 @@
         ***************************************************************************************************************/
         private handleMenuKey()
         {
-            if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_1 ) )
+            if ( mfg.Mfg.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_1 ) )
             {
-                mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_1 );
+                mfg.Mfg.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_1 );
 
                 mfg.MfgDebug.init.log( "Switching to level 1" );
                 this.resetAndLaunchLevel( new mfg.MfgLevelDev() );
             }
 
-            if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_2 ) )
+            if ( mfg.Mfg.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_2 ) )
             {
-                mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_2 );
+                mfg.Mfg.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_2 );
 
                 mfg.MfgDebug.init.log( "Switching to level 2" );
                 this.resetAndLaunchLevel( new mfg.MfgLevelEnchantedWoods() );

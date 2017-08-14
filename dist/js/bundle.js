@@ -76,7 +76,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(7));
 __export(__webpack_require__(4));
 __export(__webpack_require__(5));
-__export(__webpack_require__(6));
 __export(__webpack_require__(8));
 __export(__webpack_require__(9));
 __export(__webpack_require__(10));
@@ -10547,39 +10546,7 @@ exports.MfgDebug = MfgDebug;
 
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
-/*******************************************************************************************************************
-*   Specifies the initialization part of the game logic.
-*
-*   TODO remove and move to Mfg!
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgInit = (function () {
-    function MfgInit() {
-    }
-    /***************************************************************************************************************
-    *   Inits the game from scratch.
-    ***************************************************************************************************************/
-    MfgInit.init = function () {
-        MfgInit.game = new mfg.MfgGame();
-        MfgInit.game.init();
-    };
-    /** The singleton game instance. */
-    MfgInit.game = null;
-    return MfgInit;
-}());
-exports.MfgInit = MfgInit;
-
-
-/***/ }),
+/* 6 */,
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10669,9 +10636,13 @@ var Mfg = (function () {
         // acclaim debug console and set title
         mfg.MfgDebug.init.log(mfg.MfgSettings.TITLE);
         document.title = mfg.MfgSettings.TITLE;
-        //init game engine
-        mfg.MfgInit.init();
+        //init the game engine
+        this.game = new mfg.MfgGame();
+        this.game.init();
+        this.game.start();
     };
+    /** The singleton instance of the game engine. */
+    Mfg.game = null;
     return Mfg;
 }());
 exports.Mfg = Mfg;
@@ -10821,9 +10792,9 @@ var MfgGameObject = (function () {
                 y: this.body.position.y
             });
         }
-        if (this.body.position.x > mfg.MfgInit.game.level.width - this.width / 2) {
+        if (this.body.position.x > mfg.Mfg.game.level.width - this.width / 2) {
             Matter.Body.setPosition(this.body, {
-                x: mfg.MfgInit.game.level.width - this.width / 2,
+                x: mfg.Mfg.game.level.width - this.width / 2,
                 y: this.body.position.y
             });
         }
@@ -11093,7 +11064,7 @@ var MfgCharacter = (function (_super) {
     *   Check if the player falls to death by falling out of the level.
     ***************************************************************************************************************/
     MfgCharacter.prototype.checkFallingDead = function () {
-        if (this.body.position.y - this.height / 2 > mfg.MfgInit.game.level.height) {
+        if (this.body.position.y - this.height / 2 > mfg.Mfg.game.level.height) {
             mfg.MfgDebug.bugfix.log("Character has fallen to dead");
             this.kill();
         }
@@ -11103,7 +11074,7 @@ var MfgCharacter = (function (_super) {
     ***************************************************************************************************************/
     MfgCharacter.prototype.kill = function () {
         // remove character body
-        Matter.World.remove(mfg.MfgInit.game.engine.world, this.body);
+        Matter.World.remove(mfg.Mfg.game.engine.world, this.body);
         // flag as dead
         this.dead = true;
     };
@@ -11121,7 +11092,7 @@ var MfgCharacter = (function (_super) {
         var bodiesToCheck = [];
         try {
             // browse all game objects
-            for (var _a = __values(mfg.MfgInit.game.level.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
+            for (var _a = __values(mfg.Mfg.game.level.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
                 var gameObject = _b.value;
                 // skip own body and sensors
                 if (gameObject.body == this.body || gameObject.isSensor) {
@@ -11340,14 +11311,14 @@ var MfgPlayer = (function (_super) {
     *   Checks all pressed player keys and performs according actions.
     ***************************************************************************************************************/
     MfgPlayer.prototype.handleKeys = function () {
-        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_LEFT)) {
+        if (mfg.Mfg.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_LEFT)) {
             this.moveLeft();
         }
-        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_RIGHT)) {
+        if (mfg.Mfg.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_RIGHT)) {
             this.moveRight();
         }
-        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
-            mfg.MfgInit.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_UP);
+        if (mfg.Mfg.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
+            mfg.Mfg.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_UP);
             this.jump();
         }
     };
@@ -11464,7 +11435,7 @@ var MfgItem = (function (_super) {
     ***************************************************************************************************************/
     MfgItem.prototype.render = function () {
         if (!this.picked) {
-            if (Matter.Bounds.overlaps(this.body.bounds, mfg.MfgInit.game.level.player.body.bounds)) {
+            if (Matter.Bounds.overlaps(this.body.bounds, mfg.Mfg.game.level.player.body.bounds)) {
                 mfg.MfgDebug.item.log("Player picked item");
                 this.pick();
             }
@@ -11477,7 +11448,7 @@ var MfgItem = (function (_super) {
         // flag as picked
         this.picked = true;
         // remove the body from the world
-        Matter.World.remove(mfg.MfgInit.game.engine.world, this.body);
+        Matter.World.remove(mfg.Mfg.game.engine.world, this.body);
     };
     return MfgItem;
 }(mfg.MfgGameObject));
@@ -11636,7 +11607,7 @@ var MfgSigSaw = (function (_super) {
             }
         });
         Matter.Body.setMass(_this.body, 25.0);
-        Matter.Composite.add(mfg.MfgInit.game.engine.world, _this.constraint);
+        Matter.Composite.add(mfg.Mfg.game.engine.world, _this.constraint);
         return _this;
     }
     /***************************************************************************************************************
@@ -11725,14 +11696,16 @@ var MfgGame = (function () {
         this.initEngine2D();
         this.initKeySystem();
         this.resetAndLaunchLevel(new mfg.MfgLevelDev());
-        // start the game loop
-        this.start();
     };
     /***************************************************************************************************************
-    *   Inits the key system.
+    *   Starts the game loop.
     ***************************************************************************************************************/
-    MfgGame.prototype.initKeySystem = function () {
-        this.keySystem = new mfg.MfgKeySystem();
+    MfgGame.prototype.start = function () {
+        // render 1st engine tick
+        this.tick();
+        // start the renderer
+        Matter.Render.run(this.renderer);
+        window.setInterval(this.tick, mfg.MfgSettings.RENDER_DELTA);
     };
     /***************************************************************************************************************
     *   Inits the 2D engine.
@@ -11759,12 +11732,18 @@ var MfgGame = (function () {
             scale: 0.001
         };
         Matter.Events.on(this.engine, 'afterRender', function (event) {
-            var context = mfg.MfgInit.game.renderer.context;
+            var context = mfg.Mfg.game.renderer.context;
             context.font = "45px 'Cabin Sketch'";
             context.fillText("THROW OBJECT HERE", 150, 80);
             context.fillStyle = "#ff0000";
             context.fillRect(0, 0, 200, 100);
         });
+    };
+    /***************************************************************************************************************
+    *   Inits the key system.
+    ***************************************************************************************************************/
+    MfgGame.prototype.initKeySystem = function () {
+        this.keySystem = new mfg.MfgKeySystem();
     };
     /***************************************************************************************************************
     *   Inits the level.
@@ -11778,16 +11757,6 @@ var MfgGame = (function () {
         // reset camera
         this.camera = new mfg.MfgCamera(mfg.MfgSettings.CAMERA_RATIO_X, mfg.MfgSettings.CAMERA_RATIO_Y, mfg.MfgSettings.CAMERA_MOVING_SPEED, mfg.MfgSettings.CAMERA_MOVING_MINIMUM, this.level.width, this.level.height, mfg.MfgSettings.CANVAS_WIDTH, mfg.MfgSettings.CANVAS_HEIGHT);
         this.camera.reset();
-    };
-    /***************************************************************************************************************
-    *   Starts the game loop.
-    ***************************************************************************************************************/
-    MfgGame.prototype.start = function () {
-        // render 1st engine tick
-        this.tick();
-        // start the renderer
-        Matter.Render.run(this.renderer);
-        window.setInterval(this.tick, mfg.MfgSettings.RENDER_DELTA);
     };
     /***************************************************************************************************************
     *   Renders all game components.
@@ -11804,13 +11773,13 @@ var MfgGame = (function () {
     *   Handles pressed menu keys.
     ***************************************************************************************************************/
     MfgGame.prototype.handleMenuKey = function () {
-        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_1)) {
-            mfg.MfgInit.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_1);
+        if (mfg.Mfg.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_1)) {
+            mfg.Mfg.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_1);
             mfg.MfgDebug.init.log("Switching to level 1");
             this.resetAndLaunchLevel(new mfg.MfgLevelDev());
         }
-        if (mfg.MfgInit.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_2)) {
-            mfg.MfgInit.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_2);
+        if (mfg.Mfg.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_2)) {
+            mfg.Mfg.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_2);
             mfg.MfgDebug.init.log("Switching to level 2");
             this.resetAndLaunchLevel(new mfg.MfgLevelEnchantedWoods());
         }
@@ -11865,7 +11834,7 @@ var MfgLevel = (function () {
             // add all bodies of all game objects to the world
             for (var _a = __values(this.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
                 var gameObject = _b.value;
-                Matter.World.addBody(mfg.MfgInit.game.engine.world, gameObject.body);
+                Matter.World.addBody(mfg.Mfg.game.engine.world, gameObject.body);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -12310,7 +12279,7 @@ var MfgCamera = (function () {
     *   Resets the camera targets and offsets to the current player position without buffering.
     ***************************************************************************************************************/
     MfgCamera.prototype.reset = function () {
-        this.calculateTargets(mfg.MfgInit.game.level.player.lookingDirection, mfg.MfgInit.game.level.player.body.position.x, mfg.MfgInit.game.level.player.body.position.y);
+        this.calculateTargets(mfg.Mfg.game.level.player.lookingDirection, mfg.Mfg.game.level.player.body.position.x, mfg.Mfg.game.level.player.body.position.y);
         this.offsetX = this.targetX;
         this.offsetY = this.targetY;
     };
@@ -12460,7 +12429,7 @@ var MfgBounce = (function (_super) {
             }
         });
         Matter.Body.setMass(_this.body, 25.0);
-        Matter.Composite.add(mfg.MfgInit.game.engine.world, _this.constraint);
+        Matter.Composite.add(mfg.Mfg.game.engine.world, _this.constraint);
         return _this;
     }
     /***************************************************************************************************************

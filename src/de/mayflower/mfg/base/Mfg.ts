@@ -26,6 +26,9 @@
     *******************************************************************************************************************/
     export class Mfg
     {
+        /** The singleton instance of the game engine. */
+        public      static          game                    :mfg.MfgGame                = null;
+
         /*****************************************************************************
         *   This method is invoked when the application starts.
         *****************************************************************************/
@@ -35,7 +38,9 @@
             mfg.MfgDebug.init.log( mfg.MfgSettings.TITLE );
             document.title = mfg.MfgSettings.TITLE;
 
-            //init game engine
-            mfg.MfgInit.init();
+            //init the game engine
+            this.game = new mfg.MfgGame();
+            this.game.init();
+            this.game.start();
         }
     }

@@ -34,7 +34,7 @@
         {
             if ( !this.picked )
             {
-                if ( Matter.Bounds.overlaps( this.body.bounds, mfg.MfgInit.game.level.player.body.bounds ) )
+                if ( Matter.Bounds.overlaps( this.body.bounds, mfg.Mfg.game.level.player.body.bounds ) )
                 {
                     mfg.MfgDebug.item.log("Player picked item");
 
@@ -52,6 +52,6 @@
             this.picked = true;
 
             // remove the body from the world
-            Matter.World.remove( mfg.MfgInit.game.engine.world, this.body );
+            Matter.World.remove( mfg.Mfg.game.engine.world, this.body );
         }
     }

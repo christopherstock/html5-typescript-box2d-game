@@ -147,12 +147,12 @@
                 );
             }
 
-            if ( this.body.position.x > mfg.MfgInit.game.level.width - this.width / 2 )
+            if ( this.body.position.x > mfg.Mfg.game.level.width - this.width / 2 )
             {
                 Matter.Body.setPosition(
                     this.body,
                     {
-                        x: mfg.MfgInit.game.level.width - this.width / 2,
+                        x: mfg.Mfg.game.level.width - this.width / 2,
                         y: this.body.position.y
                     }
                 );

@@ -39,19 +39,19 @@
         ***************************************************************************************************************/
         private handleKeys()
         {
-            if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_LEFT ) )
+            if ( mfg.Mfg.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_LEFT ) )
             {
                 this.moveLeft();
             }
 
-            if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_RIGHT ) )
+            if ( mfg.Mfg.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_RIGHT ) )
             {
                 this.moveRight();
             }
 
-            if ( mfg.MfgInit.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_UP ) )
+            if ( mfg.Mfg.game.keySystem.isPressed( mfg.MfgKeySystem.KEY_UP ) )
             {
-                mfg.MfgInit.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_UP );
+                mfg.Mfg.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_UP );
 
                 this.jump();
             }

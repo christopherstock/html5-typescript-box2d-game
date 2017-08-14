@@ -135,7 +135,7 @@
         ***************************************************************************************************************/
         protected checkFallingDead()
         {
-            if ( this.body.position.y - this.height / 2 > mfg.MfgInit.game.level.height )
+            if ( this.body.position.y - this.height / 2 > mfg.Mfg.game.level.height )
             {
                 mfg.MfgDebug.bugfix.log( "Character has fallen to dead" );
 
@@ -149,7 +149,7 @@
         public kill()
         {
             // remove character body
-            Matter.World.remove( mfg.MfgInit.game.engine.world, this.body );
+            Matter.World.remove( mfg.Mfg.game.engine.world, this.body );
 
             // flag as dead
             this.dead = true;
@@ -170,7 +170,7 @@
             let bodiesToCheck:Array<Matter.Body> = [];
 
             // browse all game objects
-            for ( let gameObject of mfg.MfgInit.game.level.gameObjects )
+            for ( let gameObject of mfg.Mfg.game.level.gameObjects )
             {
                 // skip own body and sensors
                 if ( gameObject.body == this.body || gameObject.isSensor )
