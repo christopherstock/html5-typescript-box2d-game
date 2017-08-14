@@ -21,7 +21,7 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 3000, 2650, mfg.MfgCharacterLookingDirection.ERight );
+            this.player = new mfg.MfgPlayer( 3600, 2600, mfg.MfgCharacterLookingDirection.ERight );
 
             // setup all game objects
             this.gameObjects =
@@ -56,9 +56,13 @@
                 // animated platforms
                 new mfg.MfgPlatform( mfg.MfgGameObjectShape.ERectangle, 75.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL,
                     [
+/*
                         Matter.Vector.create( 3650.0, 2850.0 ),
                         Matter.Vector.create( 3700.0, 2900.0 ),
                         Matter.Vector.create( 3750.0, 2600.0 ),
+*/
+                        Matter.Vector.create( 3650.0, 2850.0 ),
+                        Matter.Vector.create( 3950.0, 2850.0 ),
                     ]
                 ),
 

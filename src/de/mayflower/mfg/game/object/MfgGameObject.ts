@@ -10,6 +10,13 @@
     *******************************************************************************************************************/
     export abstract class MfgGameObject
     {
+        /** High surface friction. */
+        public  static  FRICTION_HIGH           :number                         = 1.0;
+        /** Default surface friction. */
+        public  static  FRICTION_DEFAULT        :number                         = 0.5;
+        /** No surface friction. */
+        public  static  FRICTION_NONE           :number                         = 0.0;
+
         /** The game objects' body. */
         public          body                    :Matter.Body                    = null;
 
@@ -36,6 +43,7 @@
         *   @param isStatic   Specifies that this object has a fixed position.
         *   @param image      The image for this game object.
         *   @param angle      The rotation of this body in degrees.
+        *   @param friction   The object's body friction.
         ***************************************************************************************************************/
         protected constructor
         (
@@ -48,7 +56,8 @@
             isSensor:boolean,
             isStatic:boolean,
             image:string,
-            angle:number
+            angle:number,
+            friction:number
         )
         {
             this.isSensor = isSensor;
@@ -78,10 +87,7 @@
                             {
                                 radius: [ 5.0, 5.0, 5.0, 5.0 ]
                             },
-                            // friction: 1.0,   // not slippery
-                            // friction: 0.5,   // medium slippery
-                            friction: 0.05,     // default
-                            // friction: 0.001, // slippery
+                            friction: friction,
                         }
                     );
 

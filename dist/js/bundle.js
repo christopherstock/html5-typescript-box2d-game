@@ -10721,8 +10721,9 @@ var MfgGameObject = (function () {
     *   @param isStatic   Specifies that this object has a fixed position.
     *   @param image      The image for this game object.
     *   @param angle      The rotation of this body in degrees.
+    *   @param friction   The object's body friction.
     ***************************************************************************************************************/
-    function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic, image, angle) {
+    function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic, image, angle, friction) {
         /** The game objects' body. */
         this.body = null;
         /** The width of this object. */
@@ -10751,9 +10752,7 @@ var MfgGameObject = (function () {
                         chamfer: {
                             radius: [5.0, 5.0, 5.0, 5.0]
                         },
-                        // friction: 1.0,   // not slippery
-                        // friction: 0.5,   // medium slippery
-                        friction: 0.05,
+                        friction: friction,
                     });
                     this.width = width;
                     this.height = height;
@@ -10799,6 +10798,12 @@ var MfgGameObject = (function () {
             });
         }
     };
+    /** High surface friction. */
+    MfgGameObject.FRICTION_HIGH = 1.0;
+    /** Default surface friction. */
+    MfgGameObject.FRICTION_DEFAULT = 0.5;
+    /** No surface friction. */
+    MfgGameObject.FRICTION_NONE = 0.0;
     return MfgGameObject;
 }());
 exports.MfgGameObject = MfgGameObject;
@@ -10999,7 +11004,7 @@ var MfgCharacter = (function (_super) {
     *   @param speedMove        The speed for horizontal movement.
     ***************************************************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0) || this;
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** The top line that checks collisions with the ceiling. */
@@ -11252,7 +11257,7 @@ var MfgPlatform = (function (_super) {
     *   @param waypoints The waypoints for this platform to move to.
     ***************************************************************************************************************/
     function MfgPlatform(shape, width, height, angle, speed, waypoints) {
-        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle) || this;
+        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
         /** The waypoints for this platform to move. */
         _this.waypoints = null;
         /** The number of ticks till the next waypoint is reached. */
@@ -11306,7 +11311,7 @@ var MfgPlatform = (function (_super) {
         // move
         Matter.Body.translate(this.body, Matter.Vector.create(this.stepSizeX, this.stepSizeY));
     };
-    /** Normal moving speed. */
+    /** Medium moving speed. */
     MfgPlatform.SPEED_NORMAL = 1.0;
     return MfgPlatform;
 }(mfg.MfgGameObject));
@@ -11415,7 +11420,7 @@ var MfgBox = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgBox(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
         Matter.Body.setMass(_this.body, 10.0);
         return _this;
     }
@@ -11467,7 +11472,7 @@ var MfgItem = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgItem(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true, null, 0.0) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, true, null, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
         return _this;
@@ -11534,7 +11539,7 @@ var MfgDecoration = (function (_super) {
     *   @param image  The image source to use.
     ***************************************************************************************************************/
     function MfgDecoration(shape, x, y, width, height, image) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true, image, 0.0) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Renders this obstacle.
@@ -11583,7 +11588,7 @@ var MfgObstacle = (function (_super) {
     *   @param angle  The initial rotation.
     ***************************************************************************************************************/
     function MfgObstacle(shape, x, y, width, height, angle) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Renders this obstacle.
@@ -11633,7 +11638,7 @@ var MfgSigSaw = (function (_super) {
     *   @param image  The image for this game object.
     ***************************************************************************************************************/
     function MfgSigSaw(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image, 0.0) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
         /** The constraint that builds the turning point for the sigsaw. */
         _this.constraint = null;
         _this.constraint = Matter.Constraint.create({
@@ -11730,7 +11735,7 @@ var MfgBounce = (function (_super) {
     *   @param image  The image for this game object.
     ***************************************************************************************************************/
     function MfgBounce(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, false, image, 0.0) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
         /** The constraint that builds the turning point for the bounce. */
         _this.constraint = null;
         _this.constraint = Matter.Constraint.create({
@@ -12015,7 +12020,7 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(3000, 2650, mfg.MfgCharacterLookingDirection.ERight);
+        this.player = new mfg.MfgPlayer(3600, 2600, mfg.MfgCharacterLookingDirection.ERight);
         // setup all game objects
         this.gameObjects =
             [
@@ -12042,9 +12047,13 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createBounce(1840, 2950, 400, 25, null),
                 // animated platforms
                 new mfg.MfgPlatform(mfg.MfgGameObjectShape.ERectangle, 75.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
+                    /*
+                                            Matter.Vector.create( 3650.0, 2850.0 ),
+                                            Matter.Vector.create( 3700.0, 2900.0 ),
+                                            Matter.Vector.create( 3750.0, 2600.0 ),
+                    */
                     Matter.Vector.create(3650.0, 2850.0),
-                    Matter.Vector.create(3700.0, 2900.0),
-                    Matter.Vector.create(3750.0, 2600.0),
+                    Matter.Vector.create(3950.0, 2850.0),
                 ]),
                 // items
                 mfg.MfgGameObjectFactory.createItem(1100, 2850),

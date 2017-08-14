@@ -10,7 +10,7 @@
     *******************************************************************************************************************/
     export class MfgPlatform extends mfg.MfgGameObject
     {
-        /** Normal moving speed. */
+        /** Medium moving speed. */
         public  static      SPEED_NORMAL            :number                         = 1.0;
 
         /** The waypoints for this platform to move. */
@@ -60,7 +60,8 @@
                 false,
                 true,
                 null,
-                angle
+                angle,
+                mfg.MfgGameObject.FRICTION_DEFAULT
             );
 
             this.waypoints = waypoints;

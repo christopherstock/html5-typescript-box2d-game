@@ -57,7 +57,20 @@
             speedMove:number
         )
         {
-            super( shape, x, y, width, height, debugColor, false, false, image, 0.0 );
+            super
+            (
+                shape,
+                x,
+                y,
+                width,
+                height,
+                debugColor,
+                false,
+                false,
+                image,
+                0.0,
+                mfg.MfgGameObject.FRICTION_DEFAULT
+            );
 
             this.lookingDirection = lookingDirection;
             this.speedMove        = speedMove;
