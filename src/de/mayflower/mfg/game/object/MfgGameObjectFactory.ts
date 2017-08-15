@@ -51,16 +51,17 @@
         /***************************************************************************************************************
         *   Creates an obstacle.
         *
-        *   @param x      Anchor X.
-        *   @param y      Anchor Y.
-        *   @param width  Object width.
-        *   @param height Object height.
-        *   @param angle  The initial rotation.
-        *   @return       The created obstacle.
+        *   @param x               Anchor X.
+        *   @param y               Anchor Y.
+        *   @param width           Object width.
+        *   @param height          Object height.
+        *   @param angle           The initial rotation.
+        *   @param jumpPassThrough Specifies if the player can jump through this obstacle.
+        *   @return                The created obstacle.
         ***************************************************************************************************************/
-        public static createObstacle( x:number, y:number, width:number, height:number, angle:number ):mfg.MfgObstacle
+        public static createObstacle( x:number, y:number, width:number, height:number, angle:number, jumpPassThrough:boolean ):mfg.MfgObstacle
         {
-            return new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, x, y, width, height, angle );
+            return new mfg.MfgObstacle( mfg.MfgGameObjectShape.ERectangle, x, y, width, height, angle, jumpPassThrough );
         }
 
         /***************************************************************************************************************

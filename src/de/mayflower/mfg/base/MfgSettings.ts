@@ -80,4 +80,12 @@
                 mask:     0x00002,
                 group:    0x0003,
         };
+
+        /** The collision group for all non-colliding game objects. */
+        public      static      COLLISION_GROUP_NON_COLLIDING               :Matter.ICollisionFilter    =
+        {
+                category: 0x0004,
+                mask:     0x00005,
+                group:    0x0006,
+        };
     }

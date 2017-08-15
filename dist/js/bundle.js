@@ -10540,6 +10540,12 @@ var MfgSettings = (function () {
         mask: 0x00002,
         group: 0x0003,
     };
+    /** The collision group for all non-colliding game objects. */
+    MfgSettings.COLLISION_GROUP_NON_COLLIDING = {
+        category: 0x0004,
+        mask: 0x00005,
+        group: 0x0006,
+    };
     return MfgSettings;
 }());
 exports.MfgSettings = MfgSettings;
@@ -10605,8 +10611,6 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Create custom renderer that extends Matter.Render!
-*   TODO HIGH   Pass-through walls?
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
 *   TODO ASAP   Avoid sliding down on platforms on falling and touching platform side?
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
@@ -10619,8 +10623,10 @@ var mfg = __webpack_require__(0);
 *   TODO WEAK   Add menu keys for main menu and level map ..
 *   TODO WEAK   Add sprites.
 *   TODO WEAK   Add images.
+*   TODO WEAK   Create custom renderer that extends Matter.Render?
 *   TODO WEAK   Try discreet graphic style.
 *   TODO WEAK   Implement nice changing gravity effects.
+*   TODO WEAK   Pass-through walls?
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -10892,15 +10898,16 @@ var MfgGameObjectFactory = (function () {
     /***************************************************************************************************************
     *   Creates an obstacle.
     *
-    *   @param x      Anchor X.
-    *   @param y      Anchor Y.
-    *   @param width  Object width.
-    *   @param height Object height.
-    *   @param angle  The initial rotation.
-    *   @return       The created obstacle.
+    *   @param x               Anchor X.
+    *   @param y               Anchor Y.
+    *   @param width           Object width.
+    *   @param height          Object height.
+    *   @param angle           The initial rotation.
+    *   @param jumpPassThrough Specifies if the player can jump through this obstacle.
+    *   @return                The created obstacle.
     ***************************************************************************************************************/
-    MfgGameObjectFactory.createObstacle = function (x, y, width, height, angle) {
-        return new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, angle);
+    MfgGameObjectFactory.createObstacle = function (x, y, width, height, angle, jumpPassThrough) {
+        return new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, angle, jumpPassThrough);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -11572,33 +11579,33 @@ var MfgObstacle = (function (_super) {
     /***************************************************************************************************************
     *   Creates a new obstacle.
     *
-    *   @param shape  The shape for this object.
-    *   @param x      Startup position X.
-    *   @param y      Startup position Y.
-    *   @param width  The new width.
-    *   @param height The new height.
-    *   @param angle  The initial rotation.
+    *   @param shape           The shape for this object.
+    *   @param x               Startup position X.
+    *   @param y               Startup position Y.
+    *   @param width           The new width.
+    *   @param height          The new height.
+    *   @param angle           The initial rotation.
+    *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
     ***************************************************************************************************************/
-    function MfgObstacle(shape, x, y, width, height, angle) {
+    function MfgObstacle(shape, x, y, width, height, angle, jumpPassThrough) {
         var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
-        _this.defaultCollisionFilter = null;
-        _this.defaultCollisionFilter = _this.body.collisionFilter;
+        /** Specifies if the player shall be allowed to jump through this obstacle. */
+        _this.jumpPassThrough = false;
+        _this.jumpPassThrough = jumpPassThrough;
         return _this;
     }
     /***************************************************************************************************************
     *   Renders this obstacle.
     ***************************************************************************************************************/
     MfgObstacle.prototype.render = function () {
-        /*
-                    if ( this.body.position.y > mfg.Mfg.game.level.player.body.position.y )
-                    {
-                        this.body.collisionFilter = this.defaultCollisionFilter;
-                    }
-                    else
-                    {
-                        this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
-                    }
-        */
+        if (this.jumpPassThrough) {
+            if (mfg.Mfg.game.level.player.body.velocity.y > 0.0) {
+                this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
+            }
+            else {
+                this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
+            }
+        }
     };
     return MfgObstacle;
 }(mfg.MfgGameObject));
@@ -12036,14 +12043,14 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createDecoration(2200, 2860, 120, 90, null),
                 mfg.MfgGameObjectFactory.createDecoration(3600, 2860, 120, 90, null),
                 // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle(0, 2950, 1380, 25, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(2260, 2950, 2000, 25, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(320, 2870, 80, 80, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(80, 2700, 400, 15, -15.0),
-                mfg.MfgGameObjectFactory.createObstacle(380, 2500, 400, 15, -15.0),
-                mfg.MfgGameObjectFactory.createObstacle(1320, 2700, 400, 15, -15.0),
-                mfg.MfgGameObjectFactory.createObstacle(2000, 2300, 400, 15, -15.0),
-                mfg.MfgGameObjectFactory.createObstacle(3800, 2700, 400, 20, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(0, 2950, 1380, 25, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(2260, 2950, 2000, 25, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(320, 2870, 80, 80, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(80, 2700, 400, 15, -15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(380, 2500, 400, 15, -15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(1320, 2700, 400, 15, -15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(2000, 2300, 400, 15, -15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(3800, 2700, 400, 10, 0.0, true),
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(370, 2100, 80, 80),
                 mfg.MfgGameObjectFactory.createSphere(320, 2000, 100),
@@ -12131,8 +12138,8 @@ var MfgLevelEnchantedWoods = (function (_super) {
                 mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
                 mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
                 // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0),
-                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0),
+                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0, false),
                 // moveable boxes
                 // sigsaws
                 // items

@@ -35,16 +35,16 @@
                 mfg.MfgGameObjectFactory.createDecoration( 3600, 2860, 120, 90, null ),
 
                 // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle( 0,    2950, 1380, 25, 0.0 ),
-                mfg.MfgGameObjectFactory.createObstacle( 2260, 2950, 2000, 25, 0.0 ),
-                mfg.MfgGameObjectFactory.createObstacle( 320,  2870, 80,   80, 0.0 ),
+                mfg.MfgGameObjectFactory.createObstacle( 0,    2950, 1380, 25, 0.0, false ),
+                mfg.MfgGameObjectFactory.createObstacle( 2260, 2950, 2000, 25, 0.0, false ),
+                mfg.MfgGameObjectFactory.createObstacle( 320,  2870, 80,   80, 0.0, false ),
 
-                mfg.MfgGameObjectFactory.createObstacle( 80,    2700, 400, 15, -15.0 ),
-                mfg.MfgGameObjectFactory.createObstacle( 380,   2500, 400, 15, -15.0 ),
-                mfg.MfgGameObjectFactory.createObstacle( 1320,  2700, 400, 15, -15.0 ),
-                mfg.MfgGameObjectFactory.createObstacle( 2000,  2300, 400, 15, -15.0 ),
+                mfg.MfgGameObjectFactory.createObstacle( 80,    2700, 400, 15, -15.0, false ),
+                mfg.MfgGameObjectFactory.createObstacle( 380,   2500, 400, 15, -15.0, false ),
+                mfg.MfgGameObjectFactory.createObstacle( 1320,  2700, 400, 15, -15.0, false ),
+                mfg.MfgGameObjectFactory.createObstacle( 2000,  2300, 400, 15, -15.0, false ),
 
-                mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 20, 0.0 ),
+                mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
 
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(    370,  2100, 80, 80 ),

@@ -10,23 +10,25 @@
     *******************************************************************************************************************/
     export class MfgObstacle extends mfg.MfgGameObject
     {
-        private         defaultCollisionFilter          :Matter.ICollisionFilter            = null;
+        /** Specifies if the player shall be allowed to jump through this obstacle. */
+        private         jumpPassThrough             :boolean                        = false;
 
         /***************************************************************************************************************
         *   Creates a new obstacle.
         *
-        *   @param shape  The shape for this object.
-        *   @param x      Startup position X.
-        *   @param y      Startup position Y.
-        *   @param width  The new width.
-        *   @param height The new height.
-        *   @param angle  The initial rotation.
+        *   @param shape           The shape for this object.
+        *   @param x               Startup position X.
+        *   @param y               Startup position Y.
+        *   @param width           The new width.
+        *   @param height          The new height.
+        *   @param angle           The initial rotation.
+        *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, angle:number )
+        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, angle:number, jumpPassThrough:boolean )
         {
             super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT );
 
-            this.defaultCollisionFilter = this.body.collisionFilter;
+            this.jumpPassThrough = jumpPassThrough;
         }
 
         /***************************************************************************************************************
@@ -34,15 +36,25 @@
         ***************************************************************************************************************/
         public render()
         {
+            if ( this.jumpPassThrough )
+            {
+
+                if
+                (
+                    mfg.Mfg.game.level.player.body.velocity.y > 0.0
 /*
-            if ( this.body.position.y > mfg.Mfg.game.level.player.body.position.y )
-            {
-                this.body.collisionFilter = this.defaultCollisionFilter;
-            }
-            else
-            {
-                this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
-            }
+                    mfg.Mfg.game.level.player.body.position.y + mfg.Mfg.game.level.player.height / 2
+                    <=  this.body.position.y
 */
+                )
+                {
+                    this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
+                }
+                else
+                {
+                    this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
+                }
+
+            }
         }
     }
