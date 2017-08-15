@@ -4,8 +4,8 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO HIGH   Pass-through walls?
     *   TODO ASAP   Create custom renderer that extends Matter.Render!
+    *   TODO HIGH   Pass-through walls?
     *   TODO ASAP   Check sprite or image clipping and scaling to player size?
     *   TODO ASAP   Avoid sliding down on platforms on falling and touching platform side?
     *   TODO HIGH   Skew image (sensor) for waving grass effect?

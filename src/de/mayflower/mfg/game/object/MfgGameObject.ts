@@ -88,7 +88,7 @@
                                 radius: [ 5.0, 5.0, 5.0, 5.0 ]
                             },
                             friction: friction,
-                            // collisionFilter: mfg.MfgSettings.UNIQUE_COLLISION_GROUP_1,
+                            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
                         }
                     );
 
@@ -118,7 +118,7 @@
                             isStatic: isStatic,
                             angle: mfg.MfgMath.angleToRad( angle ),
                             friction: friction,
-                            // collisionFilter: mfg.MfgSettings.UNIQUE_COLLISION_GROUP_1,
+                            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
                         }
                     );
 

@@ -41,7 +41,7 @@
             }
             else
             {
-                this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUP_1;
+                this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
             }
 */
         }

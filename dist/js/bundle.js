@@ -10534,8 +10534,8 @@ var MfgSettings = (function () {
     MfgSettings.COLOR_DEBUG_DECORATION = "#98ffa3";
     /** The relative path from index.html where all background images reside. */
     MfgSettings.PATH_IMAGE_BG = "res/image/bg/";
-    /** The collision group for items and player collision indicator. */
-    MfgSettings.UNIQUE_COLLISION_GROUP_1 = {
+    /** The default collision group for all game objects. */
+    MfgSettings.COLLISION_GROUP_DEFAULT = {
         category: 0x0001,
         mask: 0x00002,
         group: 0x0003,
@@ -10605,8 +10605,8 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO HIGH   Pass-through walls?
 *   TODO ASAP   Create custom renderer that extends Matter.Render!
+*   TODO HIGH   Pass-through walls?
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
 *   TODO ASAP   Avoid sliding down on platforms on falling and touching platform side?
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
@@ -10752,6 +10752,7 @@ var MfgGameObject = (function () {
                             radius: [5.0, 5.0, 5.0, 5.0]
                         },
                         friction: friction,
+                        collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
                     });
                     this.width = width;
                     this.height = height;
@@ -10771,6 +10772,7 @@ var MfgGameObject = (function () {
                         isStatic: isStatic,
                         angle: mfg.MfgMath.angleToRad(angle),
                         friction: friction,
+                        collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
                     });
                     this.width = diameter;
                     this.height = diameter;
@@ -11051,8 +11053,9 @@ var MfgCharacter = (function (_super) {
             parts: [
                 _this.body,
                 _this.bottomSensor,
-            ]
+            ],
         });
+        _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
         return _this;
     }
     /***************************************************************************************************************
@@ -11593,7 +11596,7 @@ var MfgObstacle = (function (_super) {
                     }
                     else
                     {
-                        this.body.collisionFilter = mfg.MfgSettings.UNIQUE_COLLISION_GROUP_1;
+                        this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
                     }
         */
     };

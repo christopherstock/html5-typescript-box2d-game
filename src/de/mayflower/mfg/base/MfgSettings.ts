@@ -73,8 +73,8 @@
         /** The relative path from index.html where all background images reside. */
         public      static      PATH_IMAGE_BG                               :string                     = "res/image/bg/";
 
-        /** The collision group for items and player collision indicator. */
-        public      static      UNIQUE_COLLISION_GROUP_1                    :Matter.ICollisionFilter    =
+        /** The default collision group for all game objects. */
+        public      static      COLLISION_GROUP_DEFAULT                     :Matter.ICollisionFilter    =
         {
                 category: 0x0001,
                 mask:     0x00002,

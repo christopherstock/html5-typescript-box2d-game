@@ -112,9 +112,12 @@
                         this.body,
                         this.bottomSensor,
 //                      this.topSensor,
-                    ]
+                    ],
                 }
             );
+
+            this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
+
         }
 
         /***************************************************************************************************************
