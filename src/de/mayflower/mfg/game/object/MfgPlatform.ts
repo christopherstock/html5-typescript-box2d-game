@@ -62,7 +62,13 @@
                 true,
                 null,
                 angle,
-                mfg.MfgGameObject.FRICTION_HIGH
+
+
+//                mfg.MfgGameObject.FRICTION_HIGH
+
+
+                0.1
+
             );
 
             this.waypoints = waypoints;
@@ -71,7 +77,14 @@
             this.currentWaypointIndex = -1;
             this.assignNextWaypoint();
 
-            this.body.frictionStatic = Infinity;
+
+
+
+/*
+if (false)            this.body.frictionStatic = Infinity;
+*/
+
+
 
             // Matter.Body.setMass( this.body, 70.0 );
         }

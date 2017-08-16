@@ -26,6 +26,17 @@
             // setup all game objects
             this.gameObjects =
             [
+                // seize the player!
+                mfg.MfgGameObjectFactory.createObstacle( 0,   120, 500, 15, 0.0, false ),
+
+                // sliding descending ramp
+                mfg.MfgGameObjectFactory.createObstacle( -50, 400, 500, 15, 15.0, false ),
+
+
+
+
+
+/*
                 // bg decoration
                 // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
 
@@ -45,9 +56,12 @@
                 mfg.MfgGameObjectFactory.createObstacle( 2000,  2300, 400, 15, -15.0, false ),
 
                 mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
-/*
+*/
+
+
                 // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(    370,  2100, 80, 80 ),
+                mfg.MfgGameObjectFactory.createBox(    0,  135, 80, 80 ),
+/*
                 mfg.MfgGameObjectFactory.createSphere( 320,  2000,   100    ),
                 mfg.MfgGameObjectFactory.createBox(    1000, 2080,  80, 80 ),
 
@@ -77,10 +91,11 @@
 */
                 // player
                 this.player,
-
+/*
                 // fg decoration
                 mfg.MfgGameObjectFactory.createDecoration( 700,  2860, 120, 90, null ),
                 mfg.MfgGameObjectFactory.createDecoration( 2000, 2860, 120, 90, null ),
+*/
             ];
         }
     }

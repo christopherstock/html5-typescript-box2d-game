@@ -6,6 +6,7 @@
     *
     *   TODO ASAP   Stop player sliding on bouncing against a wall!
     *   TODO ASAP   Improve moving before sensors (decoration)!
+    *   TODO ASAP   Prune player's bottom sensor?
     *   TODO ASAP   Checkout all parameters of the collision filters!
     *   TODO ASAP   Improve air behaviour of player on colliding!!
     *   TODO ASAP   Check sprite or image clipping and scaling to player size?

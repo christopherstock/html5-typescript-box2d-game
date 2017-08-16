@@ -13,7 +13,7 @@
         /** High surface friction. */
         public  static  FRICTION_HIGH           :number                         = 1.0;
         /** Default surface friction. */
-        public  static  FRICTION_DEFAULT        :number                         = 0.5;
+        public  static  FRICTION_DEFAULT        :number                         = 0.1;
         /** No surface friction. */
         public  static  FRICTION_NONE           :number                         = 0.0;
 
@@ -88,6 +88,9 @@
                                 radius: [ 5.0, 5.0, 5.0, 5.0 ]
                             },
                             friction: friction,
+
+//                            frictionStatic: friction,
+
                             collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
                         }
                     );
@@ -118,6 +121,9 @@
                             isStatic: isStatic,
                             angle: mfg.MfgMath.angleToRad( angle ),
                             friction: friction,
+
+//                            frictionStatic: friction,
+
                             collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
                         }
                     );
@@ -135,7 +141,7 @@
             }
 
 
-            Matter.Body.setMass( this.body, 70.0 );
+//            Matter.Body.setMass( this.body, 70.0 );
         }
 
         /***************************************************************************************************************

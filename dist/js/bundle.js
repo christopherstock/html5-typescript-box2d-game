@@ -10613,6 +10613,7 @@ var mfg = __webpack_require__(0);
 *
 *   TODO ASAP   Stop player sliding on bouncing against a wall!
 *   TODO ASAP   Improve moving before sensors (decoration)!
+*   TODO ASAP   Prune player's bottom sensor?
 *   TODO ASAP   Checkout all parameters of the collision filters!
 *   TODO ASAP   Improve air behaviour of player on colliding!!
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
@@ -10762,6 +10763,7 @@ var MfgGameObject = (function () {
                             radius: [5.0, 5.0, 5.0, 5.0]
                         },
                         friction: friction,
+                        //                            frictionStatic: friction,
                         collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
                     });
                     this.width = width;
@@ -10782,6 +10784,7 @@ var MfgGameObject = (function () {
                         isStatic: isStatic,
                         angle: mfg.MfgMath.angleToRad(angle),
                         friction: friction,
+                        //                            frictionStatic: friction,
                         collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
                     });
                     this.width = diameter;
@@ -10792,7 +10795,7 @@ var MfgGameObject = (function () {
         if (image != null) {
             this.body.render.sprite.texture = image;
         }
-        Matter.Body.setMass(this.body, 70.0);
+        //            Matter.Body.setMass( this.body, 70.0 );
     }
     /***************************************************************************************************************
     *   Clips this body to level bounds.
@@ -10814,7 +10817,7 @@ var MfgGameObject = (function () {
     /** High surface friction. */
     MfgGameObject.FRICTION_HIGH = 1.0;
     /** Default surface friction. */
-    MfgGameObject.FRICTION_DEFAULT = 0.5;
+    MfgGameObject.FRICTION_DEFAULT = 0.1;
     /** No surface friction. */
     MfgGameObject.FRICTION_NONE = 0.0;
     return MfgGameObject;
@@ -11018,7 +11021,7 @@ var MfgCharacter = (function (_super) {
     *   @param speedMove        The speed for horizontal movement.
     ***************************************************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, Infinity) || this;
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_HIGH) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** The top line that checks collisions with the ceiling. */
@@ -11035,14 +11038,14 @@ var MfgCharacter = (function (_super) {
         _this.speedMove = 0.0;
         _this.lookingDirection = lookingDirection;
         _this.speedMove = speedMove;
-        _this.body.frictionStatic = Infinity;
         _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
             render: {
                 opacity: 1.0,
                 strokeStyle: '#ff0000',
                 lineWidth: 2.0,
             },
-            isSensor: true
+            isSensor: true,
+            friction: mfg.MfgGameObject.FRICTION_HIGH,
         });
         /*
                     this.topSensor = Matter.Bodies.rectangle(
@@ -11068,6 +11071,8 @@ var MfgCharacter = (function (_super) {
             ],
         });
         _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
+        _this.body.friction = mfg.MfgGameObject.FRICTION_HIGH;
+        Matter.Body.setMass(_this.body, 70.0);
         return _this;
     }
     /***************************************************************************************************************
@@ -11075,8 +11080,8 @@ var MfgCharacter = (function (_super) {
     ***************************************************************************************************************/
     MfgCharacter.prototype.render = function () {
         // check top and bottom collision state
-        // this.collidesTop    = this.isColliding( this.topSensor,    true  );
-        this.collidesBottom = this.isColliding(this.bottomSensor, false);
+        // this.collidesTop    = this.isColliding( this.topSensor,    true,  false );
+        this.collidesBottom = this.isColliding(this.bottomSensor, false, false);
         // avoid this body from rotating!
         Matter.Body.setAngularVelocity(this.body, 0.0);
         Matter.Body.setAngle(this.body, 0.0);
@@ -11098,7 +11103,7 @@ var MfgCharacter = (function (_super) {
     *   Kills this character.
     ***************************************************************************************************************/
     MfgCharacter.prototype.kill = function () {
-        // remove character body
+        // remove character body ??
         Matter.World.remove(mfg.Mfg.game.engine.world, this.body);
         // flag as dead
         this.dead = true;
@@ -11108,12 +11113,13 @@ var MfgCharacter = (function (_super) {
     *
     *   This function is an entire TECHNICAL DEBT!
     *
-    *   @param sensor      The sensor body to check collision for.
-    *   @param ignoreBoxes Specifies if boxes shall be considered for collision checks.
+    *   @param sensor           The sensor body to check collision for.
+    *   @param ignoreBoxes      Specifies if boxes shall be considered for collision checks.
+    *   @param ignoreDecoration Specifies if deco shall be considered for collision checks.
     *
     *   @return <code>true</code> if a bottom collision is currently active.
     ***************************************************************************************************************/
-    MfgCharacter.prototype.isColliding = function (sensor, ignoreBoxes) {
+    MfgCharacter.prototype.isColliding = function (sensor, ignoreBoxes, ignoreDecoration) {
         var bodiesToCheck = [];
         try {
             // browse all game objects
@@ -11121,6 +11127,10 @@ var MfgCharacter = (function (_super) {
                 var gameObject = _b.value;
                 // skip own body and sensors
                 if (gameObject.body == this.body || gameObject.isSensor) {
+                    continue;
+                }
+                // skip decoration
+                if (ignoreDecoration && gameObject instanceof mfg.MfgDecoration) {
                     continue;
                 }
                 // skip boxes
@@ -11258,7 +11268,9 @@ var MfgPlatform = (function (_super) {
     *   @param waypoints The waypoints for this platform to move to.
     ***************************************************************************************************************/
     function MfgPlatform(shape, width, height, angle, speed, waypoints) {
-        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_HIGH) || this;
+        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, 
+        //                mfg.MfgGameObject.FRICTION_HIGH
+        0.1) || this;
         /** The waypoints for this platform to move. */
         _this.waypoints = null;
         /** The number of ticks till the next waypoint is reached. */
@@ -11277,8 +11289,10 @@ var MfgPlatform = (function (_super) {
         _this.speed = speed;
         _this.currentWaypointIndex = -1;
         _this.assignNextWaypoint();
-        _this.body.frictionStatic = Infinity;
         return _this;
+        /*
+        if (false)            this.body.frictionStatic = Infinity;
+        */
         // Matter.Body.setMass( this.body, 70.0 );
     }
     /***************************************************************************************************************
@@ -11424,7 +11438,7 @@ var MfgBox = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgBox(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0, mfg.MfgGameObject.FRICTION_HIGH) || this;
         Matter.Body.setMass(_this.body, 10.0);
         return _this;
     }
@@ -11595,7 +11609,7 @@ var MfgObstacle = (function (_super) {
     *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
     ***************************************************************************************************************/
     function MfgObstacle(shape, x, y, width, height, angle, jumpPassThrough) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, Infinity) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_HIGH) || this;
         /** Specifies if the player shall be allowed to jump through this obstacle. */
         _this.jumpPassThrough = false;
         _this.jumpPassThrough = jumpPassThrough;
@@ -12042,24 +12056,34 @@ var MfgLevelDev = (function (_super) {
         // setup all game objects
         this.gameObjects =
             [
-                // bg decoration
-                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
-                // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(860, 2860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(2200, 2860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(3600, 2860, 120, 90, null),
-                // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle(0, 2950, 1380, 25, 0.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(2260, 2950, 2000, 25, 0.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(320, 2870, 80, 80, 0.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(80, 2700, 400, 15, -15.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(380, 2500, 400, 15, -15.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(1320, 2700, 400, 15, -15.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(2000, 2300, 400, 15, -15.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(3800, 2700, 400, 10, 0.0, true),
+                // seize the player!
+                mfg.MfgGameObjectFactory.createObstacle(0, 120, 500, 15, 0.0, false),
+                // sliding descending ramp
+                mfg.MfgGameObjectFactory.createObstacle(-50, 400, 500, 15, 15.0, false),
                 /*
-                                // moveable boxes
-                                mfg.MfgGameObjectFactory.createBox(    370,  2100, 80, 80 ),
+                                // bg decoration
+                                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
+                
+                                // bg decoration
+                                mfg.MfgGameObjectFactory.createDecoration( 860,  2860, 120, 90, null ),
+                                mfg.MfgGameObjectFactory.createDecoration( 2200, 2860, 120, 90, null ),
+                                mfg.MfgGameObjectFactory.createDecoration( 3600, 2860, 120, 90, null ),
+                
+                                // static obstacles
+                                mfg.MfgGameObjectFactory.createObstacle( 0,    2950, 1380, 25, 0.0, false ),
+                                mfg.MfgGameObjectFactory.createObstacle( 2260, 2950, 2000, 25, 0.0, false ),
+                                mfg.MfgGameObjectFactory.createObstacle( 320,  2870, 80,   80, 0.0, false ),
+                
+                                mfg.MfgGameObjectFactory.createObstacle( 80,    2700, 400, 15, -15.0, false ),
+                                mfg.MfgGameObjectFactory.createObstacle( 380,   2500, 400, 15, -15.0, false ),
+                                mfg.MfgGameObjectFactory.createObstacle( 1320,  2700, 400, 15, -15.0, false ),
+                                mfg.MfgGameObjectFactory.createObstacle( 2000,  2300, 400, 15, -15.0, false ),
+                
+                                mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
+                */
+                // moveable boxes
+                mfg.MfgGameObjectFactory.createBox(0, 135, 80, 80),
+                /*
                                 mfg.MfgGameObjectFactory.createSphere( 320,  2000,   100    ),
                                 mfg.MfgGameObjectFactory.createBox(    1000, 2080,  80, 80 ),
                 
@@ -12089,9 +12113,6 @@ var MfgLevelDev = (function (_super) {
                 */
                 // player
                 this.player,
-                // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration(700, 2860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(2000, 2860, 120, 90, null),
             ];
     };
     return MfgLevelDev;

@@ -26,7 +26,20 @@
         ***************************************************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, angle:number, jumpPassThrough:boolean )
         {
-            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, Infinity );
+            super
+            (
+                shape,
+                x,
+                y,
+                width,
+                height,
+                mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
+                false,
+                true,
+                null,
+                angle,
+                mfg.MfgGameObject.FRICTION_HIGH
+            );
 
             this.jumpPassThrough = jumpPassThrough;
         }

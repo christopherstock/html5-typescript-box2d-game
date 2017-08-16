@@ -67,16 +67,11 @@
                 false,
                 image,
                 0.0,
-                Infinity
+                mfg.MfgGameObject.FRICTION_HIGH
             );
 
             this.lookingDirection = lookingDirection;
             this.speedMove        = speedMove;
-
-
-            this.body.frictionStatic = Infinity;
-
-
 
             this.bottomSensor = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),
@@ -90,7 +85,8 @@
                         strokeStyle: '#ff0000',
                         lineWidth: 2.0,
                     },
-                    isSensor: true
+                    isSensor: true,
+                    friction: mfg.MfgGameObject.FRICTION_HIGH,
                 }
             );
 /*
@@ -122,6 +118,10 @@
             );
 
             this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
+
+            this.body.friction = mfg.MfgGameObject.FRICTION_HIGH;
+
+            Matter.Body.setMass( this.body, 70.0 );
         }
 
         /***************************************************************************************************************
@@ -130,8 +130,8 @@
         public render()
         {
             // check top and bottom collision state
-         // this.collidesTop    = this.isColliding( this.topSensor,    true  );
-            this.collidesBottom = this.isColliding( this.bottomSensor, false );
+         // this.collidesTop    = this.isColliding( this.topSensor,    true,  false );
+            this.collidesBottom = this.isColliding( this.bottomSensor, false, false );
 
             // avoid this body from rotating!
             Matter.Body.setAngularVelocity( this.body, 0.0 );
@@ -163,7 +163,7 @@
         ***************************************************************************************************************/
         public kill()
         {
-            // remove character body
+            // remove character body ??
             Matter.World.remove( mfg.Mfg.game.engine.world, this.body );
 
             // flag as dead
@@ -175,12 +175,13 @@
         *
         *   This function is an entire TECHNICAL DEBT!
         *
-        *   @param sensor      The sensor body to check collision for.
-        *   @param ignoreBoxes Specifies if boxes shall be considered for collision checks.
+        *   @param sensor           The sensor body to check collision for.
+        *   @param ignoreBoxes      Specifies if boxes shall be considered for collision checks.
+        *   @param ignoreDecoration Specifies if deco shall be considered for collision checks.
         *
         *   @return <code>true</code> if a bottom collision is currently active.
         ***************************************************************************************************************/
-        private isColliding( sensor:Matter.Body, ignoreBoxes:boolean )
+        private isColliding( sensor:Matter.Body, ignoreBoxes:boolean, ignoreDecoration:boolean )
         {
             let bodiesToCheck:Array<Matter.Body> = [];
 
@@ -189,6 +190,12 @@
             {
                 // skip own body and sensors
                 if ( gameObject.body == this.body || gameObject.isSensor )
+                {
+                    continue;
+                }
+
+                // skip decoration
+                if ( ignoreDecoration && gameObject instanceof mfg.MfgDecoration )
                 {
                     continue;
                 }
