@@ -11021,7 +11021,7 @@ var MfgCharacter = (function (_super) {
     *   @param speedMove        The speed for horizontal movement.
     ***************************************************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_NONE) || this;
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_HIGH) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** Flags if this character is dead. */
@@ -11035,6 +11035,7 @@ var MfgCharacter = (function (_super) {
         _this.lookingDirection = lookingDirection;
         _this.speedMove = speedMove;
         _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
+        //            this.body.frictionStatic = Infinity;
         Matter.Body.setMass(_this.body, 70.0);
         return _this;
     }
@@ -11234,9 +11235,7 @@ var MfgPlatform = (function (_super) {
     *   @param waypoints The waypoints for this platform to move to.
     ***************************************************************************************************************/
     function MfgPlatform(shape, width, height, angle, speed, waypoints) {
-        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, 
-        //                mfg.MfgGameObject.FRICTION_HIGH
-        0.1) || this;
+        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_HIGH) || this;
         /** The waypoints for this platform to move. */
         _this.waypoints = null;
         /** The number of ticks till the next waypoint is reached. */
@@ -11255,11 +11254,9 @@ var MfgPlatform = (function (_super) {
         _this.speed = speed;
         _this.currentWaypointIndex = -1;
         _this.assignNextWaypoint();
+        _this.body.frictionStatic = Infinity;
+        Matter.Body.setMass(_this.body, 70.0);
         return _this;
-        /*
-        if (false)            this.body.frictionStatic = Infinity;
-        */
-        // Matter.Body.setMass( this.body, 70.0 );
     }
     /***************************************************************************************************************
     *   Assigns the next waypoint to aim to.
@@ -11996,6 +11993,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The level set for the dev level.
@@ -12018,7 +12016,7 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgCharacterLookingDirection.ERight);
+        this.player = new mfg.MfgPlayer(3000, 2000, mfg.MfgCharacterLookingDirection.ERight);
         // setup all game objects
         this.gameObjects =
             [
@@ -12026,59 +12024,47 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createObstacle(0, 120, 500, 15, 0.0, false),
                 // sliding descending ramp
                 mfg.MfgGameObjectFactory.createObstacle(-50, 400, 500, 15, 15.0, false),
-                /*
-                                // bg decoration
-                                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
-                
-                                // bg decoration
-                                mfg.MfgGameObjectFactory.createDecoration( 860,  2860, 120, 90, null ),
-                                mfg.MfgGameObjectFactory.createDecoration( 2200, 2860, 120, 90, null ),
-                                mfg.MfgGameObjectFactory.createDecoration( 3600, 2860, 120, 90, null ),
-                
-                                // static obstacles
-                                mfg.MfgGameObjectFactory.createObstacle( 0,    2950, 1380, 25, 0.0, false ),
-                                mfg.MfgGameObjectFactory.createObstacle( 2260, 2950, 2000, 25, 0.0, false ),
-                                mfg.MfgGameObjectFactory.createObstacle( 320,  2870, 80,   80, 0.0, false ),
-                
-                                mfg.MfgGameObjectFactory.createObstacle( 80,    2700, 400, 15, -15.0, false ),
-                                mfg.MfgGameObjectFactory.createObstacle( 380,   2500, 400, 15, -15.0, false ),
-                                mfg.MfgGameObjectFactory.createObstacle( 1320,  2700, 400, 15, -15.0, false ),
-                                mfg.MfgGameObjectFactory.createObstacle( 2000,  2300, 400, 15, -15.0, false ),
-                
-                                mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
-                */
+                // bg decoration
+                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
+                // bg decoration
+                mfg.MfgGameObjectFactory.createDecoration(860, 2860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2200, 2860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(3600, 2860, 120, 90, null),
+                // static obstacles
+                mfg.MfgGameObjectFactory.createObstacle(0, 2950, 1380, 25, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(2260, 2950, 2000, 25, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(320, 2870, 80, 80, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(80, 2700, 400, 15, -15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(380, 2500, 400, 15, -15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(1320, 2700, 400, 15, -15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(2000, 2300, 400, 15, -15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(3800, 2700, 400, 10, 0.0, true),
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(0, 135, 80, 80),
-                /*
-                                mfg.MfgGameObjectFactory.createSphere( 320,  2000,   100    ),
-                                mfg.MfgGameObjectFactory.createBox(    1000, 2080,  80, 80 ),
-                
-                                // sigsaws
-                                mfg.MfgGameObjectFactory.createSigsaw( 1420, 2950, 400, 25, null ),
-                                mfg.MfgGameObjectFactory.createBounce( 1840, 2950, 400, 25, null ),
-                
-                                // animated platforms
-                                new mfg.MfgPlatform( mfg.MfgGameObjectShape.ERectangle, 175.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL,
-                                    [
-                                        Matter.Vector.create( 3650.0, 2850.0 ),
-                                        Matter.Vector.create( 3950.0, 2850.0 ),
-                                    ]
-                                ),
-                
-                                // items
-                                mfg.MfgGameObjectFactory.createItem( 1100, 2850 ),
-                                mfg.MfgGameObjectFactory.createItem( 1150, 2850 ),
-                                mfg.MfgGameObjectFactory.createItem( 1200, 2850 ),
-                
-                                mfg.MfgGameObjectFactory.createItem( 2600, 2850 ),
-                                mfg.MfgGameObjectFactory.createItem( 2650, 2850 ),
-                                mfg.MfgGameObjectFactory.createItem( 2700, 2850 ),
-                
-                                // enemies
-                                mfg.MfgGameObjectFactory.createEnemy( 845, 2000 ),
-                */
+                mfg.MfgGameObjectFactory.createSphere(320, 2000, 100),
+                mfg.MfgGameObjectFactory.createBox(1000, 2080, 80, 80),
+                // sigsaws
+                mfg.MfgGameObjectFactory.createSigsaw(1420, 2950, 400, 25, null),
+                mfg.MfgGameObjectFactory.createBounce(1840, 2950, 400, 25, null),
+                // animated platforms
+                new mfg.MfgPlatform(mfg.MfgGameObjectShape.ERectangle, 175.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
+                    Matter.Vector.create(3650.0, 2850.0),
+                    Matter.Vector.create(3950.0, 2850.0),
+                ]),
+                // items
+                mfg.MfgGameObjectFactory.createItem(1100, 2850),
+                mfg.MfgGameObjectFactory.createItem(1150, 2850),
+                mfg.MfgGameObjectFactory.createItem(1200, 2850),
+                mfg.MfgGameObjectFactory.createItem(2600, 2850),
+                mfg.MfgGameObjectFactory.createItem(2650, 2850),
+                mfg.MfgGameObjectFactory.createItem(2700, 2850),
+                // enemies
+                mfg.MfgGameObjectFactory.createEnemy(845, 2000),
                 // player
                 this.player,
+                // fg decoration
+                mfg.MfgGameObjectFactory.createDecoration(700, 2860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(2000, 2860, 120, 90, null),
             ];
     };
     return MfgLevelDev;

@@ -21,7 +21,7 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 0, 0, mfg.MfgCharacterLookingDirection.ERight );
+            this.player = new mfg.MfgPlayer( 3000, 2000, mfg.MfgCharacterLookingDirection.ERight );
 
             // setup all game objects
             this.gameObjects =
@@ -32,11 +32,6 @@
                 // sliding descending ramp
                 mfg.MfgGameObjectFactory.createObstacle( -50, 400, 500, 15, 15.0, false ),
 
-
-
-
-
-/*
                 // bg decoration
                 // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
 
@@ -56,12 +51,10 @@
                 mfg.MfgGameObjectFactory.createObstacle( 2000,  2300, 400, 15, -15.0, false ),
 
                 mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
-*/
-
 
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(    0,  135, 80, 80 ),
-/*
+
                 mfg.MfgGameObjectFactory.createSphere( 320,  2000,   100    ),
                 mfg.MfgGameObjectFactory.createBox(    1000, 2080,  80, 80 ),
 
@@ -88,14 +81,13 @@
 
                 // enemies
                 mfg.MfgGameObjectFactory.createEnemy( 845, 2000 ),
-*/
+
                 // player
                 this.player,
-/*
+
                 // fg decoration
                 mfg.MfgGameObjectFactory.createDecoration( 700,  2860, 120, 90, null ),
                 mfg.MfgGameObjectFactory.createDecoration( 2000, 2860, 120, 90, null ),
-*/
             ];
         }
     }
