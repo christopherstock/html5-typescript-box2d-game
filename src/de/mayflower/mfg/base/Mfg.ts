@@ -4,6 +4,10 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Stop player sliding on bouncing against a wall!
+    *   TODO ASAP   Improve moving before sensors (decoration)!
+    *   TODO ASAP   Checkout all parameters of the collision filters!
+    *   TODO ASAP   Improve air behaviour of player on colliding!!
     *   TODO ASAP   Check sprite or image clipping and scaling to player size?
     *   TODO ASAP   Avoid sliding down on platforms on falling and touching platform side?
     *   TODO HIGH   Skew image (sensor) for waving grass effect?
@@ -19,7 +23,7 @@
     *   TODO WEAK   Create custom renderer that extends Matter.Render?
     *   TODO WEAK   Try discreet graphic style.
     *   TODO WEAK   Implement nice changing gravity effects.
-    *   TODO WEAK   Pass-through walls?
+    *   TODO WEAK   Improve Pass-through walls behaviour for all characters etc. ..
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
@@ -38,7 +42,7 @@
             mfg.MfgDebug.init.log( mfg.MfgSettings.TITLE );
             document.title = mfg.MfgSettings.TITLE;
 
-            //init the game engine
+            //init and start the game engine
             this.game = new mfg.MfgGame();
             this.game.init();
             this.game.start();

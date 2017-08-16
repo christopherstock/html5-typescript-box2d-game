@@ -10611,6 +10611,10 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Stop player sliding on bouncing against a wall!
+*   TODO ASAP   Improve moving before sensors (decoration)!
+*   TODO ASAP   Checkout all parameters of the collision filters!
+*   TODO ASAP   Improve air behaviour of player on colliding!!
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
 *   TODO ASAP   Avoid sliding down on platforms on falling and touching platform side?
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
@@ -10626,7 +10630,7 @@ var mfg = __webpack_require__(0);
 *   TODO WEAK   Create custom renderer that extends Matter.Render?
 *   TODO WEAK   Try discreet graphic style.
 *   TODO WEAK   Implement nice changing gravity effects.
-*   TODO WEAK   Pass-through walls?
+*   TODO WEAK   Improve Pass-through walls behaviour for all characters etc. ..
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -10641,7 +10645,7 @@ var Mfg = (function () {
         // acclaim debug console and set title
         mfg.MfgDebug.init.log(mfg.MfgSettings.TITLE);
         document.title = mfg.MfgSettings.TITLE;
-        //init the game engine
+        //init and start the game engine
         this.game = new mfg.MfgGame();
         this.game.init();
         this.game.start();
@@ -11014,7 +11018,7 @@ var MfgCharacter = (function (_super) {
     *   @param speedMove        The speed for horizontal movement.
     ***************************************************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_HIGH) || this;
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, Infinity) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** The top line that checks collisions with the ceiling. */
@@ -11031,6 +11035,7 @@ var MfgCharacter = (function (_super) {
         _this.speedMove = 0.0;
         _this.lookingDirection = lookingDirection;
         _this.speedMove = speedMove;
+        _this.body.frictionStatic = Infinity;
         _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
             render: {
                 opacity: 1.0,
@@ -11538,7 +11543,9 @@ var MfgDecoration = (function (_super) {
     *   @param image  The image source to use.
     ***************************************************************************************************************/
     function MfgDecoration(shape, x, y, width, height, image) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, true, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, false, true, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
+        _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
+        return _this;
     }
     /***************************************************************************************************************
     *   Renders this obstacle.
@@ -11588,7 +11595,7 @@ var MfgObstacle = (function (_super) {
     *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
     ***************************************************************************************************************/
     function MfgObstacle(shape, x, y, width, height, angle, jumpPassThrough) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, Infinity) || this;
         /** Specifies if the player shall be allowed to jump through this obstacle. */
         _this.jumpPassThrough = false;
         _this.jumpPassThrough = jumpPassThrough;
@@ -11599,7 +11606,7 @@ var MfgObstacle = (function (_super) {
     ***************************************************************************************************************/
     MfgObstacle.prototype.render = function () {
         if (this.jumpPassThrough) {
-            if (mfg.Mfg.game.level.player.body.velocity.y > 0.0) {
+            if (mfg.Mfg.game.level.player.body.velocity.y >= 0.0) {
                 this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
             }
             else {
@@ -12009,7 +12016,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The level set for the dev level.
@@ -12032,7 +12038,7 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(3600, 2600, mfg.MfgCharacterLookingDirection.ERight);
+        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgCharacterLookingDirection.ERight);
         // setup all game objects
         this.gameObjects =
             [
@@ -12051,32 +12057,36 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createObstacle(1320, 2700, 400, 15, -15.0, false),
                 mfg.MfgGameObjectFactory.createObstacle(2000, 2300, 400, 15, -15.0, false),
                 mfg.MfgGameObjectFactory.createObstacle(3800, 2700, 400, 10, 0.0, true),
-                // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(370, 2100, 80, 80),
-                mfg.MfgGameObjectFactory.createSphere(320, 2000, 100),
-                mfg.MfgGameObjectFactory.createBox(1000, 2080, 80, 80),
-                // sigsaws
-                mfg.MfgGameObjectFactory.createSigsaw(1420, 2950, 400, 25, null),
-                mfg.MfgGameObjectFactory.createBounce(1840, 2950, 400, 25, null),
-                // animated platforms
-                new mfg.MfgPlatform(mfg.MfgGameObjectShape.ERectangle, 175.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
-                    /*
-                                            Matter.Vector.create( 3650.0, 2850.0 ),
-                                            Matter.Vector.create( 3700.0, 2900.0 ),
-                                            Matter.Vector.create( 3750.0, 2600.0 ),
-                    */
-                    Matter.Vector.create(3650.0, 2850.0),
-                    Matter.Vector.create(3950.0, 2850.0),
-                ]),
-                // items
-                mfg.MfgGameObjectFactory.createItem(1100, 2850),
-                mfg.MfgGameObjectFactory.createItem(1150, 2850),
-                mfg.MfgGameObjectFactory.createItem(1200, 2850),
-                mfg.MfgGameObjectFactory.createItem(2600, 2850),
-                mfg.MfgGameObjectFactory.createItem(2650, 2850),
-                mfg.MfgGameObjectFactory.createItem(2700, 2850),
-                // enemies
-                mfg.MfgGameObjectFactory.createEnemy(845, 2000),
+                /*
+                                // moveable boxes
+                                mfg.MfgGameObjectFactory.createBox(    370,  2100, 80, 80 ),
+                                mfg.MfgGameObjectFactory.createSphere( 320,  2000,   100    ),
+                                mfg.MfgGameObjectFactory.createBox(    1000, 2080,  80, 80 ),
+                
+                                // sigsaws
+                                mfg.MfgGameObjectFactory.createSigsaw( 1420, 2950, 400, 25, null ),
+                                mfg.MfgGameObjectFactory.createBounce( 1840, 2950, 400, 25, null ),
+                
+                                // animated platforms
+                                new mfg.MfgPlatform( mfg.MfgGameObjectShape.ERectangle, 175.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL,
+                                    [
+                                        Matter.Vector.create( 3650.0, 2850.0 ),
+                                        Matter.Vector.create( 3950.0, 2850.0 ),
+                                    ]
+                                ),
+                
+                                // items
+                                mfg.MfgGameObjectFactory.createItem( 1100, 2850 ),
+                                mfg.MfgGameObjectFactory.createItem( 1150, 2850 ),
+                                mfg.MfgGameObjectFactory.createItem( 1200, 2850 ),
+                
+                                mfg.MfgGameObjectFactory.createItem( 2600, 2850 ),
+                                mfg.MfgGameObjectFactory.createItem( 2650, 2850 ),
+                                mfg.MfgGameObjectFactory.createItem( 2700, 2850 ),
+                
+                                // enemies
+                                mfg.MfgGameObjectFactory.createEnemy( 845, 2000 ),
+                */
                 // player
                 this.player,
                 // fg decoration

@@ -67,11 +67,16 @@
                 false,
                 image,
                 0.0,
-                mfg.MfgGameObject.FRICTION_HIGH
+                Infinity
             );
 
             this.lookingDirection = lookingDirection;
             this.speedMove        = speedMove;
+
+
+            this.body.frictionStatic = Infinity;
+
+
 
             this.bottomSensor = Matter.Bodies.rectangle(
                 x + ( width  / 2 ),
@@ -117,7 +122,6 @@
             );
 
             this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
-
         }
 
         /***************************************************************************************************************
