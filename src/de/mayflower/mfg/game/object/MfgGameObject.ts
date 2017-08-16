@@ -87,9 +87,12 @@
                             {
                                 radius: [ 5.0, 5.0, 5.0, 5.0 ]
                             },
+
                             friction: friction,
 
+
 //                            frictionStatic: friction,
+
 
                             collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
                         }
@@ -120,7 +123,9 @@
                             isSensor: isSensor,
                             isStatic: isStatic,
                             angle: mfg.MfgMath.angleToRad( angle ),
+
                             friction: friction,
+
 
 //                            frictionStatic: friction,
 
@@ -141,7 +146,7 @@
             }
 
 
-//            Matter.Body.setMass( this.body, 70.0 );
+            Matter.Body.setMass( this.body, 70.0 );
         }
 
         /***************************************************************************************************************

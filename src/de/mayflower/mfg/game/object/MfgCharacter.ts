@@ -62,7 +62,9 @@
                 false,
                 image,
                 0.0,
-                mfg.MfgGameObject.FRICTION_HIGH
+//                mfg.MfgGameObject.FRICTION_HIGH
+
+Infinity
             );
 
             this.lookingDirection = lookingDirection;
@@ -73,7 +75,9 @@
 //            this.body.frictionStatic = Infinity;
 
 
+/*
             Matter.Body.setMass( this.body, 70.0 );
+*/
         }
 
         /***************************************************************************************************************
@@ -86,9 +90,13 @@
 
             this.collidesBottom = this.isCollidingBottom( false, false );
 
+
+
             // avoid this body from rotating!
             Matter.Body.setAngularVelocity( this.body, 0.0 );
             Matter.Body.setAngle( this.body, 0.0 );
+
+
 /*
             // avoid this body from sliding horizontal!
             this.body.velocity.x = 0.0;
@@ -179,12 +187,19 @@
         {
             if ( this.collidesBottom )
             {
+
+
+
+
+
+
                 Matter.Body.applyForce
                 (
                     this.body,
                     this.body.position,
                     Matter.Vector.create( 0.0, -3.0 )
                 );
+
             }
         }
 

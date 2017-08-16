@@ -5,6 +5,7 @@
     *   The main class contains the application's points of entry and termination.
     *
     *   TODO ASAP   Fix player sliding right!!! :( :(
+    *
     *   TODO ASAP   Avoid player sliding after landing from jumping ... apply own jumping behaviour???
     *   TODO ASAP   Stop player sliding on bouncing against a wall!
     *   TODO ASAP   Improve moving before sensors (decoration)!

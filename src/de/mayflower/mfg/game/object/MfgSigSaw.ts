@@ -54,9 +54,9 @@
                     }
                 }
             );
-
+/*
             Matter.Body.setMass( this.body, 25.0 );
-
+*/
             Matter.Composite.add(
                 mfg.Mfg.game.engine.world,
                 this.constraint

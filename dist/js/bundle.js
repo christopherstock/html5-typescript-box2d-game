@@ -10611,6 +10611,8 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Fix player sliding right!!! :( :(
+*
 *   TODO ASAP   Avoid player sliding after landing from jumping ... apply own jumping behaviour???
 *   TODO ASAP   Stop player sliding on bouncing against a wall!
 *   TODO ASAP   Improve moving before sensors (decoration)!
@@ -10795,7 +10797,7 @@ var MfgGameObject = (function () {
         if (image != null) {
             this.body.render.sprite.texture = image;
         }
-        //            Matter.Body.setMass( this.body, 70.0 );
+        Matter.Body.setMass(this.body, 70.0);
     }
     /***************************************************************************************************************
     *   Clips this body to level bounds.
@@ -11021,7 +11023,9 @@ var MfgCharacter = (function (_super) {
     *   @param speedMove        The speed for horizontal movement.
     ***************************************************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_HIGH) || this;
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, 
+        //                mfg.MfgGameObject.FRICTION_HIGH
+        Infinity) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** Flags if this character is dead. */
@@ -11035,9 +11039,11 @@ var MfgCharacter = (function (_super) {
         _this.lookingDirection = lookingDirection;
         _this.speedMove = speedMove;
         _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
-        //            this.body.frictionStatic = Infinity;
-        Matter.Body.setMass(_this.body, 70.0);
         return _this;
+        //            this.body.frictionStatic = Infinity;
+        /*
+                    Matter.Body.setMass( this.body, 70.0 );
+        */
     }
     /***************************************************************************************************************
     *   Renders the current character tick.
@@ -11255,8 +11261,10 @@ var MfgPlatform = (function (_super) {
         _this.currentWaypointIndex = -1;
         _this.assignNextWaypoint();
         _this.body.frictionStatic = Infinity;
-        Matter.Body.setMass(_this.body, 70.0);
         return _this;
+        /*
+                    Matter.Body.setMass( this.body, 70.0 );
+        */
     }
     /***************************************************************************************************************
     *   Assigns the next waypoint to aim to.
@@ -11381,7 +11389,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents a movable box.
@@ -11401,9 +11408,10 @@ var MfgBox = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgBox(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0, mfg.MfgGameObject.FRICTION_HIGH) || this;
-        Matter.Body.setMass(_this.body, 10.0);
-        return _this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0, mfg.MfgGameObject.FRICTION_HIGH) || this;
+        /*
+                    Matter.Body.setMass( this.body, 10.0 );
+        */
     }
     /***************************************************************************************************************
     *   Renders this box.
@@ -11649,7 +11657,9 @@ var MfgSigSaw = (function (_super) {
                 visible: true,
             }
         });
-        Matter.Body.setMass(_this.body, 25.0);
+        /*
+                    Matter.Body.setMass( this.body, 25.0 );
+        */
         Matter.Composite.add(mfg.Mfg.game.engine.world, _this.constraint);
         return _this;
     }
@@ -11746,7 +11756,9 @@ var MfgBounce = (function (_super) {
                 visible: true,
             }
         });
-        Matter.Body.setMass(_this.body, 25.0);
+        /*
+                    Matter.Body.setMass( this.body, 25.0 );
+        */
         Matter.Composite.add(mfg.Mfg.game.engine.world, _this.constraint);
         return _this;
     }
