@@ -4,13 +4,13 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Avoid player sliding after landing from jumping ... apply own jumping behaviour???
     *   TODO ASAP   Stop player sliding on bouncing against a wall!
     *   TODO ASAP   Improve moving before sensors (decoration)!
     *   TODO ASAP   Prune player's bottom sensor?
     *   TODO ASAP   Checkout all parameters of the collision filters!
     *   TODO ASAP   Improve air behaviour of player on colliding!!
     *   TODO ASAP   Check sprite or image clipping and scaling to player size?
-    *   TODO ASAP   Avoid sliding down on platforms on falling and touching platform side?
     *   TODO HIGH   Skew image (sensor) for waving grass effect?
     *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
     *   TODO HIGH   Create different enemy move patterns.

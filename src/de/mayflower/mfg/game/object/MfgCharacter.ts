@@ -13,11 +13,6 @@
         /** The looking direction for this character. */
         public          lookingDirection        :mfg.MfgCharacterLookingDirection   = null;
 
-        /** The top line that checks collisions with the ceiling. */
-    //  protected       topSensor               :Matter.Body                        = null;
-        /** The bottom line that checks collisions with the floor. */
-        protected       bottomSensor            :Matter.Body                        = null;
-
         /** Flags if this character is dead. */
         protected       dead                    :boolean                            = false;
 
@@ -67,59 +62,13 @@
                 false,
                 image,
                 0.0,
-                mfg.MfgGameObject.FRICTION_HIGH
+                mfg.MfgGameObject.FRICTION_NONE
             );
 
             this.lookingDirection = lookingDirection;
             this.speedMove        = speedMove;
 
-            this.bottomSensor = Matter.Bodies.rectangle(
-                x + ( width  / 2 ),
-                y + height + 1,
-                width,
-                1.0,
-                {
-                    render:
-                    {
-                        opacity: 1.0,
-                        strokeStyle: '#ff0000',
-                        lineWidth: 2.0,
-                    },
-                    isSensor: true,
-                    friction: mfg.MfgGameObject.FRICTION_HIGH,
-                }
-            );
-/*
-            this.topSensor = Matter.Bodies.rectangle(
-                x + ( width  / 2 ),
-                y - 1,
-                width,
-                1.0,
-                {
-                    render:
-                    {
-                        opacity: 1.0,
-                        strokeStyle: '#00ff00',
-                        lineWidth: 2.0,
-                    },
-                    isSensor: true
-                }
-            );
-*/
-            this.body = Matter.Body.create(
-                {
-                    parts:
-                    [
-                        this.body,
-                        this.bottomSensor,
-//                      this.topSensor,
-                    ],
-                }
-            );
-
             this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
-
-            this.body.friction = mfg.MfgGameObject.FRICTION_HIGH;
 
             Matter.Body.setMass( this.body, 70.0 );
         }
@@ -130,13 +79,19 @@
         public render()
         {
             // check top and bottom collision state
-         // this.collidesTop    = this.isColliding( this.topSensor,    true,  false );
-            this.collidesBottom = this.isColliding( this.bottomSensor, false, false );
+         // this.collidesTop    = this.isCollidingBottom( this.topSensor,    true,  false );
+
+            this.collidesBottom = this.isCollidingBottom( false, false );
 
             // avoid this body from rotating!
             Matter.Body.setAngularVelocity( this.body, 0.0 );
             Matter.Body.setAngle( this.body, 0.0 );
-
+/*
+            // avoid this body from sliding horizontal!
+            this.body.velocity.x = 0.0;
+            this.body.force.x = 0.0;
+            this.body.speed = 0.0;
+*/
             this.clipToHorizontalLevelBounds();
 
             if ( !this.dead )
@@ -173,15 +128,12 @@
         /***************************************************************************************************************
         *   Check if the specified sensor currently collides with any other colliding body.
         *
-        *   This function is an entire TECHNICAL DEBT!
-        *
-        *   @param sensor           The sensor body to check collision for.
         *   @param ignoreBoxes      Specifies if boxes shall be considered for collision checks.
         *   @param ignoreDecoration Specifies if deco shall be considered for collision checks.
         *
         *   @return <code>true</code> if a bottom collision is currently active.
         ***************************************************************************************************************/
-        private isColliding( sensor:Matter.Body, ignoreBoxes:boolean, ignoreDecoration:boolean )
+        private isCollidingBottom( ignoreBoxes:boolean, ignoreDecoration:boolean )
         {
             let bodiesToCheck:Array<Matter.Body> = [];
 
@@ -212,8 +164,8 @@
             return Matter.Query.ray
             (
                 bodiesToCheck,
-                Matter.Vector.create( sensor.position.x - ( this.width / 2 ), sensor.position.y ),
-                Matter.Vector.create( sensor.position.x + ( this.width / 2 ), sensor.position.y )
+                Matter.Vector.create( this.body.position.x - ( this.width / 2 ), this.body.position.y + ( this.height / 2 ) ),
+                Matter.Vector.create( this.body.position.x + ( this.width / 2 ), this.body.position.y + ( this.height / 2 ) )
             ).length > 0;
         }
 
@@ -224,7 +176,12 @@
         {
             if ( this.collidesBottom )
             {
-                Matter.Body.applyForce( this.body, this.body.position, Matter.Vector.create( 0.0, -3.0 ) );
+                Matter.Body.applyForce
+                (
+                    this.body,
+                    this.body.position,
+                    Matter.Vector.create( 0.0, -3.0 )
+                );
             }
         }
 

@@ -10611,13 +10611,13 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Avoid player sliding after landing from jumping ... apply own jumping behaviour???
 *   TODO ASAP   Stop player sliding on bouncing against a wall!
 *   TODO ASAP   Improve moving before sensors (decoration)!
 *   TODO ASAP   Prune player's bottom sensor?
 *   TODO ASAP   Checkout all parameters of the collision filters!
 *   TODO ASAP   Improve air behaviour of player on colliding!!
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
-*   TODO ASAP   Avoid sliding down on platforms on falling and touching platform side?
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
 *   TODO HIGH   Create different enemy move patterns.
@@ -11021,13 +11021,9 @@ var MfgCharacter = (function (_super) {
     *   @param speedMove        The speed for horizontal movement.
     ***************************************************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_HIGH) || this;
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_NONE) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
-        /** The top line that checks collisions with the ceiling. */
-        //  protected       topSensor               :Matter.Body                        = null;
-        /** The bottom line that checks collisions with the floor. */
-        _this.bottomSensor = null;
         /** Flags if this character is dead. */
         _this.dead = false;
         /** flags if the character collides with the top sensor. */
@@ -11038,40 +11034,7 @@ var MfgCharacter = (function (_super) {
         _this.speedMove = 0.0;
         _this.lookingDirection = lookingDirection;
         _this.speedMove = speedMove;
-        _this.bottomSensor = Matter.Bodies.rectangle(x + (width / 2), y + height + 1, width, 1.0, {
-            render: {
-                opacity: 1.0,
-                strokeStyle: '#ff0000',
-                lineWidth: 2.0,
-            },
-            isSensor: true,
-            friction: mfg.MfgGameObject.FRICTION_HIGH,
-        });
-        /*
-                    this.topSensor = Matter.Bodies.rectangle(
-                        x + ( width  / 2 ),
-                        y - 1,
-                        width,
-                        1.0,
-                        {
-                            render:
-                            {
-                                opacity: 1.0,
-                                strokeStyle: '#00ff00',
-                                lineWidth: 2.0,
-                            },
-                            isSensor: true
-                        }
-                    );
-        */
-        _this.body = Matter.Body.create({
-            parts: [
-                _this.body,
-                _this.bottomSensor,
-            ],
-        });
         _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
-        _this.body.friction = mfg.MfgGameObject.FRICTION_HIGH;
         Matter.Body.setMass(_this.body, 70.0);
         return _this;
     }
@@ -11080,11 +11043,17 @@ var MfgCharacter = (function (_super) {
     ***************************************************************************************************************/
     MfgCharacter.prototype.render = function () {
         // check top and bottom collision state
-        // this.collidesTop    = this.isColliding( this.topSensor,    true,  false );
-        this.collidesBottom = this.isColliding(this.bottomSensor, false, false);
+        // this.collidesTop    = this.isCollidingBottom( this.topSensor,    true,  false );
+        this.collidesBottom = this.isCollidingBottom(false, false);
         // avoid this body from rotating!
         Matter.Body.setAngularVelocity(this.body, 0.0);
         Matter.Body.setAngle(this.body, 0.0);
+        /*
+                    // avoid this body from sliding horizontal!
+                    this.body.velocity.x = 0.0;
+                    this.body.force.x = 0.0;
+                    this.body.speed = 0.0;
+        */
         this.clipToHorizontalLevelBounds();
         if (!this.dead) {
             this.checkFallingDead();
@@ -11111,15 +11080,12 @@ var MfgCharacter = (function (_super) {
     /***************************************************************************************************************
     *   Check if the specified sensor currently collides with any other colliding body.
     *
-    *   This function is an entire TECHNICAL DEBT!
-    *
-    *   @param sensor           The sensor body to check collision for.
     *   @param ignoreBoxes      Specifies if boxes shall be considered for collision checks.
     *   @param ignoreDecoration Specifies if deco shall be considered for collision checks.
     *
     *   @return <code>true</code> if a bottom collision is currently active.
     ***************************************************************************************************************/
-    MfgCharacter.prototype.isColliding = function (sensor, ignoreBoxes, ignoreDecoration) {
+    MfgCharacter.prototype.isCollidingBottom = function (ignoreBoxes, ignoreDecoration) {
         var bodiesToCheck = [];
         try {
             // browse all game objects
@@ -11147,7 +11113,7 @@ var MfgCharacter = (function (_super) {
             }
             finally { if (e_1) throw e_1.error; }
         }
-        return Matter.Query.ray(bodiesToCheck, Matter.Vector.create(sensor.position.x - (this.width / 2), sensor.position.y), Matter.Vector.create(sensor.position.x + (this.width / 2), sensor.position.y)).length > 0;
+        return Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.body.position.x - (this.width / 2), this.body.position.y + (this.height / 2)), Matter.Vector.create(this.body.position.x + (this.width / 2), this.body.position.y + (this.height / 2))).length > 0;
         var e_1, _c;
     };
     /***************************************************************************************************************
