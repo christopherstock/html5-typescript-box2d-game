@@ -10750,29 +10750,25 @@ var MfgGameObject = (function () {
         this.isStatic = false;
         this.isSensor = isSensor;
         this.isStatic = isStatic;
+        var options = {
+            render: {
+                fillStyle: debugColor,
+                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                lineWidth: 1.0,
+            },
+            isSensor: isSensor,
+            isStatic: isStatic,
+            angle: mfg.MfgMath.angleToRad(angle),
+            //              chamfer: { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
+            friction: friction,
+            //              frictionStatic: frictionStatic,
+            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
+        };
         switch (shape) {
             case mfg.MfgGameObjectShape.ERectangle:
                 {
-                    this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, {
-                        render: {
-                            fillStyle: debugColor,
-                            strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                            opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                            lineWidth: 1.0,
-                        },
-                        isSensor: isSensor,
-                        isStatic: isStatic,
-                        angle: mfg.MfgMath.angleToRad(angle),
-                        /*
-                                                    chamfer:
-                                                    {
-                                                        radius: [ 5.0, 5.0, 5.0, 5.0 ]
-                                                    },
-                        */
-                        friction: friction,
-                        //                            frictionStatic: friction,
-                        collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
-                    });
+                    this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, options);
                     this.width = width;
                     this.height = height;
                     break;
@@ -10780,20 +10776,7 @@ var MfgGameObject = (function () {
             case mfg.MfgGameObjectShape.ECircle:
                 {
                     var diameter = width;
-                    this.body = Matter.Bodies.circle(x + (diameter / 2), y + (diameter / 2), (diameter / 2), {
-                        render: {
-                            fillStyle: debugColor,
-                            strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                            opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                            lineWidth: 1.0,
-                        },
-                        isSensor: isSensor,
-                        isStatic: isStatic,
-                        angle: mfg.MfgMath.angleToRad(angle),
-                        friction: friction,
-                        //                            frictionStatic: friction,
-                        collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
-                    });
+                    this.body = Matter.Bodies.circle(x + (diameter / 2), y + (diameter / 2), (diameter / 2), options);
                     this.width = diameter;
                     this.height = diameter;
                     break;
@@ -10802,8 +10785,8 @@ var MfgGameObject = (function () {
         if (image != null) {
             this.body.render.sprite.texture = image;
         }
-        //            Matter.Body.setMass( this.body, 70.0 );
-        //            Matter.Body.setDensity( this.body, 0.1 )
+        //          Matter.Body.setMass( this.body, 70.0 );
+        //          Matter.Body.setDensity( this.body, 0.1 )
     }
     /***************************************************************************************************************
     *   Clips this body to level bounds.
@@ -11032,8 +11015,6 @@ var MfgCharacter = (function (_super) {
         _this.lookingDirection = null;
         /** Flags if this character is dead. */
         _this.dead = false;
-        /** flags if the character collides with the top sensor. */
-        // public          collidesTop             :boolean                            = false;
         /** flags if the character collides with the bottom sensor. */
         _this.collidesBottom = false;
         /** The speed for horizontal movements. */
@@ -11041,26 +11022,16 @@ var MfgCharacter = (function (_super) {
         _this.lookingDirection = lookingDirection;
         _this.speedMove = speedMove;
         return _this;
-        /*
-                    Matter.Body.setMass( this.body, 70.0 );
-        */
     }
     /***************************************************************************************************************
     *   Renders the current character tick.
     ***************************************************************************************************************/
     MfgCharacter.prototype.render = function () {
-        // check top and bottom collision state
-        // this.collidesTop    = this.isCollidingBottom( this.topSensor,    true,  false );
+        // check bottom collision state
         this.collidesBottom = this.isCollidingBottom(false, false);
         // avoid this body from rotating!
         Matter.Body.setAngularVelocity(this.body, 0.0);
         Matter.Body.setAngle(this.body, 0.0);
-        /*
-                    // avoid this body from sliding horizontal!
-                    this.body.velocity.x = 0.0;
-                    this.body.force.x = 0.0;
-                    this.body.speed = 0.0;
-        */
         this.clipToHorizontalLevelBounds();
         if (!this.dead) {
             this.checkFallingDead();
@@ -11128,7 +11099,7 @@ var MfgCharacter = (function (_super) {
     ***************************************************************************************************************/
     MfgCharacter.prototype.jump = function () {
         if (this.collidesBottom) {
-            Matter.Body.applyForce(this.body, this.body.position, Matter.Vector.create(0.0, -3.0));
+            Matter.Body.applyForce(this.body, this.body.position, Matter.Vector.create(0.0, -0.35));
         }
     };
     /***************************************************************************************************************
@@ -11409,9 +11380,6 @@ var MfgBox = (function (_super) {
     ***************************************************************************************************************/
     function MfgBox(shape, x, y, width, height) {
         return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT) || this;
-        /*
-                    Matter.Body.setMass( this.body, 10.0 );
-        */
     }
     /***************************************************************************************************************
     *   Renders this box.
@@ -12031,7 +11999,7 @@ var MfgLevelDev = (function (_super) {
         // setup all game objects
         this.gameObjects =
             [
-                mfg.MfgGameObjectFactory.createObstacle(0, 250, 500, 15, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(0, 200, 500, 15, 0.0, false),
                 /*
                 
                                 // sliding descending ramp

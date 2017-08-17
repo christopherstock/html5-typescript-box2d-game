@@ -26,7 +26,7 @@
             // setup all game objects
             this.gameObjects =
             [
-                mfg.MfgGameObjectFactory.createObstacle( 0,   250, 500, 15, 0.0, false ),
+                mfg.MfgGameObjectFactory.createObstacle( 0,   200, 500, 15, 0.0, false ),
 
 
 

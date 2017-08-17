@@ -16,8 +16,6 @@
         /** Flags if this character is dead. */
         protected       dead                    :boolean                            = false;
 
-        /** flags if the character collides with the top sensor. */
-     // public          collidesTop             :boolean                            = false;
         /** flags if the character collides with the bottom sensor. */
         public          collidesBottom          :boolean                            = false;
 
@@ -67,9 +65,6 @@
 
             this.lookingDirection     = lookingDirection;
             this.speedMove            = speedMove;
-/*
-            Matter.Body.setMass( this.body, 70.0 );
-*/
         }
 
         /***************************************************************************************************************
@@ -77,24 +72,13 @@
         ***************************************************************************************************************/
         public render()
         {
-            // check top and bottom collision state
-         // this.collidesTop    = this.isCollidingBottom( this.topSensor,    true,  false );
-
+            // check bottom collision state
             this.collidesBottom = this.isCollidingBottom( false, false );
-
-
 
             // avoid this body from rotating!
             Matter.Body.setAngularVelocity( this.body, 0.0 );
             Matter.Body.setAngle( this.body, 0.0 );
 
-
-/*
-            // avoid this body from sliding horizontal!
-            this.body.velocity.x = 0.0;
-            this.body.force.x = 0.0;
-            this.body.speed = 0.0;
-*/
             this.clipToHorizontalLevelBounds();
 
             if ( !this.dead )
@@ -179,17 +163,11 @@
         {
             if ( this.collidesBottom )
             {
-
-
-
-
-
-
                 Matter.Body.applyForce
                 (
                     this.body,
                     this.body.position,
-                    Matter.Vector.create( 0.0, -3.0 )
+                    Matter.Vector.create( 0.0, -0.35 )
                 );
 
             }

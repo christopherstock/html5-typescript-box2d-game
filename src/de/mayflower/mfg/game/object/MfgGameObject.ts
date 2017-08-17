@@ -63,6 +63,23 @@
             this.isSensor = isSensor;
             this.isStatic = isStatic;
 
+            let options = {
+                render:
+                {
+                    fillStyle:   debugColor,
+                    strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                    opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                    lineWidth:   1.0,
+                },
+                isSensor: isSensor,
+                isStatic: isStatic,
+                angle: mfg.MfgMath.angleToRad( angle ),
+//              chamfer: { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
+                friction: friction,
+//              frictionStatic: frictionStatic,
+                collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
+            };
+
             switch ( shape )
             {
                 case mfg.MfgGameObjectShape.ERectangle:
@@ -72,31 +89,7 @@
                         y + ( height / 2 ),
                         width,
                         height,
-                        {
-                            render:
-                            {
-                                fillStyle:   debugColor,
-                                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                                opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                                lineWidth:   1.0,
-                            },
-                            isSensor: isSensor,
-                            isStatic: isStatic,
-                            angle: mfg.MfgMath.angleToRad( angle ),
-/*
-                            chamfer:
-                            {
-                                radius: [ 5.0, 5.0, 5.0, 5.0 ]
-                            },
-*/
-                            friction: friction,
-
-
-//                            frictionStatic: friction,
-
-
-                            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
-                        }
+                        options
                     );
 
                     this.width  = width;
@@ -113,25 +106,7 @@
                         x + ( diameter / 2 ),
                         y + ( diameter / 2 ),
                         ( diameter / 2 ),
-                        {
-                            render:
-                            {
-                                fillStyle:   debugColor,
-                                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                                opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                                lineWidth:   1.0,
-                            },
-                            isSensor: isSensor,
-                            isStatic: isStatic,
-                            angle: mfg.MfgMath.angleToRad( angle ),
-
-                            friction: friction,
-
-
-//                            frictionStatic: friction,
-
-                            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
-                        }
+                        options
                     );
 
                     this.width  = diameter;
@@ -146,10 +121,8 @@
                 this.body.render.sprite.texture = image;
             }
 
-
-//            Matter.Body.setMass( this.body, 70.0 );
-
-//            Matter.Body.setDensity( this.body, 0.1 )
+//          Matter.Body.setMass( this.body, 70.0 );
+//          Matter.Body.setDensity( this.body, 0.1 )
         }
 
         /***************************************************************************************************************
