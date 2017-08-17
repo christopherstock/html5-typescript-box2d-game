@@ -31,7 +31,8 @@
                 mfg.MfgSettings.COLOR_DEBUG_ENEMY,
                 null,
                 mfg.MfgCharacterLookingDirection.ELeft,
-                1.0
+                1.0,
+                mfg.MfgCharacter.JUMP_POWER_DEFAULT
             );
         }
 

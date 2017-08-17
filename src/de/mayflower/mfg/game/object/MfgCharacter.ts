@@ -10,17 +10,23 @@
     *******************************************************************************************************************/
     export abstract class MfgCharacter extends mfg.MfgGameObject
     {
+        /** The default jump power ( player ). */
+        public      static  JUMP_POWER_DEFAULT          :number                             = -4.0;
+
         /** The looking direction for this character. */
-        public          lookingDirection        :mfg.MfgCharacterLookingDirection   = null;
+        public              lookingDirection            :mfg.MfgCharacterLookingDirection   = null;
 
         /** Flags if this character is dead. */
-        protected       dead                    :boolean                            = false;
+        protected           dead                        :boolean                            = false;
 
         /** flags if the character collides with the bottom sensor. */
-        public          collidesBottom          :boolean                            = false;
+        public              collidesBottom              :boolean                            = false;
 
         /** The speed for horizontal movements. */
-        private         speedMove               :number                             = 0.0;
+        private             speedMove                   :number                             = 0.0;
+
+        /** The jump power to apply for this character. */
+        private             jumpPower                   :number                             = 0.0;
 
         /***************************************************************************************************************
         *   Creates a new character.
@@ -34,6 +40,7 @@
         *   @param image            The image for this game object.
         *   @param lookingDirection The initial looking direction.
         *   @param speedMove        The speed for horizontal movement.
+        *   @param jumpPower        The vertical force to apply on jumping.
         ***************************************************************************************************************/
         public constructor
         (
@@ -45,7 +52,8 @@
             debugColor:string,
             image:string,
             lookingDirection:mfg.MfgCharacterLookingDirection,
-            speedMove:number
+            speedMove:number,
+            jumpPower:number
         )
         {
             super
@@ -61,11 +69,12 @@
                 image,
                 0.0,
                 mfg.MfgGameObject.FRICTION_DEFAULT,
-                mfg.MfgGameObject.DENSITY_DEFAULT
+                mfg.MfgGameObject.DENSITY_HUMAN
             );
 
-            this.lookingDirection     = lookingDirection;
-            this.speedMove            = speedMove;
+            this.lookingDirection = lookingDirection;
+            this.speedMove        = speedMove;
+            this.jumpPower        = jumpPower;
         }
 
         /***************************************************************************************************************
@@ -168,9 +177,8 @@
                 (
                     this.body,
                     this.body.position,
-                    Matter.Vector.create( 0.0, -0.35 )
+                    Matter.Vector.create( 0.0, this.jumpPower )
                 );
-
             }
         }
 

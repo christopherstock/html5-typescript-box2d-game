@@ -29,7 +29,8 @@
                 mfg.MfgSettings.COLOR_DEBUG_PLAYER,
                 null,
                 lookingDirection,
-                mfg.MfgSettings.PLAYER_SPEED_MOVE
+                mfg.MfgSettings.PLAYER_SPEED_MOVE,
+                mfg.MfgCharacter.JUMP_POWER_DEFAULT
             );
         }
 

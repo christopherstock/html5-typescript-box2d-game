@@ -11,13 +11,15 @@
     export abstract class MfgGameObject
     {
         /** High surface friction ( concrete ). */
-        public  static  FRICTION_HIGH           :number                         = 1.0;
-        /** Default surface friction ( human ). */
+    //  public  static  FRICTION_HIGH           :number                         = 1.0;
+        /** Default surface friction ( MatterJS ). */
         public  static  FRICTION_DEFAULT        :number                         = 0.1;
         /** No surface friction ( ice ). */
-        public  static  FRICTION_NONE           :number                         = 0.0;
+    //  public  static  FRICTION_NONE           :number                         = 0.0;
 
         /** Default density ( human ). */
+        public  static  DENSITY_HUMAN           :number                         = 0.01;
+        /** Default density ( MatterJS ). */
         public  static  DENSITY_DEFAULT         :number                         = 0.001;
 
         /** The game objects' body. */

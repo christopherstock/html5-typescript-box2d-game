@@ -26,12 +26,10 @@
             // setup all game objects
             this.gameObjects =
             [
-                // default ground
-                mfg.MfgGameObjectFactory.createObstacle( 0,   200, 500, 15, 0.0,  false ),
-
-                // sliding descending ramp
-                mfg.MfgGameObjectFactory.createObstacle( 490, 264, 500, 15, 15.0, false ),
-
+                // default ground, sliding descending ramp and lower ground
+                mfg.MfgGameObjectFactory.createObstacle( 0,    200, 500, 15, 0.0,  false ),
+                mfg.MfgGameObjectFactory.createObstacle( 490,  265, 500, 15, 15.0, false ),
+                mfg.MfgGameObjectFactory.createObstacle( 980,  330, 500, 15, 0.0,  false ),
 
 
 /*

@@ -10496,8 +10496,6 @@ var MfgSettings = (function () {
     MfgSettings.PLAYER_HEIGHT = 120.0;
     /** The player's speed in world coordinate per tick. */
     MfgSettings.PLAYER_SPEED_MOVE = 7.5;
-    /** The player's jump power in px per tick. */
-    MfgSettings.PLAYER_JUMP_POWER = 30.0;
     /** The default vertical gravity for all levels. */
     MfgSettings.DEFAULT_GRAVITY_Y = 1.0;
     /** The camera ration for the horizontal axis. */
@@ -10799,12 +10797,14 @@ var MfgGameObject = (function () {
         }
     };
     /** High surface friction ( concrete ). */
-    MfgGameObject.FRICTION_HIGH = 1.0;
-    /** Default surface friction ( human ). */
+    //  public  static  FRICTION_HIGH           :number                         = 1.0;
+    /** Default surface friction ( MatterJS ). */
     MfgGameObject.FRICTION_DEFAULT = 0.1;
     /** No surface friction ( ice ). */
-    MfgGameObject.FRICTION_NONE = 0.0;
+    //  public  static  FRICTION_NONE           :number                         = 0.0;
     /** Default density ( human ). */
+    MfgGameObject.DENSITY_HUMAN = 0.01;
+    /** Default density ( MatterJS ). */
     MfgGameObject.DENSITY_DEFAULT = 0.001;
     return MfgGameObject;
 }());
@@ -11005,9 +11005,10 @@ var MfgCharacter = (function (_super) {
     *   @param image            The image for this game object.
     *   @param lookingDirection The initial looking direction.
     *   @param speedMove        The speed for horizontal movement.
+    *   @param jumpPower        The vertical force to apply on jumping.
     ***************************************************************************************************************/
-    function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+    function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove, jumpPower) {
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_HUMAN) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** Flags if this character is dead. */
@@ -11016,8 +11017,11 @@ var MfgCharacter = (function (_super) {
         _this.collidesBottom = false;
         /** The speed for horizontal movements. */
         _this.speedMove = 0.0;
+        /** The jump power to apply for this character. */
+        _this.jumpPower = 0.0;
         _this.lookingDirection = lookingDirection;
         _this.speedMove = speedMove;
+        _this.jumpPower = jumpPower;
         return _this;
     }
     /***************************************************************************************************************
@@ -11096,7 +11100,7 @@ var MfgCharacter = (function (_super) {
     ***************************************************************************************************************/
     MfgCharacter.prototype.jump = function () {
         if (this.collidesBottom) {
-            Matter.Body.applyForce(this.body, this.body.position, Matter.Vector.create(0.0, -0.35));
+            Matter.Body.applyForce(this.body, this.body.position, Matter.Vector.create(0.0, this.jumpPower));
         }
     };
     /***************************************************************************************************************
@@ -11113,6 +11117,8 @@ var MfgCharacter = (function (_super) {
         Matter.Body.translate(this.body, Matter.Vector.create(this.speedMove, 0));
         this.lookingDirection = mfg.MfgCharacterLookingDirection.ERight;
     };
+    /** The default jump power ( player ). */
+    MfgCharacter.JUMP_POWER_DEFAULT = -4.0;
     return MfgCharacter;
 }(mfg.MfgGameObject));
 exports.MfgCharacter = MfgCharacter;
@@ -11154,7 +11160,7 @@ var MfgEnemy = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgEnemy(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null, mfg.MfgCharacterLookingDirection.ELeft, 1.0) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null, mfg.MfgCharacterLookingDirection.ELeft, 1.0, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Renders the current player tick.
@@ -11306,7 +11312,7 @@ var MfgPlayer = (function (_super) {
     *   @param lookingDirection The initial looking direction.
     ***************************************************************************************************************/
     function MfgPlayer(x, y, lookingDirection) {
-        return _super.call(this, mfg.MfgGameObjectShape.ERectangle, x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE) || this;
+        return _super.call(this, mfg.MfgGameObjectShape.ERectangle, x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -11990,10 +11996,10 @@ var MfgLevelDev = (function (_super) {
         // setup all game objects
         this.gameObjects =
             [
-                // default ground
+                // default ground, sliding descending ramp and lower ground
                 mfg.MfgGameObjectFactory.createObstacle(0, 200, 500, 15, 0.0, false),
-                // sliding descending ramp
-                mfg.MfgGameObjectFactory.createObstacle(490, 264, 500, 15, 15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(490, 265, 500, 15, 15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(980, 330, 500, 15, 0.0, false),
                 /*
                                 // bg decoration
                                 // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
