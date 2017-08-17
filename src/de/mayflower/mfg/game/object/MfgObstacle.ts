@@ -38,7 +38,8 @@
                 true,
                 null,
                 angle,
-                mfg.MfgGameObject.FRICTION_DEFAULT
+                mfg.MfgGameObject.FRICTION_DEFAULT,
+                Infinity
             );
 
             this.jumpPassThrough = jumpPassThrough;

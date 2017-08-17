@@ -21,7 +21,21 @@
         ***************************************************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, image:string )
         {
-            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, false, true, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT );
+            super
+            (
+                shape,
+                x,
+                y,
+                width,
+                height,
+                mfg.MfgSettings.COLOR_DEBUG_DECORATION,
+                false,
+                true,
+                image,
+                0.0,
+                mfg.MfgGameObject.FRICTION_DEFAULT,
+                Infinity
+            );
 
             this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
         }

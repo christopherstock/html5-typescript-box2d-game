@@ -62,7 +62,8 @@
                 true,
                 null,
                 angle,
-                mfg.MfgGameObject.FRICTION_DEFAULT
+                mfg.MfgGameObject.FRICTION_DEFAULT,
+                mfg.MfgGameObject.DENSITY_DEFAULT
             );
 
             this.waypoints = waypoints;
@@ -72,9 +73,6 @@
             this.assignNextWaypoint();
 
             this.body.frictionStatic = Infinity;
-/*
-            Matter.Body.setMass( this.body, 70.0 );
-*/
         }
 
         /***************************************************************************************************************

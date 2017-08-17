@@ -25,7 +25,21 @@
         ***************************************************************************************************************/
         public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, image:string )
         {
-            super( shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT );
+            super
+            (
+                shape,
+                x,
+                y,
+                width,
+                height,
+                mfg.MfgSettings.COLOR_DEBUG_BOUNCE,
+                false,
+                false,
+                image,
+                0.0,
+                mfg.MfgGameObject.FRICTION_DEFAULT,
+                mfg.MfgGameObject.DENSITY_DEFAULT
+            );
 
             this.constraint = Matter.Constraint.create(
                 {
@@ -41,9 +55,7 @@
                     }
                 }
             );
-/*
-            Matter.Body.setMass( this.body, 25.0 );
-*/
+
             Matter.Composite.add(
                 mfg.Mfg.game.engine.world,
                 this.constraint

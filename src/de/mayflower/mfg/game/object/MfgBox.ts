@@ -33,7 +33,8 @@
                 false,
                 null,
                 0.0,
-                mfg.MfgGameObject.FRICTION_DEFAULT
+                mfg.MfgGameObject.FRICTION_DEFAULT,
+                mfg.MfgGameObject.DENSITY_DEFAULT
             );
         }
 

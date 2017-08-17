@@ -10,12 +10,15 @@
     *******************************************************************************************************************/
     export abstract class MfgGameObject
     {
-        /** High surface friction. */
-        // public  static  FRICTION_HIGH           :number                         = 1.0;
-        /** Default surface friction. */
+        /** High surface friction ( concrete ). */
+        public  static  FRICTION_HIGH           :number                         = 1.0;
+        /** Default surface friction ( human ). */
         public  static  FRICTION_DEFAULT        :number                         = 0.1;
-        /** No surface friction. */
-        // public  static  FRICTION_NONE           :number                         = 0.0;
+        /** No surface friction ( ice ). */
+        public  static  FRICTION_NONE           :number                         = 0.0;
+
+        /** Default density ( human ). */
+        public  static  DENSITY_DEFAULT         :number                         = 0.001;
 
         /** The game objects' body. */
         public          body                    :Matter.Body                    = null;
@@ -44,6 +47,7 @@
         *   @param image      The image for this game object.
         *   @param angle      The rotation of this body in degrees.
         *   @param friction   The object's body friction.
+        *   @param density    The density of this body.
         ***************************************************************************************************************/
         protected constructor
         (
@@ -57,7 +61,8 @@
             isStatic:boolean,
             image:string,
             angle:number,
-            friction:number
+            friction:number,
+            density:number
         )
         {
             this.isSensor = isSensor;
@@ -71,13 +76,13 @@
                     opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                     lineWidth:   1.0,
                 },
-                isSensor: isSensor,
-                isStatic: isStatic,
-                angle: mfg.MfgMath.angleToRad( angle ),
-//              chamfer: { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
-                friction: friction,
-//              frictionStatic: friction,
+                isSensor:        isSensor,
+                isStatic:        isStatic,
                 collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
+                friction:        friction,
+                angle:           mfg.MfgMath.angleToRad( angle ),
+//              chamfer: { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
+//              frictionStatic: friction,
             };
 
             switch ( shape )
@@ -121,8 +126,7 @@
                 this.body.render.sprite.texture = image;
             }
 
-//          Matter.Body.setMass( this.body, 70.0 );
-//          Matter.Body.setDensity( this.body, 0.1 )
+            Matter.Body.setDensity( this.body, density );
         }
 
         /***************************************************************************************************************
