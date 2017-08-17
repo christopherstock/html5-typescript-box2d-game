@@ -11,11 +11,11 @@
     export abstract class MfgGameObject
     {
         /** High surface friction. */
-//        public  static  FRICTION_HIGH           :number                         = 1.0;
+        // public  static  FRICTION_HIGH           :number                         = 1.0;
         /** Default surface friction. */
         public  static  FRICTION_DEFAULT        :number                         = 0.1;
         /** No surface friction. */
-//        public  static  FRICTION_NONE           :number                         = 0.0;
+        // public  static  FRICTION_NONE           :number                         = 0.0;
 
         /** The game objects' body. */
         public          body                    :Matter.Body                    = null;
@@ -63,7 +63,7 @@
             this.isSensor = isSensor;
             this.isStatic = isStatic;
 
-            let options = {
+            let options:Matter.IBodyDefinition = {
                 render:
                 {
                     fillStyle:   debugColor,
@@ -76,7 +76,7 @@
                 angle: mfg.MfgMath.angleToRad( angle ),
 //              chamfer: { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
                 friction: friction,
-//              frictionStatic: frictionStatic,
+//              frictionStatic: friction,
                 collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
             };
 

@@ -21,20 +21,20 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 0, 0, mfg.MfgCharacterLookingDirection.ERight );
+            this.player = new mfg.MfgPlayer( 500, 0, mfg.MfgCharacterLookingDirection.ERight );
 
             // setup all game objects
             this.gameObjects =
             [
-                mfg.MfgGameObjectFactory.createObstacle( 0,   200, 500, 15, 0.0, false ),
+                // default ground
+                mfg.MfgGameObjectFactory.createObstacle( 0,   200, 500, 15, 0.0,  false ),
+
+                // sliding descending ramp
+                mfg.MfgGameObjectFactory.createObstacle( 490, 264, 500, 15, 15.0, false ),
 
 
 
 /*
-
-                // sliding descending ramp
-                mfg.MfgGameObjectFactory.createObstacle( -50, 400, 500, 15, 15.0, false ),
-
                 // bg decoration
                 // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
 

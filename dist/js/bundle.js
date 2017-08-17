@@ -10737,7 +10737,7 @@ var MfgGameObject = (function () {
     ***************************************************************************************************************/
     function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic, image, angle, friction) {
         /** No surface friction. */
-        //        public  static  FRICTION_NONE           :number                         = 0.0;
+        // public  static  FRICTION_NONE           :number                         = 0.0;
         /** The game objects' body. */
         this.body = null;
         /** The width of this object. */
@@ -10762,7 +10762,7 @@ var MfgGameObject = (function () {
             angle: mfg.MfgMath.angleToRad(angle),
             //              chamfer: { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
             friction: friction,
-            //              frictionStatic: frictionStatic,
+            //              frictionStatic: friction,
             collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
         };
         switch (shape) {
@@ -10806,7 +10806,7 @@ var MfgGameObject = (function () {
         }
     };
     /** High surface friction. */
-    //        public  static  FRICTION_HIGH           :number                         = 1.0;
+    // public  static  FRICTION_HIGH           :number                         = 1.0;
     /** Default surface friction. */
     MfgGameObject.FRICTION_DEFAULT = 0.1;
     return MfgGameObject;
@@ -11995,16 +11995,15 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgCharacterLookingDirection.ERight);
+        this.player = new mfg.MfgPlayer(500, 0, mfg.MfgCharacterLookingDirection.ERight);
         // setup all game objects
         this.gameObjects =
             [
+                // default ground
                 mfg.MfgGameObjectFactory.createObstacle(0, 200, 500, 15, 0.0, false),
+                // sliding descending ramp
+                mfg.MfgGameObjectFactory.createObstacle(490, 264, 500, 15, 15.0, false),
                 /*
-                
-                                // sliding descending ramp
-                                mfg.MfgGameObjectFactory.createObstacle( -50, 400, 500, 15, 15.0, false ),
-                
                                 // bg decoration
                                 // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
                 
