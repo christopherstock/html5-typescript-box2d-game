@@ -62,19 +62,11 @@
                 false,
                 image,
                 0.0,
-//                mfg.MfgGameObject.FRICTION_HIGH
-
-Infinity
+                mfg.MfgGameObject.FRICTION_DEFAULT
             );
 
-            this.lookingDirection = lookingDirection;
-            this.speedMove        = speedMove;
-
-            this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
-
-//            this.body.frictionStatic = Infinity;
-
-
+            this.lookingDirection     = lookingDirection;
+            this.speedMove            = speedMove;
 /*
             Matter.Body.setMass( this.body, 70.0 );
 */

@@ -21,13 +21,16 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 3000, 2000, mfg.MfgCharacterLookingDirection.ERight );
+            this.player = new mfg.MfgPlayer( 0, 0, mfg.MfgCharacterLookingDirection.ERight );
 
             // setup all game objects
             this.gameObjects =
             [
-                // seize the player!
-                mfg.MfgGameObjectFactory.createObstacle( 0,   120, 500, 15, 0.0, false ),
+                mfg.MfgGameObjectFactory.createObstacle( 0,   250, 500, 15, 0.0, false ),
+
+
+
+/*
 
                 // sliding descending ramp
                 mfg.MfgGameObjectFactory.createObstacle( -50, 400, 500, 15, 15.0, false ),
@@ -69,7 +72,8 @@
                         Matter.Vector.create( 3950.0, 2850.0 ),
                     ]
                 ),
-
+*/
+/*
                 // items
                 mfg.MfgGameObjectFactory.createItem( 1100, 2850 ),
                 mfg.MfgGameObjectFactory.createItem( 1150, 2850 ),
@@ -81,13 +85,14 @@
 
                 // enemies
                 mfg.MfgGameObjectFactory.createEnemy( 845, 2000 ),
-
+*/
                 // player
                 this.player,
-
+/*
                 // fg decoration
                 mfg.MfgGameObjectFactory.createDecoration( 700,  2860, 120, 90, null ),
                 mfg.MfgGameObjectFactory.createDecoration( 2000, 2860, 120, 90, null ),
+*/
             ];
         }
     }

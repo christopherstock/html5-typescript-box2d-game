@@ -11,11 +11,11 @@
     export abstract class MfgGameObject
     {
         /** High surface friction. */
-        public  static  FRICTION_HIGH           :number                         = 1.0;
+//        public  static  FRICTION_HIGH           :number                         = 1.0;
         /** Default surface friction. */
         public  static  FRICTION_DEFAULT        :number                         = 0.1;
         /** No surface friction. */
-        public  static  FRICTION_NONE           :number                         = 0.0;
+//        public  static  FRICTION_NONE           :number                         = 0.0;
 
         /** The game objects' body. */
         public          body                    :Matter.Body                    = null;
@@ -83,11 +83,12 @@
                             isSensor: isSensor,
                             isStatic: isStatic,
                             angle: mfg.MfgMath.angleToRad( angle ),
+/*
                             chamfer:
                             {
                                 radius: [ 5.0, 5.0, 5.0, 5.0 ]
                             },
-
+*/
                             friction: friction,
 
 
@@ -146,7 +147,9 @@
             }
 
 
-            Matter.Body.setMass( this.body, 70.0 );
+//            Matter.Body.setMass( this.body, 70.0 );
+
+//            Matter.Body.setDensity( this.body, 0.1 )
         }
 
         /***************************************************************************************************************

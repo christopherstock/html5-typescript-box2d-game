@@ -33,7 +33,7 @@
                 false,
                 null,
                 0.0,
-                mfg.MfgGameObject.FRICTION_HIGH
+                mfg.MfgGameObject.FRICTION_DEFAULT
             );
 /*
             Matter.Body.setMass( this.body, 10.0 );

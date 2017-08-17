@@ -62,7 +62,7 @@
                 true,
                 null,
                 angle,
-                mfg.MfgGameObject.FRICTION_HIGH
+                mfg.MfgGameObject.FRICTION_DEFAULT
             );
 
             this.waypoints = waypoints;
