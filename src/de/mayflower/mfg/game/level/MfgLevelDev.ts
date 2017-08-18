@@ -21,15 +21,15 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 500, 0, mfg.MfgCharacterLookingDirection.ERight );
+            this.player = new mfg.MfgPlayer( 0, 500, mfg.MfgCharacterLookingDirection.ERight );
 
             // setup all game objects
             this.gameObjects =
             [
                 // default ground, sliding descending ramp and lower ground
-                mfg.MfgGameObjectFactory.createObstacle( 0,    200, 500, 15, 0.0,  false ),
-                mfg.MfgGameObjectFactory.createObstacle( 490,  265, 500, 15, 15.0, false ),
-                mfg.MfgGameObjectFactory.createObstacle( 980,  330, 500, 15, 0.0,  false ),
+                mfg.MfgGameObjectFactory.createObstacle( 0,    700, 500, 15, 0.0,  false ),
+                mfg.MfgGameObjectFactory.createObstacle( 490,  765, 500, 15, 15.0, false ),
+                mfg.MfgGameObjectFactory.createObstacle( 980,  830, 500, 15, 0.0,  false ),
 
 
 /*
@@ -52,13 +52,12 @@
                 mfg.MfgGameObjectFactory.createObstacle( 2000,  2300, 400, 15, -15.0, false ),
 
                 mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
-
+*/
                 // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(    0,  135, 80, 80 ),
-
-                mfg.MfgGameObjectFactory.createSphere( 320,  2000,   100    ),
-                mfg.MfgGameObjectFactory.createBox(    1000, 2080,  80, 80 ),
-
+                mfg.MfgGameObjectFactory.createBox(    100,  500, 80, 80, mfg.MfgGameObject.FRICTION_CONCRETE ),
+                mfg.MfgGameObjectFactory.createSphere( 200,  500, 80,     mfg.MfgGameObject.FRICTION_GLASS    ),
+                mfg.MfgGameObjectFactory.createBox(    300,  500, 80, 80, mfg.MfgGameObject.FRICTION_ICE      ),
+/*
                 // sigsaws
                 mfg.MfgGameObjectFactory.createSigsaw( 1420, 2950, 400, 25, null ),
                 mfg.MfgGameObjectFactory.createBounce( 1840, 2950, 400, 25, null ),

@@ -12,15 +12,17 @@
         /***************************************************************************************************************
         *   Creates a box.
         *
-        *   @param x      Anchor X.
-        *   @param y      Anchor Y.
-        *   @param width  Object width.
-        *   @param height Object height.
+        *   @param x        Anchor X.
+        *   @param y        Anchor Y.
+        *   @param width    Object width.
+        *   @param height   Object height.
+        *   @param friction The surface friction for this object.
+        *
         *   @return       The created box.
         ***************************************************************************************************************/
-        public static createBox( x:number, y:number, width:number, height:number ):mfg.MfgBox
+        public static createBox( x:number, y:number, width:number, height:number, friction:number ):mfg.MfgBox
         {
-            return new mfg.MfgBox( mfg.MfgGameObjectShape.ERectangle, x, y, width, height );
+            return new mfg.MfgBox( mfg.MfgGameObjectShape.ERectangle, x, y, width, height, friction );
         }
 
         /***************************************************************************************************************
@@ -29,11 +31,13 @@
         *   @param x        Anchor X.
         *   @param y        Anchor Y.
         *   @param diameter Sphere diameter.
+        *   @param friction The surface friction for this object.
+        *
         *   @return         The created sphere.
         ***************************************************************************************************************/
-        public static createSphere( x:number, y:number, diameter:number ):mfg.MfgBox
+        public static createSphere( x:number, y:number, diameter:number, friction:number ):mfg.MfgBox
         {
-            return new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle, x, y, diameter, diameter );
+            return new mfg.MfgBox( mfg.MfgGameObjectShape.ECircle, x, y, diameter, diameter, friction );
         }
 
         /***************************************************************************************************************
@@ -41,6 +45,7 @@
         *
         *   @param x Anchor X.
         *   @param y Anchor Y.
+        *
         *   @return  The created item.
         ***************************************************************************************************************/
         public static createItem( x:number, y:number ):mfg.MfgItem
@@ -57,6 +62,7 @@
         *   @param height          Object height.
         *   @param angle           The initial rotation.
         *   @param jumpPassThrough Specifies if the player can jump through this obstacle.
+        *
         *   @return                The created obstacle.
         ***************************************************************************************************************/
         public static createObstacle( x:number, y:number, width:number, height:number, angle:number, jumpPassThrough:boolean ):mfg.MfgObstacle
@@ -69,6 +75,7 @@
         *
         *   @param x Anchor X.
         *   @param y Anchor Y.
+        *
         *   @return  The created enemy.
         ***************************************************************************************************************/
         public static createEnemy( x:number, y:number ):mfg.MfgEnemy
@@ -84,6 +91,7 @@
         *   @param width  Object width.
         *   @param height Object height.
         *   @param image  The decoration image.
+        *
         *   @return       The created decoration.
         ***************************************************************************************************************/
         public static createDecoration( x:number, y:number, width:number, height:number, image:string ):mfg.MfgDecoration
@@ -99,6 +107,7 @@
         *   @param width  Object width.
         *   @param height Object height.
         *   @param image  The decoration image.
+        *
         *   @return       The created decoration.
         ***************************************************************************************************************/
         public static createSigsaw( x:number, y:number, width:number, height:number, image:string ):mfg.MfgSigSaw
@@ -114,6 +123,7 @@
          *   @param width  Object width.
          *   @param height Object height.
          *   @param image  The decoration image.
+         *
          *   @return       The created decoration.
          ***************************************************************************************************************/
         public static createBounce( x:number, y:number, width:number, height:number, image:string ):mfg.MfgBounce

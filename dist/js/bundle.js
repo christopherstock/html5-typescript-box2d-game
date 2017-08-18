@@ -10609,7 +10609,6 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Solve same body friction on different surfaces with different friction ...
 *   TODO ASAP   Stop player sliding on bouncing against a wall!
 *   TODO ASAP   Improve moving before sensors (decoration)!
 *   TODO ASAP   Checkout all parameters of the collision filters!
@@ -10619,6 +10618,8 @@ var mfg = __webpack_require__(0);
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
 *   TODO HIGH   Create different enemy move patterns.
 *   TODO INIT   Parallax bg.
+*   TODO INIT   Modify starting point for all objects so they rotate around left top anchor.
+*   TODO INIT   Solve same body friction on different surfaces with different friction ...
 *   TODO LOW    Add doors / level portals.
 *   TODO LOW    Create levels and sublevels?
 *   TODO LOW    Maximum camera ascend distance if player is superjumped upwards.
@@ -10796,15 +10797,17 @@ var MfgGameObject = (function () {
             });
         }
     };
-    /** High surface friction ( concrete ). */
-    //  public  static  FRICTION_HIGH           :number                         = 1.0;
-    /** Default surface friction ( MatterJS ). */
+    /** Highest surface friction. */
+    MfgGameObject.FRICTION_CONCRETE = 1.0;
+    /** Default surface friction. */
     MfgGameObject.FRICTION_DEFAULT = 0.1;
-    /** No surface friction ( ice ). */
-    //  public  static  FRICTION_NONE           :number                         = 0.0;
-    /** Default density ( human ). */
+    /** Low surface friction. */
+    MfgGameObject.FRICTION_GLASS = 0.01;
+    /** Lowest surface friction. */
+    MfgGameObject.FRICTION_ICE = 0.0;
+    /** Character density. */
     MfgGameObject.DENSITY_HUMAN = 0.01;
-    /** Default density ( MatterJS ). */
+    /** Default density. */
     MfgGameObject.DENSITY_DEFAULT = 0.001;
     return MfgGameObject;
 }());
@@ -10858,14 +10861,16 @@ var MfgGameObjectFactory = (function () {
     /***************************************************************************************************************
     *   Creates a box.
     *
-    *   @param x      Anchor X.
-    *   @param y      Anchor Y.
-    *   @param width  Object width.
-    *   @param height Object height.
+    *   @param x        Anchor X.
+    *   @param y        Anchor Y.
+    *   @param width    Object width.
+    *   @param height   Object height.
+    *   @param friction The surface friction for this object.
+    *
     *   @return       The created box.
     ***************************************************************************************************************/
-    MfgGameObjectFactory.createBox = function (x, y, width, height) {
-        return new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, x, y, width, height);
+    MfgGameObjectFactory.createBox = function (x, y, width, height, friction) {
+        return new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, friction);
     };
     /***************************************************************************************************************
     *   Creates a sphere.
@@ -10873,16 +10878,19 @@ var MfgGameObjectFactory = (function () {
     *   @param x        Anchor X.
     *   @param y        Anchor Y.
     *   @param diameter Sphere diameter.
+    *   @param friction The surface friction for this object.
+    *
     *   @return         The created sphere.
     ***************************************************************************************************************/
-    MfgGameObjectFactory.createSphere = function (x, y, diameter) {
-        return new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, x, y, diameter, diameter);
+    MfgGameObjectFactory.createSphere = function (x, y, diameter, friction) {
+        return new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, x, y, diameter, diameter, friction);
     };
     /***************************************************************************************************************
     *   Creates an item.
     *
     *   @param x Anchor X.
     *   @param y Anchor Y.
+    *
     *   @return  The created item.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createItem = function (x, y) {
@@ -10897,6 +10905,7 @@ var MfgGameObjectFactory = (function () {
     *   @param height          Object height.
     *   @param angle           The initial rotation.
     *   @param jumpPassThrough Specifies if the player can jump through this obstacle.
+    *
     *   @return                The created obstacle.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createObstacle = function (x, y, width, height, angle, jumpPassThrough) {
@@ -10907,6 +10916,7 @@ var MfgGameObjectFactory = (function () {
     *
     *   @param x Anchor X.
     *   @param y Anchor Y.
+    *
     *   @return  The created enemy.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createEnemy = function (x, y) {
@@ -10920,6 +10930,7 @@ var MfgGameObjectFactory = (function () {
     *   @param width  Object width.
     *   @param height Object height.
     *   @param image  The decoration image.
+    *
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createDecoration = function (x, y, width, height, image) {
@@ -10933,6 +10944,7 @@ var MfgGameObjectFactory = (function () {
     *   @param width  Object width.
     *   @param height Object height.
     *   @param image  The decoration image.
+    *
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSigsaw = function (x, y, width, height, image) {
@@ -10946,6 +10958,7 @@ var MfgGameObjectFactory = (function () {
      *   @param width  Object width.
      *   @param height Object height.
      *   @param image  The decoration image.
+     *
      *   @return       The created decoration.
      ***************************************************************************************************************/
     MfgGameObjectFactory.createBounce = function (x, y, width, height, image) {
@@ -11372,14 +11385,15 @@ var MfgBox = (function (_super) {
     /***************************************************************************************************************
     *   Creates a new box.
     *
-    *   @param shape  The shape for this object.
-    *   @param x      Startup position X.
-    *   @param y      Startup position Y.
-    *   @param width  The new width.
-    *   @param height The new height.
+    *   @param shape    The shape for this object.
+    *   @param x        Startup position X.
+    *   @param y        Startup position Y.
+    *   @param width    The new width.
+    *   @param height   The new height.
+    *   @param friction The surface friction for this object.
     ***************************************************************************************************************/
-    function MfgBox(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+    function MfgBox(shape, x, y, width, height, friction) {
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0, friction, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Renders this box.
@@ -11992,14 +12006,14 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(500, 0, mfg.MfgCharacterLookingDirection.ERight);
+        this.player = new mfg.MfgPlayer(0, 500, mfg.MfgCharacterLookingDirection.ERight);
         // setup all game objects
         this.gameObjects =
             [
                 // default ground, sliding descending ramp and lower ground
-                mfg.MfgGameObjectFactory.createObstacle(0, 200, 500, 15, 0.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(490, 265, 500, 15, 15.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(980, 330, 500, 15, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(0, 700, 500, 15, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(490, 765, 500, 15, 15.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(980, 830, 500, 15, 0.0, false),
                 /*
                                 // bg decoration
                                 // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
@@ -12020,13 +12034,12 @@ var MfgLevelDev = (function (_super) {
                                 mfg.MfgGameObjectFactory.createObstacle( 2000,  2300, 400, 15, -15.0, false ),
                 
                                 mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
-                
-                                // moveable boxes
-                                mfg.MfgGameObjectFactory.createBox(    0,  135, 80, 80 ),
-                
-                                mfg.MfgGameObjectFactory.createSphere( 320,  2000,   100    ),
-                                mfg.MfgGameObjectFactory.createBox(    1000, 2080,  80, 80 ),
-                
+                */
+                // moveable boxes
+                mfg.MfgGameObjectFactory.createBox(100, 500, 80, 80, mfg.MfgGameObject.FRICTION_CONCRETE),
+                mfg.MfgGameObjectFactory.createSphere(200, 500, 80, mfg.MfgGameObject.FRICTION_GLASS),
+                mfg.MfgGameObjectFactory.createBox(300, 500, 80, 80, mfg.MfgGameObject.FRICTION_ICE),
+                /*
                                 // sigsaws
                                 mfg.MfgGameObjectFactory.createSigsaw( 1420, 2950, 400, 25, null ),
                                 mfg.MfgGameObjectFactory.createBounce( 1840, 2950, 400, 25, null ),

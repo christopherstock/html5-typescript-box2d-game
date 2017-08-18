@@ -13,13 +13,14 @@
         /***************************************************************************************************************
         *   Creates a new box.
         *
-        *   @param shape  The shape for this object.
-        *   @param x      Startup position X.
-        *   @param y      Startup position Y.
-        *   @param width  The new width.
-        *   @param height The new height.
+        *   @param shape    The shape for this object.
+        *   @param x        Startup position X.
+        *   @param y        Startup position Y.
+        *   @param width    The new width.
+        *   @param height   The new height.
+        *   @param friction The surface friction for this object.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
+        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, friction:number )
         {
             super
             (
@@ -33,7 +34,7 @@
                 false,
                 null,
                 0.0,
-                mfg.MfgGameObject.FRICTION_DEFAULT,
+                friction,
                 mfg.MfgGameObject.DENSITY_DEFAULT
             );
         }
