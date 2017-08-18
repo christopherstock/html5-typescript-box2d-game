@@ -10609,6 +10609,7 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Kill enemy by jumping on his head ..
 *   TODO ASAP   Stop player sliding on bouncing against a wall!
 *   TODO ASAP   Improve moving before sensors (decoration)!
 *   TODO ASAP   Checkout all parameters of the collision filters!
@@ -11244,6 +11245,9 @@ var MfgPlatform = (function (_super) {
         _this.stepSizeX = 0.0;
         /** Step size Y per tick in px. */
         _this.stepSizeY = 0.0;
+        if (waypoints.length == 0) {
+            throw new Error("Platform requires at least one waypoint to be specified!");
+        }
         _this.waypoints = waypoints;
         _this.speed = speed;
         _this.currentWaypointIndex = -1;
@@ -11255,23 +11259,29 @@ var MfgPlatform = (function (_super) {
     *   Assigns the next waypoint to aim to.
     ***************************************************************************************************************/
     MfgPlatform.prototype.assignNextWaypoint = function () {
-        // assign current wp
+        // increase index for current wp
         ++this.currentWaypointIndex;
+        // assign current wp
         if (this.currentWaypointIndex >= this.waypoints.length)
             this.currentWaypointIndex = 0;
+        var currentWaypoint = Matter.Vector.create(this.waypoints[this.currentWaypointIndex].x + (this.width / 2), this.waypoints[this.currentWaypointIndex].y + (this.height / 2));
         // assign next wp
         var nextWaypointIndex = this.currentWaypointIndex + 1;
         if (nextWaypointIndex >= this.waypoints.length)
             nextWaypointIndex = 0;
-        // set player to starting wp
-        Matter.Body.setPosition(this.body, this.waypoints[this.currentWaypointIndex]);
-        var deltaX = Math.abs(this.waypoints[nextWaypointIndex].x - this.waypoints[this.currentWaypointIndex].x);
-        var deltaY = Math.abs(this.waypoints[nextWaypointIndex].y - this.waypoints[this.currentWaypointIndex].y);
-        var directDistance = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
+        var nextWaypoint = Matter.Vector.create(this.waypoints[nextWaypointIndex].x + (this.width / 2), this.waypoints[nextWaypointIndex].y + (this.height / 2));
+        // set platform to starting wp
+        Matter.Body.setPosition(this.body, currentWaypoint);
+        // get deltas
+        var deltaX = Math.abs(nextWaypoint.x - currentWaypoint.x);
+        var deltaY = Math.abs(nextWaypoint.y - currentWaypoint.y);
+        var deltaDirect = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
+        // reset steps and calculate number of steps for reaching the next waypoint
         this.currentStep = 0;
-        this.stepsTillNextWaypoint = directDistance / this.speed;
-        this.stepSizeX = (this.waypoints[nextWaypointIndex].x - this.waypoints[this.currentWaypointIndex].x) / this.stepsTillNextWaypoint;
-        this.stepSizeY = (this.waypoints[nextWaypointIndex].y - this.waypoints[this.currentWaypointIndex].y) / this.stepsTillNextWaypoint;
+        this.stepsTillNextWaypoint = deltaDirect / this.speed;
+        // calculate step size
+        this.stepSizeX = (nextWaypoint.x - currentWaypoint.x) / this.stepsTillNextWaypoint;
+        this.stepSizeY = (nextWaypoint.y - currentWaypoint.y) / this.stepsTillNextWaypoint;
     };
     /***************************************************************************************************************
     *   Renders this obstacle.
@@ -11986,6 +11996,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The level set for the dev level.
@@ -12008,7 +12019,7 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 500, mfg.MfgCharacterLookingDirection.ERight);
+        this.player = new mfg.MfgPlayer(2000, 500, mfg.MfgCharacterLookingDirection.ERight);
         // setup all game objects
         this.gameObjects =
             [
@@ -12017,8 +12028,10 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createObstacle(490, 765, 500, 15, 15.0, false),
                 mfg.MfgGameObjectFactory.createObstacle(980, 830, 500, 15, 0.0, false),
                 mfg.MfgGameObjectFactory.createObstacle(2310, 830, 500, 15, 0.0, false),
-                // jump through obstacle
-                // mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
+                /*
+                                // jump through obstacle
+                                mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
+                */
                 // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration(75, 550, 25, 150, null),
                 mfg.MfgGameObjectFactory.createDecoration(150, 550, 25, 150, null),
@@ -12030,15 +12043,11 @@ var MfgLevelDev = (function (_super) {
                 // sigsaws and bounces
                 mfg.MfgGameObjectFactory.createSigsaw(1490, 830, 400, 25, null),
                 mfg.MfgGameObjectFactory.createBounce(1900, 830, 400, 25, null),
-                /*
-                                // animated platforms
-                                new mfg.MfgPlatform( mfg.MfgGameObjectShape.ERectangle, 175.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL,
-                                    [
-                                        Matter.Vector.create( 3650.0, 2850.0 ),
-                                        Matter.Vector.create( 3950.0, 2850.0 ),
-                                    ]
-                                ),
-                */
+                // animated platforms
+                new mfg.MfgPlatform(mfg.MfgGameObjectShape.ERectangle, 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
+                    Matter.Vector.create(2820.0, 830.0),
+                    Matter.Vector.create(3220.0, 830.0),
+                ]),
                 // items
                 mfg.MfgGameObjectFactory.createItem(2500, 740),
                 mfg.MfgGameObjectFactory.createItem(2550, 740),

@@ -66,8 +66,13 @@
                 mfg.MfgGameObject.DENSITY_DEFAULT
             );
 
-            this.waypoints = waypoints;
-            this.speed     = speed;
+            if ( waypoints.length == 0 )
+            {
+                throw new Error( "Platform requires at least one waypoint to be specified!" );
+            }
+
+            this.waypoints            = waypoints;
+            this.speed                = speed;
 
             this.currentWaypointIndex = -1;
             this.assignNextWaypoint();
@@ -80,27 +85,41 @@
         ***************************************************************************************************************/
         private assignNextWaypoint()
         {
-            // assign current wp
+            // increase index for current wp
             ++this.currentWaypointIndex;
+
+            // assign current wp
             if ( this.currentWaypointIndex >= this.waypoints.length ) this.currentWaypointIndex = 0;
+            let currentWaypoint:Matter.Vector = Matter.Vector.create
+            (
+                this.waypoints[ this.currentWaypointIndex ].x + ( this.width  / 2 ),
+                this.waypoints[ this.currentWaypointIndex ].y + ( this.height / 2 )
+            );
 
             // assign next wp
             let nextWaypointIndex = this.currentWaypointIndex + 1;
             if ( nextWaypointIndex >= this.waypoints.length ) nextWaypointIndex = 0;
+            let nextWaypoint:Matter.Vector = Matter.Vector.create
+            (
+                this.waypoints[ nextWaypointIndex ].x + ( this.width  / 2 ),
+                this.waypoints[ nextWaypointIndex ].y + ( this.height / 2 )
+            );
 
-            // set player to starting wp
-            Matter.Body.setPosition( this.body, this.waypoints[ this.currentWaypointIndex ] );
+            // set platform to starting wp
+            Matter.Body.setPosition( this.body, currentWaypoint );
 
-            let deltaX:number = Math.abs( this.waypoints[ nextWaypointIndex ].x - this.waypoints[ this.currentWaypointIndex ].x );
-            let deltaY:number = Math.abs( this.waypoints[ nextWaypointIndex ].y - this.waypoints[ this.currentWaypointIndex ].y );
+            // get deltas
+            let deltaX:number      = Math.abs( nextWaypoint.x - currentWaypoint.x );
+            let deltaY:number      = Math.abs( nextWaypoint.y - currentWaypoint.y );
+            let deltaDirect:number = Math.sqrt( ( deltaX * deltaX ) + ( deltaY * deltaY ) );
 
-            let directDistance:number = Math.sqrt( ( deltaX * deltaX ) + ( deltaY * deltaY ) );
-
+            // reset steps and calculate number of steps for reaching the next waypoint
             this.currentStep = 0;
-            this.stepsTillNextWaypoint = directDistance / this.speed;
+            this.stepsTillNextWaypoint = deltaDirect / this.speed;
 
-            this.stepSizeX = ( this.waypoints[ nextWaypointIndex ].x - this.waypoints[ this.currentWaypointIndex ].x ) / this.stepsTillNextWaypoint;
-            this.stepSizeY = ( this.waypoints[ nextWaypointIndex ].y - this.waypoints[ this.currentWaypointIndex ].y ) / this.stepsTillNextWaypoint;
+            // calculate step size
+            this.stepSizeX = ( nextWaypoint.x - currentWaypoint.x ) / this.stepsTillNextWaypoint;
+            this.stepSizeY = ( nextWaypoint.y - currentWaypoint.y ) / this.stepsTillNextWaypoint;
         }
 
         /***************************************************************************************************************

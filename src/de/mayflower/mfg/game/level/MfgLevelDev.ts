@@ -21,7 +21,7 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 0, 500, mfg.MfgCharacterLookingDirection.ERight );
+            this.player = new mfg.MfgPlayer( 2000, 500, mfg.MfgCharacterLookingDirection.ERight );
 
             // setup all game objects
             this.gameObjects =
@@ -31,10 +31,10 @@
                 mfg.MfgGameObjectFactory.createObstacle( 490,  765, 500, 15, 15.0, false ),
                 mfg.MfgGameObjectFactory.createObstacle( 980,  830, 500, 15, 0.0,  false ),
                 mfg.MfgGameObjectFactory.createObstacle( 2310, 830, 500, 15, 0.0,  false ),
-
+/*
                 // jump through obstacle
-                // mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
-
+                mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
+*/
                 // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration( 75,  550, 25, 150, null ),
                 mfg.MfgGameObjectFactory.createDecoration( 150, 550, 25, 150, null ),
@@ -48,15 +48,15 @@
                 // sigsaws and bounces
                 mfg.MfgGameObjectFactory.createSigsaw( 1490, 830,  400, 25, null ),
                 mfg.MfgGameObjectFactory.createBounce( 1900, 830,  400, 25, null ),
-/*
+
                 // animated platforms
-                new mfg.MfgPlatform( mfg.MfgGameObjectShape.ERectangle, 175.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL,
+                new mfg.MfgPlatform( mfg.MfgGameObjectShape.ERectangle, 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL,
                     [
-                        Matter.Vector.create( 3650.0, 2850.0 ),
-                        Matter.Vector.create( 3950.0, 2850.0 ),
+                        Matter.Vector.create( 2820.0, 830.0 ),
+                        Matter.Vector.create( 3220.0, 830.0 ),
                     ]
                 ),
-*/
+
                 // items
                 mfg.MfgGameObjectFactory.createItem( 2500, 740 ),
                 mfg.MfgGameObjectFactory.createItem( 2550, 740 ),

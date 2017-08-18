@@ -4,6 +4,7 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Kill enemy by jumping on his head ..
     *   TODO ASAP   Stop player sliding on bouncing against a wall!
     *   TODO ASAP   Improve moving before sensors (decoration)!
     *   TODO ASAP   Checkout all parameters of the collision filters!

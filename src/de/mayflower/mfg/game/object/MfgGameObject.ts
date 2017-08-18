@@ -86,7 +86,6 @@
                 friction:        friction,
                 angle:           mfg.MfgMath.angleToRad( angle ),
 //              chamfer: { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
-//              frictionStatic: friction,
             };
 
             switch ( shape )
