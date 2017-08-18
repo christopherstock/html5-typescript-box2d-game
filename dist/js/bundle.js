@@ -11043,8 +11043,7 @@ var MfgCharacter = (function (_super) {
     *   Renders the current character tick.
     ***************************************************************************************************************/
     MfgCharacter.prototype.render = function () {
-        // check bottom collision state
-        this.collidesBottom = this.isCollidingBottom();
+        this.checkBottomCollision();
         this.resetRotation();
         this.clipToHorizontalLevelBounds();
         if (!this.dead) {
@@ -11070,11 +11069,11 @@ var MfgCharacter = (function (_super) {
         this.dead = true;
     };
     /***************************************************************************************************************
-    *   Check if the character's bottom line currently collides with any other colliding body.
+    *   Checks if the character's bottom line currently collides with any other colliding body.
     *
     *   @return <code>true</code> if a bottom collision is currently active.
     ***************************************************************************************************************/
-    MfgCharacter.prototype.isCollidingBottom = function () {
+    MfgCharacter.prototype.checkBottomCollision = function () {
         var bodiesToCheck = [];
         try {
             // browse all game objects
@@ -11082,7 +11081,7 @@ var MfgCharacter = (function (_super) {
                 var gameObject = _b.value;
                 // skip own body and non-colliding game objects
                 if (gameObject.body == this.body
-                    || gameObject instanceof mfg.MfgDecoration) {
+                    || gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING) {
                     continue;
                 }
                 bodiesToCheck.push(gameObject.body);
@@ -11095,7 +11094,7 @@ var MfgCharacter = (function (_super) {
             }
             finally { if (e_1) throw e_1.error; }
         }
-        return Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.body.position.x - (this.width / 2), this.body.position.y + (this.height / 2)), Matter.Vector.create(this.body.position.x + (this.width / 2), this.body.position.y + (this.height / 2))).length > 0;
+        this.collidesBottom = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.body.position.x - (this.width / 2), this.body.position.y + (this.height / 2)), Matter.Vector.create(this.body.position.x + (this.width / 2), this.body.position.y + (this.height / 2))).length > 0;
         var e_1, _c;
     };
     /***************************************************************************************************************

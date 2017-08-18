@@ -81,11 +81,8 @@
         ***************************************************************************************************************/
         public render()
         {
-            // check bottom collision state
-            this.collidesBottom = this.isCollidingBottom();
-
+            this.checkBottomCollision();
             this.resetRotation();
-
             this.clipToHorizontalLevelBounds();
 
             if ( !this.dead )
@@ -120,11 +117,11 @@
         }
 
         /***************************************************************************************************************
-        *   Check if the character's bottom line currently collides with any other colliding body.
+        *   Checks if the character's bottom line currently collides with any other colliding body.
         *
         *   @return <code>true</code> if a bottom collision is currently active.
         ***************************************************************************************************************/
-        private isCollidingBottom()
+        private checkBottomCollision()
         {
             let bodiesToCheck:Array<Matter.Body> = [];
 
@@ -135,7 +132,7 @@
                 if
                 (
                         gameObject.body == this.body
-                    ||  gameObject instanceof mfg.MfgDecoration
+                    ||  gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING
                 )
                 {
                     continue;
@@ -144,7 +141,7 @@
                 bodiesToCheck.push( gameObject.body );
             }
 
-            return Matter.Query.ray
+            this.collidesBottom = Matter.Query.ray
             (
                 bodiesToCheck,
                 Matter.Vector.create( this.body.position.x - ( this.width / 2 ), this.body.position.y + ( this.height / 2 ) ),
