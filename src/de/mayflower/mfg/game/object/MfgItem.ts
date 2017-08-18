@@ -32,13 +32,15 @@
                 width,
                 height,
                 mfg.MfgSettings.COLOR_DEBUG_ITEM,
-                true,
+                false,
                 true,
                 null,
                 0.0,
                 mfg.MfgGameObject.FRICTION_DEFAULT,
                 Infinity
             );
+
+            this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
         }
 
         /***************************************************************************************************************
@@ -65,7 +67,7 @@
             // flag as picked
             this.picked = true;
 
-            // remove the body from the world
+            // remove item body
             Matter.World.remove( mfg.Mfg.game.engine.world, this.body );
         }
     }

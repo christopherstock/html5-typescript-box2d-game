@@ -115,7 +115,7 @@
         ***************************************************************************************************************/
         public kill()
         {
-            // remove character body ??
+            // remove character body
             Matter.World.remove( mfg.Mfg.game.engine.world, this.body );
 
             // flag as dead
