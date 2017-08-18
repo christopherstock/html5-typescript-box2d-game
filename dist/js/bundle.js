@@ -10776,6 +10776,13 @@ var MfgGameObject = (function () {
         Matter.Body.setDensity(this.body, density);
     }
     /***************************************************************************************************************
+    *   Avoids this game object from rotating.
+    ***************************************************************************************************************/
+    MfgGameObject.prototype.resetRotation = function () {
+        Matter.Body.setAngularVelocity(this.body, 0.0);
+        Matter.Body.setAngle(this.body, 0.0);
+    };
+    /***************************************************************************************************************
     *   Clips this body to level bounds.
     ***************************************************************************************************************/
     MfgGameObject.prototype.clipToHorizontalLevelBounds = function () {
@@ -11038,9 +11045,7 @@ var MfgCharacter = (function (_super) {
     MfgCharacter.prototype.render = function () {
         // check bottom collision state
         this.collidesBottom = this.isCollidingBottom();
-        // avoid this body from rotating!
-        Matter.Body.setAngularVelocity(this.body, 0.0);
-        Matter.Body.setAngle(this.body, 0.0);
+        this.resetRotation();
         this.clipToHorizontalLevelBounds();
         if (!this.dead) {
             this.checkFallingDead();

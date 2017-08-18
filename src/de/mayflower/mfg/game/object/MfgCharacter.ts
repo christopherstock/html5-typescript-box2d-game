@@ -84,9 +84,7 @@
             // check bottom collision state
             this.collidesBottom = this.isCollidingBottom();
 
-            // avoid this body from rotating!
-            Matter.Body.setAngularVelocity( this.body, 0.0 );
-            Matter.Body.setAngle( this.body, 0.0 );
+            this.resetRotation();
 
             this.clipToHorizontalLevelBounds();
 
