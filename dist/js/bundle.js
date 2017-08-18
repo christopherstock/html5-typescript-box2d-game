@@ -11175,7 +11175,7 @@ var MfgEnemy = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgEnemy(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null, mfg.MfgCharacterLookingDirection.ELeft, 1.0, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null, mfg.MfgCharacterLookingDirection.ELeft, 4.0, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Renders the current player tick.
@@ -12011,7 +12011,7 @@ var MfgLevelDev = (function (_super) {
         /** The width of this level. */
         _this.width = 5000.0;
         /** The height of this level. */
-        _this.height = 5000.0;
+        _this.height = 1000.0;
         return _this;
     }
     /***************************************************************************************************************
@@ -12019,7 +12019,7 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(2000, 500, mfg.MfgCharacterLookingDirection.ERight);
+        this.player = new mfg.MfgPlayer(0, 500, mfg.MfgCharacterLookingDirection.ERight);
         // setup all game objects
         this.gameObjects =
             [
@@ -12028,6 +12028,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createObstacle(490, 765, 500, 15, 15.0, false),
                 mfg.MfgGameObjectFactory.createObstacle(980, 830, 500, 15, 0.0, false),
                 mfg.MfgGameObjectFactory.createObstacle(2310, 830, 500, 15, 0.0, false),
+                mfg.MfgGameObjectFactory.createObstacle(3230, 830, 500, 15, 0.0, false),
                 /*
                                 // jump through obstacle
                                 mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
@@ -12046,16 +12047,14 @@ var MfgLevelDev = (function (_super) {
                 // animated platforms
                 new mfg.MfgPlatform(mfg.MfgGameObjectShape.ERectangle, 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
                     Matter.Vector.create(2820.0, 830.0),
-                    Matter.Vector.create(3220.0, 830.0),
+                    Matter.Vector.create(3020.0, 830.0),
                 ]),
                 // items
                 mfg.MfgGameObjectFactory.createItem(2500, 740),
                 mfg.MfgGameObjectFactory.createItem(2550, 740),
                 mfg.MfgGameObjectFactory.createItem(2600, 740),
-                /*
-                                // enemies
-                                mfg.MfgGameObjectFactory.createEnemy( 845, 2000 ),
-                */
+                // enemies
+                mfg.MfgGameObjectFactory.createEnemy(1200, 0),
                 // player
                 this.player,
                 // fg decoration
