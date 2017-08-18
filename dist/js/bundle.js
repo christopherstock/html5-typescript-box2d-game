@@ -10617,6 +10617,7 @@ var mfg = __webpack_require__(0);
 *   TODO HIGH   Skew image (sensor) for waving grass effect?
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
 *   TODO HIGH   Create different enemy move patterns.
+*   TODO HIGH   Disable horizontal movements while jumping?
 *   TODO INIT   Parallax bg.
 *   TODO INIT   Modify starting point for all objects so they rotate around left top anchor.
 *   TODO INIT   Solve same body friction on different surfaces with different friction ...
@@ -12014,15 +12015,11 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createObstacle(0, 700, 500, 15, 0.0, false),
                 mfg.MfgGameObjectFactory.createObstacle(490, 765, 500, 15, 15.0, false),
                 mfg.MfgGameObjectFactory.createObstacle(980, 830, 500, 15, 0.0, false),
+                // bg decoration
+                mfg.MfgGameObjectFactory.createDecoration(75, 550, 25, 150, null),
+                mfg.MfgGameObjectFactory.createDecoration(150, 550, 25, 150, null),
+                mfg.MfgGameObjectFactory.createDecoration(225, 550, 25, 150, null),
                 /*
-                                // bg decoration
-                                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
-                
-                                // bg decoration
-                                mfg.MfgGameObjectFactory.createDecoration( 860,  2860, 120, 90, null ),
-                                mfg.MfgGameObjectFactory.createDecoration( 2200, 2860, 120, 90, null ),
-                                mfg.MfgGameObjectFactory.createDecoration( 3600, 2860, 120, 90, null ),
-                
                                 // static obstacles
                                 mfg.MfgGameObjectFactory.createObstacle( 0,    2950, 1380, 25, 0.0, false ),
                                 mfg.MfgGameObjectFactory.createObstacle( 2260, 2950, 2000, 25, 0.0, false ),
@@ -12067,6 +12064,10 @@ var MfgLevelDev = (function (_super) {
                 */
                 // player
                 this.player,
+                // fg decoration
+                mfg.MfgGameObjectFactory.createDecoration(300, 550, 25, 150, null),
+                mfg.MfgGameObjectFactory.createDecoration(375, 550, 25, 150, null),
+                mfg.MfgGameObjectFactory.createDecoration(450, 550, 25, 150, null),
             ];
     };
     return MfgLevelDev;

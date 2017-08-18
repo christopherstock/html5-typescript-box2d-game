@@ -31,16 +31,11 @@
                 mfg.MfgGameObjectFactory.createObstacle( 490,  765, 500, 15, 15.0, false ),
                 mfg.MfgGameObjectFactory.createObstacle( 980,  830, 500, 15, 0.0,  false ),
 
-
+                // bg decoration
+                mfg.MfgGameObjectFactory.createDecoration( 75,  550, 25, 150, null ),
+                mfg.MfgGameObjectFactory.createDecoration( 150, 550, 25, 150, null ),
+                mfg.MfgGameObjectFactory.createDecoration( 225, 550, 25, 150, null ),
 /*
-                // bg decoration
-                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
-
-                // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 860,  2860, 120, 90, null ),
-                mfg.MfgGameObjectFactory.createDecoration( 2200, 2860, 120, 90, null ),
-                mfg.MfgGameObjectFactory.createDecoration( 3600, 2860, 120, 90, null ),
-
                 // static obstacles
                 mfg.MfgGameObjectFactory.createObstacle( 0,    2950, 1380, 25, 0.0, false ),
                 mfg.MfgGameObjectFactory.createObstacle( 2260, 2950, 2000, 25, 0.0, false ),
@@ -85,11 +80,11 @@
 */
                 // player
                 this.player,
-/*
+
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 700,  2860, 120, 90, null ),
-                mfg.MfgGameObjectFactory.createDecoration( 2000, 2860, 120, 90, null ),
-*/
+                mfg.MfgGameObjectFactory.createDecoration( 300, 550, 25, 150, null ),
+                mfg.MfgGameObjectFactory.createDecoration( 375, 550, 25, 150, null ),
+                mfg.MfgGameObjectFactory.createDecoration( 450, 550, 25, 150, null ),
             ];
         }
     }

@@ -12,6 +12,7 @@
     *   TODO HIGH   Skew image (sensor) for waving grass effect?
     *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
     *   TODO HIGH   Create different enemy move patterns.
+    *   TODO HIGH   Disable horizontal movements while jumping?
     *   TODO INIT   Parallax bg.
     *   TODO INIT   Modify starting point for all objects so they rotate around left top anchor.
     *   TODO INIT   Solve same body friction on different surfaces with different friction ...
