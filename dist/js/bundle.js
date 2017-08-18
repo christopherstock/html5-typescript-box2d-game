@@ -10610,7 +10610,7 @@ var mfg = __webpack_require__(0);
 *   The main class contains the application's points of entry and termination.
 *
 *   TODO ASAP   Kill enemy by jumping on his head ..
-*   TODO ASAP   Stop player sliding on bouncing against a wall!
+*
 *   TODO ASAP   Improve moving before sensors (decoration)!
 *   TODO ASAP   Checkout all parameters of the collision filters!
 *   TODO ASAP   Improve air behaviour of player on colliding!!
@@ -10619,6 +10619,7 @@ var mfg = __webpack_require__(0);
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
 *   TODO HIGH   Create different enemy move patterns.
 *   TODO HIGH   Disable horizontal movements while jumping?
+*   TODO HIGH   Let dead enemies fall out of the scene.
 *   TODO INIT   Parallax bg.
 *   TODO INIT   Modify starting point for all objects so they rotate around left top anchor.
 *   TODO INIT   Solve same body friction on different surfaces with different friction ... ( "staticFriction" )
@@ -10727,26 +10728,19 @@ var MfgGameObject = (function () {
     *   @param width      The new width.
     *   @param height     The new height.
     *   @param debugColor The color for the debug object.
-    *   @param isSensor   Specifies that this object is non-colliding and serves as a sensor only.
     *   @param isStatic   Specifies that this object has a fixed position.
     *   @param image      The image for this game object.
     *   @param angle      The rotation of this body in degrees.
     *   @param friction   The object's body friction.
     *   @param density    The density of this body.
     ***************************************************************************************************************/
-    function MfgGameObject(shape, x, y, width, height, debugColor, isSensor, isStatic, image, angle, friction, density) {
+    function MfgGameObject(shape, x, y, width, height, debugColor, isStatic, image, angle, friction, density) {
         /** The game objects' body. */
         this.body = null;
         /** The width of this object. */
         this.width = 0;
         /** The height of this object. */
         this.height = 0;
-        /** Specifies if this object is non-colliding. */
-        this.isSensor = false;
-        /** Specifies if this object is static. */
-        this.isStatic = false;
-        this.isSensor = isSensor;
-        this.isStatic = isStatic;
         var options = {
             render: {
                 fillStyle: debugColor,
@@ -10754,7 +10748,6 @@ var MfgGameObject = (function () {
                 opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                 lineWidth: 1.0,
             },
-            isSensor: isSensor,
             isStatic: isStatic,
             collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
             friction: friction,
@@ -11023,7 +11016,7 @@ var MfgCharacter = (function (_super) {
     *   @param jumpPower        The vertical force to apply on jumping.
     ***************************************************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove, jumpPower) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_HUMAN) || this;
+        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_HUMAN) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** Flags if this character is dead. */
@@ -11086,7 +11079,7 @@ var MfgCharacter = (function (_super) {
             for (var _a = __values(mfg.Mfg.game.level.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
                 var gameObject = _b.value;
                 // skip own body and sensors
-                if (gameObject.body == this.body || gameObject.isSensor) {
+                if (gameObject.body == this.body) {
                     continue;
                 }
                 // skip decoration
@@ -11230,7 +11223,7 @@ var MfgPlatform = (function (_super) {
     *   @param waypoints The waypoints for this platform to move to.
     ***************************************************************************************************************/
     function MfgPlatform(shape, width, height, angle, speed, waypoints) {
-        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
         /** The waypoints for this platform to move. */
         _this.waypoints = null;
         /** The number of ticks till the next waypoint is reached. */
@@ -11404,7 +11397,7 @@ var MfgBox = (function (_super) {
     *   @param friction The surface friction for this object.
     ***************************************************************************************************************/
     function MfgBox(shape, x, y, width, height, friction) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, false, null, 0.0, friction, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, null, 0.0, friction, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Renders this box.
@@ -11454,7 +11447,7 @@ var MfgItem = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgItem(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, false, true, null, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, null, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
         _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
@@ -11522,7 +11515,7 @@ var MfgDecoration = (function (_super) {
     *   @param image  The image source to use.
     ***************************************************************************************************************/
     function MfgDecoration(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, false, true, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
         _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
         return _this;
     }
@@ -11574,7 +11567,7 @@ var MfgObstacle = (function (_super) {
     *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
     ***************************************************************************************************************/
     function MfgObstacle(shape, x, y, width, height, angle, jumpPassThrough) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, false, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
         /** Specifies if the player shall be allowed to jump through this obstacle. */
         _this.jumpPassThrough = false;
         _this.jumpPassThrough = jumpPassThrough;
@@ -11636,7 +11629,7 @@ var MfgSigSaw = (function (_super) {
     *   @param image  The image for this game object.
     ***************************************************************************************************************/
     function MfgSigSaw(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
         /** The constraint that builds the turning point for the sigsaw. */
         _this.constraint = null;
         _this.constraint = Matter.Constraint.create({
@@ -11735,7 +11728,7 @@ var MfgBounce = (function (_super) {
     *   @param image  The image for this game object.
     ***************************************************************************************************************/
     function MfgBounce(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
         /** The constraint that builds the turning point for the bounce. */
         _this.constraint = null;
         _this.constraint = Matter.Constraint.create({

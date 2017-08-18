@@ -32,11 +32,6 @@
         /** The height of this object. */
         public          height                  :number                         = 0;
 
-        /** Specifies if this object is non-colliding. */
-        public          isSensor                :boolean                        = false;
-        /** Specifies if this object is static. */
-        public          isStatic                :boolean                        = false;
-
         /***************************************************************************************************************
         *   Creates a new game object.
         *
@@ -46,7 +41,6 @@
         *   @param width      The new width.
         *   @param height     The new height.
         *   @param debugColor The color for the debug object.
-        *   @param isSensor   Specifies that this object is non-colliding and serves as a sensor only.
         *   @param isStatic   Specifies that this object has a fixed position.
         *   @param image      The image for this game object.
         *   @param angle      The rotation of this body in degrees.
@@ -61,7 +55,6 @@
             width:number,
             height:number,
             debugColor:string,
-            isSensor:boolean,
             isStatic:boolean,
             image:string,
             angle:number,
@@ -69,9 +62,6 @@
             density:number
         )
         {
-            this.isSensor = isSensor;
-            this.isStatic = isStatic;
-
             let options:Matter.IBodyDefinition = {
                 render:
                 {
@@ -80,12 +70,12 @@
                     opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
                     lineWidth:   1.0,
                 },
-                isSensor:        isSensor,
                 isStatic:        isStatic,
                 collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
                 friction:        friction,
                 angle:           mfg.MfgMath.angleToRad( angle ),
-//              chamfer: { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
+//              isSensor:        isSensor,
+//              chamfer:         { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
             };
 
             switch ( shape )

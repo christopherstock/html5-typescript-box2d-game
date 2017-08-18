@@ -31,7 +31,6 @@
                 height,
                 mfg.MfgSettings.COLOR_DEBUG_BOX,
                 false,
-                false,
                 null,
                 0.0,
                 friction,

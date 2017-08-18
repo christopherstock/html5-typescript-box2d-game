@@ -65,7 +65,6 @@
                 height,
                 debugColor,
                 false,
-                false,
                 image,
                 0.0,
                 mfg.MfgGameObject.FRICTION_DEFAULT,
@@ -138,7 +137,7 @@
             for ( let gameObject of mfg.Mfg.game.level.gameObjects )
             {
                 // skip own body and sensors
-                if ( gameObject.body == this.body || gameObject.isSensor )
+                if ( gameObject.body == this.body )
                 {
                     continue;
                 }

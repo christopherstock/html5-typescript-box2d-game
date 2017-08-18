@@ -32,7 +32,6 @@
                 width,
                 height,
                 mfg.MfgSettings.COLOR_DEBUG_ITEM,
-                false,
                 true,
                 null,
                 0.0,

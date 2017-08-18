@@ -29,7 +29,6 @@
                 width,
                 height,
                 mfg.MfgSettings.COLOR_DEBUG_DECORATION,
-                false,
                 true,
                 image,
                 0.0,

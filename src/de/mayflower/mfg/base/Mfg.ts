@@ -5,7 +5,7 @@
     *   The main class contains the application's points of entry and termination.
     *
     *   TODO ASAP   Kill enemy by jumping on his head ..
-    *   TODO ASAP   Stop player sliding on bouncing against a wall!
+    *
     *   TODO ASAP   Improve moving before sensors (decoration)!
     *   TODO ASAP   Checkout all parameters of the collision filters!
     *   TODO ASAP   Improve air behaviour of player on colliding!!
@@ -14,6 +14,7 @@
     *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
     *   TODO HIGH   Create different enemy move patterns.
     *   TODO HIGH   Disable horizontal movements while jumping?
+    *   TODO HIGH   Let dead enemies fall out of the scene.
     *   TODO INIT   Parallax bg.
     *   TODO INIT   Modify starting point for all objects so they rotate around left top anchor.
     *   TODO INIT   Solve same body friction on different surfaces with different friction ... ( "staticFriction" )

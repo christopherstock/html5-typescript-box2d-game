@@ -34,7 +34,6 @@
                 height,
                 mfg.MfgSettings.COLOR_DEBUG_SIGSAW,
                 false,
-                false,
                 image,
                 0.0,
                 mfg.MfgGameObject.FRICTION_DEFAULT,

@@ -58,7 +58,6 @@
                 width,
                 height,
                 mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
-                false,
                 true,
                 null,
                 angle,
