@@ -11037,7 +11037,7 @@ var MfgCharacter = (function (_super) {
     ***************************************************************************************************************/
     MfgCharacter.prototype.render = function () {
         // check bottom collision state
-        this.collidesBottom = this.isCollidingBottom(false, false);
+        this.collidesBottom = this.isCollidingBottom();
         // avoid this body from rotating!
         Matter.Body.setAngularVelocity(this.body, 0.0);
         Matter.Body.setAngle(this.body, 0.0);
@@ -11065,29 +11065,19 @@ var MfgCharacter = (function (_super) {
         this.dead = true;
     };
     /***************************************************************************************************************
-    *   Check if the specified sensor currently collides with any other colliding body.
-    *
-    *   @param ignoreBoxes      Specifies if boxes shall be considered for collision checks.
-    *   @param ignoreDecoration Specifies if deco shall be considered for collision checks.
+    *   Check if the character's bottom line currently collides with any other colliding body.
     *
     *   @return <code>true</code> if a bottom collision is currently active.
     ***************************************************************************************************************/
-    MfgCharacter.prototype.isCollidingBottom = function (ignoreBoxes, ignoreDecoration) {
+    MfgCharacter.prototype.isCollidingBottom = function () {
         var bodiesToCheck = [];
         try {
             // browse all game objects
             for (var _a = __values(mfg.Mfg.game.level.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
                 var gameObject = _b.value;
-                // skip own body and sensors
-                if (gameObject.body == this.body) {
-                    continue;
-                }
-                // skip decoration
-                if (ignoreDecoration && gameObject instanceof mfg.MfgDecoration) {
-                    continue;
-                }
-                // skip boxes
-                if (ignoreBoxes && gameObject instanceof mfg.MfgBox) {
+                // skip own body and non-colliding game objects
+                if (gameObject.body == this.body
+                    || gameObject instanceof mfg.MfgDecoration) {
                     continue;
                 }
                 bodiesToCheck.push(gameObject.body);

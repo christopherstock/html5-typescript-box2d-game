@@ -82,7 +82,7 @@
         public render()
         {
             // check bottom collision state
-            this.collidesBottom = this.isCollidingBottom( false, false );
+            this.collidesBottom = this.isCollidingBottom();
 
             // avoid this body from rotating!
             Matter.Body.setAngularVelocity( this.body, 0.0 );
@@ -122,34 +122,23 @@
         }
 
         /***************************************************************************************************************
-        *   Check if the specified sensor currently collides with any other colliding body.
-        *
-        *   @param ignoreBoxes      Specifies if boxes shall be considered for collision checks.
-        *   @param ignoreDecoration Specifies if deco shall be considered for collision checks.
+        *   Check if the character's bottom line currently collides with any other colliding body.
         *
         *   @return <code>true</code> if a bottom collision is currently active.
         ***************************************************************************************************************/
-        private isCollidingBottom( ignoreBoxes:boolean, ignoreDecoration:boolean )
+        private isCollidingBottom()
         {
             let bodiesToCheck:Array<Matter.Body> = [];
 
             // browse all game objects
             for ( let gameObject of mfg.Mfg.game.level.gameObjects )
             {
-                // skip own body and sensors
-                if ( gameObject.body == this.body )
-                {
-                    continue;
-                }
-
-                // skip decoration
-                if ( ignoreDecoration && gameObject instanceof mfg.MfgDecoration )
-                {
-                    continue;
-                }
-
-                // skip boxes
-                if ( ignoreBoxes && gameObject instanceof mfg.MfgBox )
+                // skip own body and non-colliding game objects
+                if
+                (
+                        gameObject.body == this.body
+                    ||  gameObject instanceof mfg.MfgDecoration
+                )
                 {
                     continue;
                 }
