@@ -10621,7 +10621,7 @@ var mfg = __webpack_require__(0);
 *   TODO HIGH   Disable horizontal movements while jumping?
 *   TODO INIT   Parallax bg.
 *   TODO INIT   Modify starting point for all objects so they rotate around left top anchor.
-*   TODO INIT   Solve same body friction on different surfaces with different friction ...
+*   TODO INIT   Solve same body friction on different surfaces with different friction ... ( "staticFriction" )
 *   TODO LOW    Add doors / level portals.
 *   TODO LOW    Create levels and sublevels?
 *   TODO LOW    Maximum camera ascend distance if player is superjumped upwards.
