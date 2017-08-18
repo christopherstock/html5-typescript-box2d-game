@@ -11074,9 +11074,9 @@ var MfgCharacter = (function (_super) {
     *   @return <code>true</code> if a bottom collision is currently active.
     ***************************************************************************************************************/
     MfgCharacter.prototype.checkBottomCollision = function () {
+        // browse all game objects
         var bodiesToCheck = [];
         try {
-            // browse all game objects
             for (var _a = __values(mfg.Mfg.game.level.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
                 var gameObject = _b.value;
                 // skip own body and non-colliding game objects
@@ -11094,8 +11094,30 @@ var MfgCharacter = (function (_super) {
             }
             finally { if (e_1) throw e_1.error; }
         }
-        this.collidesBottom = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.body.position.x - (this.width / 2), this.body.position.y + (this.height / 2)), Matter.Vector.create(this.body.position.x + (this.width / 2), this.body.position.y + (this.height / 2))).length > 0;
-        var e_1, _c;
+        // check colliding bodies
+        var collidingBodies = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.body.position.x - (this.width / 2), this.body.position.y + (this.height / 2)), Matter.Vector.create(this.body.position.x + (this.width / 2), this.body.position.y + (this.height / 2)));
+        this.collidesBottom = collidingBodies.length > 0;
+        // check character landing on enemies
+        if (this.collidesBottom) {
+            try {
+                for (var _d = __values(mfg.Mfg.game.level.gameObjects), _e = _d.next(); !_e.done; _e = _d.next()) {
+                    var gameObject = _e.value;
+                    if (this instanceof mfg.MfgPlayer && gameObject instanceof mfg.MfgEnemy) {
+                        if (Matter.Bounds.overlaps(gameObject.body.bounds, this.body.bounds)) {
+                            console.log("Enemy hit!!");
+                        }
+                    }
+                }
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (_e && !_e.done && (_f = _d.return)) _f.call(_d);
+                }
+                finally { if (e_2) throw e_2.error; }
+            }
+        }
+        var e_1, _c, e_2, _f;
     };
     /***************************************************************************************************************
     *   Lets this character jump.

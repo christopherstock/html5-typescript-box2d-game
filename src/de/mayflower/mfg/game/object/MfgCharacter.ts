@@ -123,9 +123,8 @@
         ***************************************************************************************************************/
         private checkBottomCollision()
         {
-            let bodiesToCheck:Array<Matter.Body> = [];
-
             // browse all game objects
+            let bodiesToCheck:Array<Matter.Body> = [];
             for ( let gameObject of mfg.Mfg.game.level.gameObjects )
             {
                 // skip own body and non-colliding game objects
@@ -141,12 +140,30 @@
                 bodiesToCheck.push( gameObject.body );
             }
 
-            this.collidesBottom = Matter.Query.ray
+            // check colliding bodies
+            let collidingBodies:Array<Matter.Body> = Matter.Query.ray
             (
                 bodiesToCheck,
                 Matter.Vector.create( this.body.position.x - ( this.width / 2 ), this.body.position.y + ( this.height / 2 ) ),
                 Matter.Vector.create( this.body.position.x + ( this.width / 2 ), this.body.position.y + ( this.height / 2 ) )
-            ).length > 0;
+            );
+
+            this.collidesBottom = collidingBodies.length > 0;
+
+            // check character landing on enemies
+            if ( this.collidesBottom )
+            {
+                for ( let gameObject of mfg.Mfg.game.level.gameObjects )
+                {
+                    if ( this instanceof mfg.MfgPlayer && gameObject instanceof mfg.MfgEnemy )
+                    {
+                        if ( Matter.Bounds.overlaps( gameObject.body.bounds, this.body.bounds ) )
+                        {
+                            console.log( "Enemy hit!!" );
+                        }
+                    }
+                }
+            }
         }
 
         /***************************************************************************************************************
