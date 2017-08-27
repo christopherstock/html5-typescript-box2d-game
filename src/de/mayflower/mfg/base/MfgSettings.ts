@@ -72,18 +72,34 @@
         public      static      PATH_IMAGE_BG                               :string                     = "res/image/bg/";
 
         /** The default collision group for all game objects. */
-        public      static      COLLISION_GROUP_DEFAULT                     :Matter.ICollisionFilter    =
+        public      static      COLLISION_GROUP_COLLIDING                   :Matter.ICollisionFilter    =
         {
                 category: 0x0001,
                 mask:     0x0002,
                 group:    0x0003,
         };
 
-        /** The collision group for all non-colliding game objects. */
-        public      static      COLLISION_GROUP_NON_COLLIDING               :Matter.ICollisionFilter    =
+        /** The collision group for all non-colliding items. */
+        public      static      COLLISION_GROUP_NON_COLLIDING_ITEM          :Matter.ICollisionFilter    =
         {
                 category: 0x0004,
                 mask:     0x0005,
                 group:    0x0006,
+        };
+
+        /** The collision group for all non-colliding decos. */
+        public      static      COLLISION_GROUP_NON_COLLIDING_DECO          :Matter.ICollisionFilter    =
+        {
+                category: 0x0007,
+                mask:     0x0008,
+                group:    0x0009,
+        };
+
+        /** The collision group for all non-colliding dead enemies. */
+        public      static      COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY    :Matter.ICollisionFilter    =
+        {
+                category: 0x0010,
+                mask:     0x0011,
+                group:    0x0012,
         };
     }

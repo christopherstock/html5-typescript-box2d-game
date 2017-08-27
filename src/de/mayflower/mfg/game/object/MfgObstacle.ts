@@ -51,23 +51,23 @@
         {
             if ( this.jumpPassThrough )
             {
-
+/*
                 if
                 (
                     mfg.Mfg.game.level.player.body.velocity.y >= 0.0
-/*
-                    mfg.Mfg.game.level.player.body.position.y + mfg.Mfg.game.level.player.height / 2
-                    <=  this.body.position.y
-*/
+
+//                    mfg.Mfg.game.level.player.body.position.y + mfg.Mfg.game.level.player.height / 2
+//                    <=  this.body.position.y
+
                 )
                 {
-                    this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
+                    this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_COLLIDING;
                 }
                 else
                 {
                     this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
                 }
-
+*/
             }
         }
     }

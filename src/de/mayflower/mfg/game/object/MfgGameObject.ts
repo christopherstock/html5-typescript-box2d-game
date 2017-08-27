@@ -71,7 +71,7 @@
                     lineWidth:   1.0,
                 },
                 isStatic:        isStatic,
-                collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
+                collisionFilter: mfg.MfgSettings.COLLISION_GROUP_COLLIDING,
                 friction:        friction,
                 angle:           mfg.MfgMath.angleToRad( angle ),
 //              isSensor:        isSensor,

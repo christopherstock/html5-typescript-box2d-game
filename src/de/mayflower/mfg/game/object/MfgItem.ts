@@ -39,7 +39,7 @@
                 Infinity
             );
 
-            this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
+            this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;
         }
 
         /***************************************************************************************************************

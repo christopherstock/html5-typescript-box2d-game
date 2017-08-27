@@ -50,4 +50,35 @@
                 this.moveLeft();
             }
         }
+
+        /***************************************************************************************************************
+        *   Lets this enemy punch out of the screen.
+        ***************************************************************************************************************/
+        public punchOut()
+        {
+            switch ( this.lookingDirection )
+            {
+                case mfg.MfgCharacterLookingDirection.LEFT:
+                {
+                    Matter.Body.applyForce
+                    (
+                        this.body,
+                        this.body.position,
+                        Matter.Vector.create( -0.5, -1.0 )
+                    );
+                    break;
+                }
+
+                case mfg.MfgCharacterLookingDirection.RIGHT:
+                {
+                    Matter.Body.applyForce
+                    (
+                        this.body,
+                        this.body.position,
+                        Matter.Vector.create( 0.5, -1.0 )
+                    );
+                    break;
+                }
+            }
+        }
     }

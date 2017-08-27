@@ -132,7 +132,9 @@
                 if
                 (
                         gameObject.body == this.body
-                    ||  gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING
+                    ||  gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM
+                    ||  gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO
+                    ||  gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY
                 )
                 {
                     continue;

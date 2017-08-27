@@ -102,34 +102,11 @@
                                 // flag enemy as dead
                                 enemy.kill();
 
-                                // punch enemy out
-                                switch ( enemy.lookingDirection )
-                                {
-                                    case mfg.MfgCharacterLookingDirection.LEFT:
-                                    {
-                                        Matter.Body.applyForce
-                                        (
-                                            enemy.body,
-                                            enemy.body.position,
-                                            Matter.Vector.create( -1.0, -1.5 )
-                                        );
-                                        break;
-                                    }
-
-                                    case mfg.MfgCharacterLookingDirection.RIGHT:
-                                    {
-                                        Matter.Body.applyForce
-                                        (
-                                            enemy.body,
-                                            enemy.body.position,
-                                            Matter.Vector.create( 1.0, -1.5 )
-                                        );
-                                        break;
-                                    }
-                                }
+                                // let enemy fall out of the screen
+                                enemy.punchOut();
 
                                 // disable enemy collisions
-                                enemy.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
+                                enemy.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY;
                             }
                         }
                     }

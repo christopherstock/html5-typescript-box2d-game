@@ -10533,16 +10533,28 @@ var MfgSettings = (function () {
     /** The relative path from index.html where all background images reside. */
     MfgSettings.PATH_IMAGE_BG = "res/image/bg/";
     /** The default collision group for all game objects. */
-    MfgSettings.COLLISION_GROUP_DEFAULT = {
+    MfgSettings.COLLISION_GROUP_COLLIDING = {
         category: 0x0001,
-        mask: 0x00002,
+        mask: 0x0002,
         group: 0x0003,
     };
-    /** The collision group for all non-colliding game objects. */
-    MfgSettings.COLLISION_GROUP_NON_COLLIDING = {
+    /** The collision group for all non-colliding items. */
+    MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM = {
         category: 0x0004,
-        mask: 0x00005,
+        mask: 0x0005,
         group: 0x0006,
+    };
+    /** The collision group for all non-colliding decos. */
+    MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO = {
+        category: 0x0007,
+        mask: 0x0008,
+        group: 0x0009,
+    };
+    /** The collision group for all non-colliding dead enemies. */
+    MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY = {
+        category: 0x0010,
+        mask: 0x0011,
+        group: 0x0012,
     };
     return MfgSettings;
 }());
@@ -10593,6 +10605,8 @@ var MfgDebug = (function () {
     MfgDebug.key = new MfgDebug(false && mfg.MfgSettings.DEBUG_MODE);
     /** Debugs the pickable game items. */
     MfgDebug.item = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
+    /** Debugs enemy events. */
+    MfgDebug.enemy = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
     return MfgDebug;
 }());
 exports.MfgDebug = MfgDebug;
@@ -10609,8 +10623,6 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Kill enemy by jumping on his head ..
-*
 *   TODO ASAP   Improve moving before sensors (decoration)!
 *   TODO ASAP   Checkout all parameters of the collision filters!
 *   TODO ASAP   Improve air behaviour of player on colliding!!
@@ -10619,13 +10631,13 @@ var mfg = __webpack_require__(0);
 *   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
 *   TODO HIGH   Create different enemy move patterns.
 *   TODO HIGH   Disable horizontal movements while jumping?
-*   TODO HIGH   Let dead enemies fall out of the scene.
 *   TODO INIT   Parallax bg.
 *   TODO INIT   Modify starting point for all objects so they rotate around left top anchor.
 *   TODO INIT   Solve same body friction on different surfaces with different friction ... ( "staticFriction" )
 *   TODO LOW    Add doors / level portals.
 *   TODO LOW    Create levels and sublevels?
 *   TODO LOW    Maximum camera ascend distance if player is superjumped upwards.
+*   TODO LOW    Improve direction change in air. (no direction change till landed?)
 *   TODO WEAK   Add menu keys for main menu and level map ..
 *   TODO WEAK   Add sprites.
 *   TODO WEAK   Add images.
@@ -10633,6 +10645,8 @@ var mfg = __webpack_require__(0);
 *   TODO WEAK   Try discreet graphic style.
 *   TODO WEAK   Implement nice changing gravity effects.
 *   TODO WEAK   Improve Pass-through walls behaviour for all characters etc. ..
+*   TODO WEAK   Refactor camera class.
+*   TODO WEAK   Try fullscreen game in browser?
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -10675,9 +10689,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var MfgCharacterLookingDirection;
 (function (MfgCharacterLookingDirection) {
     /** Looking left. */
-    MfgCharacterLookingDirection[MfgCharacterLookingDirection["ELeft"] = 0] = "ELeft";
+    MfgCharacterLookingDirection[MfgCharacterLookingDirection["LEFT"] = 0] = "LEFT";
     /** Looking right. */
-    MfgCharacterLookingDirection[MfgCharacterLookingDirection["ERight"] = 1] = "ERight";
+    MfgCharacterLookingDirection[MfgCharacterLookingDirection["RIGHT"] = 1] = "RIGHT";
 })(MfgCharacterLookingDirection = exports.MfgCharacterLookingDirection || (exports.MfgCharacterLookingDirection = {}));
 
 
@@ -10749,7 +10763,7 @@ var MfgGameObject = (function () {
                 lineWidth: 1.0,
             },
             isStatic: isStatic,
-            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_DEFAULT,
+            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_COLLIDING,
             friction: friction,
             angle: mfg.MfgMath.angleToRad(angle),
         };
@@ -11056,16 +11070,17 @@ var MfgCharacter = (function (_super) {
     MfgCharacter.prototype.checkFallingDead = function () {
         if (this.body.position.y - this.height / 2 > mfg.Mfg.game.level.height) {
             mfg.MfgDebug.bugfix.log("Character has fallen to dead");
+            // remove character body
+            Matter.World.remove(mfg.Mfg.game.engine.world, this.body);
             this.kill();
         }
     };
     /***************************************************************************************************************
     *   Kills this character.
+    *
+    *   TODO abstract!
     ***************************************************************************************************************/
     MfgCharacter.prototype.kill = function () {
-        // remove character body
-        Matter.World.remove(mfg.Mfg.game.engine.world, this.body);
-        // flag as dead
         this.dead = true;
     };
     /***************************************************************************************************************
@@ -11081,7 +11096,9 @@ var MfgCharacter = (function (_super) {
                 var gameObject = _b.value;
                 // skip own body and non-colliding game objects
                 if (gameObject.body == this.body
-                    || gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING) {
+                    || gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM
+                    || gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO
+                    || gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY) {
                     continue;
                 }
                 bodiesToCheck.push(gameObject.body);
@@ -11097,27 +11114,7 @@ var MfgCharacter = (function (_super) {
         // check colliding bodies
         var collidingBodies = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.body.position.x - (this.width / 2), this.body.position.y + (this.height / 2)), Matter.Vector.create(this.body.position.x + (this.width / 2), this.body.position.y + (this.height / 2)));
         this.collidesBottom = collidingBodies.length > 0;
-        // check character landing on enemies
-        if (this.collidesBottom) {
-            try {
-                for (var _d = __values(mfg.Mfg.game.level.gameObjects), _e = _d.next(); !_e.done; _e = _d.next()) {
-                    var gameObject = _e.value;
-                    if (this instanceof mfg.MfgPlayer && gameObject instanceof mfg.MfgEnemy) {
-                        if (Matter.Bounds.overlaps(gameObject.body.bounds, this.body.bounds)) {
-                            console.log("Enemy hit!!");
-                        }
-                    }
-                }
-            }
-            catch (e_2_1) { e_2 = { error: e_2_1 }; }
-            finally {
-                try {
-                    if (_e && !_e.done && (_f = _d.return)) _f.call(_d);
-                }
-                finally { if (e_2) throw e_2.error; }
-            }
-        }
-        var e_1, _c, e_2, _f;
+        var e_1, _c;
     };
     /***************************************************************************************************************
     *   Lets this character jump.
@@ -11132,14 +11129,14 @@ var MfgCharacter = (function (_super) {
     ***************************************************************************************************************/
     MfgCharacter.prototype.moveLeft = function () {
         Matter.Body.translate(this.body, Matter.Vector.create(-this.speedMove, 0));
-        this.lookingDirection = mfg.MfgCharacterLookingDirection.ELeft;
+        this.lookingDirection = mfg.MfgCharacterLookingDirection.LEFT;
     };
     /***************************************************************************************************************
     *   Moves this character left.
     ***************************************************************************************************************/
     MfgCharacter.prototype.moveRight = function () {
         Matter.Body.translate(this.body, Matter.Vector.create(this.speedMove, 0));
-        this.lookingDirection = mfg.MfgCharacterLookingDirection.ERight;
+        this.lookingDirection = mfg.MfgCharacterLookingDirection.RIGHT;
     };
     /** The default jump power ( player ). */
     MfgCharacter.JUMP_POWER_DEFAULT = -4.0;
@@ -11165,6 +11162,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents an enemy being controled by the system.
@@ -11184,7 +11182,7 @@ var MfgEnemy = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgEnemy(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null, mfg.MfgCharacterLookingDirection.ELeft, 4.0, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null, mfg.MfgCharacterLookingDirection.LEFT, 4.0, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Renders the current player tick.
@@ -11194,6 +11192,23 @@ var MfgEnemy = (function (_super) {
         if (!this.dead) {
             // switch movement pattern
             this.moveLeft();
+        }
+    };
+    /***************************************************************************************************************
+    *   Lets this enemy punch out of the screen.
+    ***************************************************************************************************************/
+    MfgEnemy.prototype.punchOut = function () {
+        switch (this.lookingDirection) {
+            case mfg.MfgCharacterLookingDirection.LEFT:
+                {
+                    Matter.Body.applyForce(this.body, this.body.position, Matter.Vector.create(-0.5, -1.0));
+                    break;
+                }
+            case mfg.MfgCharacterLookingDirection.RIGHT:
+                {
+                    Matter.Body.applyForce(this.body, this.body.position, Matter.Vector.create(0.5, -1.0));
+                    break;
+                }
         }
     };
     return MfgEnemy;
@@ -11327,7 +11342,18 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __values = (this && this.__values) || function (o) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    if (m) return m.call(o);
+    return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents the player being controlled by the user.
@@ -11369,7 +11395,48 @@ var MfgPlayer = (function (_super) {
         _super.prototype.render.call(this);
         if (!this.dead) {
             this.handleKeys();
+            this.checkEnemyKill();
         }
+    };
+    /***************************************************************************************************************
+    *   Checks if an enemy is currently killed by jumping on his head.
+    ***************************************************************************************************************/
+    MfgPlayer.prototype.checkEnemyKill = function () {
+        // check character landing on enemies
+        if (this.collidesBottom) {
+            try {
+                for (var _a = __values(mfg.Mfg.game.level.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
+                    var gameObject = _b.value;
+                    if (gameObject instanceof mfg.MfgEnemy) {
+                        var enemy = gameObject;
+                        // check intersection of the player and the enemy
+                        if (Matter.Bounds.overlaps(this.body.bounds, enemy.body.bounds)) {
+                            mfg.MfgDebug.enemy.log("Enemy touched by player");
+                            var playerBottom = Math.floor(this.body.position.y + this.height / 2);
+                            var enemyTop = Math.floor(enemy.body.position.y - enemy.height / 2);
+                            mfg.MfgDebug.enemy.log(" playerBottom [" + playerBottom + "] enemyTop [" + enemyTop + "]");
+                            if (playerBottom == enemyTop) {
+                                mfg.MfgDebug.enemy.log(" Enemy killed");
+                                // flag enemy as dead
+                                enemy.kill();
+                                // let enemy fall out of the screen
+                                enemy.punchOut();
+                                // disable enemy collisions
+                                enemy.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+        }
+        var e_1, _c;
     };
     return MfgPlayer;
 }(mfg.MfgCharacter));
@@ -11466,7 +11533,7 @@ var MfgItem = (function (_super) {
         var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, null, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
-        _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
+        _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;
         return _this;
     }
     /***************************************************************************************************************
@@ -11532,7 +11599,7 @@ var MfgDecoration = (function (_super) {
     ***************************************************************************************************************/
     function MfgDecoration(shape, x, y, width, height, image) {
         var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
-        _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
+        _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO;
         return _this;
     }
     /***************************************************************************************************************
@@ -11594,12 +11661,23 @@ var MfgObstacle = (function (_super) {
     ***************************************************************************************************************/
     MfgObstacle.prototype.render = function () {
         if (this.jumpPassThrough) {
-            if (mfg.Mfg.game.level.player.body.velocity.y >= 0.0) {
-                this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_DEFAULT;
-            }
-            else {
-                this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
-            }
+            /*
+                            if
+                            (
+                                mfg.Mfg.game.level.player.body.velocity.y >= 0.0
+            
+            //                    mfg.Mfg.game.level.player.body.position.y + mfg.Mfg.game.level.player.height / 2
+            //                    <=  this.body.position.y
+            
+                            )
+                            {
+                                this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_COLLIDING;
+                            }
+                            else
+                            {
+                                this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
+                            }
+            */
         }
     };
     return MfgObstacle;
@@ -12028,7 +12106,7 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 500, mfg.MfgCharacterLookingDirection.ERight);
+        this.player = new mfg.MfgPlayer(0, 500, mfg.MfgCharacterLookingDirection.RIGHT);
         // setup all game objects
         this.gameObjects =
             [
@@ -12116,7 +12194,7 @@ var MfgLevelEnchantedWoods = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelEnchantedWoods.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgCharacterLookingDirection.ERight);
+        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgCharacterLookingDirection.RIGHT);
         // setup all game objects
         this.gameObjects =
             [
@@ -12374,21 +12452,29 @@ var MfgCamera = (function () {
             }
         ]);
     };
+    /***************************************************************************************************************
+    *   Calculates the current camera tarets according to the specified subject.
+    *
+    *   @param lookingDirection The current direction the subject is looking in.
+    *   @param subjectX         The subject's X to position the camera to.
+    *   @param subjectY         The subject's Y to position the camera to.
+    ***************************************************************************************************************/
     MfgCamera.prototype.calculateTargets = function (lookingDirection, subjectX, subjectY) {
         // calculate scroll-offsets so camera is centered to subject
         switch (lookingDirection) {
-            case mfg.MfgCharacterLookingDirection.ELeft:
+            case mfg.MfgCharacterLookingDirection.LEFT:
                 {
                     this.targetX = subjectX - (this.canvasWidth * (1.0 - this.ratioX));
                     break;
                 }
-            case mfg.MfgCharacterLookingDirection.ERight:
+            case mfg.MfgCharacterLookingDirection.RIGHT:
                 {
                     this.targetX = subjectX - (this.canvasWidth * this.ratioX);
                     break;
                 }
         }
         this.targetY = subjectY - (this.canvasHeight * this.ratioY);
+        // refactor to own method!
         // clip camera target x to level bounds
         if (this.targetX < 0)
             this.targetX = 0;
@@ -12404,6 +12490,7 @@ var MfgCamera = (function () {
     *   Resets the camera targets and offsets to the current player position without buffering.
     ***************************************************************************************************************/
     MfgCamera.prototype.reset = function () {
+        // extract level and player access!
         this.calculateTargets(mfg.Mfg.game.level.player.lookingDirection, mfg.Mfg.game.level.player.body.position.x, mfg.Mfg.game.level.player.body.position.y);
         this.offsetX = this.targetX;
         this.offsetY = this.targetY;
