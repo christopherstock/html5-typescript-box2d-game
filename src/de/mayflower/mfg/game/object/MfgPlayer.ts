@@ -21,7 +21,7 @@
         {
             super
             (
-                mfg.MfgGameObjectShape.ERectangle,
+                mfg.MfgGameObjectShape.RECTANGLE,
                 x,
                 y,
                 mfg.MfgSettings.PLAYER_WIDTH,

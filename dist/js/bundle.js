@@ -10623,26 +10623,29 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Improve moving before sensors (decoration)!
-*   TODO ASAP   Checkout all parameters of the collision filters!
-*   TODO ASAP   Improve air behaviour of player on colliding!!
-*   TODO ASAP   Check sprite or image clipping and scaling to player size?
-*   TODO HIGH   Skew image (sensor) for waving grass effect?
-*   TODO HIGH   Checkout material parameters for different game objects - Create lib/factory for assigning different masses and behaviours to bodies: rubber, steel, etc.
-*   TODO HIGH   Create different enemy move patterns.
-*   TODO HIGH   Disable horizontal movements while jumping?
-*   TODO INIT   Parallax bg.
+*   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation.
 *   TODO INIT   Modify starting point for all objects so they rotate around left top anchor.
+*
+*   TODO ASAP   Checkout all parameters of the collision filters!
+*   TODO ASAP   Check sprite or image clipping and scaling to player size?
+*   TODO ASAP   Skew image (sensor) for waving grass effect?
+*   TODO ASAP   Add sprites.
+*   TODO ASAP   Add images.
+*   TODO ASAP   Create custom renderer that extends Matter.Render?
+*   TODO ASAP   Try discreet graphic style.
+*
+*   TODO HIGH   Create different enemy move patterns.
+*   TODO INIT   Parallax bg.
 *   TODO INIT   Solve same body friction on different surfaces with different friction ... ( "staticFriction" )
 *   TODO LOW    Add doors / level portals.
 *   TODO LOW    Create levels and sublevels?
 *   TODO LOW    Maximum camera ascend distance if player is superjumped upwards.
+*
+*   TODO HIGH   Disable horizontal movements while jumping?
 *   TODO LOW    Improve direction change in air. (no direction change till landed?)
+*   TODO LOW    Improve air behaviour of player on colliding!!
+*
 *   TODO WEAK   Add menu keys for main menu and level map ..
-*   TODO WEAK   Add sprites.
-*   TODO WEAK   Add images.
-*   TODO WEAK   Create custom renderer that extends Matter.Render?
-*   TODO WEAK   Try discreet graphic style.
 *   TODO WEAK   Implement nice changing gravity effects.
 *   TODO WEAK   Improve Pass-through walls behaviour for all characters etc. ..
 *   TODO WEAK   Refactor camera class.
@@ -10711,9 +10714,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var MfgGameObjectShape;
 (function (MfgGameObjectShape) {
     /** The shape of a rectangle. */
-    MfgGameObjectShape[MfgGameObjectShape["ERectangle"] = 0] = "ERectangle";
+    MfgGameObjectShape[MfgGameObjectShape["RECTANGLE"] = 0] = "RECTANGLE";
     /** The shape of a circle. */
-    MfgGameObjectShape[MfgGameObjectShape["ECircle"] = 1] = "ECircle";
+    MfgGameObjectShape[MfgGameObjectShape["CIRCLE"] = 1] = "CIRCLE";
 })(MfgGameObjectShape = exports.MfgGameObjectShape || (exports.MfgGameObjectShape = {}));
 
 
@@ -10768,14 +10771,14 @@ var MfgGameObject = (function () {
             angle: mfg.MfgMath.angleToRad(angle),
         };
         switch (shape) {
-            case mfg.MfgGameObjectShape.ERectangle:
+            case mfg.MfgGameObjectShape.RECTANGLE:
                 {
                     this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, options);
                     this.width = width;
                     this.height = height;
                     break;
                 }
-            case mfg.MfgGameObjectShape.ECircle:
+            case mfg.MfgGameObjectShape.CIRCLE:
                 {
                     var diameter = width;
                     this.body = Matter.Bodies.circle(x + (diameter / 2), y + (diameter / 2), (diameter / 2), options);
@@ -10886,7 +10889,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created box.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBox = function (x, y, width, height, friction) {
-        return new mfg.MfgBox(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, friction);
+        return new mfg.MfgBox(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, friction);
     };
     /***************************************************************************************************************
     *   Creates a sphere.
@@ -10899,7 +10902,7 @@ var MfgGameObjectFactory = (function () {
     *   @return         The created sphere.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSphere = function (x, y, diameter, friction) {
-        return new mfg.MfgBox(mfg.MfgGameObjectShape.ECircle, x, y, diameter, diameter, friction);
+        return new mfg.MfgBox(mfg.MfgGameObjectShape.CIRCLE, x, y, diameter, diameter, friction);
     };
     /***************************************************************************************************************
     *   Creates an item.
@@ -10910,7 +10913,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created item.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createItem = function (x, y) {
-        return new mfg.MfgItem(mfg.MfgGameObjectShape.ERectangle, x, y, 25.0, 25.0);
+        return new mfg.MfgItem(mfg.MfgGameObjectShape.RECTANGLE, x, y, 25.0, 25.0);
     };
     /***************************************************************************************************************
     *   Creates an obstacle.
@@ -10925,7 +10928,7 @@ var MfgGameObjectFactory = (function () {
     *   @return                The created obstacle.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createObstacle = function (x, y, width, height, angle, jumpPassThrough) {
-        return new mfg.MfgObstacle(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, angle, jumpPassThrough);
+        return new mfg.MfgObstacle(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, angle, jumpPassThrough);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -10936,7 +10939,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created enemy.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createEnemy = function (x, y) {
-        return new mfg.MfgEnemy(mfg.MfgGameObjectShape.ERectangle, x, y, 50, 50);
+        return new mfg.MfgEnemy(mfg.MfgGameObjectShape.RECTANGLE, x, y, 50, 50);
     };
     /***************************************************************************************************************
     *   Creates a decoration.
@@ -10950,7 +10953,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createDecoration = function (x, y, width, height, image) {
-        return new mfg.MfgDecoration(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image);
+        return new mfg.MfgDecoration(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, image);
     };
     /***************************************************************************************************************
     *   Creates a sigsaw.
@@ -10964,7 +10967,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSigsaw = function (x, y, width, height, image) {
-        return new mfg.MfgSigSaw(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image);
+        return new mfg.MfgSigSaw(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, image);
     };
     /***************************************************************************************************************
      *   Creates a bounce.
@@ -10978,7 +10981,7 @@ var MfgGameObjectFactory = (function () {
      *   @return       The created decoration.
      ***************************************************************************************************************/
     MfgGameObjectFactory.createBounce = function (x, y, width, height, image) {
-        return new mfg.MfgBounce(mfg.MfgGameObjectShape.ERectangle, x, y, width, height, image);
+        return new mfg.MfgBounce(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, image);
     };
     return MfgGameObjectFactory;
 }());
@@ -11371,7 +11374,7 @@ var MfgPlayer = (function (_super) {
     *   @param lookingDirection The initial looking direction.
     ***************************************************************************************************************/
     function MfgPlayer(x, y, lookingDirection) {
-        return _super.call(this, mfg.MfgGameObjectShape.ERectangle, x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _super.call(this, mfg.MfgGameObjectShape.RECTANGLE, x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -12132,7 +12135,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createSigsaw(1490, 830, 400, 25, null),
                 mfg.MfgGameObjectFactory.createBounce(1900, 830, 400, 25, null),
                 // animated platforms
-                new mfg.MfgPlatform(mfg.MfgGameObjectShape.ERectangle, 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
+                new mfg.MfgPlatform(mfg.MfgGameObjectShape.RECTANGLE, 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
                     Matter.Vector.create(2820.0, 830.0),
                     Matter.Vector.create(3020.0, 830.0),
                 ]),

@@ -80,7 +80,7 @@
 
             switch ( shape )
             {
-                case mfg.MfgGameObjectShape.ERectangle:
+                case mfg.MfgGameObjectShape.RECTANGLE:
                 {
                     this.body = Matter.Bodies.rectangle(
                         x + ( width  / 2 ),
@@ -96,7 +96,7 @@
                     break;
                 }
 
-                case mfg.MfgGameObjectShape.ECircle:
+                case mfg.MfgGameObjectShape.CIRCLE:
                 {
                     let diameter:number = width;
 
