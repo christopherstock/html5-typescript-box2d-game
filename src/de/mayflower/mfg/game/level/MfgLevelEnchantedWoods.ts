@@ -33,8 +33,8 @@
                 mfg.MfgGameObjectFactory.createDecoration( 2200, 860, 120, 90, null ),
 
                 // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle( 0,    950, 1380, 25, 0.0, false ),
-                mfg.MfgGameObjectFactory.createObstacle( 1840, 950, 1380, 25, 0.0, false ),
+                mfg.MfgGameObjectFactory.createBlock( 0,    950, 1380, 25, 0.0, false ),
+                mfg.MfgGameObjectFactory.createBlock( 1840, 950, 1380, 25, 0.0, false ),
 
                 // moveable boxes
 

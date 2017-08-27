@@ -10623,31 +10623,30 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Solve jump-through obstacles!
+*   TODO ASAP   Create elevated ramp ( x1, y1, x2, y2, height! )
 *   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation.
-*   TODO INIT   Modify starting point for all objects so they rotate around left top anchor.
-*
+*   TODO ASAP   Modify starting point for all objects so they rotate around left top anchor.
+*   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
 *   TODO ASAP   Checkout all parameters of the collision filters!
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
 *   TODO ASAP   Skew image (sensor) for waving grass effect?
-*   TODO ASAP   Add sprites.
-*   TODO ASAP   Add images.
+*   TODO ASAP   Add sprites and sprite class.
+*   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
+*   TODO HIGH   Solve problem that player or enemy get stuck on an rotated obstacle ramp!
 *   TODO ASAP   Create custom renderer that extends Matter.Render?
 *   TODO ASAP   Try discreet graphic style.
-*
 *   TODO HIGH   Create different enemy move patterns.
 *   TODO INIT   Parallax bg.
 *   TODO INIT   Solve same body friction on different surfaces with different friction ... ( "staticFriction" )
-*   TODO LOW    Add doors / level portals.
 *   TODO LOW    Create levels and sublevels?
 *   TODO LOW    Maximum camera ascend distance if player is superjumped upwards.
-*
-*   TODO HIGH   Disable horizontal movements while jumping?
+*   TODO LOW    Disable horizontal movements while jumping?
 *   TODO LOW    Improve direction change in air. (no direction change till landed?)
 *   TODO LOW    Improve air behaviour of player on colliding!!
-*
+*   TODO WEAK   Add doors / level portals.
 *   TODO WEAK   Add menu keys for main menu and level map ..
 *   TODO WEAK   Implement nice changing gravity effects.
-*   TODO WEAK   Improve Pass-through walls behaviour for all characters etc. ..
 *   TODO WEAK   Refactor camera class.
 *   TODO WEAK   Try fullscreen game in browser?
 *
@@ -10916,7 +10915,7 @@ var MfgGameObjectFactory = (function () {
         return new mfg.MfgItem(mfg.MfgGameObjectShape.RECTANGLE, x, y, 25.0, 25.0);
     };
     /***************************************************************************************************************
-    *   Creates an obstacle.
+    *   Creates an rectangular obstacle.
     *
     *   @param x               Anchor X.
     *   @param y               Anchor Y.
@@ -10927,7 +10926,7 @@ var MfgGameObjectFactory = (function () {
     *
     *   @return                The created obstacle.
     ***************************************************************************************************************/
-    MfgGameObjectFactory.createObstacle = function (x, y, width, height, angle, jumpPassThrough) {
+    MfgGameObjectFactory.createBlock = function (x, y, width, height, angle, jumpPassThrough) {
         return new mfg.MfgObstacle(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, angle, jumpPassThrough);
     };
     /***************************************************************************************************************
@@ -12109,19 +12108,19 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 500, mfg.MfgCharacterLookingDirection.RIGHT);
+        this.player = new mfg.MfgPlayer(3500, 500, mfg.MfgCharacterLookingDirection.RIGHT);
         // setup all game objects
         this.gameObjects =
             [
                 // grounds and ramps
-                mfg.MfgGameObjectFactory.createObstacle(0, 700, 500, 15, 0.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(490, 765, 500, 15, 15.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(980, 830, 500, 15, 0.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(2310, 830, 500, 15, 0.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(3230, 830, 500, 15, 0.0, false),
+                mfg.MfgGameObjectFactory.createBlock(0, 700, 500, 15, 0.0, false),
+                mfg.MfgGameObjectFactory.createBlock(490, 765, 500, 15, 15.0, false),
+                mfg.MfgGameObjectFactory.createBlock(980, 830, 500, 15, 0.0, false),
+                mfg.MfgGameObjectFactory.createBlock(2310, 830, 500, 15, 0.0, false),
+                mfg.MfgGameObjectFactory.createBlock(3230, 830, 500, 15, 0.0, false),
                 /*
                                 // jump through obstacle
-                                mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
+                                mfg.MfgGameObjectFactory.createBlock( 3800,  2700, 400, 10, 0.0, true ),
                 */
                 // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration(75, 550, 25, 150, null),
@@ -12207,8 +12206,8 @@ var MfgLevelEnchantedWoods = (function (_super) {
                 mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
                 mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
                 // static obstacles
-                mfg.MfgGameObjectFactory.createObstacle(0, 950, 1380, 25, 0.0, false),
-                mfg.MfgGameObjectFactory.createObstacle(1840, 950, 1380, 25, 0.0, false),
+                mfg.MfgGameObjectFactory.createBlock(0, 950, 1380, 25, 0.0, false),
+                mfg.MfgGameObjectFactory.createBlock(1840, 950, 1380, 25, 0.0, false),
                 // moveable boxes
                 // sigsaws
                 // items

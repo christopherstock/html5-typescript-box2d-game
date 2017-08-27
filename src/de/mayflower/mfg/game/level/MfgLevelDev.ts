@@ -21,20 +21,25 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 0, 500, mfg.MfgCharacterLookingDirection.RIGHT );
+            this.player = new mfg.MfgPlayer( 3500, 500, mfg.MfgCharacterLookingDirection.RIGHT );
 
             // setup all game objects
             this.gameObjects =
             [
                 // grounds and ramps
-                mfg.MfgGameObjectFactory.createObstacle( 0,    700, 500, 15, 0.0,  false ),
-                mfg.MfgGameObjectFactory.createObstacle( 490,  765, 500, 15, 15.0, false ),
-                mfg.MfgGameObjectFactory.createObstacle( 980,  830, 500, 15, 0.0,  false ),
-                mfg.MfgGameObjectFactory.createObstacle( 2310, 830, 500, 15, 0.0,  false ),
-                mfg.MfgGameObjectFactory.createObstacle( 3230, 830, 500, 15, 0.0,  false ),
+                mfg.MfgGameObjectFactory.createBlock( 0,    700, 500, 15, 0.0,  false ),
+                mfg.MfgGameObjectFactory.createBlock( 490,  765, 500, 15, 15.0, false ),
+                mfg.MfgGameObjectFactory.createBlock( 980,  830, 500, 15, 0.0,  false ),
+                mfg.MfgGameObjectFactory.createBlock( 2310, 830, 500, 15, 0.0,  false ),
+                mfg.MfgGameObjectFactory.createBlock( 3230, 830, 500, 15, 0.0,  false ),
+
+
+
+
+
 /*
                 // jump through obstacle
-                mfg.MfgGameObjectFactory.createObstacle( 3800,  2700, 400, 10, 0.0, true ),
+                mfg.MfgGameObjectFactory.createBlock( 3800,  2700, 400, 10, 0.0, true ),
 */
                 // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration( 75,  550, 25, 150, null ),

@@ -4,6 +4,8 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Solve jump-through obstacles!
+    *   TODO ASAP   Create elevated ramp ( x1, y1, x2, y2, height! )
     *   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation.
     *   TODO ASAP   Modify starting point for all objects so they rotate around left top anchor.
     *   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
@@ -12,6 +14,7 @@
     *   TODO ASAP   Skew image (sensor) for waving grass effect?
     *   TODO ASAP   Add sprites and sprite class.
     *   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
+    *   TODO HIGH   Solve problem that player or enemy get stuck on an rotated obstacle ramp!
     *   TODO ASAP   Create custom renderer that extends Matter.Render?
     *   TODO ASAP   Try discreet graphic style.
     *   TODO HIGH   Create different enemy move patterns.

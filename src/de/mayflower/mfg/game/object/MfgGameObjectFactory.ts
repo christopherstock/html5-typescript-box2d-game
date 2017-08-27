@@ -54,7 +54,7 @@
         }
 
         /***************************************************************************************************************
-        *   Creates an obstacle.
+        *   Creates an rectangular obstacle.
         *
         *   @param x               Anchor X.
         *   @param y               Anchor Y.
@@ -65,7 +65,7 @@
         *
         *   @return                The created obstacle.
         ***************************************************************************************************************/
-        public static createObstacle( x:number, y:number, width:number, height:number, angle:number, jumpPassThrough:boolean ):mfg.MfgObstacle
+        public static createBlock( x:number, y:number, width:number, height:number, angle:number, jumpPassThrough:boolean ):mfg.MfgObstacle
         {
             return new mfg.MfgObstacle( mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, angle, jumpPassThrough );
         }
