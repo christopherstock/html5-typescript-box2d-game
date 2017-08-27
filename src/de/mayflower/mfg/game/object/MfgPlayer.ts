@@ -67,6 +67,73 @@
             if ( !this.dead )
             {
                 this.handleKeys();
+                this.checkEnemyKill();
+            }
+        }
+
+        /***************************************************************************************************************
+        *   Checks if an enemy is currently killed by jumping on his head.
+        ***************************************************************************************************************/
+        private checkEnemyKill()
+        {
+            // check character landing on enemies
+            if ( this.collidesBottom )
+            {
+                for ( let gameObject of mfg.Mfg.game.level.gameObjects )
+                {
+                    if ( gameObject instanceof mfg.MfgEnemy )
+                    {
+                        let enemy:mfg.MfgEnemy = gameObject;
+
+                        // check intersection of the player and the enemy
+                        if ( Matter.Bounds.overlaps( this.body.bounds, enemy.body.bounds ) )
+                        {
+                            mfg.MfgDebug.enemy.log( "Enemy touched by player" );
+
+                            let playerBottom:number = Math.floor( this.body.position.y  + this.height  / 2 );
+                            let enemyTop:number     = Math.floor( enemy.body.position.y - enemy.height / 2 );
+
+                            mfg.MfgDebug.enemy.log( " playerBottom [" + playerBottom + "] enemyTop [" + enemyTop + "]" );
+
+                            if ( playerBottom == enemyTop )
+                            {
+                                mfg.MfgDebug.enemy.log( " Enemy killed" );
+
+                                // flag enemy as dead
+                                enemy.kill();
+
+                                // punch enemy out
+                                switch ( enemy.lookingDirection )
+                                {
+                                    case mfg.MfgCharacterLookingDirection.LEFT:
+                                    {
+                                        Matter.Body.applyForce
+                                        (
+                                            enemy.body,
+                                            enemy.body.position,
+                                            Matter.Vector.create( -1.0, -1.5 )
+                                        );
+                                        break;
+                                    }
+
+                                    case mfg.MfgCharacterLookingDirection.RIGHT:
+                                    {
+                                        Matter.Body.applyForce
+                                        (
+                                            enemy.body,
+                                            enemy.body.position,
+                                            Matter.Vector.create( 1.0, -1.5 )
+                                        );
+                                        break;
+                                    }
+                                }
+
+                                // disable enemy collisions
+                                enemy.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -28,6 +28,8 @@
     *   TODO WEAK   Try discreet graphic style.
     *   TODO WEAK   Implement nice changing gravity effects.
     *   TODO WEAK   Improve Pass-through walls behaviour for all characters etc. ..
+    *   TODO WEAK   Refactor camera class.
+    *   TODO WEAK   Try fullscreen game in browser?
     *
     *   @author     Christopher Stock
     *   @version    0.0.1

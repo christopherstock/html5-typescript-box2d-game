@@ -21,7 +21,7 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 0, 500, mfg.MfgCharacterLookingDirection.ERight );
+            this.player = new mfg.MfgPlayer( 0, 500, mfg.MfgCharacterLookingDirection.RIGHT );
 
             // setup all game objects
             this.gameObjects =

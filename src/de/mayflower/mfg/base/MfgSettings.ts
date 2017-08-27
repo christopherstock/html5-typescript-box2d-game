@@ -75,7 +75,7 @@
         public      static      COLLISION_GROUP_DEFAULT                     :Matter.ICollisionFilter    =
         {
                 category: 0x0001,
-                mask:     0x00002,
+                mask:     0x0002,
                 group:    0x0003,
         };
 
@@ -83,7 +83,7 @@
         public      static      COLLISION_GROUP_NON_COLLIDING               :Matter.ICollisionFilter    =
         {
                 category: 0x0004,
-                mask:     0x00005,
+                mask:     0x0005,
                 group:    0x0006,
         };
     }

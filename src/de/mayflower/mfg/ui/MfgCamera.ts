@@ -164,6 +164,13 @@
             );
         }
 
+        /***************************************************************************************************************
+        *   Calculates the current camera tarets according to the specified subject.
+        *
+        *   @param lookingDirection The current direction the subject is looking in.
+        *   @param subjectX         The subject's X to position the camera to.
+        *   @param subjectY         The subject's Y to position the camera to.
+        ***************************************************************************************************************/
         private calculateTargets
         (
             lookingDirection:mfg.MfgCharacterLookingDirection,
@@ -174,19 +181,21 @@
             // calculate scroll-offsets so camera is centered to subject
             switch ( lookingDirection )
             {
-                case mfg.MfgCharacterLookingDirection.ELeft:
+                case mfg.MfgCharacterLookingDirection.LEFT:
                 {
                     this.targetX = subjectX - ( this.canvasWidth  * ( 1.0 - this.ratioX ) );
                     break;
                 }
 
-                case mfg.MfgCharacterLookingDirection.ERight:
+                case mfg.MfgCharacterLookingDirection.RIGHT:
                 {
                     this.targetX = subjectX - ( this.canvasWidth  * this.ratioX );
                     break;
                 }
             }
             this.targetY = subjectY - ( this.canvasHeight * this.ratioY );
+
+            // refactor to own method!
 
             // clip camera target x to level bounds
             if ( this.targetX < 0                                  ) this.targetX = 0;
@@ -202,6 +211,8 @@
         ***************************************************************************************************************/
         public reset()
         {
+            // extract level and player access!
+
             this.calculateTargets
             (
                 mfg.Mfg.game.level.player.lookingDirection,

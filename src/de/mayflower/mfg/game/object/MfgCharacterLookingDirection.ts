@@ -8,8 +8,8 @@
     export enum MfgCharacterLookingDirection
     {
         /** Looking left. */
-        ELeft,
+        LEFT,
 
         /** Looking right. */
-        ERight,
+        RIGHT,
     }

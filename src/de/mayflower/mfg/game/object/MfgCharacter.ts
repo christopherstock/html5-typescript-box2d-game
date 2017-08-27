@@ -100,19 +100,20 @@
             {
                 mfg.MfgDebug.bugfix.log( "Character has fallen to dead" );
 
+                // remove character body
+                Matter.World.remove( mfg.Mfg.game.engine.world, this.body );
+
                 this.kill();
             }
         }
 
         /***************************************************************************************************************
         *   Kills this character.
+        *
+        *   TODO abstract!
         ***************************************************************************************************************/
         public kill()
         {
-            // remove character body
-            Matter.World.remove( mfg.Mfg.game.engine.world, this.body );
-
-            // flag as dead
             this.dead = true;
         }
 
@@ -149,21 +150,6 @@
             );
 
             this.collidesBottom = collidingBodies.length > 0;
-
-            // check character landing on enemies
-            if ( this.collidesBottom )
-            {
-                for ( let gameObject of mfg.Mfg.game.level.gameObjects )
-                {
-                    if ( this instanceof mfg.MfgPlayer && gameObject instanceof mfg.MfgEnemy )
-                    {
-                        if ( Matter.Bounds.overlaps( gameObject.body.bounds, this.body.bounds ) )
-                        {
-                            console.log( "Enemy hit!!" );
-                        }
-                    }
-                }
-            }
         }
 
         /***************************************************************************************************************
@@ -188,7 +174,8 @@
         protected moveLeft()
         {
             Matter.Body.translate( this.body, Matter.Vector.create( -this.speedMove, 0 ) );
-            this.lookingDirection = mfg.MfgCharacterLookingDirection.ELeft;
+
+            this.lookingDirection = mfg.MfgCharacterLookingDirection.LEFT;
         }
 
         /***************************************************************************************************************
@@ -197,6 +184,7 @@
         protected moveRight()
         {
             Matter.Body.translate( this.body, Matter.Vector.create( this.speedMove, 0 ) );
-            this.lookingDirection = mfg.MfgCharacterLookingDirection.ERight;
+
+            this.lookingDirection = mfg.MfgCharacterLookingDirection.RIGHT;
         }
     }
