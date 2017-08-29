@@ -37,8 +37,7 @@
                 x,
                 y,
                 width,
-                height,
-                friction
+                height
             );
         }
 
@@ -68,8 +67,7 @@
                 x,
                 y,
                 diameter,
-                diameter,
-                friction
+                diameter
             );
         }
 
@@ -132,7 +130,6 @@
                 y,
                 width,
                 height,
-                angle,
                 jumpPassThrough
             );
         }

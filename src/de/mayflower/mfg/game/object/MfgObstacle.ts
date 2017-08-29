@@ -21,10 +21,9 @@
         *   @param y               Startup position Y.
         *   @param width           The new width.
         *   @param height          The new height.
-        *   @param angle           The initial rotation.
         *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgShape, x:number, y:number, width:number, height:number, angle:number, jumpPassThrough:boolean )
+        public constructor( shape:mfg.MfgShape, x:number, y:number, width:number, height:number, jumpPassThrough:boolean )
         {
             super
             (

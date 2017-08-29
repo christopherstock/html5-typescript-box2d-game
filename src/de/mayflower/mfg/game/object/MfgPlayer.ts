@@ -35,7 +35,6 @@
                 y,
                 mfg.MfgSettings.PLAYER_WIDTH,
                 mfg.MfgSettings.PLAYER_HEIGHT,
-                mfg.MfgSettings.COLOR_DEBUG_PLAYER,
                 null,
                 lookingDirection,
                 mfg.MfgSettings.PLAYER_SPEED_MOVE,

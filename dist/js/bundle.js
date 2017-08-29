@@ -10911,7 +10911,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created box.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBox = function (x, y, width, height, friction) {
-        return new mfg.MfgBox(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction), x, y, width, height, friction);
+        return new mfg.MfgBox(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction), x, y, width, height);
     };
     /***************************************************************************************************************
     *   Creates a sphere.
@@ -10924,7 +10924,7 @@ var MfgGameObjectFactory = (function () {
     *   @return         The created sphere.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSphere = function (x, y, diameter, friction) {
-        return new mfg.MfgBox(new mfg.MfgShapeCircle(mfg.MfgShape.CIRCLE, diameter, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction), x, y, diameter, diameter, friction);
+        return new mfg.MfgBox(new mfg.MfgShapeCircle(mfg.MfgShape.CIRCLE, diameter, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction), x, y, diameter, diameter);
     };
     /***************************************************************************************************************
     *   Creates an item.
@@ -10950,7 +10950,7 @@ var MfgGameObjectFactory = (function () {
     *   @return                The created obstacle.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBlock = function (x, y, width, height, angle, jumpPassThrough) {
-        return new mfg.MfgObstacle(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, angle, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, width, height, angle, jumpPassThrough);
+        return new mfg.MfgObstacle(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, angle, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, width, height, jumpPassThrough);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -11060,7 +11060,7 @@ var MfgCharacter = (function (_super) {
     *   @param speedMove        The speed for horizontal movement.
     *   @param jumpPower        The vertical force to apply on jumping.
     ***************************************************************************************************************/
-    function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove, jumpPower) {
+    function MfgCharacter(shape, x, y, width, height, image, lookingDirection, speedMove, jumpPower) {
         var _this = _super.call(this, shape, x, y, width, height, image, mfg.MfgGameObject.DENSITY_HUMAN) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
@@ -11206,7 +11206,7 @@ var MfgEnemy = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgEnemy(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null, mfg.MfgCharacterLookingDirection.LEFT, 4.0, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ENEMY, null, mfg.MfgCharacterLookingDirection.LEFT, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Renders the current player tick.
@@ -11394,7 +11394,7 @@ var MfgPlayer = (function (_super) {
     *   @param lookingDirection The initial looking direction.
     ***************************************************************************************************************/
     function MfgPlayer(x, y, lookingDirection) {
-        return _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -11501,7 +11501,7 @@ var MfgBox = (function (_super) {
     *   @param width    The new width.
     *   @param height   The new height.
     ***************************************************************************************************************/
-    function MfgBox(shape, x, y, width, height, friction) {
+    function MfgBox(shape, x, y, width, height) {
         return _super.call(this, shape, x, y, width, height, null, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
     }
     /***************************************************************************************************************
@@ -11668,10 +11668,9 @@ var MfgObstacle = (function (_super) {
     *   @param y               Startup position Y.
     *   @param width           The new width.
     *   @param height          The new height.
-    *   @param angle           The initial rotation.
     *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
     ***************************************************************************************************************/
-    function MfgObstacle(shape, x, y, width, height, angle, jumpPassThrough) {
+    function MfgObstacle(shape, x, y, width, height, jumpPassThrough) {
         var _this = _super.call(this, shape, x, y, width, height, null, Infinity) || this;
         /** Specifies if the player shall be allowed to jump through this obstacle. */
         _this.jumpPassThrough = false;

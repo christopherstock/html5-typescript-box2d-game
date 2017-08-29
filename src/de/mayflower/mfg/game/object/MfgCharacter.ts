@@ -48,7 +48,6 @@
             y:number,
             width:number,
             height:number,
-            debugColor:string,
             image:string,
             lookingDirection:mfg.MfgCharacterLookingDirection,
             speedMove:number,
