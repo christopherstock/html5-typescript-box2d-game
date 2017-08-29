@@ -22,7 +22,7 @@
         ***************************************************************************************************************/
         public static createBox( x:number, y:number, width:number, height:number, friction:number ):mfg.MfgBox
         {
-            return new mfg.MfgBox( mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, friction );
+            return new mfg.MfgBox( new mfg.MfgGameObjectShape( mfg.MfgGameObjectShape.RECTANGLE ), x, y, width, height, friction );
         }
 
         /***************************************************************************************************************
@@ -37,7 +37,7 @@
         ***************************************************************************************************************/
         public static createSphere( x:number, y:number, diameter:number, friction:number ):mfg.MfgBox
         {
-            return new mfg.MfgBox( mfg.MfgGameObjectShape.CIRCLE, x, y, diameter, diameter, friction );
+            return new mfg.MfgBox( new mfg.MfgGameObjectShape( mfg.MfgGameObjectShape.CIRCLE ), x, y, diameter, diameter, friction );
         }
 
         /***************************************************************************************************************
@@ -50,7 +50,7 @@
         ***************************************************************************************************************/
         public static createItem( x:number, y:number ):mfg.MfgItem
         {
-            return new mfg.MfgItem( mfg.MfgGameObjectShape.RECTANGLE, x, y, 25.0, 25.0 );
+            return new mfg.MfgItem( new mfg.MfgGameObjectShape( mfg.MfgGameObjectShape.RECTANGLE ), x, y, 25.0, 25.0 );
         }
 
         /***************************************************************************************************************
@@ -67,7 +67,7 @@
         ***************************************************************************************************************/
         public static createBlock( x:number, y:number, width:number, height:number, angle:number, jumpPassThrough:boolean ):mfg.MfgObstacle
         {
-            return new mfg.MfgObstacle( mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, angle, jumpPassThrough );
+            return new mfg.MfgObstacle( new mfg.MfgGameObjectShape( mfg.MfgGameObjectShape.RECTANGLE ), x, y, width, height, angle, jumpPassThrough );
         }
 
         /***************************************************************************************************************
@@ -80,7 +80,7 @@
         ***************************************************************************************************************/
         public static createEnemy( x:number, y:number ):mfg.MfgEnemy
         {
-            return new mfg.MfgEnemy( mfg.MfgGameObjectShape.RECTANGLE, x, y, 50, 50 );
+            return new mfg.MfgEnemy( new mfg.MfgGameObjectShape( mfg.MfgGameObjectShape.RECTANGLE ), x, y, 50, 50 );
         }
 
         /***************************************************************************************************************
@@ -96,7 +96,7 @@
         ***************************************************************************************************************/
         public static createDecoration( x:number, y:number, width:number, height:number, image:string ):mfg.MfgDecoration
         {
-            return new mfg.MfgDecoration( mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, image );
+            return new mfg.MfgDecoration( new mfg.MfgGameObjectShape( mfg.MfgGameObjectShape.RECTANGLE ), x, y, width, height, image );
         }
 
         /***************************************************************************************************************
@@ -112,7 +112,7 @@
         ***************************************************************************************************************/
         public static createSigsaw( x:number, y:number, width:number, height:number, image:string ):mfg.MfgSigSaw
         {
-            return new mfg.MfgSigSaw( mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, image );
+            return new mfg.MfgSigSaw( new mfg.MfgGameObjectShape( mfg.MfgGameObjectShape.RECTANGLE ), x, y, width, height, image );
         }
 
         /***************************************************************************************************************
@@ -128,6 +128,6 @@
          ***************************************************************************************************************/
         public static createBounce( x:number, y:number, width:number, height:number, image:string ):mfg.MfgBounce
         {
-            return new mfg.MfgBounce( mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, image );
+            return new mfg.MfgBounce( new mfg.MfgGameObjectShape( mfg.MfgGameObjectShape.RECTANGLE ), x, y, width, height, image );
         }
     }

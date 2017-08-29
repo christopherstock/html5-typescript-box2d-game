@@ -56,7 +56,7 @@
                 mfg.MfgGameObjectFactory.createBounce( 1900, 830,  400, 25, null ),
 
                 // animated platforms
-                new mfg.MfgPlatform( mfg.MfgGameObjectShape.RECTANGLE, 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL,
+                new mfg.MfgPlatform( new mfg.MfgGameObjectShape( mfg.MfgGameObjectShape.RECTANGLE ), 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL,
                     [
                         Matter.Vector.create( 2820.0, 830.0 ),
                         Matter.Vector.create( 3020.0, 830.0 ),

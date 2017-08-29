@@ -62,6 +62,8 @@
             density:number
         )
         {
+
+
             let options:Matter.IBodyDefinition = {
                 render:
                 {
@@ -78,7 +80,7 @@
 //              chamfer:         { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
             };
 
-            switch ( shape )
+            switch ( shape.type )
             {
                 case mfg.MfgGameObjectShape.RECTANGLE:
                 {

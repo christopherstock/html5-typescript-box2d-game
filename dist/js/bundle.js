@@ -73,14 +73,13 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(7));
 __export(__webpack_require__(4));
 __export(__webpack_require__(5));
-__export(__webpack_require__(6));
-__export(__webpack_require__(7));
 __export(__webpack_require__(8));
 __export(__webpack_require__(9));
-__export(__webpack_require__(10));
-__export(__webpack_require__(12));
+__export(__webpack_require__(33));
+__export(__webpack_require__(11));
 __export(__webpack_require__(13));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
@@ -91,6 +90,7 @@ __export(__webpack_require__(19));
 __export(__webpack_require__(20));
 __export(__webpack_require__(21));
 __export(__webpack_require__(22));
+__export(__webpack_require__(31));
 __export(__webpack_require__(23));
 __export(__webpack_require__(24));
 __export(__webpack_require__(25));
@@ -98,8 +98,8 @@ __export(__webpack_require__(26));
 __export(__webpack_require__(27));
 __export(__webpack_require__(28));
 __export(__webpack_require__(29));
+__export(__webpack_require__(32));
 __export(__webpack_require__(30));
-__export(__webpack_require__(31));
 
 
 /***/ }),
@@ -10383,7 +10383,7 @@ var Vector = _dereq_('../geometry/Vector');
 
 },{"../body/Composite":2,"../core/Common":14,"../core/Events":16,"../geometry/Bounds":26,"../geometry/Vector":28}]},{},[30])(30)
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ }),
 /* 2 */
@@ -10416,55 +10416,6 @@ window.onunload = function () {
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/*******************************************************************************************************************
-*   Contains the project history with all current and completed version information.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgVersion = (function () {
-    /***************************************************************************************************************
-    *   Creates a project version.
-    *
-    *   @param aVersion     The version specifier.
-    *   @param aCodename    The internal codename.
-    *   @param aDate        The completion date.
-    ***************************************************************************************************************/
-    function MfgVersion(aVersion, aCodename, aDate) {
-        /** This version's specifier. */
-        this.iVersion = null;
-        /** This version's internal codename. */
-        this.iCodename = null;
-        /** This version's completion date. */
-        this.iDate = null;
-        this.iVersion = aVersion;
-        this.iCodename = aCodename;
-        this.iDate = aDate;
-    }
-    /***************************************************************************************************************
-    *   Returns a representation of the current project version and it's date.
-    *
-    *   @return A representation of the current project's version with it's timestamp.
-    ***************************************************************************************************************/
-    MfgVersion.prototype.getVersionDescriptor = function () {
-        return ("v. " + this.iVersion + ", " + this.iDate + ", [" + this.iCodename + "]");
-    };
-    /** The project's version v.0.0.1. */
-    MfgVersion.V_0_0_1 = new MfgVersion("0.0.1", "GAMBAZ", "07.08.2017, 10:18:34 GMT+1");
-    /** The project's current version. */
-    MfgVersion.CURRENT_VERSION = MfgVersion.V_0_0_1;
-    return MfgVersion;
-}());
-exports.MfgVersion = MfgVersion;
-
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10562,7 +10513,7 @@ exports.MfgSettings = MfgSettings;
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10613,7 +10564,57 @@ exports.MfgDebug = MfgDebug;
 
 
 /***/ }),
+/* 6 */,
 /* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*******************************************************************************************************************
+*   Contains the project history with all current and completed version information.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgVersion = (function () {
+    /***************************************************************************************************************
+    *   Creates a project version.
+    *
+    *   @param aVersion     The version specifier.
+    *   @param aCodename    The internal codename.
+    *   @param aDate        The completion date.
+    ***************************************************************************************************************/
+    function MfgVersion(aVersion, aCodename, aDate) {
+        /** This version's specifier. */
+        this.iVersion = null;
+        /** This version's internal codename. */
+        this.iCodename = null;
+        /** This version's completion date. */
+        this.iDate = null;
+        this.iVersion = aVersion;
+        this.iCodename = aCodename;
+        this.iDate = aDate;
+    }
+    /***************************************************************************************************************
+    *   Returns a representation of the current project version and it's date.
+    *
+    *   @return A representation of the current project's version with it's timestamp.
+    ***************************************************************************************************************/
+    MfgVersion.prototype.getVersionDescriptor = function () {
+        return ("v. " + this.iVersion + ", " + this.iDate + ", [" + this.iCodename + "]");
+    };
+    /** The project's version v.0.0.1. */
+    MfgVersion.V_0_0_1 = new MfgVersion("0.0.1", "GAMBAZ", "07.08.2017, 10:18:34 GMT+1");
+    /** The project's current version. */
+    MfgVersion.CURRENT_VERSION = MfgVersion.V_0_0_1;
+    return MfgVersion;
+}());
+exports.MfgVersion = MfgVersion;
+
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10676,7 +10677,7 @@ exports.Mfg = Mfg;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10698,29 +10699,8 @@ var MfgCharacterLookingDirection;
 
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/*******************************************************************************************************************
-*   The abstract class of all game objects.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgGameObjectShape;
-(function (MfgGameObjectShape) {
-    /** The shape of a rectangle. */
-    MfgGameObjectShape[MfgGameObjectShape["RECTANGLE"] = 0] = "RECTANGLE";
-    /** The shape of a circle. */
-    MfgGameObjectShape[MfgGameObjectShape["CIRCLE"] = 1] = "CIRCLE";
-})(MfgGameObjectShape = exports.MfgGameObjectShape || (exports.MfgGameObjectShape = {}));
-
-
-/***/ }),
-/* 10 */
+/* 10 */,
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10769,7 +10749,7 @@ var MfgGameObject = (function () {
             friction: friction,
             angle: mfg.MfgMath.angleToRad(angle),
         };
-        switch (shape) {
+        switch (shape.type) {
             case mfg.MfgGameObjectShape.RECTANGLE:
                 {
                     this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, options);
@@ -10833,7 +10813,7 @@ exports.MfgGameObject = MfgGameObject;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 var g;
@@ -10860,7 +10840,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10888,7 +10868,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created box.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBox = function (x, y, width, height, friction) {
-        return new mfg.MfgBox(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, friction);
+        return new mfg.MfgBox(new mfg.MfgGameObjectShape(mfg.MfgGameObjectShape.RECTANGLE), x, y, width, height, friction);
     };
     /***************************************************************************************************************
     *   Creates a sphere.
@@ -10901,7 +10881,7 @@ var MfgGameObjectFactory = (function () {
     *   @return         The created sphere.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSphere = function (x, y, diameter, friction) {
-        return new mfg.MfgBox(mfg.MfgGameObjectShape.CIRCLE, x, y, diameter, diameter, friction);
+        return new mfg.MfgBox(new mfg.MfgGameObjectShape(mfg.MfgGameObjectShape.CIRCLE), x, y, diameter, diameter, friction);
     };
     /***************************************************************************************************************
     *   Creates an item.
@@ -10912,7 +10892,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created item.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createItem = function (x, y) {
-        return new mfg.MfgItem(mfg.MfgGameObjectShape.RECTANGLE, x, y, 25.0, 25.0);
+        return new mfg.MfgItem(new mfg.MfgGameObjectShape(mfg.MfgGameObjectShape.RECTANGLE), x, y, 25.0, 25.0);
     };
     /***************************************************************************************************************
     *   Creates an rectangular obstacle.
@@ -10927,7 +10907,7 @@ var MfgGameObjectFactory = (function () {
     *   @return                The created obstacle.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBlock = function (x, y, width, height, angle, jumpPassThrough) {
-        return new mfg.MfgObstacle(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, angle, jumpPassThrough);
+        return new mfg.MfgObstacle(new mfg.MfgGameObjectShape(mfg.MfgGameObjectShape.RECTANGLE), x, y, width, height, angle, jumpPassThrough);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -10938,7 +10918,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created enemy.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createEnemy = function (x, y) {
-        return new mfg.MfgEnemy(mfg.MfgGameObjectShape.RECTANGLE, x, y, 50, 50);
+        return new mfg.MfgEnemy(new mfg.MfgGameObjectShape(mfg.MfgGameObjectShape.RECTANGLE), x, y, 50, 50);
     };
     /***************************************************************************************************************
     *   Creates a decoration.
@@ -10952,7 +10932,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createDecoration = function (x, y, width, height, image) {
-        return new mfg.MfgDecoration(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, image);
+        return new mfg.MfgDecoration(new mfg.MfgGameObjectShape(mfg.MfgGameObjectShape.RECTANGLE), x, y, width, height, image);
     };
     /***************************************************************************************************************
     *   Creates a sigsaw.
@@ -10966,7 +10946,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSigsaw = function (x, y, width, height, image) {
-        return new mfg.MfgSigSaw(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, image);
+        return new mfg.MfgSigSaw(new mfg.MfgGameObjectShape(mfg.MfgGameObjectShape.RECTANGLE), x, y, width, height, image);
     };
     /***************************************************************************************************************
      *   Creates a bounce.
@@ -10980,7 +10960,7 @@ var MfgGameObjectFactory = (function () {
      *   @return       The created decoration.
      ***************************************************************************************************************/
     MfgGameObjectFactory.createBounce = function (x, y, width, height, image) {
-        return new mfg.MfgBounce(mfg.MfgGameObjectShape.RECTANGLE, x, y, width, height, image);
+        return new mfg.MfgBounce(new mfg.MfgGameObjectShape(mfg.MfgGameObjectShape.RECTANGLE), x, y, width, height, image);
     };
     return MfgGameObjectFactory;
 }());
@@ -10988,7 +10968,7 @@ exports.MfgGameObjectFactory = MfgGameObjectFactory;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11148,7 +11128,7 @@ exports.MfgCharacter = MfgCharacter;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11219,7 +11199,7 @@ exports.MfgEnemy = MfgEnemy;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11329,7 +11309,7 @@ exports.MfgPlatform = MfgPlatform;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11373,7 +11353,7 @@ var MfgPlayer = (function (_super) {
     *   @param lookingDirection The initial looking direction.
     ***************************************************************************************************************/
     function MfgPlayer(x, y, lookingDirection) {
-        return _super.call(this, mfg.MfgGameObjectShape.RECTANGLE, x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _super.call(this, new mfg.MfgGameObjectShape(mfg.MfgGameObjectShape.RECTANGLE), x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -11446,7 +11426,7 @@ exports.MfgPlayer = MfgPlayer;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11496,7 +11476,7 @@ exports.MfgBox = MfgBox;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11564,7 +11544,7 @@ exports.MfgItem = MfgItem;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11615,7 +11595,7 @@ exports.MfgDecoration = MfgDecoration;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11688,7 +11668,7 @@ exports.MfgObstacle = MfgObstacle;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11784,74 +11764,6 @@ var MfgSigSaw = (function (_super) {
     return MfgSigSaw;
 }(mfg.MfgGameObject));
 exports.MfgSigSaw = MfgSigSaw;
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
-/*******************************************************************************************************************
-*   Represents a bounce.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgBounce = (function (_super) {
-    __extends(MfgBounce, _super);
-    /***************************************************************************************************************
-    *   Creates a new bounce.
-    *
-    *   @param shape  The shape for this object.
-    *   @param x      Startup position X.
-    *   @param y      Startup position Y.
-    *   @param width  The new width.
-    *   @param height The new height.
-    *   @param image  The image for this game object.
-    ***************************************************************************************************************/
-    function MfgBounce(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
-        /** The constraint that builds the turning point for the bounce. */
-        _this.constraint = null;
-        _this.constraint = Matter.Constraint.create({
-            bodyB: _this.body,
-            pointA: { x: _this.body.position.x, y: _this.body.position.y },
-            pointB: { x: 0, y: 0 },
-            stiffness: 0.01,
-            length: 0,
-            render: {
-                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BOUNCE_JOINT,
-                lineWidth: 1.0,
-                visible: true,
-            }
-        });
-        Matter.Composite.add(mfg.Mfg.game.engine.world, _this.constraint);
-        return _this;
-    }
-    /***************************************************************************************************************
-    *   Renders this sigsaw.
-    ***************************************************************************************************************/
-    MfgBounce.prototype.render = function () {
-        Matter.Body.setAngle(this.body, 0.0);
-        Matter.Body.setAngularVelocity(this.body, 0.0);
-    };
-    return MfgBounce;
-}(mfg.MfgGameObject));
-exports.MfgBounce = MfgBounce;
 
 
 /***/ }),
@@ -12134,7 +12046,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createSigsaw(1490, 830, 400, 25, null),
                 mfg.MfgGameObjectFactory.createBounce(1900, 830, 400, 25, null),
                 // animated platforms
-                new mfg.MfgPlatform(mfg.MfgGameObjectShape.RECTANGLE, 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
+                new mfg.MfgPlatform(new mfg.MfgGameObjectShape(mfg.MfgGameObjectShape.RECTANGLE), 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
                     Matter.Vector.create(2820.0, 830.0),
                     Matter.Vector.create(3020.0, 830.0),
                 ]),
@@ -12533,36 +12445,6 @@ exports.MfgImages = MfgImages;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 /*******************************************************************************************************************
-*   Offers additional mathematical functionality.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgMath = (function () {
-    function MfgMath() {
-    }
-    /***************************************************************************************************************
-    *   Converts angles to radians.
-    *
-    *   @param  angle   The angle in degrees.
-    *   @return         The specified angle in radians.
-    ***************************************************************************************************************/
-    MfgMath.angleToRad = function (angle) {
-        return (angle * Math.PI / 180.0);
-    };
-    return MfgMath;
-}());
-exports.MfgMath = MfgMath;
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/*******************************************************************************************************************
 *   Offers static string functionality.
 *
 *   @author     Christopher Stock
@@ -12617,6 +12499,138 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   Represents a bounce.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgBounce = (function (_super) {
+    __extends(MfgBounce, _super);
+    /***************************************************************************************************************
+    *   Creates a new bounce.
+    *
+    *   @param shape  The shape for this object.
+    *   @param x      Startup position X.
+    *   @param y      Startup position Y.
+    *   @param width  The new width.
+    *   @param height The new height.
+    *   @param image  The image for this game object.
+    ***************************************************************************************************************/
+    function MfgBounce(shape, x, y, width, height, image) {
+        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+        /** The constraint that builds the turning point for the bounce. */
+        _this.constraint = null;
+        _this.constraint = Matter.Constraint.create({
+            bodyB: _this.body,
+            pointA: { x: _this.body.position.x, y: _this.body.position.y },
+            pointB: { x: 0, y: 0 },
+            stiffness: 0.01,
+            length: 0,
+            render: {
+                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BOUNCE_JOINT,
+                lineWidth: 1.0,
+                visible: true,
+            }
+        });
+        Matter.Composite.add(mfg.Mfg.game.engine.world, _this.constraint);
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Renders this sigsaw.
+    ***************************************************************************************************************/
+    MfgBounce.prototype.render = function () {
+        Matter.Body.setAngle(this.body, 0.0);
+        Matter.Body.setAngularVelocity(this.body, 0.0);
+    };
+    return MfgBounce;
+}(mfg.MfgGameObject));
+exports.MfgBounce = MfgBounce;
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*******************************************************************************************************************
+*   Offers additional mathematical functionality.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgMath = (function () {
+    function MfgMath() {
+    }
+    /***************************************************************************************************************
+    *   Converts angles to radians.
+    *
+    *   @param  angle   The angle in degrees.
+    *   @return         The specified angle in radians.
+    ***************************************************************************************************************/
+    MfgMath.angleToRad = function (angle) {
+        return (angle * Math.PI / 180.0);
+    };
+    return MfgMath;
+}());
+exports.MfgMath = MfgMath;
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*******************************************************************************************************************
+*   Represents the shape of a game object.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgGameObjectShape = (function () {
+    /***************************************************************************************************************
+    *   Creates a new game object shape.
+    *
+    *   @author     Christopher Stock
+    *   @version    0.0.1
+    ***************************************************************************************************************/
+    function MfgGameObjectShape(type) {
+        /** The type of this shape. */
+        this.type = 0;
+        this.type = type;
+    }
+    /** The shape of a rectangle. */
+    MfgGameObjectShape.RECTANGLE = 0;
+    /** The shape of a circle. */
+    MfgGameObjectShape.CIRCLE = 1;
+    return MfgGameObjectShape;
+}());
+exports.MfgGameObjectShape = MfgGameObjectShape;
 
 
 /***/ })
