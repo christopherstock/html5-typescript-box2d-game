@@ -10915,7 +10915,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created box.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBox = function (x, y, width, height, friction) {
-        return new mfg.MfgBox(new mfg.MfgShape(mfg.MfgShape.RECTANGLE), x, y, width, height, friction);
+        return new mfg.MfgBox(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height), x, y, width, height, friction);
     };
     /***************************************************************************************************************
     *   Creates a sphere.
@@ -10928,7 +10928,7 @@ var MfgGameObjectFactory = (function () {
     *   @return         The created sphere.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSphere = function (x, y, diameter, friction) {
-        return new mfg.MfgBox(new mfg.MfgShape(mfg.MfgShape.CIRCLE), x, y, diameter, diameter, friction);
+        return new mfg.MfgBox(new mfg.MfgShapeCircle(mfg.MfgShape.CIRCLE, diameter), x, y, diameter, diameter, friction);
     };
     /***************************************************************************************************************
     *   Creates an item.
@@ -10939,7 +10939,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created item.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createItem = function (x, y) {
-        return new mfg.MfgItem(new mfg.MfgShape(mfg.MfgShape.RECTANGLE), x, y, 25.0, 25.0);
+        return new mfg.MfgItem(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, 25.0, 25.0), x, y, 25.0, 25.0);
     };
     /***************************************************************************************************************
     *   Creates an rectangular obstacle.
@@ -10954,7 +10954,7 @@ var MfgGameObjectFactory = (function () {
     *   @return                The created obstacle.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBlock = function (x, y, width, height, angle, jumpPassThrough) {
-        return new mfg.MfgObstacle(new mfg.MfgShape(mfg.MfgShape.RECTANGLE), x, y, width, height, angle, jumpPassThrough);
+        return new mfg.MfgObstacle(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height), x, y, width, height, angle, jumpPassThrough);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -10965,7 +10965,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created enemy.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createEnemy = function (x, y) {
-        return new mfg.MfgEnemy(new mfg.MfgShape(mfg.MfgShape.RECTANGLE), x, y, 50, 50);
+        return new mfg.MfgEnemy(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, 50.0, 50.0), x, y, 50, 50);
     };
     /***************************************************************************************************************
     *   Creates a decoration.
@@ -10979,7 +10979,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createDecoration = function (x, y, width, height, image) {
-        return new mfg.MfgDecoration(new mfg.MfgShape(mfg.MfgShape.RECTANGLE), x, y, width, height, image);
+        return new mfg.MfgDecoration(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height), x, y, width, height, image);
     };
     /***************************************************************************************************************
     *   Creates a sigsaw.
@@ -10993,7 +10993,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSigsaw = function (x, y, width, height, image) {
-        return new mfg.MfgSigSaw(new mfg.MfgShape(mfg.MfgShape.RECTANGLE), x, y, width, height, image);
+        return new mfg.MfgSigSaw(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height), x, y, width, height, image);
     };
     /***************************************************************************************************************
      *   Creates a bounce.
@@ -11007,7 +11007,7 @@ var MfgGameObjectFactory = (function () {
      *   @return       The created decoration.
      ***************************************************************************************************************/
     MfgGameObjectFactory.createBounce = function (x, y, width, height, image) {
-        return new mfg.MfgBounce(new mfg.MfgShape(mfg.MfgShape.RECTANGLE), x, y, width, height, image);
+        return new mfg.MfgBounce(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height), x, y, width, height, image);
     };
     return MfgGameObjectFactory;
 }());
@@ -11400,7 +11400,7 @@ var MfgPlayer = (function (_super) {
     *   @param lookingDirection The initial looking direction.
     ***************************************************************************************************************/
     function MfgPlayer(x, y, lookingDirection) {
-        return _super.call(this, new mfg.MfgShape(mfg.MfgShape.RECTANGLE), x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT), x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -12164,7 +12164,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createSigsaw(1490, 830, 400, 25, null),
                 mfg.MfgGameObjectFactory.createBounce(1900, 830, 400, 25, null),
                 // animated platforms
-                new mfg.MfgPlatform(new mfg.MfgShape(mfg.MfgShape.RECTANGLE), 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
+                new mfg.MfgPlatform(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, 200.0, 15.0), 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
                     Matter.Vector.create(2820.0, 830.0),
                     Matter.Vector.create(3020.0, 830.0),
                 ]),

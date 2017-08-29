@@ -21,7 +21,12 @@
         {
             super
             (
-                new mfg.MfgShape( mfg.MfgShape.RECTANGLE ),
+                new mfg.MfgShapeRectangle
+                (
+                    mfg.MfgShape.RECTANGLE,
+                    mfg.MfgSettings.PLAYER_WIDTH,
+                    mfg.MfgSettings.PLAYER_HEIGHT,
+                ),
                 x,
                 y,
                 mfg.MfgSettings.PLAYER_WIDTH,
