@@ -34,7 +34,7 @@
 
             // add all bodies of all game objects to the world
             for ( let gameObject of this.gameObjects ) {
-                Matter.World.addBody( mfg.Mfg.game.engine.world, gameObject.body );
+                Matter.World.addBody( mfg.Mfg.game.engine.world, gameObject.shape.body );
             }
         }
 

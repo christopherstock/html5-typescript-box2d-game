@@ -90,12 +90,12 @@
         ***************************************************************************************************************/
         protected checkFallingDead()
         {
-            if ( this.body.position.y - this.height / 2 > mfg.Mfg.game.level.height )
+            if ( this.shape.body.position.y - this.height / 2 > mfg.Mfg.game.level.height )
             {
                 mfg.MfgDebug.bugfix.log( "Character has fallen to dead" );
 
                 // remove character body
-                Matter.World.remove( mfg.Mfg.game.engine.world, this.body );
+                Matter.World.remove( mfg.Mfg.game.engine.world, this.shape.body );
 
                 this.kill();
             }
@@ -125,24 +125,24 @@
                 // skip own body and non-colliding game objects
                 if
                 (
-                        gameObject.body == this.body
-                    ||  gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM
-                    ||  gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO
-                    ||  gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY
+                        gameObject.shape.body == this.shape.body
+                    ||  gameObject.shape.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM
+                    ||  gameObject.shape.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO
+                    ||  gameObject.shape.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY
                 )
                 {
                     continue;
                 }
 
-                bodiesToCheck.push( gameObject.body );
+                bodiesToCheck.push( gameObject.shape.body );
             }
 
             // check colliding bodies
             let collidingBodies:Array<Matter.Body> = Matter.Query.ray
             (
                 bodiesToCheck,
-                Matter.Vector.create( this.body.position.x - ( this.width / 2 ), this.body.position.y + ( this.height / 2 ) ),
-                Matter.Vector.create( this.body.position.x + ( this.width / 2 ), this.body.position.y + ( this.height / 2 ) )
+                Matter.Vector.create( this.shape.body.position.x - ( this.width / 2 ), this.shape.body.position.y + ( this.height / 2 ) ),
+                Matter.Vector.create( this.shape.body.position.x + ( this.width / 2 ), this.shape.body.position.y + ( this.height / 2 ) )
             );
 
             this.collidesBottom = collidingBodies.length > 0;
@@ -157,8 +157,8 @@
             {
                 Matter.Body.applyForce
                 (
-                    this.body,
-                    this.body.position,
+                    this.shape.body,
+                    this.shape.body.position,
                     Matter.Vector.create( 0.0, this.jumpPower )
                 );
             }
@@ -169,7 +169,7 @@
         ***************************************************************************************************************/
         protected moveLeft()
         {
-            Matter.Body.translate( this.body, Matter.Vector.create( -this.speedMove, 0 ) );
+            Matter.Body.translate( this.shape.body, Matter.Vector.create( -this.speedMove, 0 ) );
 
             this.lookingDirection = mfg.MfgCharacterLookingDirection.LEFT;
         }
@@ -179,7 +179,7 @@
         ***************************************************************************************************************/
         protected moveRight()
         {
-            Matter.Body.translate( this.body, Matter.Vector.create( this.speedMove, 0 ) );
+            Matter.Body.translate( this.shape.body, Matter.Vector.create( this.speedMove, 0 ) );
 
             this.lookingDirection = mfg.MfgCharacterLookingDirection.RIGHT;
         }

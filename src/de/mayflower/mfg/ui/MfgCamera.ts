@@ -216,8 +216,8 @@
             this.calculateTargets
             (
                 mfg.Mfg.game.level.player.lookingDirection,
-                mfg.Mfg.game.level.player.body.position.x,
-                mfg.Mfg.game.level.player.body.position.y,
+                mfg.Mfg.game.level.player.shape.body.position.x,
+                mfg.Mfg.game.level.player.shape.body.position.y,
             );
 
             this.offsetX = this.targetX;

@@ -70,7 +70,7 @@
             this.currentWaypointIndex = -1;
             this.assignNextWaypoint();
 
-            this.body.frictionStatic = Infinity;
+            this.shape.body.frictionStatic = Infinity;
         }
 
         /***************************************************************************************************************
@@ -99,7 +99,7 @@
             );
 
             // set platform to starting wp
-            Matter.Body.setPosition( this.body, currentWaypoint );
+            Matter.Body.setPosition( this.shape.body, currentWaypoint );
 
             // get deltas
             let deltaX:number      = Math.abs( nextWaypoint.x - currentWaypoint.x );
@@ -127,7 +127,7 @@
             }
 
             // move platform
-            Matter.Body.setVelocity( this.body, Matter.Vector.create( this.stepSizeX, this.stepSizeY ) );
-            Matter.Body.translate(   this.body, Matter.Vector.create( this.stepSizeX, this.stepSizeY ) );
+            Matter.Body.setVelocity( this.shape.body, Matter.Vector.create( this.stepSizeX, this.stepSizeY ) );
+            Matter.Body.translate(   this.shape.body, Matter.Vector.create( this.stepSizeX, this.stepSizeY ) );
         }
     }

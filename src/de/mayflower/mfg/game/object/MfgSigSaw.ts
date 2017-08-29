@@ -38,8 +38,8 @@
 
             this.constraint = Matter.Constraint.create(
                 {
-                    bodyB: this.body,
-                    pointA: { x: this.body.position.x, y: this.body.position.y },
+                    bodyB: this.shape.body,
+                    pointA: { x: this.shape.body.position.x, y: this.shape.body.position.y },
                     pointB: { x: 0, y: 0 },
                     stiffness: 1.0,
                     length: 0,
@@ -78,15 +78,15 @@
             const minAngle = mfg.MfgMath.angleToRad( -clipAngle );
             const maxAngle = mfg.MfgMath.angleToRad( clipAngle  );
 
-            if ( this.body.angle < minAngle )
+            if ( this.shape.body.angle < minAngle )
             {
-                Matter.Body.setAngle(           this.body, minAngle );
-                Matter.Body.setAngularVelocity( this.body, 0.0       );
+                Matter.Body.setAngle(           this.shape.body, minAngle );
+                Matter.Body.setAngularVelocity( this.shape.body, 0.0       );
             }
-            else if ( this.body.angle > maxAngle )
+            else if ( this.shape.body.angle > maxAngle )
             {
-                Matter.Body.setAngle(           this.body, maxAngle );
-                Matter.Body.setAngularVelocity( this.body, 0.0       );
+                Matter.Body.setAngle(           this.shape.body, maxAngle );
+                Matter.Body.setAngularVelocity( this.shape.body, 0.0       );
             }
         }
 
@@ -97,13 +97,13 @@
         {
             const maxRotationSpeed = 0.005;
 
-            if ( this.body.angularVelocity < -maxRotationSpeed )
+            if ( this.shape.body.angularVelocity < -maxRotationSpeed )
             {
-                Matter.Body.setAngularVelocity( this.body, -maxRotationSpeed );
+                Matter.Body.setAngularVelocity( this.shape.body, -maxRotationSpeed );
             }
-            else if ( this.body.angularVelocity > maxRotationSpeed )
+            else if ( this.shape.body.angularVelocity > maxRotationSpeed )
             {
-                Matter.Body.setAngularVelocity( this.body, maxRotationSpeed );
+                Matter.Body.setAngularVelocity( this.shape.body, maxRotationSpeed );
             }
         }
     }

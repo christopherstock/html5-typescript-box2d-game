@@ -10727,10 +10727,22 @@ var MfgShape = (function () {
     function MfgShape(debugColor, isStatic, angle, friction) {
         /** The body rendering options for this shape. */
         this.options = null;
-        this.options = this.createOptions(debugColor, isStatic, friction, angle);
+        /** The shape's body. */
+        this.body = null;
+        this.options = this.createOptions(debugColor, isStatic, angle, friction);
     }
-    MfgShape.prototype.createOptions = function (debugColor, isStatic, friction, angle) {
-        var options = {
+    /***************************************************************************************************************
+    *   Creates this shapes body rendering options.
+    *
+    *   @param debugColor The color for the debug object.
+    *   @param isStatic   Specifies that this object has a fixed position.
+    *   @param angle      The rotation of this body in degrees.
+    *   @param friction   The object's body friction.
+    *
+    *   @return The rendering options for this shape's body.
+    ***************************************************************************************************************/
+    MfgShape.prototype.createOptions = function (debugColor, isStatic, angle, friction) {
+        return {
             render: {
                 fillStyle: debugColor,
                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
@@ -10742,7 +10754,6 @@ var MfgShape = (function () {
             friction: friction,
             angle: mfg.MfgMath.angleToRad(angle),
         };
-        return options;
     };
     return MfgShape;
 }());
@@ -10781,44 +10792,41 @@ var MfgGameObject = (function () {
     function MfgGameObject(shape, x, y, width, height, image, density) {
         /** The game object's shape. */
         this.shape = null;
-        /** The game objects' body. */
-        this.body = null;
         // TODO prune! (rect only ..)
         /** The width of this object. */
         this.width = 0;
         /** The height of this object. */
         this.height = 0;
         this.shape = shape;
-        this.body = shape.createBody();
-        Matter.Body.translate(this.body, Matter.Vector.create(x, y));
+        Matter.Body.translate(this.shape.body, Matter.Vector.create(x, y));
         this.width = width;
         this.height = height;
         if (image != null) {
-            this.body.render.sprite.texture = image;
+            this.shape.body.render.sprite.texture = image;
         }
-        Matter.Body.setDensity(this.body, density);
+        Matter.Body.setDensity(this.shape.body, density);
     }
     /***************************************************************************************************************
     *   Avoids this game object from rotating.
     ***************************************************************************************************************/
     MfgGameObject.prototype.resetRotation = function () {
-        Matter.Body.setAngularVelocity(this.body, 0.0);
-        Matter.Body.setAngle(this.body, 0.0);
+        Matter.Body.setAngularVelocity(this.shape.body, 0.0);
+        Matter.Body.setAngle(this.shape.body, 0.0);
     };
     /***************************************************************************************************************
     *   Clips this body to level bounds.
     ***************************************************************************************************************/
     MfgGameObject.prototype.clipToHorizontalLevelBounds = function () {
-        if (this.body.position.x < this.width / 2) {
-            Matter.Body.setPosition(this.body, {
+        if (this.shape.body.position.x < this.width / 2) {
+            Matter.Body.setPosition(this.shape.body, {
                 x: this.width / 2,
-                y: this.body.position.y
+                y: this.shape.body.position.y
             });
         }
-        if (this.body.position.x > mfg.Mfg.game.level.width - this.width / 2) {
-            Matter.Body.setPosition(this.body, {
+        if (this.shape.body.position.x > mfg.Mfg.game.level.width - this.width / 2) {
+            Matter.Body.setPosition(this.shape.body, {
                 x: mfg.Mfg.game.level.width - this.width / 2,
-                y: this.body.position.y
+                y: this.shape.body.position.y
             });
         }
     };
@@ -11076,10 +11084,10 @@ var MfgCharacter = (function (_super) {
     *   Check if the player falls to death by falling out of the level.
     ***************************************************************************************************************/
     MfgCharacter.prototype.checkFallingDead = function () {
-        if (this.body.position.y - this.height / 2 > mfg.Mfg.game.level.height) {
+        if (this.shape.body.position.y - this.height / 2 > mfg.Mfg.game.level.height) {
             mfg.MfgDebug.bugfix.log("Character has fallen to dead");
             // remove character body
-            Matter.World.remove(mfg.Mfg.game.engine.world, this.body);
+            Matter.World.remove(mfg.Mfg.game.engine.world, this.shape.body);
             this.kill();
         }
     };
@@ -11103,13 +11111,13 @@ var MfgCharacter = (function (_super) {
             for (var _a = __values(mfg.Mfg.game.level.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
                 var gameObject = _b.value;
                 // skip own body and non-colliding game objects
-                if (gameObject.body == this.body
-                    || gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM
-                    || gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO
-                    || gameObject.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY) {
+                if (gameObject.shape.body == this.shape.body
+                    || gameObject.shape.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM
+                    || gameObject.shape.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO
+                    || gameObject.shape.body.collisionFilter == mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY) {
                     continue;
                 }
-                bodiesToCheck.push(gameObject.body);
+                bodiesToCheck.push(gameObject.shape.body);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -11120,7 +11128,7 @@ var MfgCharacter = (function (_super) {
             finally { if (e_1) throw e_1.error; }
         }
         // check colliding bodies
-        var collidingBodies = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.body.position.x - (this.width / 2), this.body.position.y + (this.height / 2)), Matter.Vector.create(this.body.position.x + (this.width / 2), this.body.position.y + (this.height / 2)));
+        var collidingBodies = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.shape.body.position.x - (this.width / 2), this.shape.body.position.y + (this.height / 2)), Matter.Vector.create(this.shape.body.position.x + (this.width / 2), this.shape.body.position.y + (this.height / 2)));
         this.collidesBottom = collidingBodies.length > 0;
         var e_1, _c;
     };
@@ -11129,21 +11137,21 @@ var MfgCharacter = (function (_super) {
     ***************************************************************************************************************/
     MfgCharacter.prototype.jump = function () {
         if (this.collidesBottom) {
-            Matter.Body.applyForce(this.body, this.body.position, Matter.Vector.create(0.0, this.jumpPower));
+            Matter.Body.applyForce(this.shape.body, this.shape.body.position, Matter.Vector.create(0.0, this.jumpPower));
         }
     };
     /***************************************************************************************************************
     *   Moves this character left.
     ***************************************************************************************************************/
     MfgCharacter.prototype.moveLeft = function () {
-        Matter.Body.translate(this.body, Matter.Vector.create(-this.speedMove, 0));
+        Matter.Body.translate(this.shape.body, Matter.Vector.create(-this.speedMove, 0));
         this.lookingDirection = mfg.MfgCharacterLookingDirection.LEFT;
     };
     /***************************************************************************************************************
     *   Moves this character left.
     ***************************************************************************************************************/
     MfgCharacter.prototype.moveRight = function () {
-        Matter.Body.translate(this.body, Matter.Vector.create(this.speedMove, 0));
+        Matter.Body.translate(this.shape.body, Matter.Vector.create(this.speedMove, 0));
         this.lookingDirection = mfg.MfgCharacterLookingDirection.RIGHT;
     };
     /** The default jump power ( player ). */
@@ -11209,12 +11217,12 @@ var MfgEnemy = (function (_super) {
         switch (this.lookingDirection) {
             case mfg.MfgCharacterLookingDirection.LEFT:
                 {
-                    Matter.Body.applyForce(this.body, this.body.position, Matter.Vector.create(-0.5, -1.0));
+                    Matter.Body.applyForce(this.shape.body, this.shape.body.position, Matter.Vector.create(-0.5, -1.0));
                     break;
                 }
             case mfg.MfgCharacterLookingDirection.RIGHT:
                 {
-                    Matter.Body.applyForce(this.body, this.body.position, Matter.Vector.create(0.5, -1.0));
+                    Matter.Body.applyForce(this.shape.body, this.shape.body.position, Matter.Vector.create(0.5, -1.0));
                     break;
                 }
         }
@@ -11283,7 +11291,7 @@ var MfgPlatform = (function (_super) {
         _this.speed = speed;
         _this.currentWaypointIndex = -1;
         _this.assignNextWaypoint();
-        _this.body.frictionStatic = Infinity;
+        _this.shape.body.frictionStatic = Infinity;
         return _this;
     }
     /***************************************************************************************************************
@@ -11302,7 +11310,7 @@ var MfgPlatform = (function (_super) {
             nextWaypointIndex = 0;
         var nextWaypoint = Matter.Vector.create(this.waypoints[nextWaypointIndex].x + (this.width / 2), this.waypoints[nextWaypointIndex].y + (this.height / 2));
         // set platform to starting wp
-        Matter.Body.setPosition(this.body, currentWaypoint);
+        Matter.Body.setPosition(this.shape.body, currentWaypoint);
         // get deltas
         var deltaX = Math.abs(nextWaypoint.x - currentWaypoint.x);
         var deltaY = Math.abs(nextWaypoint.y - currentWaypoint.y);
@@ -11323,8 +11331,8 @@ var MfgPlatform = (function (_super) {
             this.assignNextWaypoint();
         }
         // move platform
-        Matter.Body.setVelocity(this.body, Matter.Vector.create(this.stepSizeX, this.stepSizeY));
-        Matter.Body.translate(this.body, Matter.Vector.create(this.stepSizeX, this.stepSizeY));
+        Matter.Body.setVelocity(this.shape.body, Matter.Vector.create(this.stepSizeX, this.stepSizeY));
+        Matter.Body.translate(this.shape.body, Matter.Vector.create(this.stepSizeX, this.stepSizeY));
     };
     /** Medium moving speed. */
     MfgPlatform.SPEED_NORMAL = 1.0;
@@ -11417,10 +11425,10 @@ var MfgPlayer = (function (_super) {
                     if (gameObject instanceof mfg.MfgEnemy) {
                         var enemy = gameObject;
                         // check intersection of the player and the enemy
-                        if (Matter.Bounds.overlaps(this.body.bounds, enemy.body.bounds)) {
+                        if (Matter.Bounds.overlaps(this.shape.body.bounds, enemy.shape.body.bounds)) {
                             mfg.MfgDebug.enemy.log("Enemy touched by player");
-                            var playerBottom = Math.floor(this.body.position.y + this.height / 2);
-                            var enemyTop = Math.floor(enemy.body.position.y - enemy.height / 2);
+                            var playerBottom = Math.floor(this.shape.body.position.y + this.height / 2);
+                            var enemyTop = Math.floor(enemy.shape.body.position.y - enemy.height / 2);
                             mfg.MfgDebug.enemy.log(" playerBottom [" + playerBottom + "] enemyTop [" + enemyTop + "]");
                             if (playerBottom == enemyTop) {
                                 mfg.MfgDebug.enemy.log(" Enemy killed");
@@ -11429,7 +11437,7 @@ var MfgPlayer = (function (_super) {
                                 // let enemy fall out of the screen
                                 enemy.punchOut();
                                 // disable enemy collisions
-                                enemy.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY;
+                                enemy.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY;
                             }
                         }
                     }
@@ -11539,7 +11547,7 @@ var MfgItem = (function (_super) {
         var _this = _super.call(this, shape, x, y, width, height, null, Infinity) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
-        _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;
+        _this.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;
         return _this;
     }
     /***************************************************************************************************************
@@ -11547,7 +11555,7 @@ var MfgItem = (function (_super) {
     ***************************************************************************************************************/
     MfgItem.prototype.render = function () {
         if (!this.picked) {
-            if (Matter.Bounds.overlaps(this.body.bounds, mfg.Mfg.game.level.player.body.bounds)) {
+            if (Matter.Bounds.overlaps(this.shape.body.bounds, mfg.Mfg.game.level.player.shape.body.bounds)) {
                 mfg.MfgDebug.item.log("Player picked item");
                 this.pick();
             }
@@ -11560,7 +11568,7 @@ var MfgItem = (function (_super) {
         // flag as picked
         this.picked = true;
         // remove item body
-        Matter.World.remove(mfg.Mfg.game.engine.world, this.body);
+        Matter.World.remove(mfg.Mfg.game.engine.world, this.shape.body);
     };
     return MfgItem;
 }(mfg.MfgGameObject));
@@ -11605,7 +11613,7 @@ var MfgDecoration = (function (_super) {
     ***************************************************************************************************************/
     function MfgDecoration(shape, x, y, width, height, image) {
         var _this = _super.call(this, shape, x, y, width, height, image, Infinity) || this;
-        _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO;
+        _this.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO;
         return _this;
     }
     /***************************************************************************************************************
@@ -11732,8 +11740,8 @@ var MfgSigSaw = (function (_super) {
         /** The constraint that builds the turning point for the sigsaw. */
         _this.constraint = null;
         _this.constraint = Matter.Constraint.create({
-            bodyB: _this.body,
-            pointA: { x: _this.body.position.x, y: _this.body.position.y },
+            bodyB: _this.shape.body,
+            pointA: { x: _this.shape.body.position.x, y: _this.shape.body.position.y },
             pointB: { x: 0, y: 0 },
             stiffness: 1.0,
             length: 0,
@@ -11763,13 +11771,13 @@ var MfgSigSaw = (function (_super) {
         var clipAngle = 15.0;
         var minAngle = mfg.MfgMath.angleToRad(-clipAngle);
         var maxAngle = mfg.MfgMath.angleToRad(clipAngle);
-        if (this.body.angle < minAngle) {
-            Matter.Body.setAngle(this.body, minAngle);
-            Matter.Body.setAngularVelocity(this.body, 0.0);
+        if (this.shape.body.angle < minAngle) {
+            Matter.Body.setAngle(this.shape.body, minAngle);
+            Matter.Body.setAngularVelocity(this.shape.body, 0.0);
         }
-        else if (this.body.angle > maxAngle) {
-            Matter.Body.setAngle(this.body, maxAngle);
-            Matter.Body.setAngularVelocity(this.body, 0.0);
+        else if (this.shape.body.angle > maxAngle) {
+            Matter.Body.setAngle(this.shape.body, maxAngle);
+            Matter.Body.setAngularVelocity(this.shape.body, 0.0);
         }
     };
     /***************************************************************************************************************
@@ -11777,11 +11785,11 @@ var MfgSigSaw = (function (_super) {
     ***************************************************************************************************************/
     MfgSigSaw.prototype.clipRotationSpeed = function () {
         var maxRotationSpeed = 0.005;
-        if (this.body.angularVelocity < -maxRotationSpeed) {
-            Matter.Body.setAngularVelocity(this.body, -maxRotationSpeed);
+        if (this.shape.body.angularVelocity < -maxRotationSpeed) {
+            Matter.Body.setAngularVelocity(this.shape.body, -maxRotationSpeed);
         }
-        else if (this.body.angularVelocity > maxRotationSpeed) {
-            Matter.Body.setAngularVelocity(this.body, maxRotationSpeed);
+        else if (this.shape.body.angularVelocity > maxRotationSpeed) {
+            Matter.Body.setAngularVelocity(this.shape.body, maxRotationSpeed);
         }
     };
     return MfgSigSaw;
@@ -11831,8 +11839,8 @@ var MfgBounce = (function (_super) {
         /** The constraint that builds the turning point for the bounce. */
         _this.constraint = null;
         _this.constraint = Matter.Constraint.create({
-            bodyB: _this.body,
-            pointA: { x: _this.body.position.x, y: _this.body.position.y },
+            bodyB: _this.shape.body,
+            pointA: { x: _this.shape.body.position.x, y: _this.shape.body.position.y },
             pointB: { x: 0, y: 0 },
             stiffness: 0.01,
             length: 0,
@@ -11849,8 +11857,8 @@ var MfgBounce = (function (_super) {
     *   Renders this sigsaw.
     ***************************************************************************************************************/
     MfgBounce.prototype.render = function () {
-        Matter.Body.setAngle(this.body, 0.0);
-        Matter.Body.setAngularVelocity(this.body, 0.0);
+        Matter.Body.setAngle(this.shape.body, 0.0);
+        Matter.Body.setAngularVelocity(this.shape.body, 0.0);
     };
     return MfgBounce;
 }(mfg.MfgGameObject));
@@ -11967,7 +11975,7 @@ var MfgGame = (function () {
         // render level
         this.level.render();
         // render camera
-        this.camera.update(this.level.player.body.position.x, this.level.player.body.position.y, this.level.player.lookingDirection, this.level.player.collidesBottom);
+        this.camera.update(this.level.player.shape.body.position.x, this.level.player.shape.body.position.y, this.level.player.lookingDirection, this.level.player.collidesBottom);
     };
     /***************************************************************************************************************
     *   Handles pressed menu keys.
@@ -12034,7 +12042,7 @@ var MfgLevel = (function () {
             // add all bodies of all game objects to the world
             for (var _a = __values(this.gameObjects), _b = _a.next(); !_b.done; _b = _a.next()) {
                 var gameObject = _b.value;
-                Matter.World.addBody(mfg.Mfg.game.engine.world, gameObject.body);
+                Matter.World.addBody(mfg.Mfg.game.engine.world, gameObject.shape.body);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -12500,7 +12508,7 @@ var MfgCamera = (function () {
     ***************************************************************************************************************/
     MfgCamera.prototype.reset = function () {
         // extract level and player access!
-        this.calculateTargets(mfg.Mfg.game.level.player.lookingDirection, mfg.Mfg.game.level.player.body.position.x, mfg.Mfg.game.level.player.body.position.y);
+        this.calculateTargets(mfg.Mfg.game.level.player.lookingDirection, mfg.Mfg.game.level.player.shape.body.position.x, mfg.Mfg.game.level.player.shape.body.position.y);
         this.offsetX = this.targetX;
         this.offsetY = this.targetY;
     };
@@ -12667,6 +12675,7 @@ var MfgShapeRectangle = (function (_super) {
         _this.height = 0.0;
         _this.width = width;
         _this.height = height;
+        _this.body = _this.createBody();
         return _this;
     }
     /***************************************************************************************************************
@@ -12721,6 +12730,7 @@ var MfgShapeCircle = (function (_super) {
         var _this = _super.call(this, debugColor, isStatic, angle, friction) || this;
         _this.diameter = 0.0;
         _this.diameter = diameter;
+        _this.body = _this.createBody();
         return _this;
     }
     /***************************************************************************************************************

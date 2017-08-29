@@ -30,6 +30,8 @@
             super( debugColor, isStatic, angle, friction );
 
             this.diameter = diameter;
+
+            this.body     = this.createBody();
         }
 
         /***************************************************************************************************************
@@ -37,7 +39,7 @@
         *
         *   @return The body for this shape.
         ***************************************************************************************************************/
-        public createBody() : Matter.Body
+        protected createBody() : Matter.Body
         {
             return Matter.Bodies.circle(
                 ( this.diameter / 2 ),

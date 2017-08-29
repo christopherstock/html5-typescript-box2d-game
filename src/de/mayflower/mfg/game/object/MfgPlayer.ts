@@ -93,12 +93,12 @@
                         let enemy:mfg.MfgEnemy = gameObject;
 
                         // check intersection of the player and the enemy
-                        if ( Matter.Bounds.overlaps( this.body.bounds, enemy.body.bounds ) )
+                        if ( Matter.Bounds.overlaps( this.shape.body.bounds, enemy.shape.body.bounds ) )
                         {
                             mfg.MfgDebug.enemy.log( "Enemy touched by player" );
 
-                            let playerBottom:number = Math.floor( this.body.position.y  + this.height  / 2 );
-                            let enemyTop:number     = Math.floor( enemy.body.position.y - enemy.height / 2 );
+                            let playerBottom:number = Math.floor( this.shape.body.position.y  + this.height  / 2 );
+                            let enemyTop:number     = Math.floor( enemy.shape.body.position.y - enemy.height / 2 );
 
                             mfg.MfgDebug.enemy.log( " playerBottom [" + playerBottom + "] enemyTop [" + enemyTop + "]" );
 
@@ -113,7 +113,7 @@
                                 enemy.punchOut();
 
                                 // disable enemy collisions
-                                enemy.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY;
+                                enemy.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY;
                             }
                         }
                     }

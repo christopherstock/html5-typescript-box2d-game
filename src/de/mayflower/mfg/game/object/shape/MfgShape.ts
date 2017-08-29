@@ -11,7 +11,10 @@
     export abstract class MfgShape
     {
         /** The body rendering options for this shape. */
-        public                  options                 :Matter.IBodyDefinition     = null;
+        public                  options                 :Matter.IBodyDefinition         = null;
+
+        /** The shape's body. */
+        public                  body                    :Matter.Body                    = null;
 
         /***************************************************************************************************************
         *   Creates a new game object shape.
@@ -29,19 +32,22 @@
             friction:number,
         )
         {
-            this.options = this.createOptions
-            (
-                debugColor,
-                isStatic,
-                friction,
-                angle
-            );
+            this.options = this.createOptions( debugColor, isStatic, angle, friction );
         }
 
-        public createOptions( debugColor:string, isStatic:boolean, friction:number, angle:number ) : Matter.IBodyDefinition
+        /***************************************************************************************************************
+        *   Creates this shapes body rendering options.
+        *
+        *   @param debugColor The color for the debug object.
+        *   @param isStatic   Specifies that this object has a fixed position.
+        *   @param angle      The rotation of this body in degrees.
+        *   @param friction   The object's body friction.
+        *
+        *   @return The rendering options for this shape's body.
+        ***************************************************************************************************************/
+        private createOptions( debugColor:string, isStatic:boolean, angle:number, friction:number ) : Matter.IBodyDefinition
         {
-            let options:Matter.IBodyDefinition =
-            {
+            return {
                 render:
                 {
                     fillStyle:   debugColor,
@@ -56,8 +62,6 @@
 //              isSensor:        isSensor,
 //              chamfer:         { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
             };
-
-            return options;
         }
 
         /***************************************************************************************************************
@@ -65,5 +69,5 @@
         *
         *   @return The body for this shape.
         ***************************************************************************************************************/
-        public abstract createBody() : Matter.Body;
+        protected abstract createBody() : Matter.Body;
     }

@@ -35,7 +35,7 @@
                 Infinity
             );
 
-            this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;
+            this.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;
         }
 
         /***************************************************************************************************************
@@ -45,7 +45,7 @@
         {
             if ( !this.picked )
             {
-                if ( Matter.Bounds.overlaps( this.body.bounds, mfg.Mfg.game.level.player.body.bounds ) )
+                if ( Matter.Bounds.overlaps( this.shape.body.bounds, mfg.Mfg.game.level.player.shape.body.bounds ) )
                 {
                     mfg.MfgDebug.item.log("Player picked item");
 
@@ -63,6 +63,6 @@
             this.picked = true;
 
             // remove item body
-            Matter.World.remove( mfg.Mfg.game.engine.world, this.body );
+            Matter.World.remove( mfg.Mfg.game.engine.world, this.shape.body );
         }
     }

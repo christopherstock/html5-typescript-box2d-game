@@ -27,9 +27,6 @@
         /** The game object's shape. */
         public          shape                   :mfg.MfgShape                   = null;
 
-        /** The game objects' body. */
-        public          body                    :Matter.Body                    = null;
-
         // TODO prune! (rect only ..)
 
         /** The width of this object. */
@@ -63,19 +60,17 @@
         {
             this.shape = shape;
 
-            this.body = shape.createBody();
-
-            Matter.Body.translate( this.body, Matter.Vector.create( x, y ) );
+            Matter.Body.translate( this.shape.body, Matter.Vector.create( x, y ) );
 
             this.width  = width;
             this.height = height;
 
             if ( image != null )
             {
-                this.body.render.sprite.texture = image;
+                this.shape.body.render.sprite.texture = image;
             }
 
-            Matter.Body.setDensity( this.body, density );
+            Matter.Body.setDensity( this.shape.body, density );
         }
 
         /***************************************************************************************************************
@@ -88,8 +83,8 @@
         ***************************************************************************************************************/
         protected resetRotation()
         {
-            Matter.Body.setAngularVelocity( this.body, 0.0 );
-            Matter.Body.setAngle(           this.body, 0.0 );
+            Matter.Body.setAngularVelocity( this.shape.body, 0.0 );
+            Matter.Body.setAngle(           this.shape.body, 0.0 );
         }
 
         /***************************************************************************************************************
@@ -97,24 +92,24 @@
         ***************************************************************************************************************/
         protected clipToHorizontalLevelBounds()
         {
-            if ( this.body.position.x < this.width / 2 )
+            if ( this.shape.body.position.x < this.width / 2 )
             {
                 Matter.Body.setPosition(
-                    this.body,
+                    this.shape.body,
                     {
                         x: this.width / 2,
-                        y: this.body.position.y
+                        y: this.shape.body.position.y
                     }
                 );
             }
 
-            if ( this.body.position.x > mfg.Mfg.game.level.width - this.width / 2 )
+            if ( this.shape.body.position.x > mfg.Mfg.game.level.width - this.width / 2 )
             {
                 Matter.Body.setPosition(
-                    this.body,
+                    this.shape.body,
                     {
                         x: mfg.Mfg.game.level.width - this.width / 2,
-                        y: this.body.position.y
+                        y: this.shape.body.position.y
                     }
                 );
             }

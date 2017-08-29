@@ -61,8 +61,8 @@
                 {
                     Matter.Body.applyForce
                     (
-                        this.body,
-                        this.body.position,
+                        this.shape.body,
+                        this.shape.body.position,
                         Matter.Vector.create( -0.5, -1.0 )
                     );
                     break;
@@ -72,8 +72,8 @@
                 {
                     Matter.Body.applyForce
                     (
-                        this.body,
-                        this.body.position,
+                        this.shape.body,
+                        this.shape.body.position,
                         Matter.Vector.create( 0.5, -1.0 )
                     );
                     break;
