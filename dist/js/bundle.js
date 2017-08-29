@@ -10742,9 +10742,6 @@ var MfgShape = (function () {
         };
         return options;
     };
-    MfgShape.prototype.createBody = function () {
-        return null;
-    };
     /** The shape of a rectangle. */
     MfgShape.RECTANGLE = 0;
     /** The shape of a circle. */
@@ -10793,21 +10790,22 @@ var MfgGameObject = (function () {
         this.width = 0;
         /** The height of this object. */
         this.height = 0;
-        var options = shape.createOptions(debugColor, isStatic, angle, friction);
         switch (shape.type) {
             case mfg.MfgShape.RECTANGLE:
                 {
-                    this.body = shape.createBody();
-                    this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, options);
+                    var options = shape.createOptions(debugColor, isStatic, angle, friction);
+                    this.body = shape.createBody(options);
+                    Matter.Body.translate(this.body, Matter.Vector.create(x, y));
                     this.width = width;
                     this.height = height;
                     break;
                 }
             case mfg.MfgShape.CIRCLE:
                 {
+                    var options = shape.createOptions(debugColor, isStatic, angle, friction);
                     var diameter = width;
-                    this.body = shape.createBody();
-                    this.body = Matter.Bodies.circle(x + (diameter / 2), y + (diameter / 2), (diameter / 2), options);
+                    this.body = shape.createBody(options);
+                    Matter.Body.translate(this.body, Matter.Vector.create(x, y));
                     this.width = diameter;
                     this.height = diameter;
                     break;
@@ -12135,7 +12133,8 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(3500, 500, mfg.MfgCharacterLookingDirection.RIGHT);
+        //this.player = new mfg.MfgPlayer( 3500, 500, mfg.MfgCharacterLookingDirection.RIGHT );
+        this.player = new mfg.MfgPlayer(0.0, 0.0, mfg.MfgCharacterLookingDirection.RIGHT);
         // setup all game objects
         this.gameObjects =
             [
@@ -12666,6 +12665,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents the shape of a game object.
@@ -12682,10 +12682,15 @@ var MfgShapeRectangle = (function (_super) {
     *   @version    0.0.1
     ***************************************************************************************************************/
     function MfgShapeRectangle(type, width, height) {
-        return _super.call(this, type) || this;
+        var _this = _super.call(this, type) || this;
+        _this.width = 0.0;
+        _this.height = 0.0;
+        _this.width = width;
+        _this.height = height;
+        return _this;
     }
-    MfgShapeRectangle.prototype.createBody = function () {
-        return null;
+    MfgShapeRectangle.prototype.createBody = function (options) {
+        return Matter.Bodies.rectangle((this.width / 2), (this.height / 2), this.width, this.height, options);
     };
     return MfgShapeRectangle;
 }(mfg.MfgShape));
@@ -12709,6 +12714,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents the shape of a game object.
@@ -12725,10 +12731,13 @@ var MfgShapeCircle = (function (_super) {
     *   @version    0.0.1
     ***************************************************************************************************************/
     function MfgShapeCircle(type, diameter) {
-        return _super.call(this, type) || this;
+        var _this = _super.call(this, type) || this;
+        _this.diameter = 0.0;
+        _this.diameter = diameter;
+        return _this;
     }
-    MfgShapeCircle.prototype.createBody = function () {
-        return null;
+    MfgShapeCircle.prototype.createBody = function (options) {
+        return Matter.Bodies.circle((this.diameter / 2), (this.diameter / 2), (this.diameter / 2), options);
     };
     return MfgShapeCircle;
 }(mfg.MfgShape));

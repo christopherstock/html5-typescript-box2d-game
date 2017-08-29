@@ -64,21 +64,15 @@
             density:number
         )
         {
-            let options:Matter.IBodyDefinition = shape.createOptions( debugColor, isStatic, angle, friction );
-
             switch ( shape.type )
             {
                 case mfg.MfgShape.RECTANGLE:
                 {
-                    this.body = shape.createBody();
+                    let options:Matter.IBodyDefinition = shape.createOptions( debugColor, isStatic, angle, friction );
 
-                    this.body = Matter.Bodies.rectangle(
-                        x + ( width  / 2 ),
-                        y + ( height / 2 ),
-                        width,
-                        height,
-                        options
-                    );
+                    this.body = shape.createBody( options );
+
+                    Matter.Body.translate( this.body, Matter.Vector.create( x, y ) );
 
                     this.width  = width;
                     this.height = height;
@@ -88,16 +82,13 @@
 
                 case mfg.MfgShape.CIRCLE:
                 {
+                    let options:Matter.IBodyDefinition = shape.createOptions( debugColor, isStatic, angle, friction );
+
                     let diameter:number = width;
 
-                    this.body = shape.createBody();
+                    this.body = shape.createBody( options );
 
-                    this.body = Matter.Bodies.circle(
-                        x + ( diameter / 2 ),
-                        y + ( diameter / 2 ),
-                        ( diameter / 2 ),
-                        options
-                    );
+                    Matter.Body.translate( this.body, Matter.Vector.create( x, y ) );
 
                     this.width  = diameter;
                     this.height = diameter;

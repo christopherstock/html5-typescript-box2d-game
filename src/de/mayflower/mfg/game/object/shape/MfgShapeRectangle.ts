@@ -10,7 +10,9 @@
     *******************************************************************************************************************/
     export class MfgShapeRectangle extends mfg.MfgShape
     {
+        public              width           :number                 = 0.0;
 
+        public              height          :number                 = 0.0;
 
         /***************************************************************************************************************
         *   Creates a new game object shape.
@@ -22,14 +24,18 @@
         {
             super( type );
 
-
+            this.width  = width;
+            this.height = height;
         }
 
-        public createBody() : Matter.Body
+        public createBody( options:Matter.IBodyDefinition ) : Matter.Body
         {
-
-
-
-            return null;
+            return Matter.Bodies.rectangle(
+                ( this.width  / 2 ),
+                ( this.height / 2 ),
+                this.width,
+                this.height,
+                options
+            );
         }
     }

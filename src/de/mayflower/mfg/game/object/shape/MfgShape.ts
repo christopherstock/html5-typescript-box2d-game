@@ -52,10 +52,5 @@
             return options;
         }
 
-        public createBody() : Matter.Body
-        {
-
-
-            return null;
-        }
+        public abstract createBody( options:Matter.IBodyDefinition ) : Matter.Body;
     }

@@ -10,7 +10,7 @@
     *******************************************************************************************************************/
     export class MfgShapeCircle extends mfg.MfgShape
     {
-
+        public              diameter                :number             = 0.0;
 
         /***************************************************************************************************************
         *   Creates a new game object shape.
@@ -22,13 +22,16 @@
         {
             super( type );
 
-
+            this.diameter = diameter;
         }
 
-        public createBody() : Matter.Body
+        public createBody( options:Matter.IBodyDefinition ) : Matter.Body
         {
-
-
-            return null;
+            return Matter.Bodies.circle(
+                ( this.diameter / 2 ),
+                ( this.diameter / 2 ),
+                ( this.diameter / 2 ),
+                options
+            );
         }
     }
