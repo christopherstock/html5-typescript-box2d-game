@@ -19,7 +19,7 @@
         *   @param width  The new width.
         *   @param height The new height.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number )
+        public constructor( shape:mfg.MfgShape, x:number, y:number, width:number, height:number )
         {
             super
             (

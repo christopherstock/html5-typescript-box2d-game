@@ -49,7 +49,7 @@
         ***************************************************************************************************************/
         protected constructor
         (
-            shape:mfg.MfgGameObjectShape,
+            shape:mfg.MfgShape,
             x:number,
             y:number,
             width:number,
@@ -82,7 +82,7 @@
 
             switch ( shape.type )
             {
-                case mfg.MfgGameObjectShape.RECTANGLE:
+                case mfg.MfgShape.RECTANGLE:
                 {
                     this.body = Matter.Bodies.rectangle(
                         x + ( width  / 2 ),
@@ -98,7 +98,7 @@
                     break;
                 }
 
-                case mfg.MfgGameObjectShape.CIRCLE:
+                case mfg.MfgShape.CIRCLE:
                 {
                     let diameter:number = width;
 

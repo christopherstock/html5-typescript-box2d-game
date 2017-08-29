@@ -42,7 +42,7 @@
         ***************************************************************************************************************/
         public constructor
         (
-            shape:mfg.MfgGameObjectShape,
+            shape:mfg.MfgShape,
             width:number,
             height:number,
             angle:number,

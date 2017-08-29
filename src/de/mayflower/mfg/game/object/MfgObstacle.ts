@@ -24,7 +24,7 @@
         *   @param angle           The initial rotation.
         *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, angle:number, jumpPassThrough:boolean )
+        public constructor( shape:mfg.MfgShape, x:number, y:number, width:number, height:number, angle:number, jumpPassThrough:boolean )
         {
             super
             (

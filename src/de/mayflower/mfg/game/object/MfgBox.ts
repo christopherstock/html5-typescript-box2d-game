@@ -20,7 +20,7 @@
         *   @param height   The new height.
         *   @param friction The surface friction for this object.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgGameObjectShape, x:number, y:number, width:number, height:number, friction:number )
+        public constructor( shape:mfg.MfgShape, x:number, y:number, width:number, height:number, friction:number )
         {
             super
             (

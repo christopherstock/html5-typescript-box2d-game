@@ -5,7 +5,7 @@
     *   @author     Christopher Stock
     *   @version    0.0.1
     *******************************************************************************************************************/
-    export abstract class MfgGameObjectShape
+    export class MfgShape
     {
         /** The shape of a rectangle. */
         public      static          RECTANGLE               :number             = 0;
