@@ -78,7 +78,9 @@ __export(__webpack_require__(5));
 __export(__webpack_require__(6));
 __export(__webpack_require__(7));
 __export(__webpack_require__(8));
+__export(__webpack_require__(9));
 __export(__webpack_require__(32));
+__export(__webpack_require__(33));
 __export(__webpack_require__(10));
 __export(__webpack_require__(12));
 __export(__webpack_require__(13));
@@ -10623,9 +10625,11 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Solve jump-through obstacles!
+*   TODO ASAP   Separate all shapes from game objects!
 *   TODO ASAP   Create elevated ramp ( x1, y1, x2, y2, height! )
 *   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation.
+*
+*   TODO ASAP   Solve jump-through obstacles!
 *   TODO ASAP   Modify starting point for all objects so they rotate around left top anchor.
 *   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
 *   TODO ASAP   Checkout all parameters of the collision filters!
@@ -10698,7 +10702,59 @@ var MfgCharacterLookingDirection;
 
 
 /***/ }),
-/* 9 */,
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   Represents the shape of a game object.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgShape = (function () {
+    /***************************************************************************************************************
+    *   Creates a new game object shape.
+    *
+    *   @author     Christopher Stock
+    *   @version    0.0.1
+    ***************************************************************************************************************/
+    function MfgShape(type) {
+        /** The type of this shape. */
+        this.type = 0;
+        this.type = type;
+    }
+    MfgShape.prototype.createOptions = function (debugColor, isStatic, friction, angle) {
+        var options = {
+            render: {
+                fillStyle: debugColor,
+                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                lineWidth: 1.0,
+            },
+            isStatic: isStatic,
+            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_COLLIDING,
+            friction: friction,
+            angle: mfg.MfgMath.angleToRad(angle),
+        };
+        return options;
+    };
+    MfgShape.prototype.createBody = function () {
+        return null;
+    };
+    /** The shape of a rectangle. */
+    MfgShape.RECTANGLE = 0;
+    /** The shape of a circle. */
+    MfgShape.CIRCLE = 1;
+    return MfgShape;
+}());
+exports.MfgShape = MfgShape;
+
+
+/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10732,6 +10788,7 @@ var MfgGameObject = (function () {
     function MfgGameObject(shape, x, y, width, height, debugColor, isStatic, image, angle, friction, density) {
         /** The game objects' body. */
         this.body = null;
+        // TODO prune! (rect only ..)
         /** The width of this object. */
         this.width = 0;
         /** The height of this object. */
@@ -10740,6 +10797,7 @@ var MfgGameObject = (function () {
         switch (shape.type) {
             case mfg.MfgShape.RECTANGLE:
                 {
+                    this.body = shape.createBody();
                     this.body = Matter.Bodies.rectangle(x + (width / 2), y + (height / 2), width, height, options);
                     this.width = width;
                     this.height = height;
@@ -10748,6 +10806,7 @@ var MfgGameObject = (function () {
             case mfg.MfgShape.CIRCLE:
                 {
                     var diameter = width;
+                    this.body = shape.createBody();
                     this.body = Matter.Bodies.circle(x + (diameter / 2), y + (diameter / 2), (diameter / 2), options);
                     this.width = diameter;
                     this.height = diameter;
@@ -12100,6 +12159,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createBox(300, 500, 80, 80, mfg.MfgGameObject.FRICTION_ICE),
                 mfg.MfgGameObjectFactory.createSphere(3600, 400, 80, mfg.MfgGameObject.FRICTION_ICE),
                 mfg.MfgGameObjectFactory.createBox(3625, 350, 80, 80, mfg.MfgGameObject.FRICTION_ICE),
+                mfg.MfgGameObjectFactory.createBox(3650, 300, 80, 80, mfg.MfgGameObject.FRICTION_ICE),
                 // sigsaws and bounces
                 mfg.MfgGameObjectFactory.createSigsaw(1490, 830, 400, 25, null),
                 mfg.MfgGameObjectFactory.createBounce(1900, 830, 400, 25, null),
@@ -12595,6 +12655,16 @@ exports.MfgString = MfgString;
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -12603,40 +12673,66 @@ var mfg = __webpack_require__(0);
 *   @author     Christopher Stock
 *   @version    0.0.1
 *******************************************************************************************************************/
-var MfgShape = (function () {
+var MfgShapeRectangle = (function (_super) {
+    __extends(MfgShapeRectangle, _super);
     /***************************************************************************************************************
     *   Creates a new game object shape.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
     ***************************************************************************************************************/
-    function MfgShape(type) {
-        /** The type of this shape. */
-        this.type = 0;
-        this.type = type;
+    function MfgShapeRectangle(type, width, height) {
+        return _super.call(this, type) || this;
     }
-    MfgShape.prototype.createOptions = function (debugColor, isStatic, friction, angle) {
-        var options = {
-            render: {
-                fillStyle: debugColor,
-                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                lineWidth: 1.0,
-            },
-            isStatic: isStatic,
-            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_COLLIDING,
-            friction: friction,
-            angle: mfg.MfgMath.angleToRad(angle),
-        };
-        return options;
+    MfgShapeRectangle.prototype.createBody = function () {
+        return null;
     };
-    /** The shape of a rectangle. */
-    MfgShape.RECTANGLE = 0;
-    /** The shape of a circle. */
-    MfgShape.CIRCLE = 1;
-    return MfgShape;
-}());
-exports.MfgShape = MfgShape;
+    return MfgShapeRectangle;
+}(mfg.MfgShape));
+exports.MfgShapeRectangle = MfgShapeRectangle;
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   Represents the shape of a game object.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgShapeCircle = (function (_super) {
+    __extends(MfgShapeCircle, _super);
+    /***************************************************************************************************************
+    *   Creates a new game object shape.
+    *
+    *   @author     Christopher Stock
+    *   @version    0.0.1
+    ***************************************************************************************************************/
+    function MfgShapeCircle(type, diameter) {
+        return _super.call(this, type) || this;
+    }
+    MfgShapeCircle.prototype.createBody = function () {
+        return null;
+    };
+    return MfgShapeCircle;
+}(mfg.MfgShape));
+exports.MfgShapeCircle = MfgShapeCircle;
 
 
 /***/ })

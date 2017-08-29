@@ -51,4 +51,11 @@
 
             return options;
         }
+
+        public createBody() : Matter.Body
+        {
+
+
+            return null;
+        }
     }

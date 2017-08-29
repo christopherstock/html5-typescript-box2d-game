@@ -53,6 +53,7 @@
 
                 mfg.MfgGameObjectFactory.createSphere( 3600, 400, 80,     mfg.MfgGameObject.FRICTION_ICE      ),
                 mfg.MfgGameObjectFactory.createBox(    3625, 350, 80, 80, mfg.MfgGameObject.FRICTION_ICE      ),
+                mfg.MfgGameObjectFactory.createBox(    3650, 300, 80, 80, mfg.MfgGameObject.FRICTION_ICE      ),
 
                 // sigsaws and bounces
                 mfg.MfgGameObjectFactory.createSigsaw( 1490, 830,  400, 25, null ),

@@ -27,6 +27,8 @@
         /** The game objects' body. */
         public          body                    :Matter.Body                    = null;
 
+        // TODO prune! (rect only ..)
+
         /** The width of this object. */
         public          width                   :number                         = 0;
         /** The height of this object. */
@@ -68,6 +70,8 @@
             {
                 case mfg.MfgShape.RECTANGLE:
                 {
+                    this.body = shape.createBody();
+
                     this.body = Matter.Bodies.rectangle(
                         x + ( width  / 2 ),
                         y + ( height / 2 ),
@@ -85,6 +89,8 @@
                 case mfg.MfgShape.CIRCLE:
                 {
                     let diameter:number = width;
+
+                    this.body = shape.createBody();
 
                     this.body = Matter.Bodies.circle(
                         x + ( diameter / 2 ),

@@ -5,6 +5,8 @@
     export * from './base/Mfg';
     export * from './game/object/MfgCharacterLookingDirection';
     export * from './game/object/shape/MfgShape';
+    export * from './game/object/shape/MfgShapeRectangle';
+    export * from './game/object/shape/MfgShapeCircle';
     export * from './game/object/MfgGameObject';
     export * from './game/object/MfgGameObjectFactory';
     export * from './game/object/MfgCharacter';
