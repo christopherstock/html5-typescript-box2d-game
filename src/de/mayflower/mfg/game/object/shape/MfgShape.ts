@@ -10,15 +10,7 @@
     *******************************************************************************************************************/
     export abstract class MfgShape
     {
-        /** The shape of a rectangle. */
-        public      static      RECTANGLE               :number                     = 0;
-
-        /** The shape of a circle. */
-        public      static      CIRCLE                  :number                     = 1;
-
-        /** The type of this shape. */
-        public                  type                    :number                     = 0;
-
+        /** The body rendering options for this shape. */
         public                  options                 :Matter.IBodyDefinition     = null;
 
         /***************************************************************************************************************
@@ -31,15 +23,12 @@
         ***************************************************************************************************************/
         public constructor
         (
-            type:number,
             debugColor:string,
             isStatic:boolean,
             angle:number,
             friction:number,
         )
         {
-            this.type = type;
-
             this.options = this.createOptions
             (
                 debugColor,

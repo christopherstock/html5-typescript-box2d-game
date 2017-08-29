@@ -23,7 +23,6 @@
             (
                 new mfg.MfgShapeRectangle
                 (
-                    mfg.MfgShape.RECTANGLE,
                     mfg.MfgSettings.PLAYER_WIDTH,
                     mfg.MfgSettings.PLAYER_HEIGHT,
                     mfg.MfgSettings.COLOR_DEBUG_PLAYER,

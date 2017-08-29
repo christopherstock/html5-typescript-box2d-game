@@ -24,6 +24,9 @@
         /** Default density. */
         public  static  DENSITY_DEFAULT         :number                         = 0.001;
 
+        /** The game object's shape. */
+        public          shape                   :mfg.MfgShape                   = null;
+
         /** The game objects' body. */
         public          body                    :Matter.Body                    = null;
 
@@ -43,6 +46,8 @@
         *   @param width      The new width.
         *   @param height     The new height.
         *   @param image      The image for this game object.
+        *
+        *   TODO outsource to shape!
         *   @param density    The density of this body.
         ***************************************************************************************************************/
         protected constructor
@@ -56,34 +61,14 @@
             density:number
         )
         {
-            switch ( shape.type )
-            {
-                case mfg.MfgShape.RECTANGLE:
-                {
-                    this.body = shape.createBody();
+            this.shape = shape;
 
-                    Matter.Body.translate( this.body, Matter.Vector.create( x, y ) );
+            this.body = shape.createBody();
 
-                    this.width  = width;
-                    this.height = height;
+            Matter.Body.translate( this.body, Matter.Vector.create( x, y ) );
 
-                    break;
-                }
-
-                case mfg.MfgShape.CIRCLE:
-                {
-                    let diameter:number = width;
-
-                    this.body = shape.createBody();
-
-                    Matter.Body.translate( this.body, Matter.Vector.create( x, y ) );
-
-                    this.width  = diameter;
-                    this.height = diameter;
-
-                    break;
-                }
-            }
+            this.width  = width;
+            this.height = height;
 
             if ( image != null )
             {

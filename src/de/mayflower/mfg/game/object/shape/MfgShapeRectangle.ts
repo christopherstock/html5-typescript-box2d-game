@@ -24,7 +24,6 @@
         ***************************************************************************************************************/
         public constructor
         (
-            type:number,
             width:number,
             height:number,
             debugColor:string,
@@ -33,7 +32,7 @@
             friction:number,
         )
         {
-            super( type, debugColor, isStatic, angle, friction );
+            super( debugColor, isStatic, angle, friction );
 
             this.width  = width;
             this.height = height;

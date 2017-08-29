@@ -65,7 +65,6 @@
                 (
                     new mfg.MfgShapeRectangle
                     (
-                        mfg.MfgShape.RECTANGLE,
                         200.0,
                         15.0,
                         mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
@@ -88,11 +87,11 @@
                 mfg.MfgGameObjectFactory.createItem( 2550, 740 ),
                 mfg.MfgGameObjectFactory.createItem( 2600, 740 ),
 
-                // enemies
-                mfg.MfgGameObjectFactory.createEnemy( 1200, 0 ),
-
                 // player
                 this.player,
+
+                // enemies (fg)
+                mfg.MfgGameObjectFactory.createEnemy( 1200, 0 ),
 
                 // fg decoration
                 mfg.MfgGameObjectFactory.createDecoration( 300, 550, 25, 150, null ),

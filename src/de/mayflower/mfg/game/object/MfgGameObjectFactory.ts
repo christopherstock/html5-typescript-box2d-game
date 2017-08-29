@@ -26,7 +26,6 @@
             (
                 new mfg.MfgShapeRectangle
                 (
-                    mfg.MfgShape.RECTANGLE,
                     width,
                     height,
                     mfg.MfgSettings.COLOR_DEBUG_BOX,
@@ -57,7 +56,6 @@
             (
                 new mfg.MfgShapeCircle
                 (
-                    mfg.MfgShape.CIRCLE,
                     diameter,
                     mfg.MfgSettings.COLOR_DEBUG_BOX,
                     false,
@@ -85,7 +83,6 @@
             (
                 new mfg.MfgShapeRectangle
                 (
-                    mfg.MfgShape.RECTANGLE,
                     25.0,
                     25.0,
                     mfg.MfgSettings.COLOR_DEBUG_ITEM,
@@ -118,7 +115,6 @@
             (
                 new mfg.MfgShapeRectangle
                 (
-                    mfg.MfgShape.RECTANGLE,
                     width,
                     height,
                     mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
@@ -148,7 +144,6 @@
             (
                 new mfg.MfgShapeRectangle
                 (
-                    mfg.MfgShape.RECTANGLE,
                     50.0,
                     50.0,
                     mfg.MfgSettings.COLOR_DEBUG_ENEMY,
@@ -180,7 +175,6 @@
             (
                 new mfg.MfgShapeRectangle
                 (
-                    mfg.MfgShape.RECTANGLE,
                     width,
                     height,
                     mfg.MfgSettings.COLOR_DEBUG_DECORATION,
@@ -213,7 +207,6 @@
             (
                 new mfg.MfgShapeRectangle
                 (
-                    mfg.MfgShape.RECTANGLE,
                     width,
                     height,
                     mfg.MfgSettings.COLOR_DEBUG_SIGSAW,
@@ -246,7 +239,6 @@
             (
                 new mfg.MfgShapeRectangle
                 (
-                    mfg.MfgShape.RECTANGLE,
                     width,
                     height,
                     mfg.MfgSettings.COLOR_DEBUG_BOUNCE,

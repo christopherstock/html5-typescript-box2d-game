@@ -28,9 +28,9 @@
                 y,
                 width,
                 height,
-                mfg.MfgSettings.COLOR_DEBUG_ENEMY,
                 null,
                 mfg.MfgCharacterLookingDirection.LEFT,
+                4.0,
                 mfg.MfgCharacter.JUMP_POWER_DEFAULT
             );
         }

@@ -20,14 +20,14 @@
         *   @param angle      The rotation of this body in degrees.
         *   @param friction   The object's body friction.
         ***************************************************************************************************************/
-        public constructor( type:number, diameter:number,
+        public constructor( diameter:number,
             debugColor:string,
             isStatic:boolean,
             angle:number,
             friction:number,
         )
         {
-            super( type, debugColor, isStatic, angle, friction );
+            super( debugColor, isStatic, angle, friction );
 
             this.diameter = diameter;
         }
