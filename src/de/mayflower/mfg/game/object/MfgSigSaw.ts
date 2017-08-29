@@ -32,11 +32,7 @@
                 y,
                 width,
                 height,
-                mfg.MfgSettings.COLOR_DEBUG_SIGSAW,
-                false,
                 image,
-                0.0,
-                mfg.MfgGameObject.FRICTION_DEFAULT,
                 mfg.MfgGameObject.DENSITY_DEFAULT
             );
 

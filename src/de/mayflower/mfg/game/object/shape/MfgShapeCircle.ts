@@ -13,25 +13,37 @@
         public              diameter                :number             = 0.0;
 
         /***************************************************************************************************************
-        *   Creates a new game object shape.
+        *   Creates a new circle shape.
         *
-        *   @author     Christopher Stock
-        *   @version    0.0.1
+        *   @param debugColor The color for the debug object.
+        *   @param isStatic   Specifies that this object has a fixed position.
+        *   @param angle      The rotation of this body in degrees.
+        *   @param friction   The object's body friction.
         ***************************************************************************************************************/
-        public constructor( type:number, diameter:number )
+        public constructor( type:number, diameter:number,
+            debugColor:string,
+            isStatic:boolean,
+            angle:number,
+            friction:number,
+        )
         {
-            super( type );
+            super( type, debugColor, isStatic, angle, friction );
 
             this.diameter = diameter;
         }
 
-        public createBody( options:Matter.IBodyDefinition ) : Matter.Body
+        /***************************************************************************************************************
+        *   Creates this shapes body.
+        *
+        *   @return The body for this shape.
+        ***************************************************************************************************************/
+        public createBody() : Matter.Body
         {
             return Matter.Bodies.circle(
                 ( this.diameter / 2 ),
                 ( this.diameter / 2 ),
                 ( this.diameter / 2 ),
-                options
+                this.options
             );
         }
     }

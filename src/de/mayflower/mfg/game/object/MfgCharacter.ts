@@ -36,7 +36,6 @@
         *   @param y                Startup position Y.
         *   @param width            The new width.
         *   @param height           The new height.
-        *   @param debugColor       The color for the debug object.
         *   @param image            The image for this game object.
         *   @param lookingDirection The initial looking direction.
         *   @param speedMove        The speed for horizontal movement.
@@ -63,11 +62,7 @@
                 y,
                 width,
                 height,
-                debugColor,
-                false,
                 image,
-                0.0,
-                mfg.MfgGameObject.FRICTION_DEFAULT,
                 mfg.MfgGameObject.DENSITY_HUMAN
             );
 

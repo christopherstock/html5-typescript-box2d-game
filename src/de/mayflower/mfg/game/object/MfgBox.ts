@@ -18,7 +18,6 @@
         *   @param y        Startup position Y.
         *   @param width    The new width.
         *   @param height   The new height.
-        *   @param friction The surface friction for this object.
         ***************************************************************************************************************/
         public constructor( shape:mfg.MfgShape, x:number, y:number, width:number, height:number, friction:number )
         {
@@ -29,11 +28,7 @@
                 y,
                 width,
                 height,
-                mfg.MfgSettings.COLOR_DEBUG_BOX,
-                false,
                 null,
-                0.0,
-                friction,
                 mfg.MfgGameObject.DENSITY_DEFAULT
             );
         }

@@ -42,11 +42,7 @@
         *   @param y          Startup position Y.
         *   @param width      The new width.
         *   @param height     The new height.
-        *   @param debugColor The color for the debug object.
-        *   @param isStatic   Specifies that this object has a fixed position.
         *   @param image      The image for this game object.
-        *   @param angle      The rotation of this body in degrees.
-        *   @param friction   The object's body friction.
         *   @param density    The density of this body.
         ***************************************************************************************************************/
         protected constructor
@@ -56,11 +52,7 @@
             y:number,
             width:number,
             height:number,
-            debugColor:string,
-            isStatic:boolean,
             image:string,
-            angle:number,
-            friction:number,
             density:number
         )
         {
@@ -68,9 +60,7 @@
             {
                 case mfg.MfgShape.RECTANGLE:
                 {
-                    let options:Matter.IBodyDefinition = shape.createOptions( debugColor, isStatic, angle, friction );
-
-                    this.body = shape.createBody( options );
+                    this.body = shape.createBody();
 
                     Matter.Body.translate( this.body, Matter.Vector.create( x, y ) );
 
@@ -82,11 +72,9 @@
 
                 case mfg.MfgShape.CIRCLE:
                 {
-                    let options:Matter.IBodyDefinition = shape.createOptions( debugColor, isStatic, angle, friction );
-
                     let diameter:number = width;
 
-                    this.body = shape.createBody( options );
+                    this.body = shape.createBody();
 
                     Matter.Body.translate( this.body, Matter.Vector.create( x, y ) );
 

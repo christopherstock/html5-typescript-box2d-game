@@ -36,7 +36,6 @@
         *   @param shape     The shape for this object.
         *   @param width     The new width.
         *   @param height    The new height.
-        *   @param angle     The initial rotation.
         *   @param speed     The speed in pixels per tick.
         *   @param waypoints The waypoints for this platform to move to.
         ***************************************************************************************************************/
@@ -45,7 +44,6 @@
             shape:mfg.MfgShape,
             width:number,
             height:number,
-            angle:number,
             speed:number,
             waypoints:Array<Matter.Vector>
         )
@@ -57,11 +55,7 @@
                 0.0,
                 width,
                 height,
-                mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
-                true,
                 null,
-                angle,
-                mfg.MfgGameObject.FRICTION_DEFAULT,
                 mfg.MfgGameObject.DENSITY_DEFAULT
             );
 

@@ -28,11 +28,7 @@
                 y,
                 width,
                 height,
-                mfg.MfgSettings.COLOR_DEBUG_DECORATION,
-                true,
                 image,
-                0.0,
-                mfg.MfgGameObject.FRICTION_DEFAULT,
                 Infinity
             );
 

@@ -10719,13 +10719,17 @@ var MfgShape = (function () {
     /***************************************************************************************************************
     *   Creates a new game object shape.
     *
-    *   @author     Christopher Stock
-    *   @version    0.0.1
+    *   @param debugColor The color for the debug object.
+    *   @param isStatic   Specifies that this object has a fixed position.
+    *   @param angle      The rotation of this body in degrees.
+    *   @param friction   The object's body friction.
     ***************************************************************************************************************/
-    function MfgShape(type) {
+    function MfgShape(type, debugColor, isStatic, angle, friction) {
         /** The type of this shape. */
         this.type = 0;
+        this.options = null;
         this.type = type;
+        this.options = this.createOptions(debugColor, isStatic, friction, angle);
     }
     MfgShape.prototype.createOptions = function (debugColor, isStatic, friction, angle) {
         var options = {
@@ -10775,14 +10779,10 @@ var MfgGameObject = (function () {
     *   @param y          Startup position Y.
     *   @param width      The new width.
     *   @param height     The new height.
-    *   @param debugColor The color for the debug object.
-    *   @param isStatic   Specifies that this object has a fixed position.
     *   @param image      The image for this game object.
-    *   @param angle      The rotation of this body in degrees.
-    *   @param friction   The object's body friction.
     *   @param density    The density of this body.
     ***************************************************************************************************************/
-    function MfgGameObject(shape, x, y, width, height, debugColor, isStatic, image, angle, friction, density) {
+    function MfgGameObject(shape, x, y, width, height, image, density) {
         /** The game objects' body. */
         this.body = null;
         // TODO prune! (rect only ..)
@@ -10793,8 +10793,7 @@ var MfgGameObject = (function () {
         switch (shape.type) {
             case mfg.MfgShape.RECTANGLE:
                 {
-                    var options = shape.createOptions(debugColor, isStatic, angle, friction);
-                    this.body = shape.createBody(options);
+                    this.body = shape.createBody();
                     Matter.Body.translate(this.body, Matter.Vector.create(x, y));
                     this.width = width;
                     this.height = height;
@@ -10802,9 +10801,8 @@ var MfgGameObject = (function () {
                 }
             case mfg.MfgShape.CIRCLE:
                 {
-                    var options = shape.createOptions(debugColor, isStatic, angle, friction);
                     var diameter = width;
-                    this.body = shape.createBody(options);
+                    this.body = shape.createBody();
                     Matter.Body.translate(this.body, Matter.Vector.create(x, y));
                     this.width = diameter;
                     this.height = diameter;
@@ -10913,7 +10911,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created box.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBox = function (x, y, width, height, friction) {
-        return new mfg.MfgBox(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height), x, y, width, height, friction);
+        return new mfg.MfgBox(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction), x, y, width, height, friction);
     };
     /***************************************************************************************************************
     *   Creates a sphere.
@@ -10926,7 +10924,7 @@ var MfgGameObjectFactory = (function () {
     *   @return         The created sphere.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSphere = function (x, y, diameter, friction) {
-        return new mfg.MfgBox(new mfg.MfgShapeCircle(mfg.MfgShape.CIRCLE, diameter), x, y, diameter, diameter, friction);
+        return new mfg.MfgBox(new mfg.MfgShapeCircle(mfg.MfgShape.CIRCLE, diameter, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction), x, y, diameter, diameter, friction);
     };
     /***************************************************************************************************************
     *   Creates an item.
@@ -10937,7 +10935,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created item.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createItem = function (x, y) {
-        return new mfg.MfgItem(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, 25.0, 25.0), x, y, 25.0, 25.0);
+        return new mfg.MfgItem(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, 25.0, 25.0, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, 25.0, 25.0);
     };
     /***************************************************************************************************************
     *   Creates an rectangular obstacle.
@@ -10952,7 +10950,7 @@ var MfgGameObjectFactory = (function () {
     *   @return                The created obstacle.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBlock = function (x, y, width, height, angle, jumpPassThrough) {
-        return new mfg.MfgObstacle(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height), x, y, width, height, angle, jumpPassThrough);
+        return new mfg.MfgObstacle(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, angle, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, width, height, angle, jumpPassThrough);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -10963,7 +10961,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created enemy.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createEnemy = function (x, y) {
-        return new mfg.MfgEnemy(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, 50.0, 50.0), x, y, 50, 50);
+        return new mfg.MfgEnemy(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, 50.0, 50.0, mfg.MfgSettings.COLOR_DEBUG_ENEMY, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, 50, 50);
     };
     /***************************************************************************************************************
     *   Creates a decoration.
@@ -10977,7 +10975,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createDecoration = function (x, y, width, height, image) {
-        return new mfg.MfgDecoration(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height), x, y, width, height, image);
+        return new mfg.MfgDecoration(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, width, height, image);
     };
     /***************************************************************************************************************
     *   Creates a sigsaw.
@@ -10991,7 +10989,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSigsaw = function (x, y, width, height, image) {
-        return new mfg.MfgSigSaw(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height), x, y, width, height, image);
+        return new mfg.MfgSigSaw(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, width, height, image);
     };
     /***************************************************************************************************************
      *   Creates a bounce.
@@ -11005,7 +11003,7 @@ var MfgGameObjectFactory = (function () {
      *   @return       The created decoration.
      ***************************************************************************************************************/
     MfgGameObjectFactory.createBounce = function (x, y, width, height, image) {
-        return new mfg.MfgBounce(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height), x, y, width, height, image);
+        return new mfg.MfgBounce(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, width, height, image);
     };
     return MfgGameObjectFactory;
 }());
@@ -11057,14 +11055,13 @@ var MfgCharacter = (function (_super) {
     *   @param y                Startup position Y.
     *   @param width            The new width.
     *   @param height           The new height.
-    *   @param debugColor       The color for the debug object.
     *   @param image            The image for this game object.
     *   @param lookingDirection The initial looking direction.
     *   @param speedMove        The speed for horizontal movement.
     *   @param jumpPower        The vertical force to apply on jumping.
     ***************************************************************************************************************/
     function MfgCharacter(shape, x, y, width, height, debugColor, image, lookingDirection, speedMove, jumpPower) {
-        var _this = _super.call(this, shape, x, y, width, height, debugColor, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_HUMAN) || this;
+        var _this = _super.call(this, shape, x, y, width, height, image, mfg.MfgGameObject.DENSITY_HUMAN) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** Flags if this character is dead. */
@@ -11276,12 +11273,11 @@ var MfgPlatform = (function (_super) {
     *   @param shape     The shape for this object.
     *   @param width     The new width.
     *   @param height    The new height.
-    *   @param angle     The initial rotation.
     *   @param speed     The speed in pixels per tick.
     *   @param waypoints The waypoints for this platform to move to.
     ***************************************************************************************************************/
-    function MfgPlatform(shape, width, height, angle, speed, waypoints) {
-        var _this = _super.call(this, shape, 0.0, 0.0, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+    function MfgPlatform(shape, width, height, speed, waypoints) {
+        var _this = _super.call(this, shape, 0.0, 0.0, width, height, null, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
         /** The waypoints for this platform to move. */
         _this.waypoints = null;
         /** The number of ticks till the next waypoint is reached. */
@@ -11398,7 +11394,7 @@ var MfgPlayer = (function (_super) {
     *   @param lookingDirection The initial looking direction.
     ***************************************************************************************************************/
     function MfgPlayer(x, y, lookingDirection) {
-        return _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT), x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -11504,10 +11500,9 @@ var MfgBox = (function (_super) {
     *   @param y        Startup position Y.
     *   @param width    The new width.
     *   @param height   The new height.
-    *   @param friction The surface friction for this object.
     ***************************************************************************************************************/
     function MfgBox(shape, x, y, width, height, friction) {
-        return _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, null, 0.0, friction, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+        return _super.call(this, shape, x, y, width, height, null, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Renders this box.
@@ -11557,7 +11552,7 @@ var MfgItem = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgItem(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, null, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
+        var _this = _super.call(this, shape, x, y, width, height, null, Infinity) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
         _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;
@@ -11625,7 +11620,7 @@ var MfgDecoration = (function (_super) {
     *   @param image  The image source to use.
     ***************************************************************************************************************/
     function MfgDecoration(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
+        var _this = _super.call(this, shape, x, y, width, height, image, Infinity) || this;
         _this.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO;
         return _this;
     }
@@ -11677,7 +11672,7 @@ var MfgObstacle = (function (_super) {
     *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
     ***************************************************************************************************************/
     function MfgObstacle(shape, x, y, width, height, angle, jumpPassThrough) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, null, angle, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity) || this;
+        var _this = _super.call(this, shape, x, y, width, height, null, Infinity) || this;
         /** Specifies if the player shall be allowed to jump through this obstacle. */
         _this.jumpPassThrough = false;
         _this.jumpPassThrough = jumpPassThrough;
@@ -11750,7 +11745,7 @@ var MfgSigSaw = (function (_super) {
     *   @param image  The image for this game object.
     ***************************************************************************************************************/
     function MfgSigSaw(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+        var _this = _super.call(this, shape, x, y, width, height, image, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
         /** The constraint that builds the turning point for the sigsaw. */
         _this.constraint = null;
         _this.constraint = Matter.Constraint.create({
@@ -11849,7 +11844,7 @@ var MfgBounce = (function (_super) {
     *   @param image  The image for this game object.
     ***************************************************************************************************************/
     function MfgBounce(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, image, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+        var _this = _super.call(this, shape, x, y, width, height, image, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
         /** The constraint that builds the turning point for the bounce. */
         _this.constraint = null;
         _this.constraint = Matter.Constraint.create({
@@ -12162,8 +12157,8 @@ var MfgLevelDev = (function (_super) {
                 // sigsaws and bounces
                 mfg.MfgGameObjectFactory.createSigsaw(1490, 830, 400, 25, null),
                 mfg.MfgGameObjectFactory.createBounce(1900, 830, 400, 25, null),
-                // animated platforms
-                new mfg.MfgPlatform(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, 200.0, 15.0), 200.0, 15.0, 0.0, mfg.MfgPlatform.SPEED_NORMAL, [
+                // animated platforms TODO factory method
+                new mfg.MfgPlatform(new mfg.MfgShapeRectangle(mfg.MfgShape.RECTANGLE, 200.0, 15.0, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), 200.0, 15.0, mfg.MfgPlatform.SPEED_NORMAL, [
                     Matter.Vector.create(2820.0, 830.0),
                     Matter.Vector.create(3020.0, 830.0),
                 ]),
@@ -12676,21 +12671,28 @@ var mfg = __webpack_require__(0);
 var MfgShapeRectangle = (function (_super) {
     __extends(MfgShapeRectangle, _super);
     /***************************************************************************************************************
-    *   Creates a new game object shape.
+    *   Creates a new circle shape.
     *
-    *   @author     Christopher Stock
-    *   @version    0.0.1
+    *   @param debugColor The color for the debug object.
+    *   @param isStatic   Specifies that this object has a fixed position.
+    *   @param angle      The rotation of this body in degrees.
+    *   @param friction   The object's body friction.
     ***************************************************************************************************************/
-    function MfgShapeRectangle(type, width, height) {
-        var _this = _super.call(this, type) || this;
+    function MfgShapeRectangle(type, width, height, debugColor, isStatic, angle, friction) {
+        var _this = _super.call(this, type, debugColor, isStatic, angle, friction) || this;
         _this.width = 0.0;
         _this.height = 0.0;
         _this.width = width;
         _this.height = height;
         return _this;
     }
-    MfgShapeRectangle.prototype.createBody = function (options) {
-        return Matter.Bodies.rectangle((this.width / 2), (this.height / 2), this.width, this.height, options);
+    /***************************************************************************************************************
+    *   Creates this shapes body.
+    *
+    *   @return The body for this shape.
+    ***************************************************************************************************************/
+    MfgShapeRectangle.prototype.createBody = function () {
+        return Matter.Bodies.rectangle((this.width / 2), (this.height / 2), this.width, this.height, this.options);
     };
     return MfgShapeRectangle;
 }(mfg.MfgShape));
@@ -12725,19 +12727,26 @@ var mfg = __webpack_require__(0);
 var MfgShapeCircle = (function (_super) {
     __extends(MfgShapeCircle, _super);
     /***************************************************************************************************************
-    *   Creates a new game object shape.
+    *   Creates a new circle shape.
     *
-    *   @author     Christopher Stock
-    *   @version    0.0.1
+    *   @param debugColor The color for the debug object.
+    *   @param isStatic   Specifies that this object has a fixed position.
+    *   @param angle      The rotation of this body in degrees.
+    *   @param friction   The object's body friction.
     ***************************************************************************************************************/
-    function MfgShapeCircle(type, diameter) {
-        var _this = _super.call(this, type) || this;
+    function MfgShapeCircle(type, diameter, debugColor, isStatic, angle, friction) {
+        var _this = _super.call(this, type, debugColor, isStatic, angle, friction) || this;
         _this.diameter = 0.0;
         _this.diameter = diameter;
         return _this;
     }
-    MfgShapeCircle.prototype.createBody = function (options) {
-        return Matter.Bodies.circle((this.diameter / 2), (this.diameter / 2), (this.diameter / 2), options);
+    /***************************************************************************************************************
+    *   Creates this shapes body.
+    *
+    *   @return The body for this shape.
+    ***************************************************************************************************************/
+    MfgShapeCircle.prototype.createBody = function () {
+        return Matter.Bodies.circle((this.diameter / 2), (this.diameter / 2), (this.diameter / 2), this.options);
     };
     return MfgShapeCircle;
 }(mfg.MfgShape));

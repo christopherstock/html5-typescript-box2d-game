@@ -15,27 +15,43 @@
         public              height          :number                 = 0.0;
 
         /***************************************************************************************************************
-        *   Creates a new game object shape.
+        *   Creates a new circle shape.
         *
-        *   @author     Christopher Stock
-        *   @version    0.0.1
+        *   @param debugColor The color for the debug object.
+        *   @param isStatic   Specifies that this object has a fixed position.
+        *   @param angle      The rotation of this body in degrees.
+        *   @param friction   The object's body friction.
         ***************************************************************************************************************/
-        public constructor( type:number, width:number, height:number )
+        public constructor
+        (
+            type:number,
+            width:number,
+            height:number,
+            debugColor:string,
+            isStatic:boolean,
+            angle:number,
+            friction:number,
+        )
         {
-            super( type );
+            super( type, debugColor, isStatic, angle, friction );
 
             this.width  = width;
             this.height = height;
         }
 
-        public createBody( options:Matter.IBodyDefinition ) : Matter.Body
+        /***************************************************************************************************************
+        *   Creates this shapes body.
+        *
+        *   @return The body for this shape.
+        ***************************************************************************************************************/
+        public createBody() : Matter.Body
         {
             return Matter.Bodies.rectangle(
                 ( this.width  / 2 ),
                 ( this.height / 2 ),
                 this.width,
                 this.height,
-                options
+                this.options
             );
         }
     }
