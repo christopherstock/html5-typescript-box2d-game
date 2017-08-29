@@ -62,23 +62,7 @@
             density:number
         )
         {
-
-
-            let options:Matter.IBodyDefinition = {
-                render:
-                {
-                    fillStyle:   debugColor,
-                    strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                    opacity:     mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                    lineWidth:   1.0,
-                },
-                isStatic:        isStatic,
-                collisionFilter: mfg.MfgSettings.COLLISION_GROUP_COLLIDING,
-                friction:        friction,
-                angle:           mfg.MfgMath.angleToRad( angle ),
-//              isSensor:        isSensor,
-//              chamfer:         { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
-            };
+            let options:Matter.IBodyDefinition = shape.createOptions( debugColor, isStatic, angle, friction );
 
             switch ( shape.type )
             {

@@ -10736,18 +10736,7 @@ var MfgGameObject = (function () {
         this.width = 0;
         /** The height of this object. */
         this.height = 0;
-        var options = {
-            render: {
-                fillStyle: debugColor,
-                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
-                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                lineWidth: 1.0,
-            },
-            isStatic: isStatic,
-            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_COLLIDING,
-            friction: friction,
-            angle: mfg.MfgMath.angleToRad(angle),
-        };
+        var options = shape.createOptions(debugColor, isStatic, angle, friction);
         switch (shape.type) {
             case mfg.MfgShape.RECTANGLE:
                 {
@@ -12607,6 +12596,7 @@ exports.MfgString = MfgString;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents the shape of a game object.
 *
@@ -12625,6 +12615,21 @@ var MfgShape = (function () {
         this.type = 0;
         this.type = type;
     }
+    MfgShape.prototype.createOptions = function (debugColor, isStatic, friction, angle) {
+        var options = {
+            render: {
+                fillStyle: debugColor,
+                strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
+                opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
+                lineWidth: 1.0,
+            },
+            isStatic: isStatic,
+            collisionFilter: mfg.MfgSettings.COLLISION_GROUP_COLLIDING,
+            friction: friction,
+            angle: mfg.MfgMath.angleToRad(angle),
+        };
+        return options;
+    };
     /** The shape of a rectangle. */
     MfgShape.RECTANGLE = 0;
     /** The shape of a circle. */
