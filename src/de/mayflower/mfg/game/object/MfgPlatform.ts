@@ -85,8 +85,8 @@
             if ( this.currentWaypointIndex >= this.waypoints.length ) this.currentWaypointIndex = 0;
             let currentWaypoint:Matter.Vector = Matter.Vector.create
             (
-                this.waypoints[ this.currentWaypointIndex ].x + ( this.width  / 2 ),
-                this.waypoints[ this.currentWaypointIndex ].y + ( this.height / 2 )
+                this.waypoints[ this.currentWaypointIndex ].x + ( this.shape.getWidth()  / 2 ),
+                this.waypoints[ this.currentWaypointIndex ].y + ( this.shape.getHeight() / 2 )
             );
 
             // assign next wp
@@ -94,8 +94,8 @@
             if ( nextWaypointIndex >= this.waypoints.length ) nextWaypointIndex = 0;
             let nextWaypoint:Matter.Vector = Matter.Vector.create
             (
-                this.waypoints[ nextWaypointIndex ].x + ( this.width  / 2 ),
-                this.waypoints[ nextWaypointIndex ].y + ( this.height / 2 )
+                this.waypoints[ nextWaypointIndex ].x + ( this.shape.getWidth()  / 2 ),
+                this.waypoints[ nextWaypointIndex ].y + ( this.shape.getHeight() / 2 )
             );
 
             // set platform to starting wp

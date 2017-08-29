@@ -10792,15 +10792,8 @@ var MfgGameObject = (function () {
     function MfgGameObject(shape, x, y, width, height, image, density) {
         /** The game object's shape. */
         this.shape = null;
-        // TODO prune! (rect only ..)
-        /** The width of this object. */
-        this.width = 0;
-        /** The height of this object. */
-        this.height = 0;
         this.shape = shape;
         Matter.Body.translate(this.shape.body, Matter.Vector.create(x, y));
-        this.width = width;
-        this.height = height;
         if (image != null) {
             this.shape.body.render.sprite.texture = image;
         }
@@ -10817,15 +10810,15 @@ var MfgGameObject = (function () {
     *   Clips this body to level bounds.
     ***************************************************************************************************************/
     MfgGameObject.prototype.clipToHorizontalLevelBounds = function () {
-        if (this.shape.body.position.x < this.width / 2) {
+        if (this.shape.body.position.x < this.shape.getWidth() / 2) {
             Matter.Body.setPosition(this.shape.body, {
-                x: this.width / 2,
+                x: this.shape.getWidth() / 2,
                 y: this.shape.body.position.y
             });
         }
-        if (this.shape.body.position.x > mfg.Mfg.game.level.width - this.width / 2) {
+        if (this.shape.body.position.x > mfg.Mfg.game.level.width - this.shape.getWidth() / 2) {
             Matter.Body.setPosition(this.shape.body, {
-                x: mfg.Mfg.game.level.width - this.width / 2,
+                x: mfg.Mfg.game.level.width - this.shape.getWidth() / 2,
                 y: this.shape.body.position.y
             });
         }
@@ -11084,7 +11077,7 @@ var MfgCharacter = (function (_super) {
     *   Check if the player falls to death by falling out of the level.
     ***************************************************************************************************************/
     MfgCharacter.prototype.checkFallingDead = function () {
-        if (this.shape.body.position.y - this.height / 2 > mfg.Mfg.game.level.height) {
+        if (this.shape.body.position.y - this.shape.getHeight() / 2 > mfg.Mfg.game.level.height) {
             mfg.MfgDebug.bugfix.log("Character has fallen to dead");
             // remove character body
             Matter.World.remove(mfg.Mfg.game.engine.world, this.shape.body);
@@ -11128,7 +11121,7 @@ var MfgCharacter = (function (_super) {
             finally { if (e_1) throw e_1.error; }
         }
         // check colliding bodies
-        var collidingBodies = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.shape.body.position.x - (this.width / 2), this.shape.body.position.y + (this.height / 2)), Matter.Vector.create(this.shape.body.position.x + (this.width / 2), this.shape.body.position.y + (this.height / 2)));
+        var collidingBodies = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.shape.body.position.x - (this.shape.getWidth() / 2), this.shape.body.position.y + (this.shape.getHeight() / 2)), Matter.Vector.create(this.shape.body.position.x + (this.shape.getWidth() / 2), this.shape.body.position.y + (this.shape.getHeight() / 2)));
         this.collidesBottom = collidingBodies.length > 0;
         var e_1, _c;
     };
@@ -11303,12 +11296,12 @@ var MfgPlatform = (function (_super) {
         // assign current wp
         if (this.currentWaypointIndex >= this.waypoints.length)
             this.currentWaypointIndex = 0;
-        var currentWaypoint = Matter.Vector.create(this.waypoints[this.currentWaypointIndex].x + (this.width / 2), this.waypoints[this.currentWaypointIndex].y + (this.height / 2));
+        var currentWaypoint = Matter.Vector.create(this.waypoints[this.currentWaypointIndex].x + (this.shape.getWidth() / 2), this.waypoints[this.currentWaypointIndex].y + (this.shape.getHeight() / 2));
         // assign next wp
         var nextWaypointIndex = this.currentWaypointIndex + 1;
         if (nextWaypointIndex >= this.waypoints.length)
             nextWaypointIndex = 0;
-        var nextWaypoint = Matter.Vector.create(this.waypoints[nextWaypointIndex].x + (this.width / 2), this.waypoints[nextWaypointIndex].y + (this.height / 2));
+        var nextWaypoint = Matter.Vector.create(this.waypoints[nextWaypointIndex].x + (this.shape.getWidth() / 2), this.waypoints[nextWaypointIndex].y + (this.shape.getHeight() / 2));
         // set platform to starting wp
         Matter.Body.setPosition(this.shape.body, currentWaypoint);
         // get deltas
@@ -11427,8 +11420,8 @@ var MfgPlayer = (function (_super) {
                         // check intersection of the player and the enemy
                         if (Matter.Bounds.overlaps(this.shape.body.bounds, enemy.shape.body.bounds)) {
                             mfg.MfgDebug.enemy.log("Enemy touched by player");
-                            var playerBottom = Math.floor(this.shape.body.position.y + this.height / 2);
-                            var enemyTop = Math.floor(enemy.shape.body.position.y - enemy.height / 2);
+                            var playerBottom = Math.floor(this.shape.body.position.y + this.shape.getHeight() / 2);
+                            var enemyTop = Math.floor(enemy.shape.body.position.y - enemy.shape.getHeight() / 2);
                             mfg.MfgDebug.enemy.log(" playerBottom [" + playerBottom + "] enemyTop [" + enemyTop + "]");
                             if (playerBottom == enemyTop) {
                                 mfg.MfgDebug.enemy.log(" Enemy killed");
@@ -12662,8 +12655,10 @@ var mfg = __webpack_require__(0);
 var MfgShapeRectangle = (function (_super) {
     __extends(MfgShapeRectangle, _super);
     /***************************************************************************************************************
-    *   Creates a new circle shape.
+    *   Creates a new rectangle shape.
     *
+    *   @param width      The rectangle's width.
+    *   @param height     The rectangle's height.
     *   @param debugColor The color for the debug object.
     *   @param isStatic   Specifies that this object has a fixed position.
     *   @param angle      The rotation of this body in degrees.
@@ -12671,7 +12666,9 @@ var MfgShapeRectangle = (function (_super) {
     ***************************************************************************************************************/
     function MfgShapeRectangle(width, height, debugColor, isStatic, angle, friction) {
         var _this = _super.call(this, debugColor, isStatic, angle, friction) || this;
+        /** The rectangle's width. */
         _this.width = 0.0;
+        /** The rectangle's height. */
         _this.height = 0.0;
         _this.width = width;
         _this.height = height;
@@ -12685,6 +12682,22 @@ var MfgShapeRectangle = (function (_super) {
     ***************************************************************************************************************/
     MfgShapeRectangle.prototype.createBody = function () {
         return Matter.Bodies.rectangle((this.width / 2), (this.height / 2), this.width, this.height, this.options);
+    };
+    /***************************************************************************************************************
+    *   Returns the width of this shape's boundaries.
+    *
+    *   @return The shape's boundaries width.
+    ***************************************************************************************************************/
+    MfgShapeRectangle.prototype.getWidth = function () {
+        return this.width;
+    };
+    /***************************************************************************************************************
+    *   Returns the height of this shape's boundaries.
+    *
+    *   @return The shape's boundaries height.
+    ***************************************************************************************************************/
+    MfgShapeRectangle.prototype.getHeight = function () {
+        return this.height;
     };
     return MfgShapeRectangle;
 }(mfg.MfgShape));
@@ -12721,6 +12734,7 @@ var MfgShapeCircle = (function (_super) {
     /***************************************************************************************************************
     *   Creates a new circle shape.
     *
+    *   @param diameter   The circle's diameter.
     *   @param debugColor The color for the debug object.
     *   @param isStatic   Specifies that this object has a fixed position.
     *   @param angle      The rotation of this body in degrees.
@@ -12728,6 +12742,7 @@ var MfgShapeCircle = (function (_super) {
     ***************************************************************************************************************/
     function MfgShapeCircle(diameter, debugColor, isStatic, angle, friction) {
         var _this = _super.call(this, debugColor, isStatic, angle, friction) || this;
+        /** The circle's diameter. */
         _this.diameter = 0.0;
         _this.diameter = diameter;
         _this.body = _this.createBody();
@@ -12740,6 +12755,22 @@ var MfgShapeCircle = (function (_super) {
     ***************************************************************************************************************/
     MfgShapeCircle.prototype.createBody = function () {
         return Matter.Bodies.circle((this.diameter / 2), (this.diameter / 2), (this.diameter / 2), this.options);
+    };
+    /***************************************************************************************************************
+    *   Returns the width of this shape's boundaries.
+    *
+    *   @return The shape's boundaries width.
+    ***************************************************************************************************************/
+    MfgShapeCircle.prototype.getWidth = function () {
+        return this.diameter;
+    };
+    /***************************************************************************************************************
+    *   Returns the height of this shape's boundaries.
+    *
+    *   @return The shape's boundaries height.
+    ***************************************************************************************************************/
+    MfgShapeCircle.prototype.getHeight = function () {
+        return this.diameter;
     };
     return MfgShapeCircle;
 }(mfg.MfgShape));

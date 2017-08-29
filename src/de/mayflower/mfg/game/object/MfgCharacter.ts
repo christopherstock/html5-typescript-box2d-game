@@ -90,7 +90,7 @@
         ***************************************************************************************************************/
         protected checkFallingDead()
         {
-            if ( this.shape.body.position.y - this.height / 2 > mfg.Mfg.game.level.height )
+            if ( this.shape.body.position.y - this.shape.getHeight() / 2 > mfg.Mfg.game.level.height )
             {
                 mfg.MfgDebug.bugfix.log( "Character has fallen to dead" );
 
@@ -141,8 +141,8 @@
             let collidingBodies:Array<Matter.Body> = Matter.Query.ray
             (
                 bodiesToCheck,
-                Matter.Vector.create( this.shape.body.position.x - ( this.width / 2 ), this.shape.body.position.y + ( this.height / 2 ) ),
-                Matter.Vector.create( this.shape.body.position.x + ( this.width / 2 ), this.shape.body.position.y + ( this.height / 2 ) )
+                Matter.Vector.create( this.shape.body.position.x - ( this.shape.getWidth() / 2 ), this.shape.body.position.y + ( this.shape.getHeight() / 2 ) ),
+                Matter.Vector.create( this.shape.body.position.x + ( this.shape.getWidth() / 2 ), this.shape.body.position.y + ( this.shape.getHeight() / 2 ) )
             );
 
             this.collidesBottom = collidingBodies.length > 0;

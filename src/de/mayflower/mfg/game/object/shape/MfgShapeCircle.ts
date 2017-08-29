@@ -10,11 +10,13 @@
     *******************************************************************************************************************/
     export class MfgShapeCircle extends mfg.MfgShape
     {
+        /** The circle's diameter. */
         public              diameter                :number             = 0.0;
 
         /***************************************************************************************************************
         *   Creates a new circle shape.
         *
+        *   @param diameter   The circle's diameter.
         *   @param debugColor The color for the debug object.
         *   @param isStatic   Specifies that this object has a fixed position.
         *   @param angle      The rotation of this body in degrees.
@@ -47,5 +49,25 @@
                 ( this.diameter / 2 ),
                 this.options
             );
+        }
+
+        /***************************************************************************************************************
+        *   Returns the width of this shape's boundaries.
+        *
+        *   @return The shape's boundaries width.
+        ***************************************************************************************************************/
+        public getWidth() : number
+        {
+            return this.diameter;
+        }
+
+        /***************************************************************************************************************
+        *   Returns the height of this shape's boundaries.
+        *
+        *   @return The shape's boundaries height.
+        ***************************************************************************************************************/
+        public getHeight() : number
+        {
+            return this.diameter;
         }
     }

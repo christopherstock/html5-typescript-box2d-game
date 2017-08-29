@@ -27,13 +27,6 @@
         /** The game object's shape. */
         public          shape                   :mfg.MfgShape                   = null;
 
-        // TODO prune! (rect only ..)
-
-        /** The width of this object. */
-        public          width                   :number                         = 0;
-        /** The height of this object. */
-        public          height                  :number                         = 0;
-
         /***************************************************************************************************************
         *   Creates a new game object.
         *
@@ -62,9 +55,6 @@
 
             Matter.Body.translate( this.shape.body, Matter.Vector.create( x, y ) );
 
-            this.width  = width;
-            this.height = height;
-
             if ( image != null )
             {
                 this.shape.body.render.sprite.texture = image;
@@ -92,23 +82,23 @@
         ***************************************************************************************************************/
         protected clipToHorizontalLevelBounds()
         {
-            if ( this.shape.body.position.x < this.width / 2 )
+            if ( this.shape.body.position.x < this.shape.getWidth() / 2 )
             {
                 Matter.Body.setPosition(
                     this.shape.body,
                     {
-                        x: this.width / 2,
+                        x: this.shape.getWidth() / 2,
                         y: this.shape.body.position.y
                     }
                 );
             }
 
-            if ( this.shape.body.position.x > mfg.Mfg.game.level.width - this.width / 2 )
+            if ( this.shape.body.position.x > mfg.Mfg.game.level.width - this.shape.getWidth() / 2 )
             {
                 Matter.Body.setPosition(
                     this.shape.body,
                     {
-                        x: mfg.Mfg.game.level.width - this.width / 2,
+                        x: mfg.Mfg.game.level.width - this.shape.getWidth() / 2,
                         y: this.shape.body.position.y
                     }
                 );

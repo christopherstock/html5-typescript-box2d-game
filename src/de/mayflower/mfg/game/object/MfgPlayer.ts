@@ -97,8 +97,8 @@
                         {
                             mfg.MfgDebug.enemy.log( "Enemy touched by player" );
 
-                            let playerBottom:number = Math.floor( this.shape.body.position.y  + this.height  / 2 );
-                            let enemyTop:number     = Math.floor( enemy.shape.body.position.y - enemy.height / 2 );
+                            let playerBottom:number = Math.floor( this.shape.body.position.y  + this.shape.getHeight() / 2 );
+                            let enemyTop:number     = Math.floor( enemy.shape.body.position.y - enemy.shape.getHeight() / 2 );
 
                             mfg.MfgDebug.enemy.log( " playerBottom [" + playerBottom + "] enemyTop [" + enemyTop + "]" );
 
