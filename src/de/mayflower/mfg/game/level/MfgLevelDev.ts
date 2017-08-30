@@ -74,6 +74,10 @@
                 ),
 
                 // items
+                mfg.MfgGameObjectFactory.createItem( 900,  620 ),
+                mfg.MfgGameObjectFactory.createItem( 950,  620 ),
+                mfg.MfgGameObjectFactory.createItem( 1000, 620 ),
+
                 mfg.MfgGameObjectFactory.createItem( 2500, 740 ),
                 mfg.MfgGameObjectFactory.createItem( 2550, 740 ),
                 mfg.MfgGameObjectFactory.createItem( 2600, 740 ),

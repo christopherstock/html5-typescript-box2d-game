@@ -33,11 +33,25 @@
                 ),
                 x,
                 y,
-                null,
+                mfg.MfgImage.IMAGE_PLAYER_STAND,
                 lookingDirection,
                 mfg.MfgSettings.PLAYER_SPEED_MOVE,
                 mfg.MfgCharacter.JUMP_POWER_DEFAULT
             );
+        }
+
+        /***************************************************************************************************************
+        *   Renders the current player tick.
+        ***************************************************************************************************************/
+        public render()
+        {
+            super.render();
+
+            if ( !this.dead )
+            {
+                this.handleKeys();
+                this.checkEnemyKill();
+            }
         }
 
         /***************************************************************************************************************
@@ -60,20 +74,6 @@
                 mfg.Mfg.game.keySystem.setNeedsRelease( mfg.MfgKeySystem.KEY_UP );
 
                 this.jump();
-            }
-        }
-
-        /***************************************************************************************************************
-        *   Renders the current player tick.
-        ***************************************************************************************************************/
-        public render()
-        {
-            super.render();
-
-            if ( !this.dead )
-            {
-                this.handleKeys();
-                this.checkEnemyKill();
             }
         }
 

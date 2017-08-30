@@ -25,6 +25,6 @@
     export * from './game/level/MfgLevelEnchantedWoods';
     export * from './hid/MfgKeySystem';
     export * from './ui/MfgCamera';
-    export * from './ui/MfgImages';
+    export * from './ui/MfgImage';
     export * from './util/MfgMath';
     export * from './util/MfgString';

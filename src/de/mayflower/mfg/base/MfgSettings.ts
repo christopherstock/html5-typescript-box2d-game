@@ -72,6 +72,10 @@
 
         /** The relative path from index.html where all background images reside. */
         public      static      PATH_IMAGE_BG                               :string                     = "res/image/bg/";
+        /** The relative path from index.html where all player images reside. */
+        public      static      PATH_IMAGE_PLAYER                           :string                     = "res/image/player/";
+        /** The relative path from index.html where all level images reside. */
+        public      static      PATH_IMAGE_LEVEL                            :string                     = "res/image/level/";
 
         /** The default collision group for all game objects. */
         public      static      COLLISION_GROUP_COLLIDING                   :Matter.ICollisionFilter    =

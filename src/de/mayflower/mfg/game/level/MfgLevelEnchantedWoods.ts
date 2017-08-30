@@ -26,7 +26,7 @@
             this.gameObjects =
             [
                 // bg decoration
-                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
+                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImage.IMAGE_BG_FOREST_GREEN ),
 
                 // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration( 860,  860, 120, 90, null ),
