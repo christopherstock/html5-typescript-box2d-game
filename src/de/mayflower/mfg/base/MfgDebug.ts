@@ -10,15 +10,15 @@
     export class MfgDebug
     {
         /** A global debug group. */
-        public      static  bugfix          :MfgDebug           = new MfgDebug(          mfg.MfgSettings.DEBUG_MODE );
+        public      static  bugfix          :MfgDebug           = new MfgDebug( mfg.MfgSettings.DEBUG_MODE          );
         /** Debugs the init system. */
-        public      static  init            :MfgDebug           = new MfgDebug( true  && mfg.MfgSettings.DEBUG_MODE );
+        public      static  init            :MfgDebug           = new MfgDebug( mfg.MfgSettings.DEBUG_MODE && true  );
         /** Debugs the key system. */
-        public      static  key             :MfgDebug           = new MfgDebug( false && mfg.MfgSettings.DEBUG_MODE );
+        public      static  key             :MfgDebug           = new MfgDebug( mfg.MfgSettings.DEBUG_MODE && false );
         /** Debugs the pickable game items. */
-        public      static  item            :MfgDebug           = new MfgDebug( true  && mfg.MfgSettings.DEBUG_MODE );
+        public      static  item            :MfgDebug           = new MfgDebug( mfg.MfgSettings.DEBUG_MODE && true  );
         /** Debugs enemy events. */
-        public      static  enemy           :MfgDebug           = new MfgDebug( true  && mfg.MfgSettings.DEBUG_MODE );
+        public      static  enemy           :MfgDebug           = new MfgDebug( mfg.MfgSettings.DEBUG_MODE && true  );
 
         /** The flag that enables or disables logging for this debug group. */
         private             debugEnabled    :boolean            = false;

@@ -10604,13 +10604,13 @@ var MfgDebug = (function () {
     /** A global debug group. */
     MfgDebug.bugfix = new MfgDebug(mfg.MfgSettings.DEBUG_MODE);
     /** Debugs the init system. */
-    MfgDebug.init = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
+    MfgDebug.init = new MfgDebug(mfg.MfgSettings.DEBUG_MODE && true);
     /** Debugs the key system. */
-    MfgDebug.key = new MfgDebug(false && mfg.MfgSettings.DEBUG_MODE);
+    MfgDebug.key = new MfgDebug(mfg.MfgSettings.DEBUG_MODE && false);
     /** Debugs the pickable game items. */
-    MfgDebug.item = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
+    MfgDebug.item = new MfgDebug(mfg.MfgSettings.DEBUG_MODE && true);
     /** Debugs enemy events. */
-    MfgDebug.enemy = new MfgDebug(true && mfg.MfgSettings.DEBUG_MODE);
+    MfgDebug.enemy = new MfgDebug(mfg.MfgSettings.DEBUG_MODE && true);
     return MfgDebug;
 }());
 exports.MfgDebug = MfgDebug;
@@ -11035,7 +11035,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created box.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBox = function (x, y, width, height, friction, density) {
-        return new mfg.MfgBox(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction, density), x, y, width, height);
+        return new mfg.MfgBox(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction, density), x, y);
     };
     /***************************************************************************************************************
     *   Creates a sphere.
@@ -11049,7 +11049,7 @@ var MfgGameObjectFactory = (function () {
     *   @return         The created sphere.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSphere = function (x, y, diameter, friction, density) {
-        return new mfg.MfgBox(new mfg.MfgShapeCircle(diameter, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction, density), x, y, diameter, diameter);
+        return new mfg.MfgBox(new mfg.MfgShapeCircle(diameter, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction, density), x, y);
     };
     /***************************************************************************************************************
     *   Creates an item.
@@ -11060,7 +11060,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created item.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createItem = function (x, y) {
-        return new mfg.MfgItem(new mfg.MfgShapeRectangle(25.0, 25.0, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y, 25.0, 25.0);
+        return new mfg.MfgItem(new mfg.MfgShapeRectangle(25.0, 25.0, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y);
     };
     /***************************************************************************************************************
     *   Creates an rectangular obstacle.
@@ -11075,7 +11075,7 @@ var MfgGameObjectFactory = (function () {
     *   @return                The created obstacle.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBlock = function (x, y, width, height, angle, jumpPassThrough) {
-        return new mfg.MfgObstacle(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, angle, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y, width, height, jumpPassThrough);
+        return new mfg.MfgObstacle(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, angle, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y, jumpPassThrough);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -11128,7 +11128,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createPlatform = function (width, height, image, speed, waypoints) {
-        return new mfg.MfgPlatform(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_PLATFORM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), speed, waypoints);
+        return new mfg.MfgPlatform(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_PLATFORM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), speed, waypoints, image);
     };
     /***************************************************************************************************************
      *   Creates a bounce.
@@ -11273,8 +11273,7 @@ var MfgCharacter = (function (_super) {
             finally { if (e_1) throw e_1.error; }
         }
         // check colliding bodies
-        var collidingBodies = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.shape.body.position.x - (this.shape.getWidth() / 2), this.shape.body.position.y + (this.shape.getHeight() / 2)), Matter.Vector.create(this.shape.body.position.x + (this.shape.getWidth() / 2), this.shape.body.position.y + (this.shape.getHeight() / 2)));
-        this.collidesBottom = collidingBodies.length > 0;
+        this.collidesBottom = Matter.Query.ray(bodiesToCheck, Matter.Vector.create(this.shape.body.position.x - (this.shape.getWidth() / 2), this.shape.body.position.y + (this.shape.getHeight() / 2)), Matter.Vector.create(this.shape.body.position.x + (this.shape.getWidth() / 2), this.shape.body.position.y + (this.shape.getHeight() / 2))).length > 0;
         var e_1, _c;
     };
     /***************************************************************************************************************
@@ -11408,9 +11407,10 @@ var MfgPlatform = (function (_super) {
     *   @param shape     The shape for this object.
     *   @param speed     The speed in pixels per tick.
     *   @param waypoints The waypoints for this platform to move to.
+    *   @param image     The image for this platform.
     ***************************************************************************************************************/
-    function MfgPlatform(shape, speed, waypoints) {
-        var _this = _super.call(this, shape, 0.0, 0.0, null) || this;
+    function MfgPlatform(shape, speed, waypoints, image) {
+        var _this = _super.call(this, shape, 0.0, 0.0, image) || this;
         /** The waypoints for this platform to move. */
         _this.waypoints = null;
         /** The number of ticks till the next waypoint is reached. */
@@ -11631,10 +11631,8 @@ var MfgBox = (function (_super) {
     *   @param shape    The shape for this object.
     *   @param x        Startup position X.
     *   @param y        Startup position Y.
-    *   @param width    The new width.
-    *   @param height   The new height.
     ***************************************************************************************************************/
-    function MfgBox(shape, x, y, width, height) {
+    function MfgBox(shape, x, y) {
         return _super.call(this, shape, x, y, null) || this;
     }
     /***************************************************************************************************************
@@ -11681,10 +11679,8 @@ var MfgItem = (function (_super) {
     *   @param shape  The shape for this object.
     *   @param x      Startup position X.
     *   @param y      Startup position Y.
-    *   @param width  The new width.
-    *   @param height The new height.
     ***************************************************************************************************************/
-    function MfgItem(shape, x, y, width, height) {
+    function MfgItem(shape, x, y) {
         var _this = _super.call(this, shape, x, y, null) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
@@ -11797,11 +11793,9 @@ var MfgObstacle = (function (_super) {
     *   @param shape           The shape for this object.
     *   @param x               Startup position X.
     *   @param y               Startup position Y.
-    *   @param width           The new width.
-    *   @param height          The new height.
     *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
     ***************************************************************************************************************/
-    function MfgObstacle(shape, x, y, width, height, jumpPassThrough) {
+    function MfgObstacle(shape, x, y, jumpPassThrough) {
         var _this = _super.call(this, shape, x, y, null) || this;
         /** Specifies if the player shall be allowed to jump through this obstacle. */
         _this.jumpPassThrough = false;

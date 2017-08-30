@@ -36,12 +36,14 @@
         *   @param shape     The shape for this object.
         *   @param speed     The speed in pixels per tick.
         *   @param waypoints The waypoints for this platform to move to.
+        *   @param image     The image for this platform.
         ***************************************************************************************************************/
         public constructor
         (
             shape:mfg.MfgShape,
             speed:number,
-            waypoints:Array<Matter.Vector>
+            waypoints:Array<Matter.Vector>,
+            image:string
         )
         {
             super
@@ -49,7 +51,7 @@
                 shape,
                 0.0,
                 0.0,
-                null
+                image
             );
 
             if ( waypoints.length == 0 )

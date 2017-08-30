@@ -1,5 +1,4 @@
 
-    import * as Matter from 'matter-js';
     import * as mfg    from '../../mfg';
 
     /*******************************************************************************************************************
@@ -19,11 +18,9 @@
         *   @param shape           The shape for this object.
         *   @param x               Startup position X.
         *   @param y               Startup position Y.
-        *   @param width           The new width.
-        *   @param height          The new height.
         *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgShape, x:number, y:number, width:number, height:number, jumpPassThrough:boolean )
+        public constructor( shape:mfg.MfgShape, x:number, y:number, jumpPassThrough:boolean )
         {
             super
             (

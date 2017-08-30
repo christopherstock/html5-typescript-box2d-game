@@ -37,9 +37,7 @@
                     density
                 ),
                 x,
-                y,
-                width,
-                height
+                y
             );
         }
 
@@ -68,9 +66,7 @@
                     density
                 ),
                 x,
-                y,
-                diameter,
-                diameter
+                y
             );
         }
 
@@ -97,9 +93,7 @@
                     Infinity
                 ),
                 x,
-                y,
-                25.0,
-                25.0
+                y
             );
         }
 
@@ -131,8 +125,6 @@
                 ),
                 x,
                 y,
-                width,
-                height,
                 jumpPassThrough
             );
         }
@@ -252,7 +244,8 @@
                     Infinity
                 ),
                 speed,
-                waypoints
+                waypoints,
+                image
             );
         }
 

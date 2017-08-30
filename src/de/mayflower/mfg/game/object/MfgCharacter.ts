@@ -131,14 +131,12 @@
             }
 
             // check colliding bodies
-            let collidingBodies:Array<Matter.Body> = Matter.Query.ray
+            this.collidesBottom = Matter.Query.ray
             (
                 bodiesToCheck,
                 Matter.Vector.create( this.shape.body.position.x - ( this.shape.getWidth() / 2 ), this.shape.body.position.y + ( this.shape.getHeight() / 2 ) ),
                 Matter.Vector.create( this.shape.body.position.x + ( this.shape.getWidth() / 2 ), this.shape.body.position.y + ( this.shape.getHeight() / 2 ) )
-            );
-
-            this.collidesBottom = collidingBodies.length > 0;
+            ).length > 0;
         }
 
         /***************************************************************************************************************
