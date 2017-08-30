@@ -9,6 +9,7 @@
     *   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation.
     *
     *   TODO ASAP   Solve jump-through obstacles!
+    *   TODO ASAP   Reduce access to external matter lib to shape package?
     *   TODO ASAP   Modify starting point for all objects so they rotate around left top anchor.
     *   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
     *   TODO ASAP   Checkout all parameters of the collision filters!

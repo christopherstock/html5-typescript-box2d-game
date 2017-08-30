@@ -33,8 +33,6 @@
         *   @param shape      The shape for this object.
         *   @param x          Startup position X.
         *   @param y          Startup position Y.
-        *   @param width      The new width.
-        *   @param height     The new height.
         *   @param image      The image for this game object.
         *
         *   TODO outsource to shape!
@@ -45,8 +43,6 @@
             shape:mfg.MfgShape,
             x:number,
             y:number,
-            width:number,
-            height:number,
             image:string,
             density:number
         )

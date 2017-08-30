@@ -32,8 +32,6 @@
                 ),
                 x,
                 y,
-                mfg.MfgSettings.PLAYER_WIDTH,
-                mfg.MfgSettings.PLAYER_HEIGHT,
                 null,
                 lookingDirection,
                 mfg.MfgSettings.PLAYER_SPEED_MOVE,

@@ -16,18 +16,14 @@
         *   @param shape  The shape for this object.
         *   @param x      Startup position X.
         *   @param y      Startup position Y.
-        *   @param width  The new width.
-        *   @param height The new height.
         ***************************************************************************************************************/
-        public constructor( shape:mfg.MfgShape, x:number, y:number, width:number, height:number )
+        public constructor( shape:mfg.MfgShape, x:number, y:number )
         {
             super
             (
                 shape,
                 x,
                 y,
-                width,
-                height,
                 null,
                 mfg.MfgCharacterLookingDirection.LEFT,
                 4.0,

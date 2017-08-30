@@ -152,9 +152,7 @@
                     mfg.MfgGameObject.FRICTION_DEFAULT,
                 ),
                 x,
-                y,
-                50,
-                50
+                y
             );
         }
 
@@ -184,8 +182,6 @@
                 ),
                 x,
                 y,
-                width,
-                height,
                 image
             );
         }
@@ -216,8 +212,6 @@
                 ),
                 x,
                 y,
-                width,
-                height,
                 image
             );
         }
@@ -248,8 +242,6 @@
                 ),
                 x,
                 y,
-                width,
-                height,
                 image
             );
         }

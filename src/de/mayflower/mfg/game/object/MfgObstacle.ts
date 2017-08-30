@@ -30,8 +30,6 @@
                 shape,
                 x,
                 y,
-                width,
-                height,
                 null,
                 Infinity
             );

@@ -73,8 +73,6 @@
                         mfg.MfgGameObject.FRICTION_DEFAULT,
 
                     ),
-                    200.0,
-                    15.0,
                     mfg.MfgPlatform.SPEED_NORMAL,
                     [
                         Matter.Vector.create( 2820.0, 830.0 ),

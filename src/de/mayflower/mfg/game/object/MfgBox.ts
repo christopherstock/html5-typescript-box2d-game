@@ -1,5 +1,4 @@
 
-    import * as Matter from 'matter-js';
     import * as mfg    from '../../mfg';
 
     /*******************************************************************************************************************
@@ -26,8 +25,6 @@
                 shape,
                 x,
                 y,
-                width,
-                height,
                 null,
                 mfg.MfgGameObject.DENSITY_DEFAULT
             );
