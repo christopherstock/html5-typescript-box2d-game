@@ -1,5 +1,6 @@
 
-    import * as mfg from '../../mfg';
+    import * as Matter from 'matter-js';
+    import * as mfg    from '../../mfg';
 
     /*******************************************************************************************************************
     *   Creates customized instances of game objects.
@@ -222,6 +223,36 @@
                 x,
                 y,
                 image
+            );
+        }
+
+        /***************************************************************************************************************
+        *   Creates a platform.
+        *
+        *   @param width     Object width.
+        *   @param height    Object height.
+        *   @param image     The decoration image.
+        *   @param speed     Moving speed of the platform in px per tick.
+        *   @param waypoints Moving waypoints. First waypoint is the startup position.
+        *
+        *   @return       The created decoration.
+        ***************************************************************************************************************/
+        public static createPlatform( width:number, height:number, image:string, speed:number, waypoints:Array<Matter.Vector> ):mfg.MfgPlatform
+        {
+            return new mfg.MfgPlatform
+            (
+                new mfg.MfgShapeRectangle
+                (
+                    width,
+                    height,
+                    mfg.MfgSettings.COLOR_DEBUG_PLATFORM,
+                    true,
+                    0.0,
+                    mfg.MfgGameObject.FRICTION_DEFAULT,
+                    Infinity
+                ),
+                speed,
+                waypoints
             );
         }
 

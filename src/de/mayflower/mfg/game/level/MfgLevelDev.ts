@@ -60,19 +60,12 @@
                 mfg.MfgGameObjectFactory.createSigsaw( 1490, 830,  400, 25, null ),
                 mfg.MfgGameObjectFactory.createBounce( 1900, 830,  400, 25, null ),
 
-                // animated platforms TODO factory method
-                new mfg.MfgPlatform
+                // animated platforms
+                mfg.MfgGameObjectFactory.createPlatform
                 (
-                    new mfg.MfgShapeRectangle
-                    (
-                        200.0,
-                        15.0,
-                        mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
-                        true,
-                        0.0,
-                        mfg.MfgGameObject.FRICTION_DEFAULT,
-                        mfg.MfgGameObject.DENSITY_DEFAULT
-                    ),
+                    200.0,
+                    15.0,
+                    null,
                     mfg.MfgPlatform.SPEED_NORMAL,
                     [
                         Matter.Vector.create( 2820.0, 830.0 ),

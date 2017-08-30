@@ -66,7 +66,9 @@
         /** The debug color for the item. */
         public      static      COLOR_DEBUG_ITEM                            :string                     = "#fdff72";
         /** The debug color for a decoration. */
-        public      static      COLOR_DEBUG_DECORATION                      :string                     = "#98ffa3";
+        public      static      COLOR_DEBUG_DECORATION                      :string                     = "#b2ffbb";
+        /** The debug color for a platform. */
+        public      static      COLOR_DEBUG_PLATFORM                        :string                     = "#d2d2d2";
 
         /** The relative path from index.html where all background images reside. */
         public      static      PATH_IMAGE_BG                               :string                     = "res/image/bg/";

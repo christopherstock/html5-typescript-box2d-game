@@ -10531,7 +10531,9 @@ var MfgSettings = (function () {
     /** The debug color for the item. */
     MfgSettings.COLOR_DEBUG_ITEM = "#fdff72";
     /** The debug color for a decoration. */
-    MfgSettings.COLOR_DEBUG_DECORATION = "#98ffa3";
+    MfgSettings.COLOR_DEBUG_DECORATION = "#b2ffbb";
+    /** The debug color for a platform. */
+    MfgSettings.COLOR_DEBUG_PLATFORM = "#d2d2d2";
     /** The relative path from index.html where all background images reside. */
     MfgSettings.PATH_IMAGE_BG = "res/image/bg/";
     /** The default collision group for all game objects. */
@@ -11113,6 +11115,20 @@ var MfgGameObjectFactory = (function () {
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSigsaw = function (x, y, width, height, image) {
         return new mfg.MfgSigSaw(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT), x, y, image);
+    };
+    /***************************************************************************************************************
+    *   Creates a platform.
+    *
+    *   @param width     Object width.
+    *   @param height    Object height.
+    *   @param image     The decoration image.
+    *   @param speed     Moving speed of the platform in px per tick.
+    *   @param waypoints Moving waypoints. First waypoint is the startup position.
+    *
+    *   @return       The created decoration.
+    ***************************************************************************************************************/
+    MfgGameObjectFactory.createPlatform = function (width, height, image, speed, waypoints) {
+        return new mfg.MfgPlatform(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_PLATFORM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), speed, waypoints);
     };
     /***************************************************************************************************************
      *   Creates a bounce.
@@ -12267,8 +12283,8 @@ var MfgLevelDev = (function (_super) {
                 // sigsaws and bounces
                 mfg.MfgGameObjectFactory.createSigsaw(1490, 830, 400, 25, null),
                 mfg.MfgGameObjectFactory.createBounce(1900, 830, 400, 25, null),
-                // animated platforms TODO factory method
-                new mfg.MfgPlatform(new mfg.MfgShapeRectangle(200.0, 15.0, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT), mfg.MfgPlatform.SPEED_NORMAL, [
+                // animated platforms
+                mfg.MfgGameObjectFactory.createPlatform(200.0, 15.0, null, mfg.MfgPlatform.SPEED_NORMAL, [
                     Matter.Vector.create(2820.0, 830.0),
                     Matter.Vector.create(3020.0, 830.0),
                 ]),
