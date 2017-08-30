@@ -30,8 +30,7 @@
                 shape,
                 x,
                 y,
-                null,
-                Infinity
+                null
             );
 
             this.jumpPassThrough = jumpPassThrough;

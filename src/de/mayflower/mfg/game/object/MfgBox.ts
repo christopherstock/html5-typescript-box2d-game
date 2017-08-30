@@ -25,8 +25,7 @@
                 shape,
                 x,
                 y,
-                null,
-                mfg.MfgGameObject.DENSITY_DEFAULT
+                null
             );
         }
 

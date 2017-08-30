@@ -29,8 +29,7 @@
                 shape,
                 x,
                 y,
-                null,
-                Infinity
+                null
             );
 
             this.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;

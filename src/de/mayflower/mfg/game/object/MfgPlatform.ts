@@ -49,8 +49,7 @@
                 shape,
                 0.0,
                 0.0,
-                null,
-                mfg.MfgGameObject.DENSITY_DEFAULT
+                null
             );
 
             if ( waypoints.length == 0 )

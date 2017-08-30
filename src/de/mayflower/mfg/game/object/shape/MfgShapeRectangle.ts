@@ -25,6 +25,7 @@
         *   @param isStatic   Specifies that this object has a fixed position.
         *   @param angle      The rotation of this body in degrees.
         *   @param friction   The object's body friction.
+        *   @param density    The object's body density.
         ***************************************************************************************************************/
         public constructor
         (
@@ -34,9 +35,10 @@
             isStatic:boolean,
             angle:number,
             friction:number,
+            density:number
         )
         {
-            super( debugColor, isStatic, angle, friction );
+            super( debugColor, isStatic, angle, friction, density );
 
             this.width  = width;
             this.height = height;

@@ -16,11 +16,12 @@
         *   @param y        Anchor Y.
         *   @param width    Object width.
         *   @param height   Object height.
-        *   @param friction The surface friction for this object.
+        *   @param friction The surface friction for this box.
+        *   @param density  The density for this box.
         *
         *   @return       The created box.
         ***************************************************************************************************************/
-        public static createBox( x:number, y:number, width:number, height:number, friction:number ):mfg.MfgBox
+        public static createBox( x:number, y:number, width:number, height:number, friction:number, density:number ):mfg.MfgBox
         {
             return new mfg.MfgBox
             (
@@ -31,7 +32,8 @@
                     mfg.MfgSettings.COLOR_DEBUG_BOX,
                     false,
                     0.0,
-                    friction
+                    friction,
+                    density
                 ),
                 x,
                 y,
@@ -47,10 +49,11 @@
         *   @param y        Anchor Y.
         *   @param diameter Sphere diameter.
         *   @param friction The surface friction for this object.
+        *   @param density  The density for this object.
         *
         *   @return         The created sphere.
         ***************************************************************************************************************/
-        public static createSphere( x:number, y:number, diameter:number, friction:number ):mfg.MfgBox
+        public static createSphere( x:number, y:number, diameter:number, friction:number, density:number ):mfg.MfgBox
         {
             return new mfg.MfgBox
             (
@@ -60,7 +63,8 @@
                     mfg.MfgSettings.COLOR_DEBUG_BOX,
                     false,
                     0.0,
-                    friction
+                    friction,
+                    density
                 ),
                 x,
                 y,
@@ -88,7 +92,8 @@
                     mfg.MfgSettings.COLOR_DEBUG_ITEM,
                     true,
                     0.0,
-                    mfg.MfgGameObject.FRICTION_DEFAULT
+                    mfg.MfgGameObject.FRICTION_DEFAULT,
+                    Infinity
                 ),
                 x,
                 y,
@@ -120,7 +125,8 @@
                     mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
                     true,
                     angle,
-                    mfg.MfgGameObject.FRICTION_DEFAULT
+                    mfg.MfgGameObject.FRICTION_DEFAULT,
+                    Infinity
                 ),
                 x,
                 y,
@@ -150,6 +156,7 @@
                     false,
                     0.0,
                     mfg.MfgGameObject.FRICTION_DEFAULT,
+                    mfg.MfgGameObject.DENSITY_HUMAN
                 ),
                 x,
                 y
@@ -178,7 +185,8 @@
                     mfg.MfgSettings.COLOR_DEBUG_DECORATION,
                     true,
                     0.0,
-                    mfg.MfgGameObject.FRICTION_DEFAULT
+                    mfg.MfgGameObject.FRICTION_DEFAULT,
+                    Infinity
                 ),
                 x,
                 y,
@@ -209,6 +217,7 @@
                     false,
                     0.0,
                     mfg.MfgGameObject.FRICTION_DEFAULT,
+                    mfg.MfgGameObject.DENSITY_DEFAULT
                 ),
                 x,
                 y,
@@ -239,6 +248,7 @@
                     false,
                     0.0,
                     mfg.MfgGameObject.FRICTION_DEFAULT,
+                    mfg.MfgGameObject.DENSITY_DEFAULT
                 ),
                 x,
                 y,

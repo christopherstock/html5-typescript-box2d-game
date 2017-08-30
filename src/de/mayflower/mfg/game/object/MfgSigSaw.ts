@@ -28,8 +28,7 @@
                 shape,
                 x,
                 y,
-                image,
-                mfg.MfgGameObject.DENSITY_DEFAULT
+                image
             );
 
             this.constraint = Matter.Constraint.create(

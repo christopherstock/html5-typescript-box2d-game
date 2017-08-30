@@ -24,8 +24,7 @@
                 shape,
                 x,
                 y,
-                image,
-                Infinity
+                image
             );
 
             this.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO;

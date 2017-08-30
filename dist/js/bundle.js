@@ -79,8 +79,6 @@ __export(__webpack_require__(6));
 __export(__webpack_require__(7));
 __export(__webpack_require__(8));
 __export(__webpack_require__(9));
-__export(__webpack_require__(32));
-__export(__webpack_require__(33));
 __export(__webpack_require__(10));
 __export(__webpack_require__(12));
 __export(__webpack_require__(13));
@@ -102,6 +100,8 @@ __export(__webpack_require__(28));
 __export(__webpack_require__(29));
 __export(__webpack_require__(30));
 __export(__webpack_require__(31));
+__export(__webpack_require__(32));
+__export(__webpack_require__(33));
 
 
 /***/ }),
@@ -10630,6 +10630,7 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation.
 *
 *   TODO ASAP   Solve jump-through obstacles!
+*   TODO ASAP   Reduce access to external matter lib to shape package?
 *   TODO ASAP   Modify starting point for all objects so they rotate around left top anchor.
 *   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
 *   TODO ASAP   Checkout all parameters of the collision filters!
@@ -10723,26 +10724,14 @@ var MfgShape = (function () {
     *   @param isStatic   Specifies that this object has a fixed position.
     *   @param angle      The rotation of this body in degrees.
     *   @param friction   The object's body friction.
+    *   @param density    The object's body density.
     ***************************************************************************************************************/
-    function MfgShape(debugColor, isStatic, angle, friction) {
+    function MfgShape(debugColor, isStatic, angle, friction, density) {
         /** The body rendering options for this shape. */
         this.options = null;
         /** The shape's body. */
         this.body = null;
-        this.options = this.createOptions(debugColor, isStatic, angle, friction);
-    }
-    /***************************************************************************************************************
-    *   Creates this shapes body rendering options.
-    *
-    *   @param debugColor The color for the debug object.
-    *   @param isStatic   Specifies that this object has a fixed position.
-    *   @param angle      The rotation of this body in degrees.
-    *   @param friction   The object's body friction.
-    *
-    *   @return The rendering options for this shape's body.
-    ***************************************************************************************************************/
-    MfgShape.prototype.createOptions = function (debugColor, isStatic, angle, friction) {
-        return {
+        this.options = {
             render: {
                 fillStyle: debugColor,
                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
@@ -10753,8 +10742,9 @@ var MfgShape = (function () {
             collisionFilter: mfg.MfgSettings.COLLISION_GROUP_COLLIDING,
             friction: friction,
             angle: mfg.MfgMath.angleToRad(angle),
+            density: density,
         };
-    };
+    }
     return MfgShape;
 }());
 exports.MfgShape = MfgShape;
@@ -10762,6 +10752,185 @@ exports.MfgShape = MfgShape;
 
 /***/ }),
 /* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   Represents the shape of a game object.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgShapeRectangle = (function (_super) {
+    __extends(MfgShapeRectangle, _super);
+    /***************************************************************************************************************
+    *   Creates a new rectangle shape.
+    *
+    *   @param width      The rectangle's width.
+    *   @param height     The rectangle's height.
+    *   @param debugColor The color for the debug object.
+    *   @param isStatic   Specifies that this object has a fixed position.
+    *   @param angle      The rotation of this body in degrees.
+    *   @param friction   The object's body friction.
+    *   @param density    The object's body density.
+    ***************************************************************************************************************/
+    function MfgShapeRectangle(width, height, debugColor, isStatic, angle, friction, density) {
+        var _this = _super.call(this, debugColor, isStatic, angle, friction, density) || this;
+        /** The rectangle's width. */
+        _this.width = 0.0;
+        /** The rectangle's height. */
+        _this.height = 0.0;
+        _this.width = width;
+        _this.height = height;
+        _this.body = _this.createBody();
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Creates this shapes body.
+    *
+    *   @return The body for this shape.
+    ***************************************************************************************************************/
+    MfgShapeRectangle.prototype.createBody = function () {
+        return Matter.Bodies.rectangle((this.width / 2), (this.height / 2), this.width, this.height, this.options);
+    };
+    /***************************************************************************************************************
+    *   Returns the width of this shape's boundaries.
+    *
+    *   @return The shape's boundaries width.
+    ***************************************************************************************************************/
+    MfgShapeRectangle.prototype.getWidth = function () {
+        return this.width;
+    };
+    /***************************************************************************************************************
+    *   Returns the height of this shape's boundaries.
+    *
+    *   @return The shape's boundaries height.
+    ***************************************************************************************************************/
+    MfgShapeRectangle.prototype.getHeight = function () {
+        return this.height;
+    };
+    return MfgShapeRectangle;
+}(mfg.MfgShape));
+exports.MfgShapeRectangle = MfgShapeRectangle;
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   Represents the shape of a game object.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgShapeCircle = (function (_super) {
+    __extends(MfgShapeCircle, _super);
+    /***************************************************************************************************************
+    *   Creates a new circle shape.
+    *
+    *   @param diameter   The circle's diameter.
+    *   @param debugColor The color for the debug object.
+    *   @param isStatic   Specifies that this object has a fixed position.
+    *   @param angle      The rotation of this body in degrees.
+    *   @param friction   The object's body friction.
+    *   @param density    The object's body density.
+    ***************************************************************************************************************/
+    function MfgShapeCircle(diameter, debugColor, isStatic, angle, friction, density) {
+        var _this = _super.call(this, debugColor, isStatic, angle, friction, density) || this;
+        /** The circle's diameter. */
+        _this.diameter = 0.0;
+        _this.diameter = diameter;
+        _this.body = _this.createBody();
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Creates this shapes body.
+    *
+    *   @return The body for this shape.
+    ***************************************************************************************************************/
+    MfgShapeCircle.prototype.createBody = function () {
+        return Matter.Bodies.circle((this.diameter / 2), (this.diameter / 2), (this.diameter / 2), this.options);
+    };
+    /***************************************************************************************************************
+    *   Returns the width of this shape's boundaries.
+    *
+    *   @return The shape's boundaries width.
+    ***************************************************************************************************************/
+    MfgShapeCircle.prototype.getWidth = function () {
+        return this.diameter;
+    };
+    /***************************************************************************************************************
+    *   Returns the height of this shape's boundaries.
+    *
+    *   @return The shape's boundaries height.
+    ***************************************************************************************************************/
+    MfgShapeCircle.prototype.getHeight = function () {
+        return this.diameter;
+    };
+    return MfgShapeCircle;
+}(mfg.MfgShape));
+exports.MfgShapeCircle = MfgShapeCircle;
+
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10782,14 +10951,9 @@ var MfgGameObject = (function () {
     *   @param shape      The shape for this object.
     *   @param x          Startup position X.
     *   @param y          Startup position Y.
-    *   @param width      The new width.
-    *   @param height     The new height.
     *   @param image      The image for this game object.
-    *
-    *   TODO outsource to shape!
-    *   @param density    The density of this body.
     ***************************************************************************************************************/
-    function MfgGameObject(shape, x, y, width, height, image, density) {
+    function MfgGameObject(shape, x, y, image) {
         /** The game object's shape. */
         this.shape = null;
         this.shape = shape;
@@ -10797,7 +10961,6 @@ var MfgGameObject = (function () {
         if (image != null) {
             this.shape.body.render.sprite.texture = image;
         }
-        Matter.Body.setDensity(this.shape.body, density);
     }
     /***************************************************************************************************************
     *   Avoids this game object from rotating.
@@ -10841,34 +11004,7 @@ exports.MfgGameObject = MfgGameObject;
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10891,12 +11027,13 @@ var MfgGameObjectFactory = (function () {
     *   @param y        Anchor Y.
     *   @param width    Object width.
     *   @param height   Object height.
-    *   @param friction The surface friction for this object.
+    *   @param friction The surface friction for this box.
+    *   @param density  The density for this box.
     *
     *   @return       The created box.
     ***************************************************************************************************************/
-    MfgGameObjectFactory.createBox = function (x, y, width, height, friction) {
-        return new mfg.MfgBox(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction), x, y, width, height);
+    MfgGameObjectFactory.createBox = function (x, y, width, height, friction, density) {
+        return new mfg.MfgBox(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction, density), x, y, width, height);
     };
     /***************************************************************************************************************
     *   Creates a sphere.
@@ -10905,11 +11042,12 @@ var MfgGameObjectFactory = (function () {
     *   @param y        Anchor Y.
     *   @param diameter Sphere diameter.
     *   @param friction The surface friction for this object.
+    *   @param density  The density for this object.
     *
     *   @return         The created sphere.
     ***************************************************************************************************************/
-    MfgGameObjectFactory.createSphere = function (x, y, diameter, friction) {
-        return new mfg.MfgBox(new mfg.MfgShapeCircle(diameter, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction), x, y, diameter, diameter);
+    MfgGameObjectFactory.createSphere = function (x, y, diameter, friction, density) {
+        return new mfg.MfgBox(new mfg.MfgShapeCircle(diameter, mfg.MfgSettings.COLOR_DEBUG_BOX, false, 0.0, friction, density), x, y, diameter, diameter);
     };
     /***************************************************************************************************************
     *   Creates an item.
@@ -10920,7 +11058,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created item.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createItem = function (x, y) {
-        return new mfg.MfgItem(new mfg.MfgShapeRectangle(25.0, 25.0, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, 25.0, 25.0);
+        return new mfg.MfgItem(new mfg.MfgShapeRectangle(25.0, 25.0, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y, 25.0, 25.0);
     };
     /***************************************************************************************************************
     *   Creates an rectangular obstacle.
@@ -10935,7 +11073,7 @@ var MfgGameObjectFactory = (function () {
     *   @return                The created obstacle.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBlock = function (x, y, width, height, angle, jumpPassThrough) {
-        return new mfg.MfgObstacle(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, angle, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, width, height, jumpPassThrough);
+        return new mfg.MfgObstacle(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, angle, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y, width, height, jumpPassThrough);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -10946,7 +11084,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created enemy.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createEnemy = function (x, y) {
-        return new mfg.MfgEnemy(new mfg.MfgShapeRectangle(50.0, 50.0, mfg.MfgSettings.COLOR_DEBUG_ENEMY, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, 50, 50);
+        return new mfg.MfgEnemy(new mfg.MfgShapeRectangle(50.0, 50.0, mfg.MfgSettings.COLOR_DEBUG_ENEMY, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_HUMAN), x, y);
     };
     /***************************************************************************************************************
     *   Creates a decoration.
@@ -10960,7 +11098,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createDecoration = function (x, y, width, height, image) {
-        return new mfg.MfgDecoration(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, width, height, image);
+        return new mfg.MfgDecoration(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_DECORATION, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y, image);
     };
     /***************************************************************************************************************
     *   Creates a sigsaw.
@@ -10974,7 +11112,7 @@ var MfgGameObjectFactory = (function () {
     *   @return       The created decoration.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createSigsaw = function (x, y, width, height, image) {
-        return new mfg.MfgSigSaw(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, width, height, image);
+        return new mfg.MfgSigSaw(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_SIGSAW, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT), x, y, image);
     };
     /***************************************************************************************************************
      *   Creates a bounce.
@@ -10988,7 +11126,7 @@ var MfgGameObjectFactory = (function () {
      *   @return       The created decoration.
      ***************************************************************************************************************/
     MfgGameObjectFactory.createBounce = function (x, y, width, height, image) {
-        return new mfg.MfgBounce(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, width, height, image);
+        return new mfg.MfgBounce(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_BOUNCE, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT), x, y, image);
     };
     return MfgGameObjectFactory;
 }());
@@ -10996,7 +11134,7 @@ exports.MfgGameObjectFactory = MfgGameObjectFactory;
 
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11038,15 +11176,13 @@ var MfgCharacter = (function (_super) {
     *   @param shape            The shape for this object.
     *   @param x                Startup position X.
     *   @param y                Startup position Y.
-    *   @param width            The new width.
-    *   @param height           The new height.
     *   @param image            The image for this game object.
     *   @param lookingDirection The initial looking direction.
     *   @param speedMove        The speed for horizontal movement.
     *   @param jumpPower        The vertical force to apply on jumping.
     ***************************************************************************************************************/
-    function MfgCharacter(shape, x, y, width, height, image, lookingDirection, speedMove, jumpPower) {
-        var _this = _super.call(this, shape, x, y, width, height, image, mfg.MfgGameObject.DENSITY_HUMAN) || this;
+    function MfgCharacter(shape, x, y, image, lookingDirection, speedMove, jumpPower) {
+        var _this = _super.call(this, shape, x, y, image) || this;
         /** The looking direction for this character. */
         _this.lookingDirection = null;
         /** Flags if this character is dead. */
@@ -11155,7 +11291,7 @@ exports.MfgCharacter = MfgCharacter;
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11187,11 +11323,9 @@ var MfgEnemy = (function (_super) {
     *   @param shape  The shape for this object.
     *   @param x      Startup position X.
     *   @param y      Startup position Y.
-    *   @param width  The new width.
-    *   @param height The new height.
     ***************************************************************************************************************/
-    function MfgEnemy(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, null, mfg.MfgCharacterLookingDirection.LEFT, 4.0, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+    function MfgEnemy(shape, x, y) {
+        return _super.call(this, shape, x, y, null, mfg.MfgCharacterLookingDirection.LEFT, 4.0, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Renders the current player tick.
@@ -11226,7 +11360,7 @@ exports.MfgEnemy = MfgEnemy;
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11256,13 +11390,11 @@ var MfgPlatform = (function (_super) {
     *   Creates a new platform. Initial position is the first waypoint.
     *
     *   @param shape     The shape for this object.
-    *   @param width     The new width.
-    *   @param height    The new height.
     *   @param speed     The speed in pixels per tick.
     *   @param waypoints The waypoints for this platform to move to.
     ***************************************************************************************************************/
-    function MfgPlatform(shape, width, height, speed, waypoints) {
-        var _this = _super.call(this, shape, 0.0, 0.0, width, height, null, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+    function MfgPlatform(shape, speed, waypoints) {
+        var _this = _super.call(this, shape, 0.0, 0.0, null) || this;
         /** The waypoints for this platform to move. */
         _this.waypoints = null;
         /** The number of ticks till the next waypoint is reached. */
@@ -11335,7 +11467,7 @@ exports.MfgPlatform = MfgPlatform;
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11379,7 +11511,7 @@ var MfgPlayer = (function (_super) {
     *   @param lookingDirection The initial looking direction.
     ***************************************************************************************************************/
     function MfgPlayer(x, y, lookingDirection) {
-        return _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), x, y, mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_HUMAN), x, y, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
@@ -11452,7 +11584,7 @@ exports.MfgPlayer = MfgPlayer;
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11487,7 +11619,7 @@ var MfgBox = (function (_super) {
     *   @param height   The new height.
     ***************************************************************************************************************/
     function MfgBox(shape, x, y, width, height) {
-        return _super.call(this, shape, x, y, width, height, null, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+        return _super.call(this, shape, x, y, null) || this;
     }
     /***************************************************************************************************************
     *   Renders this box.
@@ -11501,7 +11633,7 @@ exports.MfgBox = MfgBox;
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11537,7 +11669,7 @@ var MfgItem = (function (_super) {
     *   @param height The new height.
     ***************************************************************************************************************/
     function MfgItem(shape, x, y, width, height) {
-        var _this = _super.call(this, shape, x, y, width, height, null, Infinity) || this;
+        var _this = _super.call(this, shape, x, y, null) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
         _this.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;
@@ -11569,7 +11701,7 @@ exports.MfgItem = MfgItem;
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11600,12 +11732,10 @@ var MfgDecoration = (function (_super) {
     *   @param shape  The shape for this object.
     *   @param x      Startup position X.
     *   @param y      Startup position Y.
-    *   @param width  The new width.
-    *   @param height The new height.
     *   @param image  The image source to use.
     ***************************************************************************************************************/
-    function MfgDecoration(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, image, Infinity) || this;
+    function MfgDecoration(shape, x, y, image) {
+        var _this = _super.call(this, shape, x, y, image) || this;
         _this.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO;
         return _this;
     }
@@ -11620,7 +11750,7 @@ exports.MfgDecoration = MfgDecoration;
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11656,7 +11786,7 @@ var MfgObstacle = (function (_super) {
     *   @param jumpPassThrough Specifies if the player may jump through this obstacle.
     ***************************************************************************************************************/
     function MfgObstacle(shape, x, y, width, height, jumpPassThrough) {
-        var _this = _super.call(this, shape, x, y, width, height, null, Infinity) || this;
+        var _this = _super.call(this, shape, x, y, null) || this;
         /** Specifies if the player shall be allowed to jump through this obstacle. */
         _this.jumpPassThrough = false;
         _this.jumpPassThrough = jumpPassThrough;
@@ -11692,7 +11822,7 @@ exports.MfgObstacle = MfgObstacle;
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11724,12 +11854,10 @@ var MfgSigSaw = (function (_super) {
     *   @param shape  The shape for this object.
     *   @param x      Startup position X.
     *   @param y      Startup position Y.
-    *   @param width  The new width.
-    *   @param height The new height.
     *   @param image  The image for this game object.
     ***************************************************************************************************************/
-    function MfgSigSaw(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, image, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+    function MfgSigSaw(shape, x, y, image) {
+        var _this = _super.call(this, shape, x, y, image) || this;
         /** The constraint that builds the turning point for the sigsaw. */
         _this.constraint = null;
         _this.constraint = Matter.Constraint.create({
@@ -11791,7 +11919,7 @@ exports.MfgSigSaw = MfgSigSaw;
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11823,12 +11951,10 @@ var MfgBounce = (function (_super) {
     *   @param shape  The shape for this object.
     *   @param x      Startup position X.
     *   @param y      Startup position Y.
-    *   @param width  The new width.
-    *   @param height The new height.
     *   @param image  The image for this game object.
     ***************************************************************************************************************/
-    function MfgBounce(shape, x, y, width, height, image) {
-        var _this = _super.call(this, shape, x, y, width, height, image, mfg.MfgGameObject.DENSITY_DEFAULT) || this;
+    function MfgBounce(shape, x, y, image) {
+        var _this = _super.call(this, shape, x, y, image) || this;
         /** The constraint that builds the turning point for the bounce. */
         _this.constraint = null;
         _this.constraint = Matter.Constraint.create({
@@ -11859,7 +11985,7 @@ exports.MfgBounce = MfgBounce;
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11991,7 +12117,7 @@ exports.MfgGame = MfgGame;
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12073,7 +12199,7 @@ exports.MfgLevel = MfgLevel;
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12132,17 +12258,17 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createDecoration(150, 550, 25, 150, null),
                 mfg.MfgGameObjectFactory.createDecoration(225, 550, 25, 150, null),
                 // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(100, 500, 80, 80, mfg.MfgGameObject.FRICTION_CONCRETE),
-                mfg.MfgGameObjectFactory.createSphere(200, 500, 80, mfg.MfgGameObject.FRICTION_GLASS),
-                mfg.MfgGameObjectFactory.createBox(300, 500, 80, 80, mfg.MfgGameObject.FRICTION_ICE),
-                mfg.MfgGameObjectFactory.createSphere(3600, 400, 80, mfg.MfgGameObject.FRICTION_ICE),
-                mfg.MfgGameObjectFactory.createBox(3625, 350, 80, 80, mfg.MfgGameObject.FRICTION_ICE),
-                mfg.MfgGameObjectFactory.createBox(3650, 300, 80, 80, mfg.MfgGameObject.FRICTION_ICE),
+                mfg.MfgGameObjectFactory.createBox(100, 500, 80, 80, mfg.MfgGameObject.FRICTION_CONCRETE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createSphere(200, 500, 80, mfg.MfgGameObject.FRICTION_GLASS, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(300, 500, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createSphere(3600, 400, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(3625, 350, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(3650, 300, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
                 // sigsaws and bounces
                 mfg.MfgGameObjectFactory.createSigsaw(1490, 830, 400, 25, null),
                 mfg.MfgGameObjectFactory.createBounce(1900, 830, 400, 25, null),
                 // animated platforms TODO factory method
-                new mfg.MfgPlatform(new mfg.MfgShapeRectangle(200.0, 15.0, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT), 200.0, 15.0, mfg.MfgPlatform.SPEED_NORMAL, [
+                new mfg.MfgPlatform(new mfg.MfgShapeRectangle(200.0, 15.0, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_DEFAULT), mfg.MfgPlatform.SPEED_NORMAL, [
                     Matter.Vector.create(2820.0, 830.0),
                     Matter.Vector.create(3020.0, 830.0),
                 ]),
@@ -12166,7 +12292,7 @@ exports.MfgLevelDev = MfgLevelDev;
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12233,7 +12359,7 @@ exports.MfgLevelEnchantedWoods = MfgLevelEnchantedWoods;
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12335,7 +12461,7 @@ exports.MfgKeySystem = MfgKeySystem;
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12511,7 +12637,7 @@ exports.MfgCamera = MfgCamera;
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12534,7 +12660,7 @@ exports.MfgImages = MfgImages;
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12564,7 +12690,7 @@ exports.MfgMath = MfgMath;
 
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12625,156 +12751,6 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
-/*******************************************************************************************************************
-*   Represents the shape of a game object.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgShapeRectangle = (function (_super) {
-    __extends(MfgShapeRectangle, _super);
-    /***************************************************************************************************************
-    *   Creates a new rectangle shape.
-    *
-    *   @param width      The rectangle's width.
-    *   @param height     The rectangle's height.
-    *   @param debugColor The color for the debug object.
-    *   @param isStatic   Specifies that this object has a fixed position.
-    *   @param angle      The rotation of this body in degrees.
-    *   @param friction   The object's body friction.
-    ***************************************************************************************************************/
-    function MfgShapeRectangle(width, height, debugColor, isStatic, angle, friction) {
-        var _this = _super.call(this, debugColor, isStatic, angle, friction) || this;
-        /** The rectangle's width. */
-        _this.width = 0.0;
-        /** The rectangle's height. */
-        _this.height = 0.0;
-        _this.width = width;
-        _this.height = height;
-        _this.body = _this.createBody();
-        return _this;
-    }
-    /***************************************************************************************************************
-    *   Creates this shapes body.
-    *
-    *   @return The body for this shape.
-    ***************************************************************************************************************/
-    MfgShapeRectangle.prototype.createBody = function () {
-        return Matter.Bodies.rectangle((this.width / 2), (this.height / 2), this.width, this.height, this.options);
-    };
-    /***************************************************************************************************************
-    *   Returns the width of this shape's boundaries.
-    *
-    *   @return The shape's boundaries width.
-    ***************************************************************************************************************/
-    MfgShapeRectangle.prototype.getWidth = function () {
-        return this.width;
-    };
-    /***************************************************************************************************************
-    *   Returns the height of this shape's boundaries.
-    *
-    *   @return The shape's boundaries height.
-    ***************************************************************************************************************/
-    MfgShapeRectangle.prototype.getHeight = function () {
-        return this.height;
-    };
-    return MfgShapeRectangle;
-}(mfg.MfgShape));
-exports.MfgShapeRectangle = MfgShapeRectangle;
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var Matter = __webpack_require__(1);
-var mfg = __webpack_require__(0);
-/*******************************************************************************************************************
-*   Represents the shape of a game object.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgShapeCircle = (function (_super) {
-    __extends(MfgShapeCircle, _super);
-    /***************************************************************************************************************
-    *   Creates a new circle shape.
-    *
-    *   @param diameter   The circle's diameter.
-    *   @param debugColor The color for the debug object.
-    *   @param isStatic   Specifies that this object has a fixed position.
-    *   @param angle      The rotation of this body in degrees.
-    *   @param friction   The object's body friction.
-    ***************************************************************************************************************/
-    function MfgShapeCircle(diameter, debugColor, isStatic, angle, friction) {
-        var _this = _super.call(this, debugColor, isStatic, angle, friction) || this;
-        /** The circle's diameter. */
-        _this.diameter = 0.0;
-        _this.diameter = diameter;
-        _this.body = _this.createBody();
-        return _this;
-    }
-    /***************************************************************************************************************
-    *   Creates this shapes body.
-    *
-    *   @return The body for this shape.
-    ***************************************************************************************************************/
-    MfgShapeCircle.prototype.createBody = function () {
-        return Matter.Bodies.circle((this.diameter / 2), (this.diameter / 2), (this.diameter / 2), this.options);
-    };
-    /***************************************************************************************************************
-    *   Returns the width of this shape's boundaries.
-    *
-    *   @return The shape's boundaries width.
-    ***************************************************************************************************************/
-    MfgShapeCircle.prototype.getWidth = function () {
-        return this.diameter;
-    };
-    /***************************************************************************************************************
-    *   Returns the height of this shape's boundaries.
-    *
-    *   @return The shape's boundaries height.
-    ***************************************************************************************************************/
-    MfgShapeCircle.prototype.getHeight = function () {
-        return this.diameter;
-    };
-    return MfgShapeCircle;
-}(mfg.MfgShape));
-exports.MfgShapeCircle = MfgShapeCircle;
 
 
 /***/ })

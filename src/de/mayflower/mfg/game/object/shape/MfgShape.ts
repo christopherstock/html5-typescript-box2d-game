@@ -23,6 +23,7 @@
         *   @param isStatic   Specifies that this object has a fixed position.
         *   @param angle      The rotation of this body in degrees.
         *   @param friction   The object's body friction.
+        *   @param density    The object's body density.
         ***************************************************************************************************************/
         public constructor
         (
@@ -30,24 +31,10 @@
             isStatic:boolean,
             angle:number,
             friction:number,
+            density:number
         )
         {
-            this.options = this.createOptions( debugColor, isStatic, angle, friction );
-        }
-
-        /***************************************************************************************************************
-        *   Creates this shapes body rendering options.
-        *
-        *   @param debugColor The color for the debug object.
-        *   @param isStatic   Specifies that this object has a fixed position.
-        *   @param angle      The rotation of this body in degrees.
-        *   @param friction   The object's body friction.
-        *
-        *   @return The rendering options for this shape's body.
-        ***************************************************************************************************************/
-        private createOptions( debugColor:string, isStatic:boolean, angle:number, friction:number ) : Matter.IBodyDefinition
-        {
-            return {
+            this.options = {
                 render:
                 {
                     fillStyle:   debugColor,
@@ -59,6 +46,7 @@
                 collisionFilter: mfg.MfgSettings.COLLISION_GROUP_COLLIDING,
                 friction:        friction,
                 angle:           mfg.MfgMath.angleToRad( angle ),
+                density:         density,
 //              isSensor:        isSensor,
 //              chamfer:         { radius: [ 5.0, 5.0, 5.0, 5.0 ] },
             };

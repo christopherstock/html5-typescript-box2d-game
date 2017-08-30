@@ -29,6 +29,7 @@
                     false,
                     0.0,
                     mfg.MfgGameObject.FRICTION_DEFAULT,
+                    mfg.MfgGameObject.DENSITY_HUMAN
                 ),
                 x,
                 y,

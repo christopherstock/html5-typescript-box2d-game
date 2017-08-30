@@ -55,8 +55,7 @@
                 shape,
                 x,
                 y,
-                image,
-                mfg.MfgGameObject.DENSITY_HUMAN
+                image
             );
 
             this.lookingDirection = lookingDirection;

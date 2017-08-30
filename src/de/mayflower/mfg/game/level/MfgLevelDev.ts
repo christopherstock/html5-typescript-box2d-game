@@ -48,13 +48,13 @@
                 mfg.MfgGameObjectFactory.createDecoration( 225, 550, 25, 150, null ),
 
                 // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(    100,  500, 80, 80, mfg.MfgGameObject.FRICTION_CONCRETE ),
-                mfg.MfgGameObjectFactory.createSphere( 200,  500, 80,     mfg.MfgGameObject.FRICTION_GLASS    ),
-                mfg.MfgGameObjectFactory.createBox(    300,  500, 80, 80, mfg.MfgGameObject.FRICTION_ICE      ),
+                mfg.MfgGameObjectFactory.createBox(    100,  500, 80, 80, mfg.MfgGameObject.FRICTION_CONCRETE, mfg.MfgGameObject.DENSITY_DEFAULT ),
+                mfg.MfgGameObjectFactory.createSphere( 200,  500, 80,     mfg.MfgGameObject.FRICTION_GLASS,    mfg.MfgGameObject.DENSITY_DEFAULT ),
+                mfg.MfgGameObjectFactory.createBox(    300,  500, 80, 80, mfg.MfgGameObject.FRICTION_ICE,      mfg.MfgGameObject.DENSITY_DEFAULT ),
 
-                mfg.MfgGameObjectFactory.createSphere( 3600, 400, 80,     mfg.MfgGameObject.FRICTION_ICE      ),
-                mfg.MfgGameObjectFactory.createBox(    3625, 350, 80, 80, mfg.MfgGameObject.FRICTION_ICE      ),
-                mfg.MfgGameObjectFactory.createBox(    3650, 300, 80, 80, mfg.MfgGameObject.FRICTION_ICE      ),
+                mfg.MfgGameObjectFactory.createSphere( 3600, 400, 80,     mfg.MfgGameObject.FRICTION_ICE,      mfg.MfgGameObject.DENSITY_DEFAULT ),
+                mfg.MfgGameObjectFactory.createBox(    3625, 350, 80, 80, mfg.MfgGameObject.FRICTION_ICE,      mfg.MfgGameObject.DENSITY_DEFAULT ),
+                mfg.MfgGameObjectFactory.createBox(    3650, 300, 80, 80, mfg.MfgGameObject.FRICTION_ICE,      mfg.MfgGameObject.DENSITY_DEFAULT ),
 
                 // sigsaws and bounces
                 mfg.MfgGameObjectFactory.createSigsaw( 1490, 830,  400, 25, null ),
@@ -71,7 +71,7 @@
                         true,
                         0.0,
                         mfg.MfgGameObject.FRICTION_DEFAULT,
-
+                        mfg.MfgGameObject.DENSITY_DEFAULT
                     ),
                     mfg.MfgPlatform.SPEED_NORMAL,
                     [

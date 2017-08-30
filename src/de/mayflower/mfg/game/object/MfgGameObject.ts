@@ -34,17 +34,13 @@
         *   @param x          Startup position X.
         *   @param y          Startup position Y.
         *   @param image      The image for this game object.
-        *
-        *   TODO outsource to shape!
-        *   @param density    The density of this body.
         ***************************************************************************************************************/
         protected constructor
         (
             shape:mfg.MfgShape,
             x:number,
             y:number,
-            image:string,
-            density:number
+            image:string
         )
         {
             this.shape = shape;
@@ -55,8 +51,6 @@
             {
                 this.shape.body.render.sprite.texture = image;
             }
-
-            Matter.Body.setDensity( this.shape.body, density );
         }
 
         /***************************************************************************************************************
