@@ -10549,7 +10549,7 @@ var MfgSettings = (function () {
     };
     /** The collision group for all non-colliding items. */
     MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM = {
-        category: 0x0004,
+        category: 0x0002,
         mask: 0x0005,
         group: 0x0006,
     };
@@ -10632,28 +10632,28 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Solve jump-through obstacles!
-*   TODO ASAP   Reduce access to external matter lib to shape package?
-*   TODO ASAP   Modify starting point for all objects so they rotate around left top anchor.
-*   TODO ASAP   Add adventure / dialog system.
-*   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
 *   TODO ASAP   Checkout all parameters of the collision filters!
+*   TODO ASAP   Solve jump-through obstacles!
+*   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
+*
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
-*   TODO ASAP   Skew image (sensor) for waving grass effect?
-*   TODO ASAP   Add sprites and sprite class.
-*   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
-*   TODO HIGH   Solve problem that player or enemy get stuck on an rotated obstacle ramp!
 *   TODO ASAP   Create custom renderer that extends Matter.Render?
 *   TODO ASAP   Try discreet graphic style.
+*   TODO ASAP   Skew image (sensor) for waving grass effect?
+*   TODO HIGH   Add sprites and sprite class.
+*   TODO HIGH   Add images and image class ?? Improve image usage for all game objects ..
+*   TODO HIGH   Solve problem that player or enemy get stuck on an rotated obstacle ramp!
 *   TODO HIGH   Create different enemy move patterns.
 *   TODO INIT   Parallax bg.
-*   TODO INIT   Solve same body friction on different surfaces with different friction ... ( "staticFriction" )
+*   TODO INIT   Solve same body friction on different surfaces with different friction ...
+*   TODO INIT   Add doors / level portals.
 *   TODO LOW    Create levels and sublevels?
 *   TODO LOW    Maximum camera ascend distance if player is superjumped upwards.
+*   TODO LOW    Add adventure / dialog system.
 *   TODO LOW    Disable horizontal movements while jumping?
+*   TODO LOW    Reduce access to external matter lib to shape and game package?
 *   TODO LOW    Improve direction change in air. (no direction change till landed?)
 *   TODO LOW    Improve air behaviour of player on colliding!!
-*   TODO WEAK   Add doors / level portals.
 *   TODO WEAK   Add menu keys for main menu and level map ..
 *   TODO WEAK   Implement nice changing gravity effects.
 *   TODO WEAK   Refactor camera class.
