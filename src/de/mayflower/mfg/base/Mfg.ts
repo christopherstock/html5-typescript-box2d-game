@@ -4,9 +4,8 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
-    *   TODO ASAP   Separate all shapes from game objects!
     *   TODO ASAP   Create elevated ramp ( x1, y1, x2, y2, height! )
-    *   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation.
+    *   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation and elevated points.
     *
     *   TODO ASAP   Solve jump-through obstacles!
     *   TODO ASAP   Reduce access to external matter lib to shape package?

@@ -21,8 +21,7 @@
         protected createGameObjects()
         {
             // init player
-            //this.player = new mfg.MfgPlayer( 3500, 500, mfg.MfgCharacterLookingDirection.RIGHT );
-            this.player = new mfg.MfgPlayer( 0.0, 0.0, mfg.MfgCharacterLookingDirection.RIGHT );
+            this.player = new mfg.MfgPlayer( 3500, 500.0, mfg.MfgCharacterLookingDirection.RIGHT );
 
             // setup all game objects
             this.gameObjects =
@@ -33,11 +32,6 @@
                 mfg.MfgGameObjectFactory.createBlock( 980,  830, 500, 15, 0.0,  false ),
                 mfg.MfgGameObjectFactory.createBlock( 2310, 830, 500, 15, 0.0,  false ),
                 mfg.MfgGameObjectFactory.createBlock( 3230, 830, 500, 15, 0.0,  false ),
-
-
-
-
-
 /*
                 // jump through obstacle
                 mfg.MfgGameObjectFactory.createBlock( 3800,  2700, 400, 10, 0.0, true ),
@@ -77,6 +71,19 @@
                 mfg.MfgGameObjectFactory.createItem( 2500, 740 ),
                 mfg.MfgGameObjectFactory.createItem( 2550, 740 ),
                 mfg.MfgGameObjectFactory.createItem( 2600, 740 ),
+
+                // free form
+                mfg.MfgGameObjectFactory.createFreeForm(
+                    3150.0,
+                    500.0,
+                    [
+                        Matter.Vector.create( 0.0,   0.0   ),
+                        Matter.Vector.create( 300.0, 0.0   ),
+                        Matter.Vector.create( 310.0, 150.0 ),
+                        Matter.Vector.create( 0.0,   150.0 ),
+                    ],
+                    0.0
+                ),
 
                 // player
                 this.player,

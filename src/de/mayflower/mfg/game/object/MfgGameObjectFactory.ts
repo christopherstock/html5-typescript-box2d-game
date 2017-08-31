@@ -130,6 +130,35 @@
         }
 
         /***************************************************************************************************************
+        *   Creates a free form.
+        *
+        *   @param x        Anchor X.
+        *   @param y        Anchor Y.
+        *   @param vertices All vertices that build up the free form.
+        *   @param angle    The initial rotation of the form.
+        *
+        *   @return                The created obstacle.
+        ***************************************************************************************************************/
+        public static createFreeForm( x:number, y:number, vertices:Array<Matter.Vector>, angle:number ):mfg.MfgObstacle
+        {
+            return new mfg.MfgObstacle
+            (
+                new mfg.MfgShapeFreeForm
+                (
+                    vertices,
+                    mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
+                    true,
+                    angle,
+                    mfg.MfgGameObject.FRICTION_DEFAULT,
+                    Infinity
+                ),
+                x,
+                y,
+                false
+            );
+        }
+
+        /***************************************************************************************************************
         *   Creates an enemy.
         *
         *   @param x Anchor X.

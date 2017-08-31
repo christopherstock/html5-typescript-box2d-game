@@ -3,23 +3,25 @@
     import * as mfg    from '../../../mfg';
 
     /*******************************************************************************************************************
-    *   Represents the shape of a game object.
+    *   A free form shape for a game object.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
     *******************************************************************************************************************/
-    export class MfgShapeRectangle extends mfg.MfgShape
+    export class MfgShapeFreeForm extends mfg.MfgShape
     {
-        /** The rectangle's width. */
-        public              width           :number                 = 0.0;
-        /** The rectangle's height. */
-        public              height          :number                 = 0.0;
+        /** All vertices that build the free form. */
+        public              vertices            :Array<Matter.Vector>           = null;
+
+        /** The boundary width. */
+        public              boundWidth          :number                 = 0.0;
+        /** The boundary height. */
+        public              boundHeight         :number                 = 0.0;
 
         /***************************************************************************************************************
-        *   Creates a new rectangle shape.
+        *   Creates a new free formed shape.
         *
-        *   @param width      The rectangle's width.
-        *   @param height     The rectangle's height.
+        *   @param vertices   All vertices that make up the entire free form shape.
         *   @param debugColor The color for the debug object.
         *   @param isStatic   Specifies that this object has a fixed position.
         *   @param angle      The rotation of this body in degrees.
@@ -28,8 +30,7 @@
         ***************************************************************************************************************/
         public constructor
         (
-            width:number,
-            height:number,
+            vertices:Array<Matter.Vector>,
             debugColor:string,
             isStatic:boolean,
             angle:number,
@@ -39,8 +40,9 @@
         {
             super( debugColor, isStatic, angle, friction, density );
 
-            this.width  = width;
-            this.height = height;
+            this.vertices = vertices;
+
+            this.determineBoundDimensions();
 
             this.body   = this.createBody();
         }
@@ -52,11 +54,10 @@
         ***************************************************************************************************************/
         public createBody() : Matter.Body
         {
-            return Matter.Bodies.rectangle(
-                ( this.width  / 2 ),
-                ( this.height / 2 ),
-                this.width,
-                this.height,
+            return Matter.Bodies.fromVertices(
+                ( this.boundWidth  / 2 ),
+                ( this.boundHeight / 2 ),
+                [ this.vertices ],
                 this.options
             );
         }
@@ -68,7 +69,7 @@
         ***************************************************************************************************************/
         public getWidth() : number
         {
-            return this.width;
+            return this.boundWidth;
         }
 
         /***************************************************************************************************************
@@ -78,6 +79,32 @@
         ***************************************************************************************************************/
         public getHeight() : number
         {
-            return this.height;
+            return this.boundHeight;
+        }
+
+        /***************************************************************************************************************
+        *   Calculates the width and height of this shapes bounds.
+        ***************************************************************************************************************/
+        private determineBoundDimensions() : void
+        {
+            let minimumX:number = Infinity;
+            let minimumY:number = Infinity;
+
+            let maximumX:number = -Infinity;
+            let maximumY:number = -Infinity;
+
+            for ( let vertex of this.vertices )
+            {
+                if ( vertex.x < minimumX ) minimumX = vertex.x;
+                if ( vertex.y < minimumY ) minimumY = vertex.y;
+
+                if ( vertex.x > maximumX ) maximumX = vertex.x;
+                if ( vertex.y > maximumY ) maximumY = vertex.y;
+            }
+
+            this.boundWidth  = maximumX - minimumX;
+            this.boundHeight = maximumY - minimumY;
+
+            console.log("bounds: " + this.boundWidth + "   " + this.boundHeight);
         }
     }
