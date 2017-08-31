@@ -78,13 +78,13 @@
 
                 // free form
                 mfg.MfgGameObjectFactory.createFreeForm(
-                    3150.0,
-                    500.0,
+                    3730.0,
+                    730.0,
                     [
-                        Matter.Vector.create( 0.0,   0.0   ),
-                        Matter.Vector.create( 300.0, 0.0   ),
-                        Matter.Vector.create( 310.0, 150.0 ),
-                        Matter.Vector.create( 0.0,   150.0 ),
+                        Matter.Vector.create( 0.0,   0.0    ),
+                        Matter.Vector.create( 350.0, -100.0 ),
+                        Matter.Vector.create( 350.0, -85.0  ),
+                        Matter.Vector.create( 0.0,   15.0 ),
                     ],
                     0.0
                 ),
