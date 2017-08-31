@@ -10632,12 +10632,10 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Create elevated ramp ( x1, y1, x2, y2, height! )
-*   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation and elevated points.
-*
 *   TODO ASAP   Solve jump-through obstacles!
 *   TODO ASAP   Reduce access to external matter lib to shape package?
 *   TODO ASAP   Modify starting point for all objects so they rotate around left top anchor.
+*   TODO ASAP   Add adventure / dialog system.
 *   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
 *   TODO ASAP   Checkout all parameters of the collision filters!
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
@@ -11138,6 +11136,7 @@ exports.MfgGameObject = MfgGameObject;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Creates customized instances of game objects.
@@ -11211,10 +11210,32 @@ var MfgGameObjectFactory = (function () {
     *   @param vertices All vertices that build up the free form.
     *   @param angle    The initial rotation of the form.
     *
-    *   @return                The created obstacle.
+    *   @return         The created obstacle.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createFreeForm = function (x, y, vertices, angle) {
         return new mfg.MfgObstacle(new mfg.MfgShapeFreeForm(vertices, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, angle, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y, false);
+    };
+    /***************************************************************************************************************
+    *   Creates an elevated ramp obstacle.
+    *
+    *   @param x      Anchor X.
+    *   @param y      Anchor Y.
+    *   @param width  The ramp width.
+    *   @param height The remp height.
+    *   @param deltaY Ramp will ascend if <code>true</code> and descend if <code>false</code>.
+    *
+    *   @return         The created obstacle ramp.
+    ***************************************************************************************************************/
+    MfgGameObjectFactory.createElevatedRamp = function (x, y, width, height, deltaY) {
+        var vertices = [];
+        vertices.push(Matter.Vector.create(0.0, 0.0));
+        vertices.push(Matter.Vector.create(width, deltaY));
+        vertices.push(Matter.Vector.create(width, height + deltaY));
+        vertices.push(Matter.Vector.create(0.0, height));
+        if (deltaY <= 0.0) {
+            y += deltaY;
+        }
+        return new mfg.MfgObstacle(new mfg.MfgShapeFreeForm(vertices, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y, false);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -12377,7 +12398,7 @@ var MfgLevelDev = (function (_super) {
     function MfgLevelDev() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         /** The width of this level. */
-        _this.width = 5000.0;
+        _this.width = 10000.0;
         /** The height of this level. */
         _this.height = 1000.0;
         return _this;
@@ -12387,7 +12408,7 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(3500, 500.0, mfg.MfgCharacterLookingDirection.RIGHT);
+        this.player = new mfg.MfgPlayer(4100, 500.0, mfg.MfgCharacterLookingDirection.RIGHT);
         // setup all game objects
         this.gameObjects =
             [
@@ -12397,6 +12418,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createBlock(980, 830, 500, 15, 0.0, false),
                 mfg.MfgGameObjectFactory.createBlock(2310, 830, 500, 15, 0.0, false),
                 mfg.MfgGameObjectFactory.createBlock(3230, 830, 500, 15, 0.0, false),
+                mfg.MfgGameObjectFactory.createBlock(4080, 730, 500, 15, 0.0, false),
                 /*
                                 // jump through obstacle
                                 mfg.MfgGameObjectFactory.createBlock( 3800,  2700, 400, 10, 0.0, true ),
@@ -12434,6 +12456,8 @@ var MfgLevelDev = (function (_super) {
                     Matter.Vector.create(350.0, -85.0),
                     Matter.Vector.create(0.0, 15.0),
                 ], 0.0),
+                // ascending ramp
+                mfg.MfgGameObjectFactory.createElevatedRamp(4600.0, 730.0, 1000.0, 15.0, -200.0),
                 // player
                 this.player,
                 // enemies (fg)

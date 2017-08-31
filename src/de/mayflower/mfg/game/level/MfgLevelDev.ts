@@ -11,7 +11,7 @@
     export class MfgLevelDev extends mfg.MfgLevel
     {
         /** The width of this level. */
-        public      width                   :number                     = 5000.0;
+        public      width                   :number                     = 10000.0;
         /** The height of this level. */
         public      height                  :number                     = 1000.0;
 
@@ -21,7 +21,7 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 3500, 500.0, mfg.MfgCharacterLookingDirection.RIGHT );
+            this.player = new mfg.MfgPlayer( 4100, 500.0, mfg.MfgCharacterLookingDirection.RIGHT );
 
             // setup all game objects
             this.gameObjects =
@@ -32,6 +32,7 @@
                 mfg.MfgGameObjectFactory.createBlock( 980,  830, 500, 15, 0.0,  false ),
                 mfg.MfgGameObjectFactory.createBlock( 2310, 830, 500, 15, 0.0,  false ),
                 mfg.MfgGameObjectFactory.createBlock( 3230, 830, 500, 15, 0.0,  false ),
+                mfg.MfgGameObjectFactory.createBlock( 4080, 730, 500, 15, 0.0,  false ),
 /*
                 // jump through obstacle
                 mfg.MfgGameObjectFactory.createBlock( 3800,  2700, 400, 10, 0.0, true ),
@@ -84,10 +85,13 @@
                         Matter.Vector.create( 0.0,   0.0    ),
                         Matter.Vector.create( 350.0, -100.0 ),
                         Matter.Vector.create( 350.0, -85.0  ),
-                        Matter.Vector.create( 0.0,   15.0 ),
+                        Matter.Vector.create( 0.0,   15.0   ),
                     ],
                     0.0
                 ),
+
+                // ascending ramp
+                mfg.MfgGameObjectFactory.createElevatedRamp( 4600.0, 730.0, 1000.0, 15.0, -200.0 ),
 
                 // player
                 this.player,

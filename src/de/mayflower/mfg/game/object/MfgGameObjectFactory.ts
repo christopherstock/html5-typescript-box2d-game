@@ -137,7 +137,7 @@
         *   @param vertices All vertices that build up the free form.
         *   @param angle    The initial rotation of the form.
         *
-        *   @return                The created obstacle.
+        *   @return         The created obstacle.
         ***************************************************************************************************************/
         public static createFreeForm( x:number, y:number, vertices:Array<Matter.Vector>, angle:number ):mfg.MfgObstacle
         {
@@ -149,6 +149,48 @@
                     mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
                     true,
                     angle,
+                    mfg.MfgGameObject.FRICTION_DEFAULT,
+                    Infinity
+                ),
+                x,
+                y,
+                false
+            );
+        }
+
+        /***************************************************************************************************************
+        *   Creates an elevated ramp obstacle.
+        *
+        *   @param x      Anchor X.
+        *   @param y      Anchor Y.
+        *   @param width  The ramp width.
+        *   @param height The remp height.
+        *   @param deltaY Ramp will ascend if <code>true</code> and descend if <code>false</code>.
+        *
+        *   @return         The created obstacle ramp.
+        ***************************************************************************************************************/
+        public static createElevatedRamp( x:number, y:number, width:number, height:number, deltaY:number ):mfg.MfgObstacle
+        {
+            let vertices:Array<Matter.Vector> = [];
+
+            vertices.push( Matter.Vector.create( 0.0,   0.0             ) );
+            vertices.push( Matter.Vector.create( width, deltaY          ) );
+            vertices.push( Matter.Vector.create( width, height + deltaY ) );
+            vertices.push( Matter.Vector.create( 0.0,   height          ) );
+
+            if ( deltaY <= 0.0 )
+            {
+                y += deltaY;
+            }
+
+            return new mfg.MfgObstacle
+            (
+                new mfg.MfgShapeFreeForm
+                (
+                    vertices,
+                    mfg.MfgSettings.COLOR_DEBUG_OBSTACLE,
+                    true,
+                    0.0,
                     mfg.MfgGameObject.FRICTION_DEFAULT,
                     Infinity
                 ),
