@@ -4,6 +4,8 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
+    *   TODO ASAP   Checkout improved renderer or render-lib for MatterJS?
     *   TODO ASAP   Checkout all parameters of the collision filters!
     *   TODO ASAP   Solve jump-through obstacles!
     *   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
@@ -12,7 +14,6 @@
     *   TODO ASAP   Create custom renderer that extends Matter.Render?
     *   TODO ASAP   Skew image (sensor) for waving grass effect?
     *   TODO HIGH   Add sprites and sprite class.
-    *   TODO HIGH   Add images and image class ?? Improve image usage for all game objects ..
     *   TODO HIGH   Solve problem that player or enemy get stuck on an rotated obstacle ramp!
     *   TODO HIGH   Create different enemy move patterns.
     *   TODO INIT   Parallax bg.
