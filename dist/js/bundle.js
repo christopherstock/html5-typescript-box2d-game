@@ -100,7 +100,7 @@ __export(__webpack_require__(28));
 __export(__webpack_require__(29));
 __export(__webpack_require__(30));
 __export(__webpack_require__(31));
-__export(__webpack_require__(35));
+__export(__webpack_require__(32));
 __export(__webpack_require__(33));
 __export(__webpack_require__(34));
 
@@ -10638,7 +10638,6 @@ var mfg = __webpack_require__(0);
 *
 *   TODO ASAP   Check sprite or image clipping and scaling to player size?
 *   TODO ASAP   Create custom renderer that extends Matter.Render?
-*   TODO ASAP   Try discreet graphic style.
 *   TODO ASAP   Skew image (sensor) for waving grass effect?
 *   TODO HIGH   Add sprites and sprite class.
 *   TODO HIGH   Add images and image class ?? Improve image usage for all game objects ..
@@ -11185,7 +11184,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created item.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createItem = function (x, y) {
-        return new mfg.MfgItem(new mfg.MfgShapeRectangle(25.0, 48.0, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y);
+        return new mfg.MfgItem(new mfg.MfgShapeRectangle(30.0, 52.0, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y);
     };
     /***************************************************************************************************************
     *   Creates an rectangular obstacle.
@@ -11694,6 +11693,12 @@ var MfgPlayer = (function (_super) {
     ***************************************************************************************************************/
     MfgPlayer.prototype.render = function () {
         _super.prototype.render.call(this);
+        if (this.collidesBottom) {
+            this.shape.body.render.sprite.texture = mfg.MfgImage.IMAGE_PLAYER_STAND;
+        }
+        else {
+            this.shape.body.render.sprite.texture = mfg.MfgImage.IMAGE_PLAYER_FALL;
+        }
         if (!this.dead) {
             this.handleKeys();
             this.checkEnemyKill();
@@ -12424,9 +12429,9 @@ var MfgLevelDev = (function (_super) {
                                 mfg.MfgGameObjectFactory.createBlock( 3800,  2700, 400, 10, 0.0, true ),
                 */
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(75, 550, 25, 150, null),
-                mfg.MfgGameObjectFactory.createDecoration(150, 550, 25, 150, null),
-                mfg.MfgGameObjectFactory.createDecoration(225, 550, 25, 150, null),
+                mfg.MfgGameObjectFactory.createDecoration(0, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(80, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(160, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(100, 500, 80, 80, mfg.MfgGameObject.FRICTION_CONCRETE, mfg.MfgGameObject.DENSITY_DEFAULT),
                 mfg.MfgGameObjectFactory.createSphere(200, 500, 80, mfg.MfgGameObject.FRICTION_GLASS, mfg.MfgGameObject.DENSITY_DEFAULT),
@@ -12463,9 +12468,9 @@ var MfgLevelDev = (function (_super) {
                 // enemies (fg)
                 mfg.MfgGameObjectFactory.createEnemy(1200, 0),
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration(300, 550, 25, 150, null),
-                mfg.MfgGameObjectFactory.createDecoration(375, 550, 25, 150, null),
-                mfg.MfgGameObjectFactory.createDecoration(450, 550, 25, 150, null),
+                mfg.MfgGameObjectFactory.createDecoration(300, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(395, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(490, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
             ];
     };
     return MfgLevelDev;
@@ -12819,7 +12824,38 @@ exports.MfgCamera = MfgCamera;
 
 
 /***/ }),
-/* 32 */,
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   All images the game makes use of.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgImage = (function () {
+    function MfgImage() {
+    }
+    /** Image resource 'forest bg'. */
+    MfgImage.IMAGE_BG_FOREST_GREEN = mfg.MfgSettings.PATH_IMAGE_BG + "woodsGreen_big.jpg";
+    /** Image resource 'player standing'. */
+    MfgImage.IMAGE_PLAYER_STAND = mfg.MfgSettings.PATH_IMAGE_PLAYER + "stand.png";
+    /** Image resource 'player falling'. */
+    MfgImage.IMAGE_PLAYER_FALL = mfg.MfgSettings.PATH_IMAGE_PLAYER + "fall.png";
+    /** Image resource 'item'. */
+    MfgImage.IMAGE_ITEM = mfg.MfgSettings.PATH_IMAGE_LEVEL + "item.png";
+    /** Image resource 'tree'. */
+    MfgImage.IMAGE_TREE = mfg.MfgSettings.PATH_IMAGE_LEVEL + "tree.png";
+    return MfgImage;
+}());
+exports.MfgImage = MfgImage;
+
+
+/***/ }),
 /* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12911,34 +12947,6 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
-
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
-/*******************************************************************************************************************
-*   All images the game makes use of.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgImage = (function () {
-    function MfgImage() {
-    }
-    /** Image resource 'forest bg'. */
-    MfgImage.IMAGE_BG_FOREST_GREEN = mfg.MfgSettings.PATH_IMAGE_BG + "woodsGreen_big.jpg";
-    /** Image resource 'player standing'. */
-    MfgImage.IMAGE_PLAYER_STAND = mfg.MfgSettings.PATH_IMAGE_PLAYER + "stand.png";
-    /** Image resource 'item'. */
-    MfgImage.IMAGE_ITEM = mfg.MfgSettings.PATH_IMAGE_LEVEL + "item.png";
-    return MfgImage;
-}());
-exports.MfgImage = MfgImage;
 
 
 /***/ })

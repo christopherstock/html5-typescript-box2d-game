@@ -84,8 +84,8 @@
             (
                 new mfg.MfgShapeRectangle
                 (
-                    25.0,
-                    48.0,
+                    30.0,
+                    52.0,
                     mfg.MfgSettings.COLOR_DEBUG_ITEM,
                     true,
                     0.0,

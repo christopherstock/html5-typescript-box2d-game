@@ -38,9 +38,9 @@
                 mfg.MfgGameObjectFactory.createBlock( 3800,  2700, 400, 10, 0.0, true ),
 */
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 75,  550, 25, 150, null ),
-                mfg.MfgGameObjectFactory.createDecoration( 150, 550, 25, 150, null ),
-                mfg.MfgGameObjectFactory.createDecoration( 225, 550, 25, 150, null ),
+                mfg.MfgGameObjectFactory.createDecoration( 0,   550, 76, 170, mfg.MfgImage.IMAGE_TREE ),
+                mfg.MfgGameObjectFactory.createDecoration( 80,  550, 76, 170, mfg.MfgImage.IMAGE_TREE ),
+                mfg.MfgGameObjectFactory.createDecoration( 160, 550, 76, 170, mfg.MfgImage.IMAGE_TREE ),
 
                 // moveable boxes
                 mfg.MfgGameObjectFactory.createBox(    100,  500, 80, 80, mfg.MfgGameObject.FRICTION_CONCRETE, mfg.MfgGameObject.DENSITY_DEFAULT ),
@@ -100,9 +100,9 @@
                 mfg.MfgGameObjectFactory.createEnemy( 1200, 0 ),
 
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 300, 550, 25, 150, null ),
-                mfg.MfgGameObjectFactory.createDecoration( 375, 550, 25, 150, null ),
-                mfg.MfgGameObjectFactory.createDecoration( 450, 550, 25, 150, null ),
+                mfg.MfgGameObjectFactory.createDecoration( 300, 550, 76, 170, mfg.MfgImage.IMAGE_TREE ),
+                mfg.MfgGameObjectFactory.createDecoration( 395, 550, 76, 170, mfg.MfgImage.IMAGE_TREE ),
+                mfg.MfgGameObjectFactory.createDecoration( 490, 550, 76, 170, mfg.MfgImage.IMAGE_TREE ),
             ];
         }
     }

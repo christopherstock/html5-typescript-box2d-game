@@ -47,6 +47,15 @@
         {
             super.render();
 
+            if ( this.collidesBottom )
+            {
+                this.shape.body.render.sprite.texture = mfg.MfgImage.IMAGE_PLAYER_STAND;
+            }
+            else
+            {
+                this.shape.body.render.sprite.texture = mfg.MfgImage.IMAGE_PLAYER_FALL;
+            }
+
             if ( !this.dead )
             {
                 this.handleKeys();

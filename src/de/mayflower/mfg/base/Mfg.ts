@@ -10,7 +10,6 @@
     *
     *   TODO ASAP   Check sprite or image clipping and scaling to player size?
     *   TODO ASAP   Create custom renderer that extends Matter.Render?
-    *   TODO ASAP   Try discreet graphic style.
     *   TODO ASAP   Skew image (sensor) for waving grass effect?
     *   TODO HIGH   Add sprites and sprite class.
     *   TODO HIGH   Add images and image class ?? Improve image usage for all game objects ..
