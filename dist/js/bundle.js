@@ -99,7 +99,7 @@ __export(__webpack_require__(27));
 __export(__webpack_require__(28));
 __export(__webpack_require__(29));
 __export(__webpack_require__(30));
-__export(__webpack_require__(31));
+__export(__webpack_require__(34));
 __export(__webpack_require__(32));
 __export(__webpack_require__(33));
 
@@ -10536,6 +10536,10 @@ var MfgSettings = (function () {
     MfgSettings.COLOR_DEBUG_PLATFORM = "#d2d2d2";
     /** The relative path from index.html where all background images reside. */
     MfgSettings.PATH_IMAGE_BG = "res/image/bg/";
+    /** The relative path from index.html where all player images reside. */
+    MfgSettings.PATH_IMAGE_PLAYER = "res/image/player/";
+    /** The relative path from index.html where all level images reside. */
+    MfgSettings.PATH_IMAGE_LEVEL = "res/image/level/";
     /** The default collision group for all game objects. */
     MfgSettings.COLLISION_GROUP_COLLIDING = {
         category: 0x0001,
@@ -11060,7 +11064,7 @@ var MfgGameObjectFactory = (function () {
     *   @return  The created item.
     ***************************************************************************************************************/
     MfgGameObjectFactory.createItem = function (x, y) {
-        return new mfg.MfgItem(new mfg.MfgShapeRectangle(25.0, 25.0, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y);
+        return new mfg.MfgItem(new mfg.MfgShapeRectangle(25.0, 48.0, mfg.MfgSettings.COLOR_DEBUG_ITEM, true, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y);
     };
     /***************************************************************************************************************
     *   Creates an rectangular obstacle.
@@ -11325,7 +11329,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
-*   Represents an enemy being controled by the system.
+*   Represents an enemy being controlled by the system.
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -11527,8 +11531,18 @@ var MfgPlayer = (function (_super) {
     *   @param lookingDirection The initial looking direction.
     ***************************************************************************************************************/
     function MfgPlayer(x, y, lookingDirection) {
-        return _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_HUMAN), x, y, null, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_HUMAN), x, y, mfg.MfgImage.IMAGE_PLAYER_STAND, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
     }
+    /***************************************************************************************************************
+    *   Renders the current player tick.
+    ***************************************************************************************************************/
+    MfgPlayer.prototype.render = function () {
+        _super.prototype.render.call(this);
+        if (!this.dead) {
+            this.handleKeys();
+            this.checkEnemyKill();
+        }
+    };
     /***************************************************************************************************************
     *   Checks all pressed player keys and performs according actions.
     ***************************************************************************************************************/
@@ -11542,16 +11556,6 @@ var MfgPlayer = (function (_super) {
         if (mfg.Mfg.game.keySystem.isPressed(mfg.MfgKeySystem.KEY_UP)) {
             mfg.Mfg.game.keySystem.setNeedsRelease(mfg.MfgKeySystem.KEY_UP);
             this.jump();
-        }
-    };
-    /***************************************************************************************************************
-    *   Renders the current player tick.
-    ***************************************************************************************************************/
-    MfgPlayer.prototype.render = function () {
-        _super.prototype.render.call(this);
-        if (!this.dead) {
-            this.handleKeys();
-            this.checkEnemyKill();
         }
     };
     /***************************************************************************************************************
@@ -11681,7 +11685,7 @@ var MfgItem = (function (_super) {
     *   @param y      Startup position Y.
     ***************************************************************************************************************/
     function MfgItem(shape, x, y) {
-        var _this = _super.call(this, shape, x, y, null) || this;
+        var _this = _super.call(this, shape, x, y, mfg.MfgImage.IMAGE_ITEM) || this;
         /** Indicates if this item has been picked. */
         _this.picked = null;
         _this.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;
@@ -12283,6 +12287,9 @@ var MfgLevelDev = (function (_super) {
                     Matter.Vector.create(3020.0, 830.0),
                 ]),
                 // items
+                mfg.MfgGameObjectFactory.createItem(900, 620),
+                mfg.MfgGameObjectFactory.createItem(950, 620),
+                mfg.MfgGameObjectFactory.createItem(1000, 620),
                 mfg.MfgGameObjectFactory.createItem(2500, 740),
                 mfg.MfgGameObjectFactory.createItem(2550, 740),
                 mfg.MfgGameObjectFactory.createItem(2600, 740),
@@ -12345,7 +12352,7 @@ var MfgLevelEnchantedWoods = (function (_super) {
         this.gameObjects =
             [
                 // bg decoration
-                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImages.IMAGE_BG_FOREST_GREEN ),
+                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImage.IMAGE_BG_FOREST_GREEN ),
                 // bg decoration
                 mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
                 mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
@@ -12647,29 +12654,7 @@ exports.MfgCamera = MfgCamera;
 
 
 /***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var mfg = __webpack_require__(0);
-/*******************************************************************************************************************
-*   All images the game makes use of.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgImages = (function () {
-    function MfgImages() {
-    }
-    MfgImages.IMAGE_BG_FOREST_GREEN = mfg.MfgSettings.PATH_IMAGE_BG + "woodsGreen_big.jpg";
-    return MfgImages;
-}());
-exports.MfgImages = MfgImages;
-
-
-/***/ }),
+/* 31 */,
 /* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12761,6 +12746,34 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   All images the game makes use of.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgImage = (function () {
+    function MfgImage() {
+    }
+    /** Image resource 'forest bg'. */
+    MfgImage.IMAGE_BG_FOREST_GREEN = mfg.MfgSettings.PATH_IMAGE_BG + "woodsGreen_big.jpg";
+    /** Image resource 'player standing'. */
+    MfgImage.IMAGE_PLAYER_STAND = mfg.MfgSettings.PATH_IMAGE_PLAYER + "stand.png";
+    /** Image resource 'item'. */
+    MfgImage.IMAGE_ITEM = mfg.MfgSettings.PATH_IMAGE_LEVEL + "item.png";
+    return MfgImage;
+}());
+exports.MfgImage = MfgImage;
 
 
 /***/ })

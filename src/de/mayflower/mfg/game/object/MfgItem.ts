@@ -27,7 +27,7 @@
                 shape,
                 x,
                 y,
-                null
+                mfg.MfgImage.IMAGE_ITEM
             );
 
             this.shape.body.collisionFilter = mfg.MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM;

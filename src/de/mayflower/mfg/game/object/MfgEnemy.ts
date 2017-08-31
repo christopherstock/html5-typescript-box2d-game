@@ -3,7 +3,7 @@
     import * as mfg    from '../../mfg';
 
     /*******************************************************************************************************************
-    *   Represents an enemy being controled by the system.
+    *   Represents an enemy being controlled by the system.
     *
     *   @author     Christopher Stock
     *   @version    0.0.1
