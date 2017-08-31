@@ -99,9 +99,10 @@ __export(__webpack_require__(27));
 __export(__webpack_require__(28));
 __export(__webpack_require__(29));
 __export(__webpack_require__(30));
-__export(__webpack_require__(34));
-__export(__webpack_require__(32));
+__export(__webpack_require__(31));
+__export(__webpack_require__(35));
 __export(__webpack_require__(33));
+__export(__webpack_require__(34));
 
 
 /***/ }),
@@ -10631,9 +10632,8 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
-*   TODO ASAP   Separate all shapes from game objects!
 *   TODO ASAP   Create elevated ramp ( x1, y1, x2, y2, height! )
-*   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation.
+*   TODO ASAP   Create 'line' obstacles (parallelograms) in order to simplify rotation and elevated points.
 *
 *   TODO ASAP   Solve jump-through obstacles!
 *   TODO ASAP   Reduce access to external matter lib to shape package?
@@ -10941,6 +10941,128 @@ exports.MfgShapeCircle = MfgShapeCircle;
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __values = (this && this.__values) || function (o) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    if (m) return m.call(o);
+    return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var Matter = __webpack_require__(1);
+var mfg = __webpack_require__(0);
+/*******************************************************************************************************************
+*   A free form shape for a game object.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgShapeFreeForm = (function (_super) {
+    __extends(MfgShapeFreeForm, _super);
+    /***************************************************************************************************************
+    *   Creates a new free formed shape.
+    *
+    *   @param vertices   All vertices that make up the entire free form shape.
+    *   @param debugColor The color for the debug object.
+    *   @param isStatic   Specifies that this object has a fixed position.
+    *   @param angle      The rotation of this body in degrees.
+    *   @param friction   The object's body friction.
+    *   @param density    The object's body density.
+    ***************************************************************************************************************/
+    function MfgShapeFreeForm(vertices, debugColor, isStatic, angle, friction, density) {
+        var _this = _super.call(this, debugColor, isStatic, angle, friction, density) || this;
+        /** All vertices that build the free form. */
+        _this.vertices = null;
+        /** The boundary width. */
+        _this.boundWidth = 0.0;
+        /** The boundary height. */
+        _this.boundHeight = 0.0;
+        _this.vertices = vertices;
+        _this.determineBoundDimensions();
+        _this.body = _this.createBody();
+        return _this;
+    }
+    /***************************************************************************************************************
+    *   Creates this shapes body.
+    *
+    *   @return The body for this shape.
+    ***************************************************************************************************************/
+    MfgShapeFreeForm.prototype.createBody = function () {
+        return Matter.Bodies.fromVertices((this.boundWidth / 2), (this.boundHeight / 2), [this.vertices], this.options);
+    };
+    /***************************************************************************************************************
+    *   Returns the width of this shape's boundaries.
+    *
+    *   @return The shape's boundaries width.
+    ***************************************************************************************************************/
+    MfgShapeFreeForm.prototype.getWidth = function () {
+        return this.boundWidth;
+    };
+    /***************************************************************************************************************
+    *   Returns the height of this shape's boundaries.
+    *
+    *   @return The shape's boundaries height.
+    ***************************************************************************************************************/
+    MfgShapeFreeForm.prototype.getHeight = function () {
+        return this.boundHeight;
+    };
+    /***************************************************************************************************************
+    *   Calculates the width and height of this shapes bounds.
+    ***************************************************************************************************************/
+    MfgShapeFreeForm.prototype.determineBoundDimensions = function () {
+        var minimumX = Infinity;
+        var minimumY = Infinity;
+        var maximumX = -Infinity;
+        var maximumY = -Infinity;
+        try {
+            for (var _a = __values(this.vertices), _b = _a.next(); !_b.done; _b = _a.next()) {
+                var vertex = _b.value;
+                if (vertex.x < minimumX)
+                    minimumX = vertex.x;
+                if (vertex.y < minimumY)
+                    minimumY = vertex.y;
+                if (vertex.x > maximumX)
+                    maximumX = vertex.x;
+                if (vertex.y > maximumY)
+                    maximumY = vertex.y;
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        this.boundWidth = maximumX - minimumX;
+        this.boundHeight = maximumY - minimumY;
+        console.log("bounds: " + this.boundWidth + "   " + this.boundHeight);
+        var e_1, _c;
+    };
+    return MfgShapeFreeForm;
+}(mfg.MfgShape));
+exports.MfgShapeFreeForm = MfgShapeFreeForm;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
@@ -11010,7 +11132,7 @@ exports.MfgGameObject = MfgGameObject;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11080,6 +11202,19 @@ var MfgGameObjectFactory = (function () {
     ***************************************************************************************************************/
     MfgGameObjectFactory.createBlock = function (x, y, width, height, angle, jumpPassThrough) {
         return new mfg.MfgObstacle(new mfg.MfgShapeRectangle(width, height, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, angle, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y, jumpPassThrough);
+    };
+    /***************************************************************************************************************
+    *   Creates a free form.
+    *
+    *   @param x        Anchor X.
+    *   @param y        Anchor Y.
+    *   @param vertices All vertices that build up the free form.
+    *   @param angle    The initial rotation of the form.
+    *
+    *   @return                The created obstacle.
+    ***************************************************************************************************************/
+    MfgGameObjectFactory.createFreeForm = function (x, y, vertices, angle) {
+        return new mfg.MfgObstacle(new mfg.MfgShapeFreeForm(vertices, mfg.MfgSettings.COLOR_DEBUG_OBSTACLE, true, angle, mfg.MfgGameObject.FRICTION_DEFAULT, Infinity), x, y, false);
     };
     /***************************************************************************************************************
     *   Creates an enemy.
@@ -11154,7 +11289,7 @@ exports.MfgGameObjectFactory = MfgGameObjectFactory;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11310,7 +11445,7 @@ exports.MfgCharacter = MfgCharacter;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11379,7 +11514,7 @@ exports.MfgEnemy = MfgEnemy;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11487,7 +11622,7 @@ exports.MfgPlatform = MfgPlatform;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11604,7 +11739,7 @@ exports.MfgPlayer = MfgPlayer;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11651,7 +11786,7 @@ exports.MfgBox = MfgBox;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11717,7 +11852,7 @@ exports.MfgItem = MfgItem;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11766,7 +11901,7 @@ exports.MfgDecoration = MfgDecoration;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11836,7 +11971,7 @@ exports.MfgObstacle = MfgObstacle;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11933,7 +12068,7 @@ exports.MfgSigSaw = MfgSigSaw;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11999,7 +12134,7 @@ exports.MfgBounce = MfgBounce;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12131,7 +12266,7 @@ exports.MfgGame = MfgGame;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12213,7 +12348,7 @@ exports.MfgLevel = MfgLevel;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12252,8 +12387,7 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        //this.player = new mfg.MfgPlayer( 3500, 500, mfg.MfgCharacterLookingDirection.RIGHT );
-        this.player = new mfg.MfgPlayer(0.0, 0.0, mfg.MfgCharacterLookingDirection.RIGHT);
+        this.player = new mfg.MfgPlayer(3500, 500.0, mfg.MfgCharacterLookingDirection.RIGHT);
         // setup all game objects
         this.gameObjects =
             [
@@ -12293,6 +12427,13 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createItem(2500, 740),
                 mfg.MfgGameObjectFactory.createItem(2550, 740),
                 mfg.MfgGameObjectFactory.createItem(2600, 740),
+                // free form
+                mfg.MfgGameObjectFactory.createFreeForm(3150.0, 500.0, [
+                    Matter.Vector.create(0.0, 0.0),
+                    Matter.Vector.create(300.0, 0.0),
+                    Matter.Vector.create(310.0, 150.0),
+                    Matter.Vector.create(0.0, 150.0),
+                ], 0.0),
                 // player
                 this.player,
                 // enemies (fg)
@@ -12309,7 +12450,7 @@ exports.MfgLevelDev = MfgLevelDev;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12376,7 +12517,7 @@ exports.MfgLevelEnchantedWoods = MfgLevelEnchantedWoods;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12478,7 +12619,7 @@ exports.MfgKeySystem = MfgKeySystem;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12654,8 +12795,8 @@ exports.MfgCamera = MfgCamera;
 
 
 /***/ }),
-/* 31 */,
-/* 32 */
+/* 32 */,
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12685,7 +12826,7 @@ exports.MfgMath = MfgMath;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12749,7 +12890,7 @@ exports.MfgString = MfgString;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
