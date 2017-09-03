@@ -10,6 +10,7 @@
     export * from './game/object/shape/MfgShapeFreeForm';
     export * from './game/object/MfgGameObject';
     export * from './game/object/MfgGameObjectFactory';
+    export * from './game/object/MfgGameObjectBundleFactory';
     export * from './game/object/MfgCharacter';
     export * from './game/object/MfgEnemy';
     export * from './game/object/MfgPlatform';

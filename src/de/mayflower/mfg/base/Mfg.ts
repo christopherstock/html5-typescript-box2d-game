@@ -4,6 +4,8 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Enable decoration destruction?
+    *   TODO ASAP   Open-World gaming?
     *   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
     *   TODO ASAP   Checkout improved renderer or render-lib for MatterJS?
     *   TODO ASAP   Checkout all parameters of the collision filters!

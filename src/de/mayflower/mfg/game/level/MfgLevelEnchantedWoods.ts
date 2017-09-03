@@ -20,21 +20,18 @@
         protected createGameObjects()
         {
             // init player
-            this.player = new mfg.MfgPlayer( 0, 0, mfg.MfgCharacterLookingDirection.RIGHT );
+            this.player = new mfg.MfgPlayer( 750, 880, mfg.MfgCharacterLookingDirection.RIGHT );
 
             // setup all game objects
             this.gameObjects =
             [
-                // bg decoration
-                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImage.IMAGE_BG_FOREST_GREEN ),
+                // static level blocks
+                mfg.MfgGameObjectFactory.createBlock( 0, 1000, 2000, 20, 0.0, false ),
 
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 860,  860, 120, 90, null ),
-                mfg.MfgGameObjectFactory.createDecoration( 2200, 860, 120, 90, null ),
-
-                // static obstacles
-                mfg.MfgGameObjectFactory.createBlock( 0,    950, 1380, 25, 0.0, false ),
-                mfg.MfgGameObjectFactory.createBlock( 1840, 950, 1380, 25, 0.0, false ),
+                mfg.MfgGameObjectFactory.createDecoration( 250,  870, 120, 90, mfg.MfgImage.IMAGE_TREE ),
+                mfg.MfgGameObjectFactory.createDecoration( 750,  870, 120, 90, mfg.MfgImage.IMAGE_TREE ),
+                mfg.MfgGameObjectFactory.createDecoration( 1250, 870, 120, 90, mfg.MfgImage.IMAGE_TREE ),
 
                 // moveable boxes
 
@@ -48,8 +45,9 @@
                 this.player,
 
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 700,  860, 120, 90, null ),
-                mfg.MfgGameObjectFactory.createDecoration( 2000, 860, 120, 90, null ),
+                mfg.MfgGameObjectFactory.createDecoration( 500,  870, 120, 90, mfg.MfgImage.IMAGE_TREE ),
+                mfg.MfgGameObjectFactory.createDecoration( 1000, 870, 120, 90, mfg.MfgImage.IMAGE_TREE ),
+                mfg.MfgGameObjectFactory.createDecoration( 1500, 870, 120, 90, mfg.MfgImage.IMAGE_TREE ),
             ];
         }
     }

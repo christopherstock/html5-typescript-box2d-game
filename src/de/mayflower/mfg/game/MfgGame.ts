@@ -32,7 +32,7 @@
             this.initEngine2D();
             this.initKeySystem();
 
-            this.resetAndLaunchLevel( new mfg.MfgLevelDev() );
+            this.resetAndLaunchLevel( new mfg.MfgLevelEnchantedWoods() );
         }
 
         /***************************************************************************************************************

@@ -84,6 +84,7 @@ __export(__webpack_require__(12));
 __export(__webpack_require__(13));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
+__export(__webpack_require__(35));
 __export(__webpack_require__(16));
 __export(__webpack_require__(17));
 __export(__webpack_require__(18));
@@ -10632,6 +10633,8 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Enable decoration destruction?
+*   TODO ASAP   Open-World gaming?
 *   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
 *   TODO ASAP   Checkout improved renderer or render-lib for MatterJS?
 *   TODO ASAP   Checkout all parameters of the collision filters!
@@ -12205,7 +12208,7 @@ var MfgGame = (function () {
         mfg.MfgDebug.init.log("Initing game engine");
         this.initEngine2D();
         this.initKeySystem();
-        this.resetAndLaunchLevel(new mfg.MfgLevelDev());
+        this.resetAndLaunchLevel(new mfg.MfgLevelEnchantedWoods());
     };
     /***************************************************************************************************************
     *   Starts the game loop.
@@ -12518,18 +12521,16 @@ var MfgLevelEnchantedWoods = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelEnchantedWoods.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(0, 0, mfg.MfgCharacterLookingDirection.RIGHT);
+        this.player = new mfg.MfgPlayer(750, 880, mfg.MfgCharacterLookingDirection.RIGHT);
         // setup all game objects
         this.gameObjects =
             [
+                // static level blocks
+                mfg.MfgGameObjectFactory.createBlock(0, 1000, 2000, 20, 0.0, false),
                 // bg decoration
-                // mfg.MfgGameObjectFactory.createDecoration( 0, 0, this.width, this.height, mfg.MfgImage.IMAGE_BG_FOREST_GREEN ),
-                // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(860, 860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(2200, 860, 120, 90, null),
-                // static obstacles
-                mfg.MfgGameObjectFactory.createBlock(0, 950, 1380, 25, 0.0, false),
-                mfg.MfgGameObjectFactory.createBlock(1840, 950, 1380, 25, 0.0, false),
+                mfg.MfgGameObjectFactory.createDecoration(250, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(750, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(1250, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
                 // moveable boxes
                 // sigsaws
                 // items
@@ -12537,8 +12538,9 @@ var MfgLevelEnchantedWoods = (function (_super) {
                 // player
                 this.player,
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration(700, 860, 120, 90, null),
-                mfg.MfgGameObjectFactory.createDecoration(2000, 860, 120, 90, null),
+                mfg.MfgGameObjectFactory.createDecoration(500, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(1000, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(1500, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
             ];
     };
     return MfgLevelEnchantedWoods;
@@ -12948,6 +12950,27 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*******************************************************************************************************************
+*   Creates customized instances of bundled game objects.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgGameObjectBundleFactory = (function () {
+    function MfgGameObjectBundleFactory() {
+    }
+    return MfgGameObjectBundleFactory;
+}());
+exports.MfgGameObjectBundleFactory = MfgGameObjectBundleFactory;
 
 
 /***/ })
