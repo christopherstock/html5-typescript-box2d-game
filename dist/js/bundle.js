@@ -10636,7 +10636,9 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Enable decoration destruction?
 *   TODO ASAP   Open-World gaming?
 *   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
+*   TODO ASAP   Pick game object dimensions from images!
 *   TODO ASAP   Checkout improved renderer or render-lib for MatterJS?
+*   TODO ASAP   Cleanup game/object package!
 *   TODO ASAP   Checkout all parameters of the collision filters!
 *   TODO ASAP   Solve jump-through obstacles!
 *   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
@@ -11690,7 +11692,10 @@ var MfgPlayer = (function (_super) {
     *   @param lookingDirection The initial looking direction.
     ***************************************************************************************************************/
     function MfgPlayer(x, y, lookingDirection) {
-        return _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_HUMAN), x, y, mfg.MfgImage.IMAGE_PLAYER_STAND, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        var _this = this;
+        var img = mfg.MfgImage.IMAGE_PLAYER_STAND;
+        _this = _super.call(this, new mfg.MfgShapeRectangle(mfg.MfgSettings.PLAYER_WIDTH, mfg.MfgSettings.PLAYER_HEIGHT, mfg.MfgSettings.COLOR_DEBUG_PLAYER, false, 0.0, mfg.MfgGameObject.FRICTION_DEFAULT, mfg.MfgGameObject.DENSITY_HUMAN), x, y, img, lookingDirection, mfg.MfgSettings.PLAYER_SPEED_MOVE, mfg.MfgCharacter.JUMP_POWER_DEFAULT) || this;
+        return _this;
     }
     /***************************************************************************************************************
     *   Renders the current player tick.
@@ -12521,7 +12526,7 @@ var MfgLevelEnchantedWoods = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelEnchantedWoods.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(750, 880, mfg.MfgCharacterLookingDirection.RIGHT);
+        this.player = new mfg.MfgPlayer(750, 880, mfg.MfgCharacterLookingDirection.LEFT);
         // setup all game objects
         this.gameObjects =
             [

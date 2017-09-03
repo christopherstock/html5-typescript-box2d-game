@@ -19,6 +19,8 @@
         ***************************************************************************************************************/
         public constructor( x:number, y:number, lookingDirection:mfg.MfgCharacterLookingDirection )
         {
+            let img:string = mfg.MfgImage.IMAGE_PLAYER_STAND;
+
             super
             (
                 new mfg.MfgShapeRectangle
@@ -33,7 +35,7 @@
                 ),
                 x,
                 y,
-                mfg.MfgImage.IMAGE_PLAYER_STAND,
+                img,
                 lookingDirection,
                 mfg.MfgSettings.PLAYER_SPEED_MOVE,
                 mfg.MfgCharacter.JUMP_POWER_DEFAULT
