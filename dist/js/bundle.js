@@ -84,7 +84,6 @@ __export(__webpack_require__(12));
 __export(__webpack_require__(13));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
-__export(__webpack_require__(35));
 __export(__webpack_require__(16));
 __export(__webpack_require__(17));
 __export(__webpack_require__(18));
@@ -104,6 +103,7 @@ __export(__webpack_require__(31));
 __export(__webpack_require__(32));
 __export(__webpack_require__(33));
 __export(__webpack_require__(34));
+__export(__webpack_require__(35));
 
 
 /***/ }),
@@ -10633,10 +10633,11 @@ var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
 *
+*   TODO ASAP   Pick game object dimensions from images!
 *   TODO ASAP   Enable decoration destruction?
 *   TODO ASAP   Open-World gaming?
+*   TODO ASAP   Delay falling! ( Enable easy jumping on sliding ramp down! )
 *   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
-*   TODO ASAP   Pick game object dimensions from images!
 *   TODO ASAP   Checkout improved renderer or render-lib for MatterJS?
 *   TODO ASAP   Cleanup game/object package!
 *   TODO ASAP   Checkout all parameters of the collision filters!
@@ -11320,6 +11321,27 @@ exports.MfgGameObjectFactory = MfgGameObjectFactory;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+/*******************************************************************************************************************
+*   Creates customized instances of bundled game objects.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgGameObjectBundleFactory = (function () {
+    function MfgGameObjectBundleFactory() {
+    }
+    return MfgGameObjectBundleFactory;
+}());
+exports.MfgGameObjectBundleFactory = MfgGameObjectBundleFactory;
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -11471,7 +11493,7 @@ exports.MfgCharacter = MfgCharacter;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11540,7 +11562,7 @@ exports.MfgEnemy = MfgEnemy;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11648,7 +11670,7 @@ exports.MfgPlatform = MfgPlatform;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11774,7 +11796,7 @@ exports.MfgPlayer = MfgPlayer;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11821,7 +11843,7 @@ exports.MfgBox = MfgBox;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11887,7 +11909,7 @@ exports.MfgItem = MfgItem;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11936,7 +11958,7 @@ exports.MfgDecoration = MfgDecoration;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12006,7 +12028,7 @@ exports.MfgObstacle = MfgObstacle;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12103,7 +12125,7 @@ exports.MfgSigSaw = MfgSigSaw;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12169,7 +12191,7 @@ exports.MfgBounce = MfgBounce;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12301,7 +12323,7 @@ exports.MfgGame = MfgGame;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12383,7 +12405,7 @@ exports.MfgLevel = MfgLevel;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12488,7 +12510,7 @@ exports.MfgLevelDev = MfgLevelDev;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12530,22 +12552,30 @@ var MfgLevelEnchantedWoods = (function (_super) {
         // setup all game objects
         this.gameObjects =
             [
-                // static level blocks
-                mfg.MfgGameObjectFactory.createBlock(0, 1000, 2000, 20, 0.0, false),
+                // floor
+                mfg.MfgGameObjectFactory.createBlock(0, 1000, 1250, 500, 0.0, false),
+                mfg.MfgGameObjectFactory.createElevatedRamp(1250, 1000, 750, 500, -100.0),
+                mfg.MfgGameObjectFactory.createBlock(2000, 900, 1250, 500, 0.0, false),
+                // hut
+                mfg.MfgGameObjectFactory.createDecoration(140, 870, 350, 130, null),
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(250, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
-                mfg.MfgGameObjectFactory.createDecoration(750, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
-                mfg.MfgGameObjectFactory.createDecoration(1250, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(350, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(850, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(1350, 850, 120, 90, mfg.MfgImage.IMAGE_TREE),
                 // moveable boxes
                 // sigsaws
                 // items
+                mfg.MfgGameObjectFactory.createItem(10, 1000 - 52),
+                mfg.MfgGameObjectFactory.createItem(40, 1000 - 52),
+                mfg.MfgGameObjectFactory.createItem(70, 1000 - 52),
+                mfg.MfgGameObjectFactory.createItem(100, 1000 - 52),
                 // enemies
                 // player
                 this.player,
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration(500, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
-                mfg.MfgGameObjectFactory.createDecoration(1000, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
-                mfg.MfgGameObjectFactory.createDecoration(1500, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(600, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(1100, 870, 120, 90, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(1600, 817, 120, 90, mfg.MfgImage.IMAGE_TREE),
             ];
     };
     return MfgLevelEnchantedWoods;
@@ -12554,7 +12584,7 @@ exports.MfgLevelEnchantedWoods = MfgLevelEnchantedWoods;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12656,7 +12686,7 @@ exports.MfgKeySystem = MfgKeySystem;
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12832,7 +12862,7 @@ exports.MfgCamera = MfgCamera;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12864,7 +12894,7 @@ exports.MfgImage = MfgImage;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12894,7 +12924,7 @@ exports.MfgMath = MfgMath;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12955,27 +12985,6 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
-
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/*******************************************************************************************************************
-*   Creates customized instances of bundled game objects.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgGameObjectBundleFactory = (function () {
-    function MfgGameObjectBundleFactory() {
-    }
-    return MfgGameObjectBundleFactory;
-}());
-exports.MfgGameObjectBundleFactory = MfgGameObjectBundleFactory;
 
 
 /***/ })

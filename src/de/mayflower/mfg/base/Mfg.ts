@@ -4,10 +4,11 @@
     /*******************************************************************************************************************
     *   The main class contains the application's points of entry and termination.
     *
+    *   TODO ASAP   Pick game object dimensions from images!
     *   TODO ASAP   Enable decoration destruction?
     *   TODO ASAP   Open-World gaming?
+    *   TODO ASAP   Delay falling! ( Enable easy jumping on sliding ramp down! )
     *   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
-    *   TODO ASAP   Pick game object dimensions from images!
     *   TODO ASAP   Checkout improved renderer or render-lib for MatterJS?
     *   TODO ASAP   Cleanup game/object package!
     *   TODO ASAP   Checkout all parameters of the collision filters!
