@@ -28,5 +28,6 @@
     export * from './hid/MfgKeySystem';
     export * from './ui/MfgCamera';
     export * from './ui/MfgImage';
+    export * from './util/MfgEnumEx';
     export * from './util/MfgMath';
     export * from './util/MfgString';

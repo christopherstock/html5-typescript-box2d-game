@@ -84,6 +84,7 @@ __export(__webpack_require__(12));
 __export(__webpack_require__(13));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
+__export(__webpack_require__(35));
 __export(__webpack_require__(16));
 __export(__webpack_require__(17));
 __export(__webpack_require__(18));
@@ -101,9 +102,9 @@ __export(__webpack_require__(29));
 __export(__webpack_require__(30));
 __export(__webpack_require__(31));
 __export(__webpack_require__(32));
+__export(__webpack_require__(36));
 __export(__webpack_require__(33));
 __export(__webpack_require__(34));
-__export(__webpack_require__(35));
 
 
 /***/ }),
@@ -10637,6 +10638,10 @@ var mfg = __webpack_require__(0);
 *   TODO ASAP   Enable decoration destruction?
 *   TODO ASAP   Open-World gaming?
 *   TODO ASAP   Delay falling! ( Enable easy jumping on sliding ramp down! )
+*   TODO ASAP   Create greater factories that bundle ojects.
+*   TODO ASAP   Delay player sprite change.
+*   TODO ASAP   Fill all game elements with images.
+*
 *   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
 *   TODO ASAP   Checkout improved renderer or render-lib for MatterJS?
 *   TODO ASAP   Cleanup game/object package!
@@ -11321,27 +11326,6 @@ exports.MfgGameObjectFactory = MfgGameObjectFactory;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
-/*******************************************************************************************************************
-*   Creates customized instances of bundled game objects.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgGameObjectBundleFactory = (function () {
-    function MfgGameObjectBundleFactory() {
-    }
-    return MfgGameObjectBundleFactory;
-}());
-exports.MfgGameObjectBundleFactory = MfgGameObjectBundleFactory;
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -11493,7 +11477,7 @@ exports.MfgCharacter = MfgCharacter;
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11562,7 +11546,7 @@ exports.MfgEnemy = MfgEnemy;
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11670,7 +11654,7 @@ exports.MfgPlatform = MfgPlatform;
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11796,7 +11780,7 @@ exports.MfgPlayer = MfgPlayer;
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11843,7 +11827,7 @@ exports.MfgBox = MfgBox;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11909,7 +11893,7 @@ exports.MfgItem = MfgItem;
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11958,7 +11942,7 @@ exports.MfgDecoration = MfgDecoration;
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12028,7 +12012,7 @@ exports.MfgObstacle = MfgObstacle;
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12125,7 +12109,7 @@ exports.MfgSigSaw = MfgSigSaw;
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12191,7 +12175,7 @@ exports.MfgBounce = MfgBounce;
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12235,6 +12219,7 @@ var MfgGame = (function () {
         mfg.MfgDebug.init.log("Initing game engine");
         this.initEngine2D();
         this.initKeySystem();
+        mfg.MfgDebug.init.log("Launching initial level");
         this.resetAndLaunchLevel(new mfg.MfgLevelEnchantedWoods());
     };
     /***************************************************************************************************************
@@ -12323,7 +12308,7 @@ exports.MfgGame = MfgGame;
 
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12405,7 +12390,7 @@ exports.MfgLevel = MfgLevel;
 
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12510,7 +12495,7 @@ exports.MfgLevelDev = MfgLevelDev;
 
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12584,7 +12569,7 @@ exports.MfgLevelEnchantedWoods = MfgLevelEnchantedWoods;
 
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12686,7 +12671,7 @@ exports.MfgKeySystem = MfgKeySystem;
 
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12862,7 +12847,7 @@ exports.MfgCamera = MfgCamera;
 
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12894,7 +12879,7 @@ exports.MfgImage = MfgImage;
 
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12924,7 +12909,7 @@ exports.MfgMath = MfgMath;
 
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12985,6 +12970,60 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*******************************************************************************************************************
+*   Creates customized instances of bundled game objects.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgGameObjectBundleFactory = (function () {
+    function MfgGameObjectBundleFactory() {
+    }
+    return MfgGameObjectBundleFactory;
+}());
+exports.MfgGameObjectBundleFactory = MfgGameObjectBundleFactory;
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*******************************************************************************************************************
+*   Offers extended static functionality for the treatment of enumerations.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var EnumEx = (function () {
+    function EnumEx() {
+    }
+    EnumEx.getNamesAndValues = function (e) {
+        return EnumEx.getNames(e).map(function (n) { return ({ name: n, value: e[n] }); });
+    };
+    EnumEx.getNames = function (e) {
+        return EnumEx.getObjValues(e).filter(function (v) { return typeof v === "string"; });
+    };
+    EnumEx.getValues = function (e) {
+        return EnumEx.getObjValues(e).filter(function (v) { return typeof v === "number"; });
+    };
+    EnumEx.getObjValues = function (e) {
+        return Object.keys(e).map(function (k) { return e[k]; });
+    };
+    return EnumEx;
+}());
+exports.EnumEx = EnumEx;
 
 
 /***/ })

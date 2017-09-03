@@ -8,6 +8,10 @@
     *   TODO ASAP   Enable decoration destruction?
     *   TODO ASAP   Open-World gaming?
     *   TODO ASAP   Delay falling! ( Enable easy jumping on sliding ramp down! )
+    *   TODO ASAP   Create greater factories that bundle ojects.
+    *   TODO ASAP   Delay player sprite change.
+    *   TODO ASAP   Fill all game elements with images.
+    *
     *   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
     *   TODO ASAP   Checkout improved renderer or render-lib for MatterJS?
     *   TODO ASAP   Cleanup game/object package!
