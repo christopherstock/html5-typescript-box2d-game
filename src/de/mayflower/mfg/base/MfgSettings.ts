@@ -88,7 +88,7 @@
         /** The collision group for all non-colliding items. */
         public      static      COLLISION_GROUP_NON_COLLIDING_ITEM          :Matter.ICollisionFilter    =
         {
-                category: 0x0002,
+                category: 0x0004,
                 mask:     0x0005,
                 group:    0x0006,
         };

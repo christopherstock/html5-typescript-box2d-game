@@ -8,30 +8,30 @@
     export class MfgVersion
     {
         /** The project's version v.0.0.1. */
-        private     static      V_0_0_1                 :MfgVersion         = new MfgVersion( "0.0.1", "GAMBAZ", "07.08.2017, 10:18:34 GMT+1" );
+        private     static  readonly    V_0_0_1                 :MfgVersion         = new MfgVersion( "0.0.1", "GAMBAZ", "07.08.2017, 10:18:34 GMT+1" );
 
         /** The project's current version. */
-        public      static      CURRENT_VERSION         :MfgVersion         = MfgVersion.V_0_0_1;
+        public      static  readonly    CURRENT_VERSION         :MfgVersion         = MfgVersion.V_0_0_1;
 
         /** This version's specifier. */
-        private                 iVersion                :string             = null;
+        private                         version                 :string             = null;
         /** This version's internal codename. */
-        private                 iCodename               :string             = null;
+        private                         codename                :string             = null;
         /** This version's completion date. */
-        private                 iDate                   :string             = null;
+        private                         date                    :string             = null;
 
         /***************************************************************************************************************
         *   Creates a project version.
         *
-        *   @param aVersion     The version specifier.
-        *   @param aCodename    The internal codename.
-        *   @param aDate        The completion date.
+        *   @param version      The version specifier.
+        *   @param codename     The internal codename.
+        *   @param date         The completion date.
         ***************************************************************************************************************/
-        constructor( aVersion:string, aCodename:string, aDate:string )
+        constructor( version:string, codename:string, date:string )
         {
-            this.iVersion  = aVersion;
-            this.iCodename = aCodename;
-            this.iDate     = aDate;
+            this.version  = version;
+            this.codename = codename;
+            this.date     = date;
         }
 
         /***************************************************************************************************************
@@ -41,6 +41,6 @@
         ***************************************************************************************************************/
         public getVersionDescriptor():string
         {
-            return ( "v. " + this.iVersion + ", " + this.iDate + ", [" + this.iCodename + "]" );
+            return ( "v. " + this.version + ", " + this.date + ", [" + this.codename + "]" );
         }
     }

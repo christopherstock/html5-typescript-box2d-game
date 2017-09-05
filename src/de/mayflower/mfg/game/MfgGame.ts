@@ -33,7 +33,7 @@
             this.initKeySystem();
 
             mfg.MfgDebug.init.log( "Launching initial level" );
-            this.resetAndLaunchLevel( new mfg.MfgLevelEnchantedWoods() );
+            this.resetAndLaunchLevel( new mfg.MfgLevelDev() );
         }
 
         /***************************************************************************************************************

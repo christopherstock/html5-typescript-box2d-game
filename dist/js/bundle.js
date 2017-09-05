@@ -84,7 +84,6 @@ __export(__webpack_require__(12));
 __export(__webpack_require__(13));
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
-__export(__webpack_require__(35));
 __export(__webpack_require__(16));
 __export(__webpack_require__(17));
 __export(__webpack_require__(18));
@@ -102,9 +101,10 @@ __export(__webpack_require__(29));
 __export(__webpack_require__(30));
 __export(__webpack_require__(31));
 __export(__webpack_require__(32));
-__export(__webpack_require__(36));
 __export(__webpack_require__(33));
 __export(__webpack_require__(34));
+__export(__webpack_require__(35));
+__export(__webpack_require__(36));
 
 
 /***/ }),
@@ -10436,20 +10436,20 @@ var MfgVersion = (function () {
     /***************************************************************************************************************
     *   Creates a project version.
     *
-    *   @param aVersion     The version specifier.
-    *   @param aCodename    The internal codename.
-    *   @param aDate        The completion date.
+    *   @param version      The version specifier.
+    *   @param codename     The internal codename.
+    *   @param date         The completion date.
     ***************************************************************************************************************/
-    function MfgVersion(aVersion, aCodename, aDate) {
+    function MfgVersion(version, codename, date) {
         /** This version's specifier. */
-        this.iVersion = null;
+        this.version = null;
         /** This version's internal codename. */
-        this.iCodename = null;
+        this.codename = null;
         /** This version's completion date. */
-        this.iDate = null;
-        this.iVersion = aVersion;
-        this.iCodename = aCodename;
-        this.iDate = aDate;
+        this.date = null;
+        this.version = version;
+        this.codename = codename;
+        this.date = date;
     }
     /***************************************************************************************************************
     *   Returns a representation of the current project version and it's date.
@@ -10457,7 +10457,7 @@ var MfgVersion = (function () {
     *   @return A representation of the current project's version with it's timestamp.
     ***************************************************************************************************************/
     MfgVersion.prototype.getVersionDescriptor = function () {
-        return ("v. " + this.iVersion + ", " + this.iDate + ", [" + this.iCodename + "]");
+        return ("v. " + this.version + ", " + this.date + ", [" + this.codename + "]");
     };
     /** The project's version v.0.0.1. */
     MfgVersion.V_0_0_1 = new MfgVersion("0.0.1", "GAMBAZ", "07.08.2017, 10:18:34 GMT+1");
@@ -10551,7 +10551,7 @@ var MfgSettings = (function () {
     };
     /** The collision group for all non-colliding items. */
     MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM = {
-        category: 0x0002,
+        category: 0x0004,
         mask: 0x0005,
         group: 0x0006,
     };
@@ -11326,6 +11326,27 @@ exports.MfgGameObjectFactory = MfgGameObjectFactory;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+/*******************************************************************************************************************
+*   Creates customized instances of bundled game objects.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var MfgGameObjectBundleFactory = (function () {
+    function MfgGameObjectBundleFactory() {
+    }
+    return MfgGameObjectBundleFactory;
+}());
+exports.MfgGameObjectBundleFactory = MfgGameObjectBundleFactory;
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -11380,6 +11401,8 @@ var MfgCharacter = (function (_super) {
         _this.speedMove = 0.0;
         /** The jump power to apply for this character. */
         _this.jumpPower = 0.0;
+        /** Current ticks being passed without character bottom collision. */
+        _this.ticksWithoutBottomCollision = 0;
         _this.lookingDirection = lookingDirection;
         _this.speedMove = speedMove;
         _this.jumpPower = jumpPower;
@@ -11390,6 +11413,8 @@ var MfgCharacter = (function (_super) {
     ***************************************************************************************************************/
     MfgCharacter.prototype.render = function () {
         this.checkBottomCollision();
+        if (this.collidesBottom)
+            this.ticksWithoutBottomCollision = 0;
         this.resetRotation();
         this.clipToHorizontalLevelBounds();
         if (!this.dead) {
@@ -11471,13 +11496,14 @@ var MfgCharacter = (function (_super) {
     };
     /** The default jump power ( player ). */
     MfgCharacter.JUMP_POWER_DEFAULT = -4.0;
+    MfgCharacter.MAX_TICKS_WITHOUT_BOTTOM_COLLISION = 15;
     return MfgCharacter;
 }(mfg.MfgGameObject));
 exports.MfgCharacter = MfgCharacter;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11546,7 +11572,7 @@ exports.MfgEnemy = MfgEnemy;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11654,7 +11680,7 @@ exports.MfgPlatform = MfgPlatform;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11708,7 +11734,7 @@ var MfgPlayer = (function (_super) {
     ***************************************************************************************************************/
     MfgPlayer.prototype.render = function () {
         _super.prototype.render.call(this);
-        if (this.collidesBottom) {
+        if (this.collidesBottom || this.ticksWithoutBottomCollision++ < mfg.MfgCharacter.MAX_TICKS_WITHOUT_BOTTOM_COLLISION) {
             this.shape.body.render.sprite.texture = mfg.MfgImage.IMAGE_PLAYER_STAND;
         }
         else {
@@ -11780,7 +11806,7 @@ exports.MfgPlayer = MfgPlayer;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11827,7 +11853,7 @@ exports.MfgBox = MfgBox;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11893,7 +11919,7 @@ exports.MfgItem = MfgItem;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11942,7 +11968,7 @@ exports.MfgDecoration = MfgDecoration;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12012,7 +12038,7 @@ exports.MfgObstacle = MfgObstacle;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12109,7 +12135,7 @@ exports.MfgSigSaw = MfgSigSaw;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12175,7 +12201,7 @@ exports.MfgBounce = MfgBounce;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12220,7 +12246,7 @@ var MfgGame = (function () {
         this.initEngine2D();
         this.initKeySystem();
         mfg.MfgDebug.init.log("Launching initial level");
-        this.resetAndLaunchLevel(new mfg.MfgLevelEnchantedWoods());
+        this.resetAndLaunchLevel(new mfg.MfgLevelDev());
     };
     /***************************************************************************************************************
     *   Starts the game loop.
@@ -12308,7 +12334,7 @@ exports.MfgGame = MfgGame;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12390,7 +12416,7 @@ exports.MfgLevel = MfgLevel;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12429,32 +12455,39 @@ var MfgLevelDev = (function (_super) {
     ***************************************************************************************************************/
     MfgLevelDev.prototype.createGameObjects = function () {
         // init player
-        this.player = new mfg.MfgPlayer(4100, 500.0, mfg.MfgCharacterLookingDirection.RIGHT);
+        this.player = new mfg.MfgPlayer(50, 500.0, mfg.MfgCharacterLookingDirection.RIGHT);
         // setup all game objects
         this.gameObjects =
             [
                 // grounds and ramps
-                mfg.MfgGameObjectFactory.createBlock(0, 700, 500, 15, 0.0, false),
+                mfg.MfgGameObjectFactory.createBlock(0, 620, 500, 15, 0.0, false),
                 mfg.MfgGameObjectFactory.createBlock(490, 765, 500, 15, 15.0, false),
                 mfg.MfgGameObjectFactory.createBlock(980, 830, 500, 15, 0.0, false),
                 mfg.MfgGameObjectFactory.createBlock(2310, 830, 500, 15, 0.0, false),
                 mfg.MfgGameObjectFactory.createBlock(3230, 830, 500, 15, 0.0, false),
                 mfg.MfgGameObjectFactory.createBlock(4080, 730, 500, 15, 0.0, false),
-                /*
-                                // jump through obstacle
-                                mfg.MfgGameObjectFactory.createBlock( 3800,  2700, 400, 10, 0.0, true ),
-                */
                 // bg decoration
-                mfg.MfgGameObjectFactory.createDecoration(0, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
-                mfg.MfgGameObjectFactory.createDecoration(80, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
-                mfg.MfgGameObjectFactory.createDecoration(160, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(30, 450, 76, 170, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(370, 450, 76, 170, mfg.MfgImage.IMAGE_TREE),
                 // moveable boxes
-                mfg.MfgGameObjectFactory.createBox(100, 500, 80, 80, mfg.MfgGameObject.FRICTION_CONCRETE, mfg.MfgGameObject.DENSITY_DEFAULT),
-                mfg.MfgGameObjectFactory.createSphere(200, 500, 80, mfg.MfgGameObject.FRICTION_GLASS, mfg.MfgGameObject.DENSITY_DEFAULT),
-                mfg.MfgGameObjectFactory.createBox(300, 500, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
-                mfg.MfgGameObjectFactory.createSphere(3600, 400, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
-                mfg.MfgGameObjectFactory.createBox(3625, 350, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
-                mfg.MfgGameObjectFactory.createBox(3650, 300, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(300, 160, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createSphere(350, 240, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(400, 320, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(450, 400, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createSphere(500, 320, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(550, 240, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(600, 160, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createSphere(650, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(700, 0, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(1300, -3160, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createSphere(1350, -3240, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(1400, -3320, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(1450, -3400, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createSphere(1500, -3320, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(1550, -3240, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(1600, -3160, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createSphere(1650, -3180, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
+                mfg.MfgGameObjectFactory.createBox(1700, -3000, 80, 80, mfg.MfgGameObject.FRICTION_ICE, mfg.MfgGameObject.DENSITY_DEFAULT),
                 // sigsaws and bounces
                 mfg.MfgGameObjectFactory.createSigsaw(1490, 830, 400, 25, null),
                 mfg.MfgGameObjectFactory.createBounce(1900, 830, 400, 25, null),
@@ -12484,9 +12517,7 @@ var MfgLevelDev = (function (_super) {
                 // enemies (fg)
                 mfg.MfgGameObjectFactory.createEnemy(1200, 0),
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration(300, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
-                mfg.MfgGameObjectFactory.createDecoration(395, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
-                mfg.MfgGameObjectFactory.createDecoration(490, 550, 76, 170, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(200, 450, 76, 170, mfg.MfgImage.IMAGE_TREE),
             ];
     };
     return MfgLevelDev;
@@ -12495,7 +12526,7 @@ exports.MfgLevelDev = MfgLevelDev;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12569,7 +12600,7 @@ exports.MfgLevelEnchantedWoods = MfgLevelEnchantedWoods;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12671,7 +12702,7 @@ exports.MfgKeySystem = MfgKeySystem;
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12847,7 +12878,7 @@ exports.MfgCamera = MfgCamera;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12879,7 +12910,40 @@ exports.MfgImage = MfgImage;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*******************************************************************************************************************
+*   Offers extended static functionality for the treatment of enumerations.
+*
+*   @author     Christopher Stock
+*   @version    0.0.1
+*******************************************************************************************************************/
+var EnumEx = (function () {
+    function EnumEx() {
+    }
+    EnumEx.getNamesAndValues = function (e) {
+        return EnumEx.getNames(e).map(function (n) { return ({ name: n, value: e[n] }); });
+    };
+    EnumEx.getNames = function (e) {
+        return EnumEx.getObjValues(e).filter(function (v) { return typeof v === "string"; });
+    };
+    EnumEx.getValues = function (e) {
+        return EnumEx.getObjValues(e).filter(function (v) { return typeof v === "number"; });
+    };
+    EnumEx.getObjValues = function (e) {
+        return Object.keys(e).map(function (k) { return e[k]; });
+    };
+    return EnumEx;
+}());
+exports.EnumEx = EnumEx;
+
+
+/***/ }),
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12909,7 +12973,7 @@ exports.MfgMath = MfgMath;
 
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12970,60 +13034,6 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
-
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/*******************************************************************************************************************
-*   Creates customized instances of bundled game objects.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var MfgGameObjectBundleFactory = (function () {
-    function MfgGameObjectBundleFactory() {
-    }
-    return MfgGameObjectBundleFactory;
-}());
-exports.MfgGameObjectBundleFactory = MfgGameObjectBundleFactory;
-
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/*******************************************************************************************************************
-*   Offers extended static functionality for the treatment of enumerations.
-*
-*   @author     Christopher Stock
-*   @version    0.0.1
-*******************************************************************************************************************/
-var EnumEx = (function () {
-    function EnumEx() {
-    }
-    EnumEx.getNamesAndValues = function (e) {
-        return EnumEx.getNames(e).map(function (n) { return ({ name: n, value: e[n] }); });
-    };
-    EnumEx.getNames = function (e) {
-        return EnumEx.getObjValues(e).filter(function (v) { return typeof v === "string"; });
-    };
-    EnumEx.getValues = function (e) {
-        return EnumEx.getObjValues(e).filter(function (v) { return typeof v === "number"; });
-    };
-    EnumEx.getObjValues = function (e) {
-        return Object.keys(e).map(function (k) { return e[k]; });
-    };
-    return EnumEx;
-}());
-exports.EnumEx = EnumEx;
 
 
 /***/ })

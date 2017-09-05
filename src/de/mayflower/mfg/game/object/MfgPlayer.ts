@@ -49,7 +49,7 @@
         {
             super.render();
 
-            if ( this.collidesBottom )
+            if ( this.collidesBottom || this.ticksWithoutBottomCollision++ < mfg.MfgCharacter.MAX_TICKS_WITHOUT_BOTTOM_COLLISION )
             {
                 this.shape.body.render.sprite.texture = mfg.MfgImage.IMAGE_PLAYER_STAND;
             }

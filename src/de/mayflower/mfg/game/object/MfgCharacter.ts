@@ -11,22 +11,27 @@
     export abstract class MfgCharacter extends mfg.MfgGameObject
     {
         /** The default jump power ( player ). */
-        public      static  JUMP_POWER_DEFAULT          :number                             = -4.0;
+        public      static  readonly    JUMP_POWER_DEFAULT                  :number                             = -4.0;
+
+        protected   static  readonly    MAX_TICKS_WITHOUT_BOTTOM_COLLISION  :number                             = 15;
 
         /** The looking direction for this character. */
-        public              lookingDirection            :mfg.MfgCharacterLookingDirection   = null;
+        public                          lookingDirection                    :mfg.MfgCharacterLookingDirection   = null;
 
         /** Flags if this character is dead. */
-        protected           dead                        :boolean                            = false;
+        protected                       dead                                :boolean                            = false;
 
         /** flags if the character collides with the bottom sensor. */
-        public              collidesBottom              :boolean                            = false;
+        public                          collidesBottom                      :boolean                            = false;
 
         /** The speed for horizontal movements. */
-        private             speedMove                   :number                             = 0.0;
+        private                         speedMove                           :number                             = 0.0;
 
         /** The jump power to apply for this character. */
-        private             jumpPower                   :number                             = 0.0;
+        private                         jumpPower                           :number                             = 0.0;
+
+        /** Current ticks being passed without character bottom collision. */
+        protected                       ticksWithoutBottomCollision         :number                             = 0;
 
         /***************************************************************************************************************
         *   Creates a new character.
@@ -69,6 +74,8 @@
         public render()
         {
             this.checkBottomCollision();
+            if ( this.collidesBottom ) this.ticksWithoutBottomCollision = 0;
+
             this.resetRotation();
             this.clipToHorizontalLevelBounds();
 
