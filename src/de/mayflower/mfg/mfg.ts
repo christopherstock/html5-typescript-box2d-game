@@ -26,6 +26,8 @@
     export * from './game/level/MfgLevelDev';
     export * from './game/level/MfgLevelEnchantedWoods';
     export * from './hid/MfgKeySystem';
+    export * from './hid/MfgSound';
+    export * from './hid/MfgSoundSystem';
     export * from './ui/MfgCamera';
     export * from './ui/MfgImage';
     export * from './util/MfgEnumEx';

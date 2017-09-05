@@ -107,7 +107,8 @@
                 mfg.MfgGameObjectFactory.createEnemy( 1200, 0 ),
 
                 // fg decoration
-                mfg.MfgGameObjectFactory.createDecoration( 200, 450, 76, 170, mfg.MfgImage.IMAGE_TREE ),
+                mfg.MfgGameObjectFactory.createDecoration( 200,  450, 76, 170, mfg.MfgImage.IMAGE_TREE ),
+                mfg.MfgGameObjectFactory.createDecoration( 3230, 660, 76, 170, mfg.MfgImage.IMAGE_TREE ),
             ];
         }
     }

@@ -100,6 +100,8 @@ __export(__webpack_require__(28));
 __export(__webpack_require__(29));
 __export(__webpack_require__(30));
 __export(__webpack_require__(31));
+__export(__webpack_require__(38));
+__export(__webpack_require__(37));
 __export(__webpack_require__(32));
 __export(__webpack_require__(33));
 __export(__webpack_require__(34));
@@ -10543,6 +10545,8 @@ var MfgSettings = (function () {
     MfgSettings.PATH_IMAGE_PLAYER = "res/image/player/";
     /** The relative path from index.html where all level images reside. */
     MfgSettings.PATH_IMAGE_LEVEL = "res/image/level/";
+    /** The relative path from index.html where all sounds reside. */
+    MfgSettings.PATH_SOUND = "res/sound/";
     /** The default collision group for all game objects. */
     MfgSettings.COLLISION_GROUP_COLLIDING = {
         category: 0x0001,
@@ -12228,6 +12232,8 @@ var MfgGame = (function () {
         this.camera = null;
         /** The custom level. */
         this.level = null;
+        /** The soundSystem system. */
+        this.soundSystem = null;
         /***************************************************************************************************************
         *   Being invoked each tick of the game loop in order to render the game.
         ***************************************************************************************************************/
@@ -12245,6 +12251,9 @@ var MfgGame = (function () {
         mfg.MfgDebug.init.log("Initing game engine");
         this.initEngine2D();
         this.initKeySystem();
+        this.initSoundSystem();
+        mfg.MfgDebug.init.log("Playing bg sounds");
+        this.soundSystem.playSound(mfg.MfgSound.PACHELBELS_CANON);
         mfg.MfgDebug.init.log("Launching initial level");
         this.resetAndLaunchLevel(new mfg.MfgLevelDev());
     };
@@ -12288,6 +12297,12 @@ var MfgGame = (function () {
     ***************************************************************************************************************/
     MfgGame.prototype.initKeySystem = function () {
         this.keySystem = new mfg.MfgKeySystem();
+    };
+    /***************************************************************************************************************
+    *   Inits the soundSystem system.
+    ***************************************************************************************************************/
+    MfgGame.prototype.initSoundSystem = function () {
+        this.soundSystem = new mfg.MfgSoundSystem(mfg.MfgSound.FILE_NAMES);
     };
     /***************************************************************************************************************
     *   Inits the level.
@@ -12518,6 +12533,7 @@ var MfgLevelDev = (function (_super) {
                 mfg.MfgGameObjectFactory.createEnemy(1200, 0),
                 // fg decoration
                 mfg.MfgGameObjectFactory.createDecoration(200, 450, 76, 170, mfg.MfgImage.IMAGE_TREE),
+                mfg.MfgGameObjectFactory.createDecoration(3230, 660, 76, 170, mfg.MfgImage.IMAGE_TREE),
             ];
     };
     return MfgLevelDev;
@@ -13034,6 +13050,75 @@ var MfgString = (function () {
     return MfgString;
 }());
 exports.MfgString = MfgString;
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/*****************************************************************************
+*   Loads and manages all desired sounds.
+*
+*   @author  Christopher Stock
+*   @version 1.0
+*****************************************************************************/
+var MfgSoundSystem = (function () {
+    /*****************************************************************************
+    *   Loads all audio elements.
+    *
+    *   @param fileNames An array containing all filenames of the sounds to load.
+    *****************************************************************************/
+    function MfgSoundSystem(fileNames) {
+        /** This array contains all loaded sounds. */
+        this.allSounds = [];
+        //load all sounds
+        for (var i = 0; i < fileNames.length; ++i) {
+            this.allSounds[fileNames[i]] = new Audio(fileNames[i]);
+        }
+    }
+    /*****************************************************************************
+    *   Creates and plays a COPY of the specified audio object.
+    *
+    *   @param id The ID of the audio object to play.
+    *****************************************************************************/
+    MfgSoundSystem.prototype.playSound = function (id) {
+        var clipClone = this.allSounds[id].cloneNode(true);
+        clipClone.play();
+    };
+    return MfgSoundSystem;
+}());
+exports.MfgSoundSystem = MfgSoundSystem;
+
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var mfg = __webpack_require__(0);
+/*****************************************************************************
+*   Specifies all different soundSystem effects being used in the game.
+*
+*   @author  Christopher Stock
+*   @version 1.0
+*****************************************************************************/
+var MfgSound = (function () {
+    function MfgSound() {
+    }
+    /** The soundSystem 'Pachelbels Canon in D major. */
+    MfgSound.PACHELBELS_CANON = mfg.MfgSettings.PATH_SOUND + "pachelbels_canon_d_major.mp3";
+    /** This array contains all filenames of all sounds that shall be loaded. */
+    MfgSound.FILE_NAMES = [
+        MfgSound.PACHELBELS_CANON,
+    ];
+    return MfgSound;
+}());
+exports.MfgSound = MfgSound;
 
 
 /***/ })

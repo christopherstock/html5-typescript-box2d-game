@@ -11,16 +11,19 @@
     export class MfgGame
     {
         /** The MatterJS engine. */
-        public      engine                  :Matter.Engine      = null;
+        public      engine                  :Matter.Engine          = null;
         /** The MatterJS renderer. */
-        private     renderer                :Matter.Render      = null;
+        private     renderer                :Matter.Render          = null;
 
         /** The custom key system. */
-        public      keySystem               :mfg.MfgKeySystem   = null;
+        public      keySystem               :mfg.MfgKeySystem       = null;
         /** The custom camera. */
-        public      camera                  :mfg.MfgCamera      = null;
+        public      camera                  :mfg.MfgCamera          = null;
         /** The custom level. */
-        public      level                   :mfg.MfgLevel       = null;
+        public      level                   :mfg.MfgLevel           = null;
+
+        /** The soundSystem system. */
+        public      soundSystem             :mfg.MfgSoundSystem     = null;
 
         /***************************************************************************************************************
         *   Inits the game from scratch.
@@ -31,6 +34,10 @@
 
             this.initEngine2D();
             this.initKeySystem();
+            this.initSoundSystem();
+
+            mfg.MfgDebug.init.log( "Playing bg sounds" );
+            this.soundSystem.playSound( mfg.MfgSound.PACHELBELS_CANON );
 
             mfg.MfgDebug.init.log( "Launching initial level" );
             this.resetAndLaunchLevel( new mfg.MfgLevelDev() );
@@ -93,6 +100,14 @@
         private initKeySystem()
         {
             this.keySystem = new mfg.MfgKeySystem();
+        }
+
+        /***************************************************************************************************************
+        *   Inits the soundSystem system.
+        ***************************************************************************************************************/
+        private initSoundSystem()
+        {
+            this.soundSystem = new mfg.MfgSoundSystem( mfg.MfgSound.FILE_NAMES );
         }
 
         /***************************************************************************************************************
