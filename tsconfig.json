@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",                    /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
+        "target": "es3",                    /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
         "module": "commonjs",               /* Specify module code generation: 'commonjs', 'amd', 'system', 'umd' or 'es2015'. */
         "outDir": "./bin",                  /* Redirect output structure to the directory. */
         "declaration": false,               /* Generates corresponding '.d.ts' files. */
@@ -11,7 +11,7 @@
         "typeRoots": [
             "node_modules/@types"
         ],                                  /* List of folders to include type definitions from. */
-        "downlevelIteration": true
+        "downlevelIteration": true          /* Used for for of loops. */
     },
 
     "include": [

@@ -23,7 +23,7 @@
         public      level                   :mfg.MfgLevel           = null;
 
         /** The soundSystem system. */
-        public      soundSystem             :mfg.MfgSoundSystem     = null;
+        public      test             :mfg.MfgSoundSystem     = null;
 
         /***************************************************************************************************************
         *   Inits the game from scratch.
@@ -37,7 +37,7 @@
             this.initSoundSystem();
 
             mfg.MfgDebug.init.log( "Playing bg sounds" );
-            this.soundSystem.playSound( mfg.MfgSound.PACHELBELS_CANON );
+            this.test.playSound( mfg.MfgSound.PACHELBELS_CANON );
 
             mfg.MfgDebug.init.log( "Launching initial level" );
             this.resetAndLaunchLevel( new mfg.MfgLevelDev() );
@@ -107,7 +107,7 @@
         ***************************************************************************************************************/
         private initSoundSystem()
         {
-            this.soundSystem = new mfg.MfgSoundSystem( mfg.MfgSound.FILE_NAMES );
+            this.test = new mfg.MfgSoundSystem( mfg.MfgSound.FILE_NAMES );
         }
 
         /***************************************************************************************************************

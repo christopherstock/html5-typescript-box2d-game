@@ -72,7 +72,7 @@
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 __export(__webpack_require__(4));
 __export(__webpack_require__(5));
 __export(__webpack_require__(6));
@@ -10405,7 +10405,7 @@ module.exports = __webpack_require__(3);
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Being invoked when the page is loaded completely.
@@ -10427,7 +10427,7 @@ window.onunload = function () {
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 /*******************************************************************************************************************
 *   Contains the project history with all current and completed version information.
 *
@@ -10476,7 +10476,7 @@ exports.MfgVersion = MfgVersion;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   All adjustments and balancings for the application.
@@ -10551,25 +10551,25 @@ var MfgSettings = (function () {
     MfgSettings.COLLISION_GROUP_COLLIDING = {
         category: 0x0001,
         mask: 0x0002,
-        group: 0x0003,
+        group: 0x0003
     };
     /** The collision group for all non-colliding items. */
     MfgSettings.COLLISION_GROUP_NON_COLLIDING_ITEM = {
         category: 0x0004,
         mask: 0x0005,
-        group: 0x0006,
+        group: 0x0006
     };
     /** The collision group for all non-colliding decos. */
     MfgSettings.COLLISION_GROUP_NON_COLLIDING_DECO = {
         category: 0x0007,
         mask: 0x0008,
-        group: 0x0009,
+        group: 0x0009
     };
     /** The collision group for all non-colliding dead enemies. */
     MfgSettings.COLLISION_GROUP_NON_COLLIDING_DEAD_ENEMY = {
         category: 0x0010,
         mask: 0x0011,
-        group: 0x0012,
+        group: 0x0012
     };
     return MfgSettings;
 }());
@@ -10582,7 +10582,7 @@ exports.MfgSettings = MfgSettings;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents a debug group whose logging can be enabled or disabled.
@@ -10633,46 +10633,10 @@ exports.MfgDebug = MfgDebug;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The main class contains the application's points of entry and termination.
-*
-*   TODO ASAP   Pick game object dimensions from images!
-*   TODO ASAP   Enable decoration destruction?
-*   TODO ASAP   Open-World gaming?
-*   TODO ASAP   Delay falling! ( Enable easy jumping on sliding ramp down! )
-*   TODO ASAP   Create greater factories that bundle ojects.
-*   TODO ASAP   Delay player sprite change.
-*   TODO ASAP   Fill all game elements with images.
-*
-*   TODO ASAP   Add images and image class ?? Improve image usage for all game objects ..
-*   TODO ASAP   Checkout improved renderer or render-lib for MatterJS?
-*   TODO ASAP   Cleanup game/object package!
-*   TODO ASAP   Checkout all parameters of the collision filters!
-*   TODO ASAP   Solve jump-through obstacles!
-*   TODO ASAP   Improve Pass-through walls behaviour for all characters etc. ..
-*
-*   TODO ASAP   Check sprite or image clipping and scaling to player size?
-*   TODO ASAP   Create custom renderer that extends Matter.Render?
-*   TODO ASAP   Skew image (sensor) for waving grass effect?
-*   TODO HIGH   Add sprites and sprite class.
-*   TODO HIGH   Solve problem that player or enemy get stuck on an rotated obstacle ramp!
-*   TODO HIGH   Create different enemy move patterns.
-*   TODO INIT   Parallax bg.
-*   TODO INIT   Solve same body friction on different surfaces with different friction ...
-*   TODO INIT   Add doors / level portals.
-*   TODO LOW    Create levels and sublevels?
-*   TODO LOW    Maximum camera ascend distance if player is superjumped upwards.
-*   TODO LOW    Add adventure / dialog system.
-*   TODO LOW    Disable horizontal movements while jumping?
-*   TODO LOW    Reduce access to external matter lib to shape and game package?
-*   TODO LOW    Improve direction change in air. (no direction change till landed?)
-*   TODO LOW    Improve air behaviour of player on colliding!!
-*   TODO WEAK   Add menu keys for main menu and level map ..
-*   TODO WEAK   Implement nice changing gravity effects.
-*   TODO WEAK   Refactor camera class.
-*   TODO WEAK   Try fullscreen game in browser?
 *
 *   @author     Christopher Stock
 *   @version    0.0.1
@@ -10705,7 +10669,7 @@ exports.Mfg = Mfg;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 /*******************************************************************************************************************
 *   Represents a character's looking direction.
 *
@@ -10727,7 +10691,7 @@ var MfgCharacterLookingDirection;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents the shape of a game object.
@@ -10755,13 +10719,13 @@ var MfgShape = (function () {
                 fillStyle: debugColor,
                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BORDER,
                 opacity: mfg.MfgSettings.COLOR_DEBUG_OPACITY,
-                lineWidth: 1.0,
+                lineWidth: 1.0
             },
             isStatic: isStatic,
             collisionFilter: mfg.MfgSettings.COLLISION_GROUP_COLLIDING,
             friction: friction,
             angle: mfg.MfgMath.angleToRad(angle),
-            density: density,
+            density: density
         };
     }
     return MfgShape;
@@ -10785,7 +10749,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -10890,7 +10854,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -10974,7 +10938,7 @@ var __values = (this && this.__values) || function (o) {
         }
     };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -11056,7 +11020,7 @@ var MfgShapeFreeForm = (function (_super) {
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                if (_b && !_b.done && (_c = _a["return"])) _c.call(_a);
             }
             finally { if (e_1) throw e_1.error; }
         }
@@ -11076,7 +11040,7 @@ exports.MfgShapeFreeForm = MfgShapeFreeForm;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -11150,7 +11114,7 @@ exports.MfgGameObject = MfgGameObject;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -11330,7 +11294,7 @@ exports.MfgGameObjectFactory = MfgGameObjectFactory;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 /*******************************************************************************************************************
 *   Creates customized instances of bundled game objects.
 *
@@ -11371,7 +11335,7 @@ var __values = (this && this.__values) || function (o) {
         }
     };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -11468,7 +11432,7 @@ var MfgCharacter = (function (_super) {
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                if (_b && !_b.done && (_c = _a["return"])) _c.call(_a);
             }
             finally { if (e_1) throw e_1.error; }
         }
@@ -11522,7 +11486,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -11591,7 +11555,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -11709,7 +11673,7 @@ var __values = (this && this.__values) || function (o) {
         }
     };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -11797,7 +11761,7 @@ var MfgPlayer = (function (_super) {
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
                 try {
-                    if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                    if (_b && !_b.done && (_c = _a["return"])) _c.call(_a);
                 }
                 finally { if (e_1) throw e_1.error; }
             }
@@ -11825,7 +11789,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents a movable box.
@@ -11872,7 +11836,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -11938,7 +11902,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents a non-colliding decoration.
@@ -11987,7 +11951,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   Represents a collidable and solid obstacle.
@@ -12057,7 +12021,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -12089,7 +12053,7 @@ var MfgSigSaw = (function (_super) {
             render: {
                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_SIGSAW_JOINT,
                 lineWidth: 1.0,
-                visible: true,
+                visible: true
             }
         });
         /*
@@ -12154,7 +12118,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -12186,7 +12150,7 @@ var MfgBounce = (function (_super) {
             render: {
                 strokeStyle: mfg.MfgSettings.COLOR_DEBUG_BOUNCE_JOINT,
                 lineWidth: 1.0,
-                visible: true,
+                visible: true
             }
         });
         Matter.Composite.add(mfg.Mfg.game.engine.world, _this.constraint);
@@ -12210,7 +12174,7 @@ exports.MfgBounce = MfgBounce;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -12233,7 +12197,7 @@ var MfgGame = (function () {
         /** The custom level. */
         this.level = null;
         /** The soundSystem system. */
-        this.soundSystem = null;
+        this.test = null;
         /***************************************************************************************************************
         *   Being invoked each tick of the game loop in order to render the game.
         ***************************************************************************************************************/
@@ -12253,7 +12217,7 @@ var MfgGame = (function () {
         this.initKeySystem();
         this.initSoundSystem();
         mfg.MfgDebug.init.log("Playing bg sounds");
-        this.soundSystem.playSound(mfg.MfgSound.PACHELBELS_CANON);
+        this.test.playSound(mfg.MfgSound.PACHELBELS_CANON);
         mfg.MfgDebug.init.log("Launching initial level");
         this.resetAndLaunchLevel(new mfg.MfgLevelDev());
     };
@@ -12277,12 +12241,12 @@ var MfgGame = (function () {
             wireframes: false,
             showCollisions: true,
             showAngleIndicator: true,
-            showVelocity: true,
+            showVelocity: true
         };
         this.renderer = Matter.Render.create({
             element: document.body,
             engine: this.engine,
-            options: options,
+            options: options
         });
         this.renderer.canvas.width = mfg.MfgSettings.CANVAS_WIDTH;
         this.renderer.canvas.height = mfg.MfgSettings.CANVAS_HEIGHT;
@@ -12302,7 +12266,7 @@ var MfgGame = (function () {
     *   Inits the soundSystem system.
     ***************************************************************************************************************/
     MfgGame.prototype.initSoundSystem = function () {
-        this.soundSystem = new mfg.MfgSoundSystem(mfg.MfgSound.FILE_NAMES);
+        this.test = new mfg.MfgSoundSystem(mfg.MfgSound.FILE_NAMES);
     };
     /***************************************************************************************************************
     *   Inits the level.
@@ -12364,7 +12328,7 @@ var __values = (this && this.__values) || function (o) {
         }
     };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -12399,7 +12363,7 @@ var MfgLevel = (function () {
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                if (_b && !_b.done && (_c = _a["return"])) _c.call(_a);
             }
             finally { if (e_1) throw e_1.error; }
         }
@@ -12419,7 +12383,7 @@ var MfgLevel = (function () {
         catch (e_2_1) { e_2 = { error: e_2_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                if (_b && !_b.done && (_c = _a["return"])) _c.call(_a);
             }
             finally { if (e_2) throw e_2.error; }
         }
@@ -12446,7 +12410,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -12557,7 +12521,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The level set for the level 'enchanted woods'.
@@ -12621,7 +12585,7 @@ exports.MfgLevelEnchantedWoods = MfgLevelEnchantedWoods;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   The key system that manages all pressed keys.
@@ -12723,7 +12687,7 @@ exports.MfgKeySystem = MfgKeySystem;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*****************************************************************************
 *   Specifies all different soundSystem effects being used in the game.
@@ -12751,7 +12715,7 @@ exports.MfgSound = MfgSound;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 /*****************************************************************************
 *   Loads and manages all desired sounds.
 *
@@ -12792,7 +12756,7 @@ exports.MfgSoundSystem = MfgSoundSystem;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var Matter = __webpack_require__(1);
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
@@ -12968,7 +12932,7 @@ exports.MfgCamera = MfgCamera;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var mfg = __webpack_require__(0);
 /*******************************************************************************************************************
 *   All images the game makes use of.
@@ -13000,7 +12964,7 @@ exports.MfgImage = MfgImage;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 /*******************************************************************************************************************
 *   Offers extended static functionality for the treatment of enumerations.
 *
@@ -13033,7 +12997,7 @@ exports.EnumEx = EnumEx;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 /*******************************************************************************************************************
 *   Offers additional mathematical functionality.
 *
@@ -13063,7 +13027,7 @@ exports.MfgMath = MfgMath;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 /*******************************************************************************************************************
 *   Offers static string functionality.
 *
