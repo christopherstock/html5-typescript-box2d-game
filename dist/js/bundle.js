@@ -11807,7 +11807,7 @@ var MfgBox = (function (_super) {
     *   @param y        Startup position Y.
     ***************************************************************************************************************/
     function MfgBox(shape, x, y) {
-        return _super.call(this, shape, x, y, null) || this;
+        return _super.call(this, shape, x, y, mfg.MfgImage.IMAGE_BOX) || this;
     }
     /***************************************************************************************************************
     *   Renders this box.
@@ -12217,7 +12217,7 @@ var MfgGame = (function () {
         this.initKeySystem();
         this.initSoundSystem();
         mfg.MfgDebug.init.log("Playing bg sounds");
-        this.test.playSound(mfg.MfgSound.PACHELBELS_CANON);
+        // this.test.playSound( mfg.MfgSound.PACHELBELS_CANON );
         mfg.MfgDebug.init.log("Launching initial level");
         this.resetAndLaunchLevel(new mfg.MfgLevelDev());
     };
@@ -12943,8 +12943,6 @@ var mfg = __webpack_require__(0);
 var MfgImage = (function () {
     function MfgImage() {
     }
-    /** Image resource 'forest bg'. */
-    MfgImage.IMAGE_BG_FOREST_GREEN = mfg.MfgSettings.PATH_IMAGE_BG + "woodsGreen_big.jpg";
     /** Image resource 'player standing'. */
     MfgImage.IMAGE_PLAYER_STAND = mfg.MfgSettings.PATH_IMAGE_PLAYER + "stand.png";
     /** Image resource 'player falling'. */
@@ -12953,6 +12951,8 @@ var MfgImage = (function () {
     MfgImage.IMAGE_ITEM = mfg.MfgSettings.PATH_IMAGE_LEVEL + "item.png";
     /** Image resource 'tree'. */
     MfgImage.IMAGE_TREE = mfg.MfgSettings.PATH_IMAGE_LEVEL + "tree.png";
+    /** Image resource 'box'. */
+    MfgImage.IMAGE_BOX = mfg.MfgSettings.PATH_IMAGE_LEVEL + "box.jpg";
     return MfgImage;
 }());
 exports.MfgImage = MfgImage;

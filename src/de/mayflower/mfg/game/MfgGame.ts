@@ -37,7 +37,7 @@
             this.initSoundSystem();
 
             mfg.MfgDebug.init.log( "Playing bg sounds" );
-            this.test.playSound( mfg.MfgSound.PACHELBELS_CANON );
+            // this.test.playSound( mfg.MfgSound.PACHELBELS_CANON );
 
             mfg.MfgDebug.init.log( "Launching initial level" );
             this.resetAndLaunchLevel( new mfg.MfgLevelDev() );

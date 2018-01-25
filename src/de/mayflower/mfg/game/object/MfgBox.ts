@@ -23,7 +23,7 @@
                 shape,
                 x,
                 y,
-                null
+                mfg.MfgImage.IMAGE_BOX
             );
         }
 
